@@ -9,7 +9,7 @@
 # Basic Site Settings
 locale                   : "en-US"
 site_theme               : "default"
-title                    : "Yuntao Nie / Site Title"
+title                    : "Yuntao Nie"
 title_separator          : "-"
 name                     : &name "Yuntao Nie"
 description              : &description "personal description"
@@ -24,10 +24,10 @@ author:
   # Biographic information
   avatar           : "profile.png"
   name             : "Yuntao Nie"
-  pronouns         : # example: "she/her"  
-  bio              : "Short biography for the left-hand sidebar"
-  location         : "China"
-  employer         : "Red Brick University"
+  pronouns         : "he/his" # example: "she/her"  
+  bio: "Master's student at BUPT University (2025-2028). Research interests: RAG, LLM, LLM4EDA"  
+  location: "Beijing, China"  
+  employer: "Beijing University of Posts and Telecommunications"  
   uri              : # URL
   email            : "lenckcuak@gmail.com" 
 
@@ -41,6 +41,8 @@ author:
   pubmed           : "https://www.ncbi.nlm.nih.gov/pubmed/?term=john+snow"
   researchgate     : # URL
   scopus           : # URL
+  github           : "https://github.com/1571859588" # If you have research code repositories
+
 
   # Repositories and software development
   bitbucket        : # Username - Update with your username on the site
