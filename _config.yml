@@ -24,7 +24,7 @@ author:
   # Biographic information
   avatar           : "avators/fig1.png"
   name             : "Yuntao Nie"
-  pronouns         : "he/his" # example: "she/her"  
+  # pronouns         : "he/his" # example: "she/her"  
   bio: "Ms student @ BUPT IC. \nResearch interests: RAG, LLM, LLM4EDA"  
   location: "Beijing, China"  
   employer: "Beijing University of Posts and Telecommunications"  
@@ -48,7 +48,7 @@ author:
   bitbucket        : # Username - Update with your username on the site
   codepen          : # Username
   dribbble         : # Username
-  github           : "academicpages"
+  github           : "https://github.com/1571859588"
   kaggle           : # Username  
   stackoverflow    : # User number or user number and name (i.e., use "1" or "1/jeff-atwood")    
 
