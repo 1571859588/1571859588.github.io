@@ -17,13 +17,9 @@ I am Yuntao Nie (聂云滔 in Chinese), a first-year MS student at the Departmen
 
 My research interests include:
 
-* Multi-Modal Large Languge Models
+* Large Languge Models
 * Mixture-of-Experts Architecture
 * Multi-Agent System
-
-​	<!-- * Hardware/Software Co-Design for AI -->
-<!-- * Inference and Application of LLMs -->
-
 * Electronic Design Automation
 
 Feel free to contact me at [yuntaonie@bupt.edu.cn]() if you’d like to chat!
