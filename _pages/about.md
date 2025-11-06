@@ -36,20 +36,25 @@ For a completed list of publications, see [this](https://1571859588.github.io/pu
 
 ## Education
 
-- **The Chinese University of Hong Kong**
+- **The Beijing University of Posts and Telecommunications**
   - M.S. in Integrated Circuits Engineering, 2025.8 - Present
-- **South China Normal University**
+- **The South China Normal University**
   - B.Eng. in Software Engineering, 2021.9 - 2025.6
 
 ## Interns
 
-- **ChatEDA** 
+- **ChatEDA**
   - Research Intern, 2024.10 - 2025.8
 
 ## Selected Honors & Awards
 
 * First Award Scholarship, 2021, 2023
 * Third Award Scholarship, 2022, 2024
+* China University Computer Competition - Network Challenge Finals Third Prize, 2023 
+* APMCM Third Prize, 2023 
+* RoboMaster College League Competition 3V3 Third Prize, 2024 
+* Bronze Award of National College Students Algorithm Design and Programming Challenge
+* National Undergraduate Mathematical Modeling Competition Provincial First Prize, 2023 
 
 ## Skills
 
