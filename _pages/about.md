@@ -43,8 +43,9 @@ For a completed list of publications, see [this](https://1571859588.github.io/pu
 
 ## Interns
 
-- **ChatEDA**
-  - Research Intern, 2024.10 - 2025.8
+- **ChatEDA Lab**, China
+  - Research Intern, Oct. 2024 - Now
+
 
 ## Selected Honors & Awards
 
