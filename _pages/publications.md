@@ -6,7 +6,7 @@ author_profile: true
 
 ## **2026**
 
-- Zhenghao Chen, Yuan Pu, Hairuo Han, <u>Yuntao Nie</u>, Jiajun Qin, Yuhan Qin, Tairu Qiu, Zhuolun He, Jianwang Zhai, Bei Yu and Kang Zhao. **MAEDA: An LLM-Powered Multi-Agent Evaluation Framework for EDA Tool Documentation QA**. Design, Automation & Test in Europe Conference & Exhibition (**DATE**), 2026.
+- Zhenghao Chen, Yuan Pu, Hairuo Han, <u>Yuntao Nie</u>, Jiajun Qin, Yuhan Qin, Tairu Qiu, Zhuolun He, Jianwang Zhai, Bei Yu, Kang Zhao, **MAEDA: An LLM-Powered Multi-Agent Evaluation Framework for EDA Tool Documentation QA**, IEEE/ACM Proceedings Design, Automation and Test in Europe (**DATE**), 2026.
 
 
 
