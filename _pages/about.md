@@ -7,7 +7,7 @@ redirect_from:
   - /about.html
 ---
 
-I am Yuntao Nie (聂云滔 in Chinese), a first-year MS student at the Department of Integrated Circuits Engineering, The Beijing University of Posts and Telecommunications (BUPT), supervised by [Jianwang Zhai]([Jianwang Zhai](https://zhaijw18.github.io/)) since 2025 Fall. Prior to that, I graduated from The South China Normal University  in 2025.
+I am Yuntao Nie (聂云滔 in Chinese), a first-year ME student at the Department of Integrated Circuits Engineering, The Beijing University of Posts and Telecommunications (BUPT), supervised by [Jianwang Zhai]([Jianwang Zhai](https://zhaijw18.github.io/)) since 2025 Fall. Prior to that, I graduated from The South China Normal University  in 2025.
 
 <!-- Prior to that, I graduated from Zhejiang University in 2025. I had the privilege to complete a research internship at NYU SAI Lab under the supervision of [Prof.Sai Qian Zhang](https://saiqianzhang.com/). I was also fortunate to collaborate with [Prof.Cheng Tan](https://tancheng.github.io/) from Google and [Prof.Jeff Zhang](https://search.asu.edu/profile/4346755) from ASU. Prior to this, I greatly appreciated the mentorship of [Prof.Zeke Wang](https://wangzeke.github.io/) at RC4ML at ZJU. -->
 
@@ -33,7 +33,7 @@ For a completed list of publications, see [this](https://1571859588.github.io/pu
 ## Education
 
 - **The Beijing University of Posts and Telecommunications**
-  - M.S. in Integrated Circuits Engineering, 2025.8 - Present
+  - M.E. in Integrated Circuits Engineering, 2025.8 - Present
 - **The South China Normal University**
   - B.Eng. in Software Engineering, 2021.9 - 2025.6
 
