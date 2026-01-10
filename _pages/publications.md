@@ -33,9 +33,10 @@ author_profile: true
 <h4>My Contribution</h4>
 {{ paper.contribution | markdownify }}
 {% endif %}
-{% if paper.pdf_url or paper.github_url or paper.doi %}
+{% if paper.pdf_url or paper.slides_url or paper.github_url or paper.doi %}
 <div class="paper-links">
 {% if paper.pdf_url %}{% if paper.pdf_url contains "://" %}<a href="{{ paper.pdf_url }}" target="_blank" rel="noopener noreferrer"><i class="fa fa-file-pdf" aria-hidden="true"></i> PDF</a>{% else %}<a href="/{{ paper.pdf_url }}" target="_blank" rel="noopener noreferrer"><i class="fa fa-file-pdf" aria-hidden="true"></i> PDF</a>{% endif %}{% endif %}
+{% if paper.slides_url %}{% if paper.slides_url contains "://" %}<a href="{{ paper.slides_url }}" target="_blank" rel="noopener noreferrer"><i class="fa fa-file-powerpoint" aria-hidden="true"></i> Slides</a>{% else %}<a href="/{{ paper.slides_url }}" target="_blank" rel="noopener noreferrer"><i class="fa fa-file-powerpoint" aria-hidden="true"></i> Slides</a>{% endif %}{% endif %}
 {% if paper.github_url %}<a href="{{ paper.github_url }}" target="_blank" rel="noopener noreferrer"><i class="fa fa-github" aria-hidden="true"></i> Code</a>{% endif %}
 {% if paper.doi %}<a href="{{ paper.doi }}" target="_blank" rel="noopener noreferrer"><i class="fa fa-external-link" aria-hidden="true"></i> DOI</a>{% endif %}
 </div>
