@@ -52,6 +52,34 @@ author_profile: true
     <strong>{{ paper.title }}</strong><br>
     {{ paper.authors | join: ", " }}<br>
     <em>{{ paper.venue }}</em>, {{ paper.date | date: "%Y" }}
+    {% if paper.contribution %}
+    <div class="cv-contribution">
+      <strong>My Contribution:</strong>
+      {{ paper.contribution | markdownify }}
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endfor %}
+
+<h2 class="cv-section-title">Projects</h2>
+
+{% for project in site.data.cv.projects %}
+<div class="cv-entry">
+  <div class="cv-entry-header">
+    <strong>{{ project.name.en }}</strong>
+    <span class="cv-date">{{ project.date.en }}</span>
+  </div>
+  <div class="cv-entry-content">
+    <em>{{ project.role.en }}</em><br>
+    {{ project.description.en }}
+    {% if project.highlights.en %}
+    <ul class="cv-highlights">
+      {% for highlight in project.highlights.en %}
+      <li>{{ highlight }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
   </div>
 </div>
 {% endfor %}
@@ -65,7 +93,15 @@ author_profile: true
     <span class="cv-date">{{ intern.date.en }}</span>
   </div>
   <div class="cv-entry-content">
-    {{ intern.position.en }}{% if intern.description.en %}<br>{{ intern.description.en }}{% endif %}
+    <em>{{ intern.position.en }}</em>
+    {% if intern.description.en %}<br>{{ intern.description.en }}{% endif %}
+    {% if intern.responsibilities.en %}
+    <ul class="cv-highlights">
+      {% for resp in intern.responsibilities.en %}
+      <li>{{ resp }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
   </div>
 </div>
 {% endfor %}
