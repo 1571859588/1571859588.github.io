@@ -5,6 +5,8 @@ permalink: /publications/
 author_profile: true
 ---
 
+## Publications
+
 <!-- Toggle for showing/hiding paper details -->
 <div class="paper-details-toggle">
   <input type="checkbox" id="show-paper-details">
@@ -19,7 +21,7 @@ author_profile: true
   {% assign paper_year = paper.date | date: "%Y" %}
   {% if paper_year != current_year %}
     {% if current_year != "" %}
-      <hr style="margin: 2em 0; border: 0; border-top: 1px solid #e9ecef;">
+      <br><br>
     {% endif %}
     {% assign current_year = paper_year %}
     <h2>{{ current_year }}</h2>
