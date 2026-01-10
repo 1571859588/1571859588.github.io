@@ -12,7 +12,7 @@ author_profile: true
 
 <div class="cv-content" id="cv-content">
 
-## {{ site.data.cv.personal.name.en }}
+<h2 class="cv-name">{{ site.data.cv.personal.name.en }}</h2>
 
 <div class="cv-contact">
   <span><i class="fa fa-envelope"></i> {{ site.data.cv.personal.email }}</span>
@@ -21,13 +21,15 @@ author_profile: true
   <span><i class="fa fa-map-marker"></i> {{ site.data.cv.personal.location.en }}</span>
 </div>
 
-## Research Interests
+<h2 class="cv-section-title">Research Interests</h2>
 
+<ul class="cv-list">
 {% for interest in site.data.cv.research_interests.en %}
-- {{ interest }}
+  <li>{{ interest }}</li>
 {% endfor %}
+</ul>
 
-## Education
+<h2 class="cv-section-title">Education</h2>
 
 {% for edu in site.data.cv.education %}
 <div class="cv-entry">
@@ -41,11 +43,11 @@ author_profile: true
 </div>
 {% endfor %}
 
-## Publications
+<h2 class="cv-section-title">Publications</h2>
 
 {% assign sorted_papers = site.data.papers.papers | sort: "date" | reverse %}
 {% for paper in sorted_papers %}
-<div class="cv-entry">
+<div class="cv-entry cv-publication">
   <div class="cv-entry-content">
     <strong>{{ paper.title }}</strong><br>
     {{ paper.authors | join: ", " }}<br>
@@ -54,7 +56,7 @@ author_profile: true
 </div>
 {% endfor %}
 
-## Internships
+<h2 class="cv-section-title">Internships</h2>
 
 {% for intern in site.data.cv.internships %}
 <div class="cv-entry">
@@ -68,16 +70,20 @@ author_profile: true
 </div>
 {% endfor %}
 
-## Honors & Awards
+<h2 class="cv-section-title">Honors & Awards</h2>
 
+<ul class="cv-list">
 {% for award in site.data.cv.awards %}
-- {{ award.title.en }}{% if award.year %}, {{ award.year }}{% endif %}
+  <li>{{ award.title.en }}{% if award.year %}, {{ award.year }}{% endif %}</li>
 {% endfor %}
+</ul>
 
-## Skills
+<h2 class="cv-section-title">Skills</h2>
 
+<ul class="cv-list">
 {% for skill in site.data.cv.skills %}
-- **{{ skill.category.en }}**: {{ skill.items }}
+  <li><strong>{{ skill.category.en }}</strong>: {{ skill.items }}</li>
 {% endfor %}
+</ul>
 
 </div>
