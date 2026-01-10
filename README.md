@@ -23,6 +23,7 @@
 ### 1.1 从零开始创建项目
 
 #### 步骤 1: GitHub 仓库创建
+
 ```bash
 # 1. 点击 GitHub 上的 "Use this template" 按钮
 # 2. 命名您的仓库: [your-username].github.io
@@ -31,12 +32,14 @@
 ```
 
 #### 步骤 2: 克隆项目到本地
+
 ```bash
 git clone https://github.com/[your-username]/[your-username].github.io.git
 cd [your-username].github.io
 ```
 
 #### 步骤 3: 基础环境配置
+
 ```bash
 # 安装 Ruby 依赖
 bundle install
@@ -51,6 +54,7 @@ jekyll -v
 ### 1.2 核心配置文件
 
 #### `_config.yml` - 站点配置文件
+
 ```yaml
 # Site Settings
 title: "您的姓名 - 学术主页"
@@ -73,6 +77,7 @@ theme: minimal-mistakes
 ```
 
 #### `Gemfile` - Ruby 依赖管理
+
 ```ruby
 source "https://rubygems.org"
 
@@ -94,6 +99,7 @@ end
 ### 2.1 图标文件格式要求
 
 #### 推荐格式与尺寸
+
 ```
 ├── favicon.ico (16x16, 32x32, 48x48 - ICO格式)
 ├── favicon-16x16.png (16x16 - PNG格式)
@@ -104,6 +110,7 @@ end
 ```
 
 #### 图标生成工具推荐
+
 - [Real Favicon Generator](https://realfavicongenerator.net/)
 - [Favicon.io](https://favicon.io/)
 - [Canva](https://www.canva.com/)
@@ -111,6 +118,7 @@ end
 ### 2.2 图标文件存放位置
 
 #### 标准目录结构
+
 ```
 images/
 ├── favicon/
@@ -126,6 +134,7 @@ images/
 ### 2.3 HTML 头部配置
 
 #### 在 `_includes/head/custom.html` 中添加:
+
 ```html
 <!-- Standard favicon -->
 <link rel="icon" type="image/x-icon" href="{{ '/images/favicon/favicon.ico' | relative_url }}">
@@ -151,6 +160,7 @@ images/
 ### 2.4 多平台兼容性处理
 
 #### Web App Manifest 文件 (`site.webmanifest`)
+
 ```json
 {
   "name": "您的学术主页",
@@ -174,6 +184,7 @@ images/
 ```
 
 #### Safari 固定标签页图标 (`safari-pinned-tab.svg`)
+
 ```html
 <link rel="mask-icon" href="{{ '/images/favicon/safari-pinned-tab.svg' | relative_url }}" color="#5bbad5">
 ```
@@ -225,6 +236,7 @@ images/
 ### 3.2 文件命名规范
 
 #### Markdown 文件命名
+
 ```
 # 页面文件
 about.md                    # 关于页面
@@ -242,6 +254,7 @@ publications/
 ```
 
 #### 图片文件命名
+
 ```
 images/
 ├── profile.jpg             # 个人头像
@@ -257,6 +270,7 @@ images/
 ### 3.3 最佳实践目录布局
 
 #### 研究型学者推荐结构
+
 ```
 ├── _pages/
 │   ├── about.md            # 个人简介
@@ -286,24 +300,25 @@ images/
 ### 4.1 导航菜单实现方案
 
 #### 顶部导航栏配置 (`_data/navigation.yml`)
+
 ```yaml
 # Main navigation links
 main:
   - title: "关于我"
     url: /about/
-    
+  
   - title: "研究方向"
     url: /research/
-    
+  
   - title: "发表论文"
     url: /publications/
-    
+  
   - title: "教学经历"
     url: /teaching/
-    
+  
   - title: "学术演讲"
     url: /talks/
-    
+  
   - title: "联系方式"
     url: /contact/
 
@@ -320,6 +335,7 @@ main:
 ```
 
 #### 响应式导航实现 (`_includes/masthead.html`)
+
 ```html
 <nav class="greedy-nav">
   <button class="nav-toggle">
@@ -342,6 +358,7 @@ main:
 ### 4.2 侧边栏导航设计
 
 #### 页面内导航 (`_includes/sidebar.html`)
+
 ```html
 <aside class="sidebar__right">
   <nav class="toc">
@@ -357,6 +374,7 @@ main:
 ```
 
 #### 自动生成目录 (使用 Jekyll 插件)
+
 ```yaml
 # _config.yml 配置
 plugins:
@@ -371,6 +389,7 @@ toc_icon: "list"
 ### 4.3 活动状态指示
 
 #### CSS 高亮样式 (`_sass/_navigation.scss`)
+
 ```scss
 .nav__list {
   .active {
@@ -381,7 +400,7 @@ toc_icon: "list"
     font-weight: bold;
     background: $primary-color;
     border-radius: $border-radius;
-    
+  
     &:hover {
       color: #fff;
       background: darken($primary-color, 10%);
@@ -392,10 +411,10 @@ toc_icon: "list"
 .masthead__menu-item {
   a {
     position: relative;
-    
+  
     &.current {
       color: $masthead-link-color-hover;
-      
+    
       &:before {
         content: "";
         position: absolute;
@@ -411,6 +430,7 @@ toc_icon: "list"
 ```
 
 #### JavaScript 当前页面检测
+
 ```javascript
 // assets/js/navigation.js
 $(document).ready(function() {
@@ -430,6 +450,7 @@ $(document).ready(function() {
 ### 4.4 移动端适配方案
 
 #### 响应式导航菜单 (`_sass/_navigation.scss`)
+
 ```scss
 // 移动端导航样式
 @include breakpoint($small) {
@@ -442,15 +463,15 @@ $(document).ready(function() {
       right: 0;
       background: #fff;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      
+    
       &.is-visible {
         display: block;
       }
     }
-    
+  
     .nav-toggle {
       display: block;
-      
+    
       @include breakpoint($medium) {
         display: none;
       }
@@ -466,6 +487,7 @@ $(document).ready(function() {
 ### 5.1 全局样式定义
 
 #### 主题变量配置 (`_sass/_variables.scss`)
+
 ```scss
 /* Typography */
 $global-font-family: -apple-system, BlinkMacSystemFont, "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", Arial, sans-serif;
@@ -496,6 +518,7 @@ $light-text-color: mix(#fff, $text-color, 70%);
 ```
 
 #### 基础样式重置 (`_sass/_base.scss`)
+
 ```scss
 /* Base element styles */
 body {
@@ -529,35 +552,37 @@ p {
 ### 5.2 内容区块划分
 
 #### 页面布局结构 (`_layouts/default.html`)
+
 ```html
 <!DOCTYPE html>
 <html lang="{{ page.lang | default: site.lang | default: 'en' }}">
   {% include head.html %}
   <body>
     {% include masthead.html %}
-    
+  
     <div class="initial-content">
       {{ content }}
     </div>
-    
+  
     {% if site.search == true %}
       <div class="search-content">
         {% include search/search_form.html %}
       </div>
     {% endif %}
-    
+  
     <div class="page__footer">
       <footer>
         {% include footer.html %}
       </footer>
     </div>
-    
+  
     {% include scripts.html %}
   </body>
 </html>
 ```
 
 #### 内容区域样式 (`_sass/_page.scss`)
+
 ```scss
 /* Page wrapper */
 .page {
@@ -582,10 +607,10 @@ p {
   /* Links */
   a {
     text-decoration: underline;
-    
+  
     &:hover {
       text-decoration: underline;
-      
+    
       img {
         box-shadow: 0 0 10px rgba(#000, 0.25);
       }
@@ -597,6 +622,7 @@ p {
 ### 5.3 响应式布局实现
 
 #### 断点定义 (`_sass/_variables.scss`)
+
 ```scss
 /* Breakpoint variables */
 $small: 480px;
@@ -622,6 +648,7 @@ $x-large: 1280px;
 ```
 
 #### 响应式网格系统
+
 ```scss
 /* Grid system */
 .container {
@@ -652,6 +679,7 @@ $x-large: 1280px;
 ### 5.4 标准化配置
 
 #### 间距系统 (`_sass/_utilities.scss`)
+
 ```scss
 /* Spacing utilities */
 .margin-top-0 { margin-top: 0; }
@@ -670,6 +698,7 @@ $x-large: 1280px;
 ```
 
 #### 颜色主题配置
+
 ```scss
 /* Color utilities */
 .text-primary { color: $primary-color; }
@@ -692,12 +721,14 @@ $x-large: 1280px;
 ### 6.1 环境要求
 
 #### 系统依赖
+
 - **Ruby**: 2.7 或更高版本
 - **Node.js**: 14.0 或更高版本
 - **Bundler**: Ruby 包管理器
 - **Git**: 版本控制
 
 #### 安装命令
+
 ```bash
 # Ubuntu/Debian
 sudo apt install ruby-dev ruby-bundler nodejs git build-essential
@@ -713,6 +744,7 @@ sudo apt install ruby-dev ruby-bundler nodejs git build-essential
 ### 6.2 本地服务器启动
 
 #### 基本启动命令
+
 ```bash
 # 安装依赖
 bundle install
@@ -725,6 +757,7 @@ bundle exec jekyll serve --host 0.0.0.0 --port 4000 --livereload
 ```
 
 #### 开发模式配置
+
 ```yaml
 # _config.yml 开发配置
 url: "http://localhost:4000"
@@ -744,11 +777,13 @@ plugins:
 ### 7.1 GitHub Pages 部署
 
 #### 自动部署配置
+
 1. 推送代码到 `main` 分支
 2. GitHub Actions 自动构建
 3. 访问 `https://[username].github.io`
 
 #### 部署状态检查
+
 - 绿色勾选: 构建成功
 - 橙色圆圈: 构建中
 - 红色叉号: 构建失败
@@ -756,6 +791,7 @@ plugins:
 ### 7.2 常见问题解决
 
 #### 构建失败排查
+
 ```bash
 # 本地构建测试
 bundle exec jekyll build --verbose
@@ -768,10 +804,99 @@ bundle exec jekyll clean
 ```
 
 #### 性能优化建议
+
 1. **图片优化**: 压缩图片，使用 WebP 格式
 2. **缓存配置**: 启用浏览器缓存
 3. **CDN 使用**: 使用 jsDelivr 等 CDN
 4. **代码压缩**: 启用 HTML/CSS/JS 压缩
+
+
+## 8. paper具体贡献
+
+实现概述
+
+1. 创建数据文件 _data/papers.yml
+
+这是维护论文信息的核心文件，包含以下字段：
+
+- id: 唯一标识符
+- authors: 作者列表（用 <u> 标记你的贡献）
+- title: 论文标题
+- venue: 期刊/会议名称
+- date: 发布日期
+- contribution: 详细贡献描述
+- pdf_url: PDF 下载链接
+- github_url: GitHub 代码仓库链接
+- doi: DOI 链接
+
+
+
+支持的链接格式
+
+1. 本地文件（使用 files/ 目录）：
+   pdf_url: "files/DATE26_RAG_EVALUATION.pdf"
+2. 外部链接（任意 URL）：
+   pdf_url: "https://arxiv.org/pdf/xxxx.xxxxx.pdf"
+   pdf_url: "https://ieeexplore.ieee.org/document/xxxxx"
+   pdf_url: "https://github.com/username/repo/raw/main/paper.pdf"
+
+已配置的论文
+
+- MAEDA (DATE 2026): files/DATE26_RAG_EVALUATION.pdf
+- SAM-DRA-UNet (ICIC 2025): files/SAM-DRA-UNet.pdf
+
+使用示例
+
+如果需要添加外部链接，只需填写完整 URL：
+
+pdf_url: "https://arxiv.org/pdf/2301.00000.pdf"
+github_url: "https://github.com/your-username/your-repo"
+doi: "https://doi.org/10.xxxx/xxxxx"
+
+模板会自动检测链接类型并正确处理，本地链接会相对于网站根路径解析，外部链接会直接跳转。
+
+2. 创建 JavaScript assets/js/paper-details.js
+
+- 实现复选框切换功能
+- 使用 localStorage 保存用户偏好设置
+- 默认隐藏详细信息，勾选后显示
+
+3. 创建样式文件 _sass/_paper-details.scss
+
+- 复选框样式
+- 详细信息区域样式
+- 链接按钮样式（PDF、Code、DOI）
+
+4. 更新 _pages/publications.md
+
+- 添加复选框控件
+- 从 YAML 数据文件读取论文信息
+- 按年份分组显示
+- 仅当复选框被勾选时显示详细信息
+
+5. 更新配置文件
+
+- assets/css/main.scss: 导入新样式
+- _includes/scripts.html: 加载 JavaScript
+
+使用方法
+
+1. 添加新论文: 编辑 _data/papers.yml，添加新的论文条目
+2. 更新贡献: 在 YAML 文件中修改 contribution 字段
+3. 添加链接: 填写 pdf_url 和 github_url 字段
+
+效果
+
+- 默认状态: 只显示论文标题、作者和会议信息（与原来一样）
+- 勾选后: 显示每个论文的详细贡献、PDF 下载链接、GitHub 代码链接和 DOI 链接
+- 记忆功能: 用户的选择会被保存，刷新页面后保持设置
+
+要测试效果，请运行：
+bundle install
+bundle exec jekyll serve
+
+然后访问 http://localhost:4000/publications/
+
 
 ---
 
@@ -785,7 +910,7 @@ bundle exec jekyll clean
 ---
 
 <div align="center">
-    
+
 ![pages-build-deployment](https://github.com/academicpages/academicpages.github.io/actions/workflows/pages/pages-build-deployment/badge.svg)
 [![GitHub contributors](https://img.shields.io/github/contributors/academicpages/academicpages.github.io.svg)](https://github.com/academicpages/academicpages.github.io/graphs/contributors)
 [![GitHub release](https://img.shields.io/github/v/release/academicpages/academicpages.github.io)](https://github.com/academicpages/academicpages.github.io/releases/latest)
@@ -793,4 +918,5 @@ bundle exec jekyll clean
 
 [![GitHub stars](https://img.shields.io/github/stars/academicpages/academicpages.github.io)](https://github.com/academicpages/academicpages.github.io)
 [![GitHub forks](https://img.shields.io/github/forks/academicpages/academicpages.github.io)](https://github.com/academicpages/academicpages.github.io/fork)
+
 </div>

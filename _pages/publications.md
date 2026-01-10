@@ -1,16 +1,58 @@
 ---
+layout: archive
 title: "Publications"
 permalink: /publications/
 author_profile: true
 ---
 
-## **2026**
+<!-- Toggle for showing/hiding paper details -->
+<div class="paper-details-toggle">
+  <input type="checkbox" id="show-paper-details">
+  <label for="show-paper-details">Show detailed contribution, PDF, and GitHub links</label>
+</div>
 
-- Zhenghao Chen, Yuan Pu, Hairuo Han, <u>Yuntao Nie</u>, Jiajun Qin, Yuhan Qin, Tairu Qiu, Zhuolun He, Jianwang Zhai, Bei Yu, Kang Zhao, **MAEDA: An LLM-Powered Multi-Agent Evaluation Framework for EDA Tool Documentation QA**, IEEE/ACM Proceedings Design, Automation and Test in Europe (**DATE**), 2026.
+<!-- Publications grouped by year -->
+{% assign papers_by_year = site.data.papers.papers | group_by_exp: "item", "item.date | date: '%Y'" | sort: "name" | reverse %}
 
+{% for year_group in papers_by_year %}
+  <h2>{{ year_group.name }}</h2>
 
+  {% for paper in year_group.items %}
+    <div class="publication-paper">
+      <div class="paper-title">
+        {{ paper.title }}
+      </div>
+      <div class="paper-meta">
+        {{ paper.authors | join: ", " }} • {{ paper.venue }}
+      </div>
 
-## **2025**
+      <!-- Detailed information (hidden by default, shown when checkbox is checked) -->
+      <div class="paper-details">
+        {% if paper.contribution %}
+          <h4>My Contribution</h4>
+          {{ paper.contribution | newline_to_br }}
+        {% endif %}
 
-* Weihao Huang, Chunhong Jiang, Yuheng Huang, Jiayu Ye, <u>Yuntao Nie</u> and Jiahui Pan. **SAM-DRA-UNet: An Enhanced U-Net FrameworkIntegrating Knowledge Distillation and Transfer Learning for Brain Tumor Segmentation**. International Conference on Intelligent Computing(**ICIC**), 2025
-
+        {% if paper.pdf_url or paper.github_url or paper.doi %}
+          <div class="paper-links">
+            {% if paper.pdf_url %}
+              <a href="{{ paper.pdf_url }}" target="_blank" rel="noopener noreferrer">
+                <i class="fa fa-file-pdf" aria-hidden="true"></i> PDF
+              </a>
+            {% endif %}
+            {% if paper.github_url %}
+              <a href="{{ paper.github_url }}" target="_blank" rel="noopener noreferrer">
+                <i class="fa fa-github" aria-hidden="true"></i> Code
+              </a>
+            {% endif %}
+            {% if paper.doi %}
+              <a href="{{ paper.doi }}" target="_blank" rel="noopener noreferrer">
+                <i class="fa fa-external-link" aria-hidden="true"></i> DOI
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+{% endfor %}

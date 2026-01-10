@@ -1,0 +1,54 @@
+# Publications data file
+# Each paper can have the following fields:
+# - authors: List of authors (marked with <u> for your contribution)
+# - title: Paper title
+# - venue: Conference/Journal name
+# - date: Publication date (YYYY-MM-DD)
+# - contribution: Your detailed contribution to this paper
+# - pdf_url: URL to download the PDF (can be local file like "files/DATE26_RAG_EVALUATION.pdf" or external URL)
+# - github_url: URL to the GitHub repository
+# - doi: DOI link (optional)
+
+papers:
+  - id: "maeda-2026"
+    authors:
+      - "Zhenghao Chen"
+      - "Yuan Pu"
+      - "Hairuo Han"
+      - "<u>Yuntao Nie</u>"
+      - "Jiajun Qin"
+      - "Yuhan Qin"
+      - "Tairu Qiu"
+      - "Zhuolun He"
+      - "Jianwang Zhai"
+      - "Bei Yu"
+      - "Kang Zhao"
+    title: "MAEDA: An LLM-Powered Multi-Agent Evaluation Framework for EDA Tool Documentation QA"
+    venue: "IEEE/ACM Proceedings Design, Automation and Test in Europe (DATE)"
+    date: "2026-01-01"
+    contribution: |
+      - Designed and implemented the multi-agent evaluation framework
+      - Developed the LLM-powered QA system for EDA tool documentation
+      - Conducted comprehensive experiments and analysis
+    pdf_url: "files/DATE26_RAG_EVALUATION.pdf"
+    github_url: ""
+    doi: ""
+
+  - id: "sam-dra-unet-2025"
+    authors:
+      - "Weihao Huang"
+      - "Chunhong Jiang"
+      - "Yuheng Huang"
+      - "Jiayu Ye"
+      - "<u>Yuntao Nie</u>"
+      - "Jiahui Pan"
+    title: "SAM-DRA-UNet: An Enhanced U-Net Framework Integrating Knowledge Distillation and Transfer Learning for Brain Tumor Segmentation"
+    venue: "International Conference on Intelligent Computing (ICIC)"
+    date: "2025-01-01"
+    contribution: |
+      - Contributed to the U-Net framework enhancement
+      - Assisted with knowledge distillation implementation
+      - Participated in experimental validation
+    pdf_url: "files/SAM-DRA-UNet.pdf"
+    github_url: ""
+    doi: ""
