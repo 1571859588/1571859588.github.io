@@ -1,0 +1,115 @@
+# CV Data File
+# This file contains all CV information in both English and Chinese
+# Used to generate CV pages and PDF downloads
+
+# Personal Information
+personal:
+  name:
+    en: "Yuntao Nie"
+    zh: "聂云滔"
+  email: "yuntaonie@bupt.edu.cn"
+  phone: ""
+  website: "https://1571859588.github.io"
+  github: "1571859588"
+  location:
+    en: "Beijing, China"
+    zh: "中国，北京"
+
+# Research Interests
+research_interests:
+  en:
+    - "Large Language Models"
+    - "Mixture-of-Experts Architecture"
+    - "Multi-Agent System"
+    - "Electronic Design Automation"
+  zh:
+    - "大语言模型"
+    - "混合专家架构"
+    - "多智能体系统"
+    - "电子设计自动化"
+
+# Education
+education:
+  - institution:
+      en: "The Beijing University of Posts and Telecommunications"
+      zh: "北京邮电大学"
+    degree:
+      en: "M.E. in Integrated Circuits Engineering"
+      zh: "集成电路工程硕士"
+    date:
+      en: "2025.8 - Present"
+      zh: "2025.8 - 至今"
+    supervisor:
+      en: "Jianwang Zhai"
+      zh: "翟建旺"
+    supervisor_url: "https://zhaijw18.github.io/"
+
+  - institution:
+      en: "The South China Normal University"
+      zh: "华南师范大学"
+    degree:
+      en: "B.Eng. in Software Engineering"
+      zh: "软件工程学士"
+    date:
+      en: "2021.9 - 2025.6"
+      zh: "2021.9 - 2025.6"
+
+# Internships
+internships:
+  - company:
+      en: "ChatEDA Lab"
+      zh: "ChatEDA实验室"
+    location:
+      en: "China"
+      zh: "中国"
+    position:
+      en: "Research Intern"
+      zh: "研究实习生"
+    date:
+      en: "Oct. 2024 - Present"
+      zh: "2024.10 - 至今"
+    description:
+      en: ""
+      zh: ""
+
+# Honors & Awards
+awards:
+  - title:
+      en: "First Award Scholarship"
+      zh: "一等奖学金"
+    year: "2021, 2023"
+  - title:
+      en: "Third Award Scholarship"
+      zh: "三等奖学金"
+    year: "2022, 2024"
+  - title:
+      en: "China University Computer Competition - Network Challenge Finals Third Prize"
+      zh: "中国大学生计算机大赛-网络技术挑战赛全国三等奖"
+    year: "2023"
+  - title:
+      en: "APMCM Third Prize"
+      zh: "APMCM三等奖"
+    year: "2023"
+  - title:
+      en: "RoboMaster College League Competition 3V3 Third Prize"
+      zh: "RoboMaster高校联盟赛3V3对抗赛三等奖"
+    year: "2024"
+  - title:
+      en: "Bronze Award of National College Students Algorithm Design and Programming Challenge"
+      zh: "全国大学生算法设计与编程挑战赛铜奖"
+    year: ""
+  - title:
+      en: "National Undergraduate Mathematical Modeling Competition Provincial First Prize"
+      zh: "全国大学生数学建模竞赛省一等奖"
+    year: "2023"
+
+# Skills
+skills:
+  - category:
+      en: "Programming Languages"
+      zh: "编程语言"
+    items: "C/C++, Python, Java, HTML"
+  - category:
+      en: "Tools"
+      zh: "工具"
+    items: "Pytorch, LLM, LaTeX"
