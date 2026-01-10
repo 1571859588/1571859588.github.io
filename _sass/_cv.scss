@@ -41,17 +41,27 @@
 }
 
 .cv-content {
-  h2 {
-    margin-top: 1.5em;
-    margin-bottom: 0.75em;
-    padding-bottom: 0.25em;
-    border-bottom: 2px solid $primary-color;
-    color: $text-color;
-  }
+  max-width: 100%;
+}
 
-  h2:first-of-type {
-    margin-top: 0;
-  }
+/* CV Name - Main heading */
+.cv-name {
+  font-size: 2em;
+  font-weight: 700;
+  color: $text-color;
+  margin: 0 0 0.5em 0;
+  padding-bottom: 0.25em;
+  border-bottom: 3px solid $primary-color;
+}
+
+/* CV Section Titles */
+.cv-section-title {
+  font-size: 1.4em;
+  font-weight: 600;
+  color: $text-color;
+  margin: 1.5em 0 0.75em 0;
+  padding-bottom: 0.25em;
+  border-bottom: 2px solid $primary-color;
 }
 
 .cv-contact {
@@ -75,6 +85,18 @@
     &:hover {
       text-decoration: underline;
     }
+  }
+}
+
+/* CV List styling */
+.cv-list {
+  margin: 0;
+  padding-left: 1.5em;
+
+  li {
+    margin-bottom: 0.4em;
+    line-height: 1.5;
+    color: $text-color;
   }
 }
 
@@ -116,6 +138,15 @@
   }
 }
 
+.cv-publication {
+  padding-left: 0;
+  border-left: none;
+
+  .cv-entry-content {
+    line-height: 1.6;
+  }
+}
+
 /* Print Styles for PDF Generation */
 @media print {
   /* Hide non-essential elements */
@@ -150,12 +181,17 @@
 
   .cv-content {
     max-width: 100% !important;
+  }
 
-    h2 {
-      page-break-after: avoid;
-      margin-top: 1em;
-      font-size: 1.3em;
-    }
+  .cv-name {
+    font-size: 1.8em;
+    margin-top: 0;
+  }
+
+  .cv-section-title {
+    page-break-after: avoid;
+    margin-top: 1em;
+    font-size: 1.3em;
   }
 
   .cv-entry {
@@ -179,7 +215,7 @@
   }
 
   /* Page breaks */
-  h2 {
+  .cv-section-title {
     page-break-after: avoid;
   }
 
