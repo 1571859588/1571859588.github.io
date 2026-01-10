@@ -14,6 +14,7 @@ author_profile: true
 </div>
 
 <!-- Publications grouped by year -->
+{% include base_path %}
 {% assign sorted_papers = site.data.papers.papers | sort: "date" | reverse %}
 {% assign current_year = "" %}
 
@@ -24,7 +25,7 @@ author_profile: true
       <br><br>
     {% endif %}
     {% assign current_year = paper_year %}
-    <h2>{{ current_year }}</h2>
+    {{ current_year | prepend: "## " | markdownify }}
   {% endif %}
   <div class="publication-paper">
     <div class="paper-title">
