@@ -6,6 +6,7 @@
 # - date: Publication date (YYYY-MM-DD)
 # - contribution: Your detailed contribution to this paper
 # - pdf_url: URL to download the PDF (can be local file like "files/DATE26_RAG_EVALUATION.pdf" or external URL)
+# - slides_url: URL to download the slides (can be local file like "files/slides.pdf" or external URL)
 # - github_url: URL to the GitHub repository
 # - doi: DOI link (optional)
 
@@ -31,6 +32,7 @@ papers:
       - Developed the LLM-powered QA system for EDA tool documentation
       - Conducted comprehensive experiments and analysis
     pdf_url: "files/DATE26_RAG_EVALUATION.pdf"
+    slides_url: "files/slides1.pdf"
     github_url: ""
     doi: ""
 
@@ -50,5 +52,6 @@ papers:
       - Assisted with knowledge distillation implementation
       - Participated in experimental validation
     pdf_url: "files/SAM-DRA-UNet.pdf"
+    slides_url: ""
     github_url: ""
     doi: ""
