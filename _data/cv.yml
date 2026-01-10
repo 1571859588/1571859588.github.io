@@ -55,6 +55,13 @@ education:
       zh: "2021.9 - 2025.6"
 
 # Internships
+# Each internship can have:
+# - company: Company name (en/zh)
+# - location: Location (en/zh)
+# - position: Job title (en/zh)
+# - date: Time period (en/zh)
+# - description: Brief description (en/zh)
+# - responsibilities: List of responsibilities/projects worked on (en/zh)
 internships:
   - company:
       en: "ChatEDA Lab"
@@ -69,8 +76,69 @@ internships:
       en: "Oct. 2024 - Present"
       zh: "2024.10 - 至今"
     description:
-      en: ""
-      zh: ""
+      en: "Research on LLM applications in Electronic Design Automation"
+      zh: "研究大语言模型在电子设计自动化中的应用"
+    responsibilities:
+      en:
+        - "Developed multi-agent evaluation framework for EDA documentation QA"
+        - "Built LLM-powered question answering system for technical documentation"
+        - "Conducted experiments and analysis on RAG systems"
+      zh:
+        - "开发了用于EDA文档问答的多智能体评估框架"
+        - "构建了基于大语言模型的技术文档问答系统"
+        - "对RAG系统进行了实验和分析"
+
+# Projects
+# Each project can have:
+# - name: Project name (en/zh)
+# - date: Time period (en/zh)
+# - role: Your role in the project (en/zh)
+# - description: Brief description (en/zh)
+# - highlights: Key achievements or responsibilities (en/zh)
+projects:
+  - name:
+      en: "MAEDA: Multi-Agent Evaluation Framework for EDA Documentation"
+      zh: "MAEDA：EDA文档多智能体评估框架"
+    date:
+      en: "2024.10 - 2025.01"
+      zh: "2024.10 - 2025.01"
+    role:
+      en: "Core Developer"
+      zh: "核心开发者"
+    description:
+      en: "An LLM-powered multi-agent system for evaluating EDA tool documentation QA"
+      zh: "基于大语言模型的多智能体系统，用于评估EDA工具文档问答"
+    highlights:
+      en:
+        - "Designed and implemented the multi-agent evaluation framework"
+        - "Developed automated evaluation pipelines for documentation QA"
+        - "Achieved significant improvements in QA accuracy metrics"
+      zh:
+        - "设计并实现了多智能体评估框架"
+        - "开发了文档问答的自动化评估流程"
+        - "在问答准确率指标上取得了显著提升"
+
+  - name:
+      en: "Brain Tumor Segmentation with SAM-DRA-UNet"
+      zh: "基于SAM-DRA-UNet的脑肿瘤分割"
+    date:
+      en: "2024.06 - 2024.09"
+      zh: "2024.06 - 2024.09"
+    role:
+      en: "Research Contributor"
+      zh: "研究贡献者"
+    description:
+      en: "Enhanced U-Net framework integrating knowledge distillation and transfer learning"
+      zh: "集成知识蒸馏和迁移学习的增强U-Net框架"
+    highlights:
+      en:
+        - "Contributed to the U-Net framework enhancement"
+        - "Assisted with knowledge distillation implementation"
+        - "Participated in experimental validation on medical imaging datasets"
+      zh:
+        - "参与U-Net框架的增强工作"
+        - "协助实现知识蒸馏模块"
+        - "在医学影像数据集上进行实验验证"
 
 # Honors & Awards
 awards:
