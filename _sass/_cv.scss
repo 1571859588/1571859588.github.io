@@ -1,0 +1,189 @@
+/* ==========================================================================
+   CV Styles
+   ========================================================================== */
+
+.cv-actions {
+  margin-bottom: 2em;
+  display: flex;
+  gap: 1em;
+  flex-wrap: wrap;
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0.5em 1.5em;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.9em;
+    cursor: pointer;
+    border: none;
+    transition: $global-transition;
+
+    &--primary {
+      background-color: $primary-color;
+      color: #fff;
+
+      &:hover {
+        background-color: darken($primary-color, 10%);
+      }
+    }
+
+    &--info {
+      background-color: $info-color;
+      color: #fff;
+
+      &:hover {
+        background-color: darken($info-color, 10%);
+      }
+    }
+  }
+}
+
+.cv-content {
+  h2 {
+    margin-top: 1.5em;
+    margin-bottom: 0.75em;
+    padding-bottom: 0.25em;
+    border-bottom: 2px solid $primary-color;
+    color: $text-color;
+  }
+
+  h2:first-of-type {
+    margin-top: 0;
+  }
+}
+
+.cv-contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em 2em;
+  margin-bottom: 1.5em;
+  font-size: 0.9em;
+  color: $gray;
+
+  span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+  }
+
+  a {
+    color: $link-color;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.cv-entry {
+  margin-bottom: 1em;
+  padding-bottom: 0.5em;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.cv-entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  margin-bottom: 0.25em;
+
+  strong {
+    color: $text-color;
+  }
+}
+
+.cv-date {
+  color: $gray;
+  font-size: 0.9em;
+  white-space: nowrap;
+}
+
+.cv-entry-content {
+  color: $text-color;
+  font-size: 0.95em;
+  line-height: 1.5;
+
+  a {
+    color: $link-color;
+  }
+}
+
+/* Print Styles for PDF Generation */
+@media print {
+  /* Hide non-essential elements */
+  .masthead,
+  .page__footer,
+  .sidebar,
+  .cv-actions,
+  .author__avatar,
+  .author__content,
+  .author__urls-wrapper,
+  #sidebar {
+    display: none !important;
+  }
+
+  /* Reset page layout */
+  body {
+    margin: 0;
+    padding: 0;
+    background: #fff !important;
+  }
+
+  #main {
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 1cm !important;
+  }
+
+  .page {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .cv-content {
+    max-width: 100% !important;
+
+    h2 {
+      page-break-after: avoid;
+      margin-top: 1em;
+      font-size: 1.3em;
+    }
+  }
+
+  .cv-entry {
+    page-break-inside: avoid;
+  }
+
+  .cv-contact {
+    font-size: 0.85em;
+  }
+
+  /* Ensure links are visible */
+  a {
+    color: #000 !important;
+    text-decoration: none !important;
+  }
+
+  a[href^="http"]:after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #666;
+  }
+
+  /* Page breaks */
+  h2 {
+    page-break-after: avoid;
+  }
+
+  ul, ol {
+    page-break-inside: avoid;
+  }
+}
