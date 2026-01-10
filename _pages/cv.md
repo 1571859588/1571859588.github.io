@@ -1,64 +1,83 @@
 ---
 layout: archive
-title: "CV"
+title: "Curriculum Vitae"
 permalink: /cv/
 author_profile: true
-redirect_from:
-  - /resume
 ---
 
-{% include base_path %}
+<div class="cv-actions">
+  <button onclick="window.print()" class="btn btn--primary"><i class="fa fa-download"></i> Download PDF</button>
+  <a href="/cv-zh/" class="btn btn--info">中文版</a>
+</div>
 
-Education
-======
-* Ph.D in Version Control Theory, GitHub University, 2018 (expected)
-* M.S. in Jekyll, GitHub University, 2014
-* B.S. in GitHub, GitHub University, 2012
+<div class="cv-content" id="cv-content">
 
-Work experience
-======
-* Spring 2024: Academic Pages Collaborator
-  * Github University
-  * Duties includes: Updates and improvements to template
-  * Supervisor: The Users
+## {{ site.data.cv.personal.name.en }}
 
-* Fall 2015: Research Assistant
-  * Github University
-  * Duties included: Merging pull requests
-  * Supervisor: Professor Hub
+<div class="cv-contact">
+  <span><i class="fa fa-envelope"></i> {{ site.data.cv.personal.email }}</span>
+  <span><i class="fa fa-globe"></i> <a href="{{ site.data.cv.personal.website }}">{{ site.data.cv.personal.website }}</a></span>
+  <span><i class="fa fa-github"></i> <a href="https://github.com/{{ site.data.cv.personal.github }}">{{ site.data.cv.personal.github }}</a></span>
+  <span><i class="fa fa-map-marker"></i> {{ site.data.cv.personal.location.en }}</span>
+</div>
 
-* Summer 2015: Research Assistant
-  * Github University
-  * Duties included: Tagging issues
-  * Supervisor: Professor Git
-  
-Skills
-======
-* Skill 1
-* Skill 2
-  * Sub-skill 2.1
-  * Sub-skill 2.2
-  * Sub-skill 2.3
-* Skill 3
+## Research Interests
 
-Publications
-======
-  <ul>{% for post in site.publications reversed %}
-    {% include archive-single-cv.html %}
-  {% endfor %}</ul>
-  
-Talks
-======
-  <ul>{% for post in site.talks reversed %}
-    {% include archive-single-talk-cv.html  %}
-  {% endfor %}</ul>
-  
-Teaching
-======
-  <ul>{% for post in site.teaching reversed %}
-    {% include archive-single-cv.html %}
-  {% endfor %}</ul>
-  
-Service and leadership
-======
-* Currently signed in to 43 different slack teams
+{% for interest in site.data.cv.research_interests.en %}
+- {{ interest }}
+{% endfor %}
+
+## Education
+
+{% for edu in site.data.cv.education %}
+<div class="cv-entry">
+  <div class="cv-entry-header">
+    <strong>{{ edu.institution.en }}</strong>
+    <span class="cv-date">{{ edu.date.en }}</span>
+  </div>
+  <div class="cv-entry-content">
+    {{ edu.degree.en }}{% if edu.supervisor %}, Supervisor: <a href="{{ edu.supervisor_url }}">{{ edu.supervisor.en }}</a>{% endif %}
+  </div>
+</div>
+{% endfor %}
+
+## Publications
+
+{% assign sorted_papers = site.data.papers.papers | sort: "date" | reverse %}
+{% for paper in sorted_papers %}
+<div class="cv-entry">
+  <div class="cv-entry-content">
+    <strong>{{ paper.title }}</strong><br>
+    {{ paper.authors | join: ", " }}<br>
+    <em>{{ paper.venue }}</em>, {{ paper.date | date: "%Y" }}
+  </div>
+</div>
+{% endfor %}
+
+## Internships
+
+{% for intern in site.data.cv.internships %}
+<div class="cv-entry">
+  <div class="cv-entry-header">
+    <strong>{{ intern.company.en }}</strong>, {{ intern.location.en }}
+    <span class="cv-date">{{ intern.date.en }}</span>
+  </div>
+  <div class="cv-entry-content">
+    {{ intern.position.en }}{% if intern.description.en %}<br>{{ intern.description.en }}{% endif %}
+  </div>
+</div>
+{% endfor %}
+
+## Honors & Awards
+
+{% for award in site.data.cv.awards %}
+- {{ award.title.en }}{% if award.year %}, {{ award.year }}{% endif %}
+{% endfor %}
+
+## Skills
+
+{% for skill in site.data.cv.skills %}
+- **{{ skill.category.en }}**: {{ skill.items }}
+{% endfor %}
+
+</div>
