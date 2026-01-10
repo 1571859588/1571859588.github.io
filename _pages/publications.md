@@ -29,7 +29,9 @@ author_profile: true
       {{ paper.title }}
     </div>
     <div class="paper-meta">
-      {{ paper.authors | join: ", " }} • {{ paper.venue }}
+      {{ paper.authors | join: ", " }}
+      <br>
+      <em>{{ paper.venue }}</em>
     </div>
 
     <!-- Detailed information (hidden by default, shown when checkbox is checked) -->
