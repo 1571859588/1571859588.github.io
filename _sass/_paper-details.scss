@@ -51,6 +51,16 @@
     margin-bottom: 0.5em;
     line-height: 1.6;
   }
+
+  br {
+    display: block;
+    margin: 0.5em 0;
+  }
+
+  p {
+    margin: 0.5em 0;
+    line-height: 1.6;
+  }
 }
 
 .paper-links {
@@ -87,18 +97,19 @@
 }
 
 .publication-paper {
-  margin-bottom: 2em;
+  margin-bottom: 1.5em;
   padding-bottom: 1.5em;
-  border-bottom: 1px solid $border-color;
 
   &:last-child {
-    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
   }
 
   .paper-title {
     font-weight: 600;
     margin-bottom: 0.5em;
     color: $text-color;
+    line-height: 1.4;
 
     u {
       text-decoration: none;
@@ -110,5 +121,6 @@
     color: $gray;
     font-size: 0.9em;
     margin-bottom: 0.5em;
+    line-height: 1.5;
   }
 }

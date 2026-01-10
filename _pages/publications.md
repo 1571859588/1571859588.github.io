@@ -12,47 +12,52 @@ author_profile: true
 </div>
 
 <!-- Publications grouped by year -->
-{% assign papers_by_year = site.data.papers.papers | group_by_exp: "item", "item.date | date: '%Y'" | sort: "name" | reverse %}
+{% assign sorted_papers = site.data.papers.papers | sort: "date" | reverse %}
+{% assign current_year = "" %}
 
-{% for year_group in papers_by_year %}
-  <h2>{{ year_group.name }}</h2>
-
-  {% for paper in year_group.items %}
-    <div class="publication-paper">
-      <div class="paper-title">
-        {{ paper.title }}
-      </div>
-      <div class="paper-meta">
-        {{ paper.authors | join: ", " }} • {{ paper.venue }}
-      </div>
-
-      <!-- Detailed information (hidden by default, shown when checkbox is checked) -->
-      <div class="paper-details">
-        {% if paper.contribution %}
-          <h4>My Contribution</h4>
-          {{ paper.contribution | newline_to_br }}
-        {% endif %}
-
-        {% if paper.pdf_url or paper.github_url or paper.doi %}
-          <div class="paper-links">
-            {% if paper.pdf_url %}
-              <a href="{{ paper.pdf_url }}" target="_blank" rel="noopener noreferrer">
-                <i class="fa fa-file-pdf" aria-hidden="true"></i> PDF
-              </a>
-            {% endif %}
-            {% if paper.github_url %}
-              <a href="{{ paper.github_url }}" target="_blank" rel="noopener noreferrer">
-                <i class="fa fa-github" aria-hidden="true"></i> Code
-              </a>
-            {% endif %}
-            {% if paper.doi %}
-              <a href="{{ paper.doi }}" target="_blank" rel="noopener noreferrer">
-                <i class="fa fa-external-link" aria-hidden="true"></i> DOI
-              </a>
-            {% endif %}
-          </div>
-        {% endif %}
-      </div>
+{% for paper in sorted_papers %}
+  {% assign paper_year = paper.date | date: "%Y" %}
+  {% if paper_year != current_year %}
+    {% if current_year != "" %}
+      <hr style="margin: 2em 0; border: 0; border-top: 1px solid #e9ecef;">
+    {% endif %}
+    {% assign current_year = paper_year %}
+    <h2>{{ current_year }}</h2>
+  {% endif %}
+  <div class="publication-paper">
+    <div class="paper-title">
+      {{ paper.title }}
     </div>
-  {% endfor %}
+    <div class="paper-meta">
+      {{ paper.authors | join: ", " }} • {{ paper.venue }}
+    </div>
+
+    <!-- Detailed information (hidden by default, shown when checkbox is checked) -->
+    <div class="paper-details">
+      {% if paper.contribution %}
+        <h4>My Contribution</h4>
+        {{ paper.contribution | markdownify }}
+      {% endif %}
+
+      {% if paper.pdf_url or paper.github_url or paper.doi %}
+        <div class="paper-links">
+          {% if paper.pdf_url %}
+            <a href="{{ paper.pdf_url }}" target="_blank" rel="noopener noreferrer">
+              <i class="fa fa-file-pdf" aria-hidden="true"></i> PDF
+            </a>
+          {% endif %}
+          {% if paper.github_url %}
+            <a href="{{ paper.github_url }}" target="_blank" rel="noopener noreferrer">
+              <i class="fa fa-github" aria-hidden="true"></i> Code
+            </a>
+          {% endif %}
+          {% if paper.doi %}
+            <a href="{{ paper.doi }}" target="_blank" rel="noopener noreferrer">
+              <i class="fa fa-external-link" aria-hidden="true"></i> DOI
+            </a>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
 {% endfor %}
