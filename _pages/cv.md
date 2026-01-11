@@ -12,7 +12,16 @@ author_profile: true
 
 <div class="cv-content" id="cv-content">
 
-<h2 class="cv-name">{{ site.data.cv.personal.name.en }}</h2>
+<div class="cv-header">
+  {% if site.data.cv.personal.photo %}
+  <div class="cv-photo">
+    <img src="{{ site.data.cv.personal.photo }}" alt="{{ site.data.cv.personal.name.en }}">
+  </div>
+  {% endif %}
+  <div class="cv-header-info">
+    <h2 class="cv-name">{{ site.data.cv.personal.name.en }}</h2>
+  </div>
+</div>
 
 <div class="cv-contact">
   <span><i class="fa fa-envelope"></i> {{ site.data.cv.personal.email }}</span>

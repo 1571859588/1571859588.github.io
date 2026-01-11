@@ -44,6 +44,29 @@
   max-width: 100%;
 }
 
+/* CV Header with photo */
+.cv-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5em;
+  margin-bottom: 1em;
+}
+
+.cv-photo {
+  flex-shrink: 0;
+
+  img {
+    width: 120px;
+    height: 150px;
+    object-fit: cover;
+    border: 1px solid #ddd;
+  }
+}
+
+.cv-header-info {
+  flex: 1;
+}
+
 /* CV Name - Main heading */
 .cv-name {
   font-size: 2em;
@@ -192,8 +215,15 @@
   .author__avatar,
   .author__content,
   .author__urls-wrapper,
-  #sidebar {
+  #sidebar,
+  .page__title {
     display: none !important;
+  }
+
+  /* CV Photo in print */
+  .cv-photo img {
+    width: 100px;
+    height: 125px;
   }
 
   /* Reset page layout */
