@@ -104,8 +104,8 @@ projects:
       en: "2025.04 - 2025.07"
       zh: "2025.04 - 2025.07"
     role:
-      en: "Core Developer"
-      zh: "核心开发者"
+      en: "First Author"
+      zh: "第一作者"
     description:
       en: "A Modality-Aware MoE combined with 3-stage fine-tuning for Visually-Grounded EDA Tool Documentation QA"
       zh: "基于MoE架构并结合三阶段微调策略的视觉引导EDA工具文档问答系统"
