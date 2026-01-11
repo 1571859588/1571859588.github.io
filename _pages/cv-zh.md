@@ -12,13 +12,21 @@ author_profile: true
 
 <div class="cv-content" id="cv-content">
 
-<h2 class="cv-name">{{ site.data.cv.personal.name.zh }} ({{ site.data.cv.personal.name.en }})</h2>
-
-<div class="cv-contact">
-  <span><i class="fa fa-envelope"></i> {{ site.data.cv.personal.email }}</span>
-  <span><i class="fa fa-globe"></i> <a href="{{ site.data.cv.personal.website }}">{{ site.data.cv.personal.website }}</a></span>
-  <span><i class="fa fa-github"></i> <a href="https://github.com/{{ site.data.cv.personal.github }}">{{ site.data.cv.personal.github }}</a></span>
-  <span><i class="fa fa-map-marker"></i> {{ site.data.cv.personal.location.zh }}</span>
+<div class="cv-header">
+  {% if site.data.cv.personal.photo %}
+  <div class="cv-photo">
+    <img src="{{ site.data.cv.personal.photo }}" alt="{{ site.data.cv.personal.name.zh }}">
+  </div>
+  {% endif %}
+  <div class="cv-header-info">
+    <h2 class="cv-name">{{ site.data.cv.personal.name.zh }} ({{ site.data.cv.personal.name.en }})</h2>
+    <div class="cv-contact">
+      <span><i class="fa fa-envelope"></i> {{ site.data.cv.personal.email }}</span>
+      <span><i class="fa fa-globe"></i> <a href="{{ site.data.cv.personal.website }}">{{ site.data.cv.personal.website }}</a></span>
+      <span><i class="fa fa-github"></i> <a href="https://github.com/{{ site.data.cv.personal.github }}">{{ site.data.cv.personal.github }}</a></span>
+      <span><i class="fa fa-map-marker"></i> {{ site.data.cv.personal.location.zh }}</span>
+    </div>
+  </div>
 </div>
 
 <h2 class="cv-section-title">研究兴趣</h2>

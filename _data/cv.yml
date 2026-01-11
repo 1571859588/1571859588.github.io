@@ -7,6 +7,7 @@ personal:
   name:
     en: "Yuntao Nie"
     zh: "聂云滔"
+  photo: "/images/avators/cv.jpg"
   email: "yuntaonie@bupt.edu.cn"
   phone: ""
   website: "https://1571859588.github.io"
@@ -204,4 +205,4 @@ skills:
   - category:
       en: "Tools"
       zh: "工具"
-    items: "Pytorch, LLM, LaTeX"
+    items: "Pytorch, LLM, LaTeX, git"
