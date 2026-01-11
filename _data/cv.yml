@@ -97,11 +97,35 @@ internships:
 # - highlights: Key achievements or responsibilities (en/zh)
 projects:
   - name:
+      en: "EDA-ModMoE: A Modality-Aware MoE for Visually-Grounded EDA Tool Documentation QA"
+      zh: "EDA-ModMoE: 一个用于视觉引导EDA工具文档问答的模态感知混合专家模型"
+    date:
+      en: "2025.04 - 2025.07"
+      zh: "2025.04 - 2025.07"
+    role:
+      en: "Core Developer"
+      zh: "核心开发者"
+    description:
+      en: "A Modality-Aware MoE combined with 3-stage fine-tuning for Visually-Grounded EDA Tool Documentation QA"
+      zh: "基于MoE架构并结合三阶段微调策略的视觉引导EDA工具文档问答系统"
+    highlights:
+      en:
+        - "Designed and implemented the 3-stage fine-tuning framework combined with designated Algorithms for different modalities"
+        - "Developed documentation QA system based on RAG"
+        - "Developed an auto training dataset building with designated multi-agent framework for visual-grounded EDA tool documentation QA"
+        - "Achieved significant improvements in Images F1 score metrics and textual QA accuracy"
+      zh:
+        - "设计并实现了结合不同模态专用算法的三阶段微调框架"
+        - "开发了基于RAG的文档问答系统"
+        - "开发了用于视觉引导EDA工具文档问答的多智能体自动训练数据集构建框架"
+        - "在文档图像F1分数指标和文本问答准确率上取得了显著提升"
+
+  - name:
       en: "MAEDA: Multi-Agent Evaluation Framework for EDA Documentation"
       zh: "MAEDA：EDA文档多智能体评估框架"
     date:
-      en: "2024.10 - 2025.01"
-      zh: "2024.10 - 2025.01"
+      en: "2025.09 - 2025.10"
+      zh: "2025.09 - 2025.10"
     role:
       en: "Core Developer"
       zh: "核心开发者"

@@ -28,12 +28,12 @@ papers:
     venue: "IEEE/ACM Proceedings Design, Automation and Test in Europe (DATE)"
     date: "2026-01-01"
     contribution: |
-      - Designed and implemented the multi-agent evaluation framework
-      - Developed the LLM-powered QA system for EDA tool documentation
-      - Conducted comprehensive experiments and analysis
+      - Draw the figures in the paper
+      - Experimented with the baseline
+      - Refine the benchmark dataset
     pdf_url: "files/DATE26_RAG_EVALUATION.pdf"
     slides_url: "files/slides1.pdf"
-    github_url: ""
+    github_url: "https://anonymous.4open.science/r/MAEDA-DATE26"
     doi: ""
 
   - id: "sam-dra-unet-2025"
@@ -48,9 +48,8 @@ papers:
     venue: "International Conference on Intelligent Computing (ICIC)"
     date: "2025-01-01"
     contribution: |
-      - Contributed to the U-Net framework enhancement
-      - Assisted with knowledge distillation implementation
-      - Participated in experimental validation
+      - Propose the integration of knowledge distillation and transfer learning into U-Net combined with SAM for brain tumor segmentation
+      - Implemented the proposed framework and benchmarks initially
     pdf_url: "files/SAM-DRA-UNet.pdf"
     slides_url: ""
     github_url: ""
