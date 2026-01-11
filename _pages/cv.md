@@ -20,14 +20,13 @@ author_profile: true
   {% endif %}
   <div class="cv-header-info">
     <h2 class="cv-name">{{ site.data.cv.personal.name.en }}</h2>
+    <div class="cv-contact">
+      <span><i class="fa fa-envelope"></i> {{ site.data.cv.personal.email }}</span>
+      <span><i class="fa fa-globe"></i> <a href="{{ site.data.cv.personal.website }}">{{ site.data.cv.personal.website }}</a></span>
+      <span><i class="fa fa-github"></i> <a href="https://github.com/{{ site.data.cv.personal.github }}">{{ site.data.cv.personal.github }}</a></span>
+      <span><i class="fa fa-map-marker"></i> {{ site.data.cv.personal.location.en }}</span>
+    </div>
   </div>
-</div>
-
-<div class="cv-contact">
-  <span><i class="fa fa-envelope"></i> {{ site.data.cv.personal.email }}</span>
-  <span><i class="fa fa-globe"></i> <a href="{{ site.data.cv.personal.website }}">{{ site.data.cv.personal.website }}</a></span>
-  <span><i class="fa fa-github"></i> <a href="https://github.com/{{ site.data.cv.personal.github }}">{{ site.data.cv.personal.github }}</a></span>
-  <span><i class="fa fa-map-marker"></i> {{ site.data.cv.personal.location.en }}</span>
 </div>
 
 <h2 class="cv-section-title">Research Interests</h2>
