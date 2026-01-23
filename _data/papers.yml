@@ -54,3 +54,20 @@ papers:
     slides_url: ""
     github_url: ""
     doi: ""
+
+  - id: "BERT-Enhanced-2024"
+    authors:
+      - "Jiarong Xian"
+      - "Jibao Yuan"
+      - "Peiwei Zheng"
+      - "Dexian Chen"
+      - "<u>Yuntao Nie</u>"
+    title: "BERT-Enhanced Retrieval Tool for Homework Plagiarism Detection System"
+    venue: "arXiv preprint arXiv:2404.01582"
+    date: "2024-04-01"
+    contribution: |
+      - Proposed the GPT-3.5 based data augmentation methodology to construct a diverse dataset covering multiple plagiarism styles (e.g., imitation, shuffle)
+    pdf_url: "https://arxiv.org/abs/2404.01582"
+    slides_url: ""
+    github_url: ""
+    doi: ""
