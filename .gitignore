@@ -13,3 +13,5 @@ node_modules
 package-lock.json
 
 poe_adapter.py
+
+others_blogs_sites/

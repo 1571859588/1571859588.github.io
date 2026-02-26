@@ -57,3 +57,11 @@ For a completed list of publications, see [this](https://1571859588.github.io/pu
 
 * **Programming Languages**: C/C++, Python, Java, HTML
 * **Tools**: Pytorch, LLM, LaTeX
+
+## Recent Blog Posts
+
+{% for post in site.posts limit: 5 %}
+  {% include archive-single.html %}
+{% endfor %}
+
+[View all posts](/year-archive/)
