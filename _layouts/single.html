@@ -95,8 +95,30 @@ layout: default
     {% endif %}
   </article>
 
-  {% comment %}<!-- only show related on a post page when not disabled -->{% endcomment %}
-  {% if page.id and page.related and site.related_posts.size > 0 %}
+  {% comment %}<!-- custom tag-based related posts -->{% endcomment %}
+  {% if page.id and page.related %}
+  {% assign related_str = "" %}
+  {% for post in site.posts %}
+  {% if post.id != page.id %}
+  {% assign match_count = 0 %}
+  {% for tag in post.tags %}
+  {% if page.tags contains tag %}
+  {% assign match_count = match_count | plus: 1 %}
+  {% endif %}
+  {% endfor %}
+  {% if match_count > 0 %}
+  {% capture match_str %}{{ match_count | prepend: '00' | slice: -2, 2 }}::{{ post.id }}{% endcapture %}
+  {% if related_str == "" %}
+  {% assign related_str = match_str %}
+  {% else %}
+  {% assign related_str = related_str | append: "," | append: match_str %}
+  {% endif %}
+  {% endif %}
+  {% endif %}
+  {% endfor %}
+
+  {% if related_str != "" %}
+  {% assign sorted_related = related_str | split: "," | sort | reverse %}
   <div class="page__related">
     {% if site.data.ui-text[site.locale].related_label %}
     <h4 class="page__related-title">{{ site.data.ui-text[site.locale].related_label | default: "You May Also Enjoy" }}
@@ -104,10 +126,16 @@ layout: default
     {% endif %}
     <div class="blog-card-grid"
       style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 1em;">
-      {% for post in site.related_posts limit:4 %}
+      {% for item in sorted_related limit:3 %}
+      {% assign related_id = item | split: "::" | last %}
+      {% for post in site.posts %}
+      {% if post.id == related_id %}
       {% include blog-card.html %}
+      {% endif %}
+      {% endfor %}
       {% endfor %}
     </div>
   </div>
+  {% endif %}
   {% endif %}
 </div>
