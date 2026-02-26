@@ -12,10 +12,13 @@ author_profile: true
 
     {% for category in group_names %}
     {% assign posts = group_items[forloop.index0] %}
-    <h2 id="{{ category | slugify }}" class="archive__subtitle">{{ category }}</h2>
-    {% for post in posts %}
-    {% include archive-single.html %}
-    {% endfor %}
+    <h2 id="{{ category | slugify }}" class="archive__subtitle" style="width: 100%;">{{ category }}</h2>
+    <div class="blog-card-grid"
+      style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; width: 100%;">
+      {% for post in posts %}
+      {% include blog-card.html %}
+      {% endfor %}
+    </div>
     {% endfor %}
   </div>
 

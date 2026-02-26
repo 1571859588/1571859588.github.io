@@ -106,9 +106,9 @@
     <h4 style="margin-top:2em;"><i class="fa fa-history"></i> Recent Timeline</h4>
     <ul class="timeline-list">
         {% for post in site.posts limit: 15 %}
-        <li class="timeline-item">
+        <li class="timeline-item" id="timeline-node-{{ post.id | slugify }}">
             <span class="timeline-date">{{ post.date | date: "%Y-%m-%d" }}</span>
-            <a href="{{ post.url }}" class="timeline-title" title="{{ post.title }}">
+            <a href="#post-{{ post.id | slugify }}" class="timeline-title timeline-link" title="{{ post.title }}">
                 {{ post.title | truncate: 20 }}
             </a>
         </li>
@@ -116,3 +116,73 @@
     </ul>
 
 </div>
+
+<style>
+    /* Active state for timeline */
+    .timeline-item.active::before {
+        background: #4a90e2;
+        /* Fill the dot */
+    }
+
+    .timeline-item.active .timeline-title {
+        color: #4a90e2;
+        font-weight: bold;
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // 1. Smooth Scrolling & Highlighting on Click
+        const timelineLinks = document.querySelectorAll('.timeline-link');
+        timelineLinks.forEach(link => {
+            link.addEventListener('click', function (e) {
+                // Only prevent default and scroll if we are on the same page as the target.
+                // E.g., if on category page, clicking a timeline link might not work if card isn't on the page.
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+
+                if (targetElement) {
+                    e.preventDefault();
+                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                    // Remove existing highlights
+                    document.querySelectorAll('.blog-card').forEach(card => card.classList.remove('highlight'));
+
+                    // Add highlight class briefly
+                    setTimeout(() => targetElement.classList.add('highlight'), 300);
+                } else {
+                    // If the card is NOT on the current page (e.g. clicking a tag/category filter), redirect to the full blog list
+                    window.location.href = '/year-archive/' + targetId;
+                }
+            });
+        });
+
+        // 2. ScrollSpy using IntersectionObserver
+        const blogCards = document.querySelectorAll('.blog-card');
+        const observerOptions = {
+            root: null,
+            rootMargin: '-20% 0px -60% 0px', // Trigger when card reaches top 20% of viewport
+            threshold: 0
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const cardId = entry.target.id;
+                    const timelineNodeId = 'timeline-node-' + cardId.replace('post-', '');
+
+                    // Remove active class from all
+                    document.querySelectorAll('.timeline-item').forEach(item => item.classList.remove('active'));
+
+                    // Add active class to current
+                    const activeNode = document.getElementById(timelineNodeId);
+                    if (activeNode) {
+                        activeNode.classList.add('active');
+                    }
+                }
+            });
+        }, observerOptions);
+
+        blogCards.forEach(card => observer.observe(card));
+    });
+</script>
