@@ -98,16 +98,26 @@ layout: default
   {% comment %}<!-- custom tag-based related posts -->{% endcomment %}
   {% if page.id and page.related %}
   {% assign related_str = "" %}
+  {% assign page_tags_downcased = "" %}
+
+  {% for page_tag in page.tags %}
+  {% assign d_tag = page_tag | downcase %}
+  {% assign page_tags_downcased = page_tags_downcased | append: d_tag | append: "||" %}
+  {% endfor %}
+
   {% for post in site.posts %}
   {% if post.id != page.id %}
   {% assign match_count = 0 %}
-  {% for tag in post.tags %}
-  {% if page.tags contains tag %}
+
+  {% for post_tag in post.tags %}
+  {% assign p_tag = post_tag | downcase %}
+  {% if page_tags_downcased contains p_tag %}
   {% assign match_count = match_count | plus: 1 %}
   {% endif %}
   {% endfor %}
+
   {% if match_count > 0 %}
-  {% capture match_str %}{{ match_count | prepend: '00' | slice: -2, 2 }}::{{ post.id }}{% endcapture %}
+  {% capture match_str %}{{ match_count | prepend: '00' | slice: -2, 2 }}::{{ post.id | remove: "/" }}{% endcapture %}
   {% if related_str == "" %}
   {% assign related_str = match_str %}
   {% else %}
@@ -129,7 +139,8 @@ layout: default
       {% for item in sorted_related limit:3 %}
       {% assign related_id = item | split: "::" | last %}
       {% for post in site.posts %}
-      {% if post.id == related_id %}
+      {% assign clean_post_id = post.id | remove: "/" %}
+      {% if clean_post_id == related_id %}
       {% include blog-card.html %}
       {% endif %}
       {% endfor %}
