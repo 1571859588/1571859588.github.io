@@ -1,0 +1,118 @@
+<style>
+    .blog-sidebar {
+        font-family: inherit;
+        font-size: 0.9em;
+        padding-left: 15px;
+        border-left: 1px solid #ddd;
+    }
+
+    .blog-sidebar h4 {
+        margin-top: 0;
+        margin-bottom: 0.5em;
+        text-transform: uppercase;
+        font-size: 0.8em;
+        color: #666;
+        letter-spacing: 1px;
+    }
+
+    .blog-sidebar ul {
+        list-style-type: none;
+        padding: 0;
+        margin-bottom: 2em;
+    }
+
+    .blog-sidebar li {
+        margin-bottom: 0.5em;
+    }
+
+    .sidebar-tag,
+    .sidebar-category {
+        display: inline-block;
+        background: #f1f1f1;
+        padding: 2px 8px;
+        border-radius: 4px;
+        text-decoration: none;
+        color: #333;
+        margin-right: 5px;
+        margin-bottom: 5px;
+        font-size: 0.85em;
+        transition: background 0.2s;
+    }
+
+    .sidebar-tag:hover,
+    .sidebar-category:hover {
+        background: #ddd;
+        text-decoration: none;
+    }
+
+    .timeline-list {
+        position: relative;
+        padding-left: 15px !important;
+        border-left: 2px solid #eaeaea;
+    }
+
+    .timeline-item {
+        position: relative;
+        margin-bottom: 1em !important;
+    }
+
+    .timeline-item::before {
+        content: '';
+        position: absolute;
+        left: -20px;
+        top: 5px;
+        width: 10px;
+        height: 10px;
+        background: #fff;
+        border: 2px solid #4a90e2;
+        border-radius: 50%;
+    }
+
+    .timeline-date {
+        font-size: 0.75em;
+        color: #888;
+        display: block;
+        margin-bottom: 2px;
+    }
+
+    .timeline-title {
+        text-decoration: none;
+        color: inherit;
+        font-weight: 500;
+    }
+
+    .timeline-title:hover {
+        color: #4a90e2;
+    }
+</style>
+
+<div class="blog-sidebar">
+
+    <h4><i class="fa fa-folder-open"></i> Categories</h4>
+    <div>
+        {% for category in site.categories %}
+        <a href="/categories/#{{ category[0] | slugify }}" class="sidebar-category">{{ category[0] }} ({{
+            category[1].size }})</a>
+        {% endfor %}
+    </div>
+
+    <h4 style="margin-top:2em;"><i class="fa fa-tags"></i> Tags</h4>
+    <div>
+        {% for tag in site.tags %}
+        <a href="/tags/#{{ tag[0] | slugify }}" class="sidebar-tag">{{ tag[0] }} ({{ tag[1].size }})</a>
+        {% endfor %}
+    </div>
+
+    <h4 style="margin-top:2em;"><i class="fa fa-history"></i> Recent Timeline</h4>
+    <ul class="timeline-list">
+        {% for post in site.posts limit: 15 %}
+        <li class="timeline-item">
+            <span class="timeline-date">{{ post.date | date: "%Y-%m-%d" }}</span>
+            <a href="{{ post.url }}" class="timeline-title" title="{{ post.title }}">
+                {{ post.title | truncate: 20 }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+
+</div>

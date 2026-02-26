@@ -5,13 +5,21 @@ title: "Posts by Tags"
 author_profile: true
 ---
 
-{% include base_path %}
-{% include group-by-array collection=site.posts field="tags" %}
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px;">
+  <div style="flex: 1 1 65%; max-width: 100%;">
+    {% include base_path %}
+    {% include group-by-array collection=site.posts field="tags" %}
 
-{% for tag in group_names %}
-  {% assign posts = group_items[forloop.index0] %}
-  <h2 id="{{ tag | slugify }}" class="archive__subtitle">{{ tag }}</h2>
-  {% for post in posts %}
+    {% for tag in group_names %}
+    {% assign posts = group_items[forloop.index0] %}
+    <h2 id="{{ tag | slugify }}" class="archive__subtitle">{{ tag }}</h2>
+    {% for post in posts %}
     {% include archive-single.html %}
-  {% endfor %}
-{% endfor %}
+    {% endfor %}
+    {% endfor %}
+  </div>
+
+  <div style="flex: 1 1 30%; max-width: 100%; position: sticky; top: 20px; align-self: flex-start;">
+    {% include blog-sidebar.html %}
+  </div>
+</div>
