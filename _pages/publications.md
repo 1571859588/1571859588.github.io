@@ -5,10 +5,12 @@ permalink: /publications/
 author_profile: true
 ---
 
+{% if site.show_contributions %}
 <div class="paper-details-toggle">
   <input type="checkbox" id="show-paper-details">
   <label for="show-paper-details">Show detailed contribution, PDF, and GitHub links</label>
 </div>
+{% endif %}
 
 {% include base_path %}
 {% assign sorted_papers = site.data.papers.papers | sort: "date" | reverse %}
@@ -29,7 +31,7 @@ author_profile: true
 <em>{{ paper.venue }}</em>
 </div>
 <div class="paper-details">
-{% if paper.contribution %}
+{% if site.show_contributions and paper.contribution %}
 <h4>My Contribution</h4>
 {{ paper.contribution | markdownify }}
 {% endif %}

@@ -60,7 +60,7 @@ author_profile: true
     <strong>{{ paper.title }}</strong><br>
     {{ paper.authors | join: ", " }}<br>
     <em>{{ paper.venue }}</em>, {{ paper.date | date: "%Y" }}
-    {% if paper.contribution %}
+    {% if site.show_contributions and paper.contribution %}
     <div class="cv-contribution">
       <strong>My Contribution:</strong>
       {{ paper.contribution | markdownify }}

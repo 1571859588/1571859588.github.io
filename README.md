@@ -46,9 +46,26 @@ bundle exec jekyll serve -l -H localhost
 
 ---
 
+## Configuration Options
+
+Edit `_config.yml` to customize the site:
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `show_contributions` | `false` | Set to `true` to display "My Contribution" sections on Publications and CV pages. When `false`, contribution details are hidden but remain in the data files. |
+
+**Example:**
+```yaml
+# In _config.yml
+show_contributions: false  # Hide contribution details on website
+```
+
+---
+
 ## Deployment
 
 Pushing to the `main` branch automatically deploys to GitHub Pages.
+
 ## License
 
 - Theme: [Academic Pages](https://github.com/academicpages/academicpages.github.io) (MIT License)
