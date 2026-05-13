@@ -129,26 +129,37 @@ projects:
         - "设计了自动化评测框架，编写了覆盖检索召回率、重排准确率、端到端问答准确率的回归测试脚本，支持实验结果自动生成报告"
 
   - name:
-      en: "Brain Tumor Segmentation with SAM-DRA-UNet"
-      zh: "基于SAM-DRA-UNet的脑肿瘤分割"
+      en: "Intelligent PDF Parsing System for EDA Chip Design Documents"
+      zh: "面向EDA芯片设计文档的PDF智能解析系统"
+    tech: "Python, OpenCV, Flask, MinerU, Docker"
     date:
-      en: "2024.06 - 2024.09"
-      zh: "2024.06 - 2024.09"
+      en: "2026.01 - 2026.05"
+      zh: "2026.01 - 2026.05"
     role:
-      en: "Research Contributor"
-      zh: "研究贡献者"
+      en: "Core Developer"
+      zh: "核心开发者"
     description:
-      en: "Enhanced U-Net framework integrating knowledge distillation and transfer learning"
-      zh: "集成知识蒸馏和迁移学习的增强U-Net框架"
+      en: "A complete PDF document parsing pipeline for chip SPEC and EDA technical documents, supporting structured extraction and knowledge base construction; developed at ChatEDA Lab"
+      zh: "面向芯片SPEC文档和EDA技术文档的完整PDF解析流水线，支持结构化提取与知识库构建；在ChatEDA实验室完成开发"
     highlights:
       en:
-        - "Contributed to the U-Net framework enhancement"
-        - "Assisted with knowledge distillation implementation"
-        - "Participated in experimental validation on medical imaging datasets"
+        - "Designed a unified Intermediate Representation (IR) layer based on JSON Schema, supporting 6 element types (heading, text_block, table, image, etc.) to normalize outputs from multiple parsing tools"
+        - "Built a multi-tool collaborative extraction framework integrating MinerU deep learning parser and pdf2kg rule-based extractor, with bbox merging and deduplication strategies for improved layout element localization"
+        - "Implemented OpenCV-based table structure recognition supporting cell merging and cross-page table stitching, generating Markdown/HTML dual-format output while avoiding LLM invocation costs"
+        - "Designed an intelligent caption merging mechanism combining screenshot text detection and font style analysis for accurate figure-caption association"
+        - "Constructed a dual outline recognition strategy using PDF bookmark extraction and font-size analysis, supporting automatic chapter hierarchy inference for documents without table of contents"
+        - "Designed LLM-enhanced chunking strategy with ancestor chapter summaries for each chunk, improving contextual understanding during retrieval; implemented token budget control and summary caching optimization"
+        - "Built an automated verification and repair pipeline to detect missing elements and automatically re-run corresponding parsing steps, ensuring output completeness"
+        - "Deployed Flask frontend with configurable pipeline architecture, supporting customized parsing parameters for different PDF types and Docker one-click deployment; implemented group cropping for mixed page-size SPEC documents (LPDDR5/DDR6)"
       zh:
-        - "参与U-Net框架的增强工作"
-        - "协助实现知识蒸馏模块"
-        - "在医学影像数据集上进行实验验证"
+        - "设计了统一的中间表示层（IR），基于JSON Schema定义文档结构模型，支持heading、text_block、table、image等6类元素的规范化表示，实现多解析工具输出格式的统一"
+        - "构建了多工具协同的元素提取框架，集成MinerU深度学习解析器与pdf2kg硬规则提取器，通过bbox合并与去重策略实现优势互补，提升复杂版面元素定位准确率"
+        - "实现了基于OpenCV的表格结构识别方案，支持单元格合并、跨页表格拼接等复杂场景，生成Markdown/HTML双格式输出，避免LLM调用成本"
+        - "设计了Caption智能合并机制，结合截图文本检测与字体样式分析，实现图表与标题的准确关联"
+        - "构建了PDF书签提取与字体大小分析的双重大纲识别策略，支持无目录结构文档的章节层级自动推断，实现基于缩进的大纲树构建算法"
+        - "设计了LLM增强的分块策略，为每个chunk生成祖先章节摘要，提升检索时的上下文理解能力，支持token预算控制与摘要缓存优化"
+        - "构建了自动化验证与修复流程，检测缺失元素并自动重跑对应解析步骤，保障输出完整性"
+        - "搭建了Flask前端 + 配置化流水线架构，支持不同PDF类型的定制化解析参数，实现Docker一键部署；设计了分组裁剪功能，支持LPDDR5/DDR6等混合页面尺寸的SPEC文档处理"
 
 # Honors & Awards
 awards:
