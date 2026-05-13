@@ -112,21 +112,17 @@ projects:
       zh: "面向EDA工具文档的全栈RAG问答系统，已在华大九天落地部署"
     highlights:
       en:
-        - "Designed and implemented a full-stack RAG-based QA system covering document parsing, vectorized retrieval, reranking, and LLM generation, supporting 5 EDA tool documentation knowledge bases; the system has been deployed at Empyrean Technology"
-        - "Built a hybrid retrieval engine combining FAISS (semantic) and BM25 (keyword) with deduplication and metadata-based filtering, improving recall from 60% to over 90%"
-        - "Integrated and fine-tuned FlagLLM Reranker for candidate document re-scoring with intelligent token-budget truncation, improving Top-5 hit rate from 60% to over 90%"
-        - "Fine-tuned Qwen1.5-14B for the EDA domain with CoT-style prompt templates including reference relevance analysis; implemented answer quality self-verification with automatic retry mechanism"
-        - "Developed multimodal QA capability by integrating InternVL2-26B / Qwen-VL vision-language models, enabling image-assisted query understanding for joint image-text retrieval QA"
-        - "Built Streamlit interactive frontend with MySQL persistence layer, supporting user authentication, multi-KB switching, chat history, and user feedback collection; containerized with Docker for one-click deployment"
-        - "Designed an automated evaluation framework with regression test scripts covering retrieval recall, reranker accuracy, and end-to-end QA accuracy, with automatic report generation"
+        - "Designed and implemented a full-stack RAG pipeline (parsing → FAISS+BM25 hybrid retrieval → FlagLLM Reranker → Qwen1.5-14B generation) for 5 EDA tool knowledge bases; deployed at Empyrean Technology"
+        - "Built multi-channel retrieval with deduplication and metadata filtering, combined with fine-tuned Reranker re-scoring, improving recall and Top-5 hit rate from 60% to over 90%"
+        - "Fine-tuned Qwen1.5-14B with CoT-style prompts and answer self-verification; integrated InternVL2/Qwen-VL for multimodal image-text joint QA"
+        - "Built Streamlit frontend + MySQL backend with user auth, multi-KB switching, and chat history; containerized with Docker for one-click deployment"
+        - "Designed automated evaluation framework covering retrieval recall, reranker accuracy, and end-to-end QA with automatic report generation"
       zh:
-        - "设计并实现了完整的RAG全栈问答系统，覆盖文档解析、向量化检索、重排序和大模型生成四个核心模块，支持5款EDA工具的技术文档知识库，已在华大九天落地部署"
-        - "构建了FAISS + BM25混合检索引擎，通过语义向量检索和关键词检索的多路召回策略，并结合去重与Metadata过滤机制，召回率从60%提升至90%以上"
-        - "集成并微调了FlagLLM Reranker重排序模块，对候选文档进行精排打分，实现基于token预算和文档来源的智能截断策略，Top-5命中率从60%提升至90%以上"
-        - "基于Qwen1.5-14B进行领域微调，设计了包含参考资料相关性分析和结构化回答的CoT风格Prompt模板，内置答案质量自检和自动重试机制"
-        - "开发了多模态文档问答功能，集成InternVL2-26B / Qwen-VL视觉语言模型，支持用户上传截图辅助问题理解，实现图文联合检索问答"
-        - "搭建了Streamlit交互式前端 + MySQL持久化后端，实现用户登录、多知识库切换、聊天历史记录、用户反馈收集等完整产品功能，支持Docker一键部署"
-        - "设计了自动化评测框架，编写了覆盖检索召回率、重排准确率、端到端问答准确率的回归测试脚本，支持实验结果自动生成报告"
+        - "设计并实现完整RAG流水线（文档解析 → FAISS+BM25混合检索 → FlagLLM Reranker精排 → Qwen1.5-14B生成），支持5款EDA工具知识库，已在华大九天落地部署"
+        - "构建多路召回 + 去重与Metadata过滤 + Reranker精排打分策略，检索召回率与Top-5命中率从60%提升至90%以上"
+        - "基于Qwen1.5-14B领域微调，设计CoT风格Prompt与答案自检机制；集成InternVL2/Qwen-VL实现图文联合问答"
+        - "搭建Streamlit前端 + MySQL后端，支持用户登录、多知识库切换、聊天历史，Docker一键部署"
+        - "设计自动化评测框架，覆盖检索召回率、重排准确率、端到端问答准确率，支持实验报告自动生成"
 
   - name:
       en: "Intelligent PDF Parsing System for EDA Chip Design Documents"
@@ -139,27 +135,19 @@ projects:
       en: "Core Developer"
       zh: "核心开发者"
     description:
-      en: "A complete PDF document parsing pipeline for chip SPEC and EDA technical documents, supporting structured extraction and knowledge base construction; developed at ChatEDA Lab"
+      en: "A complete PDF parsing pipeline for chip SPEC and EDA documents, supporting structured extraction and knowledge base construction; developed at ChatEDA Lab"
       zh: "面向芯片SPEC文档和EDA技术文档的完整PDF解析流水线，支持结构化提取与知识库构建；在ChatEDA实验室完成开发"
     highlights:
       en:
-        - "Designed a unified Intermediate Representation (IR) layer based on JSON Schema, supporting 6 element types (heading, text_block, table, image, etc.) to normalize outputs from multiple parsing tools"
-        - "Built a multi-tool collaborative extraction framework integrating MinerU deep learning parser and pdf2kg rule-based extractor, with bbox merging and deduplication strategies for improved layout element localization"
-        - "Implemented OpenCV-based table structure recognition supporting cell merging and cross-page table stitching, generating Markdown/HTML dual-format output while avoiding LLM invocation costs"
-        - "Designed an intelligent caption merging mechanism combining screenshot text detection and font style analysis for accurate figure-caption association"
-        - "Constructed a dual outline recognition strategy using PDF bookmark extraction and font-size analysis, supporting automatic chapter hierarchy inference for documents without table of contents"
-        - "Designed LLM-enhanced chunking strategy with ancestor chapter summaries for each chunk, improving contextual understanding during retrieval; implemented token budget control and summary caching optimization"
-        - "Built an automated verification and repair pipeline to detect missing elements and automatically re-run corresponding parsing steps, ensuring output completeness"
-        - "Deployed Flask frontend with configurable pipeline architecture, supporting customized parsing parameters for different PDF types and Docker one-click deployment; implemented group cropping for mixed page-size SPEC documents (LPDDR5/DDR6)"
+        - "Designed a unified IR layer based on JSON Schema supporting 6 element types; integrated MinerU (deep learning) and pdf2kg (rule-based) parsers with bbox merging for robust layout extraction"
+        - "Implemented OpenCV-based table recognition with cell merging and cross-page stitching (Markdown/HTML output), avoiding LLM costs; designed caption-figure association via font style analysis"
+        - "Built dual outline recognition (PDF bookmarks + font-size analysis) for automatic chapter hierarchy inference; designed LLM-enhanced chunking with ancestor summaries and token budget control"
+        - "Deployed configurable Flask pipeline with Docker; built auto-verification to detect and re-parse missing elements; supported mixed page-size SPEC documents (LPDDR5/DDR6)"
       zh:
-        - "设计了统一的中间表示层（IR），基于JSON Schema定义文档结构模型，支持heading、text_block、table、image等6类元素的规范化表示，实现多解析工具输出格式的统一"
-        - "构建了多工具协同的元素提取框架，集成MinerU深度学习解析器与pdf2kg硬规则提取器，通过bbox合并与去重策略实现优势互补，提升复杂版面元素定位准确率"
-        - "实现了基于OpenCV的表格结构识别方案，支持单元格合并、跨页表格拼接等复杂场景，生成Markdown/HTML双格式输出，避免LLM调用成本"
-        - "设计了Caption智能合并机制，结合截图文本检测与字体样式分析，实现图表与标题的准确关联"
-        - "构建了PDF书签提取与字体大小分析的双重大纲识别策略，支持无目录结构文档的章节层级自动推断，实现基于缩进的大纲树构建算法"
-        - "设计了LLM增强的分块策略，为每个chunk生成祖先章节摘要，提升检索时的上下文理解能力，支持token预算控制与摘要缓存优化"
-        - "构建了自动化验证与修复流程，检测缺失元素并自动重跑对应解析步骤，保障输出完整性"
-        - "搭建了Flask前端 + 配置化流水线架构，支持不同PDF类型的定制化解析参数，实现Docker一键部署；设计了分组裁剪功能，支持LPDDR5/DDR6等混合页面尺寸的SPEC文档处理"
+        - "设计基于JSON Schema的统一IR层，支持6类文档元素；集成MinerU深度学习解析器与pdf2kg规则提取器，通过bbox合并实现多工具协同提取"
+        - "实现基于OpenCV的表格识别，支持单元格合并与跨页拼接（Markdown/HTML输出），避免LLM成本；设计基于字体样式分析的图表-标题智能关联"
+        - "构建PDF书签 + 字体大小的双重大纲识别策略，自动推断章节层级；设计LLM增强分块策略，生成祖先章节摘要并支持token预算控制"
+        - "搭建Flask配置化流水线 + Docker部署；构建自动化验证与修复流程，保障输出完整性；支持LPDDR5/DDR6等混合页面尺寸SPEC文档"
 
 # Honors & Awards
 awards:
