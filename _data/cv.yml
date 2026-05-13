@@ -81,13 +81,15 @@ internships:
       zh: "研究大语言模型在电子设计自动化中的应用"
     responsibilities:
       en:
-        - "Led the development of RAG-EDA, a full-stack RAG-based document QA system for 5 EDA tools"
+        - "Led the development of RAG-EDA, a full-stack RAG-based document QA system for 5 EDA tools, deployed at Empyrean Technology"
         - "Designed hybrid retrieval (FAISS + BM25) and FlagLLM Reranker pipeline, improving Top-5 hit rate from 60% to over 90%"
         - "Built multimodal QA with InternVL2/Qwen-VL and automated evaluation framework with regression testing"
+        - "Developed an intelligent PDF parsing system for chip SPEC documents, integrating multi-tool extraction, OpenCV table recognition, and LLM-enhanced chunking"
       zh:
-        - "主导开发RAG-EDA全栈RAG文档问答系统，支持5款EDA工具的技术文档知识库"
+        - "主导开发RAG-EDA全栈RAG文档问答系统，支持5款EDA工具的技术文档知识库，已在华大九天落地部署"
         - "设计FAISS + BM25混合检索与FlagLLM Reranker精排流水线，Top-5命中率从60%提升至90%以上"
         - "构建基于InternVL2/Qwen-VL的多模态问答能力，并搭建覆盖召回率、精排与端到端准确率的自动化评测框架"
+        - "开发面向芯片SPEC文档的PDF智能解析系统，集成多工具协同提取、OpenCV表格识别与LLM增强分块策略"
 
 # Projects
 # Each project can have:
