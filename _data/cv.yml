@@ -65,8 +65,8 @@ education:
 # - responsibilities: List of responsibilities/projects worked on (en/zh)
 internships:
   - company:
-      en: "Empyrean Technology / ChatEDA Lab"
-      zh: "华大九天 / ChatEDA实验室"
+      en: "ChatEDA Lab"
+      zh: "ChatEDA"
     location:
       en: "China"
       zh: "中国"
@@ -81,11 +81,11 @@ internships:
       zh: "研究大语言模型在电子设计自动化中的应用"
     responsibilities:
       en:
-        - "Led the development of MAEDA-Flow, a full-stack RAG-based document QA system for 5 EDA tools"
+        - "Led the development of RAG-EDA, a full-stack RAG-based document QA system for 5 EDA tools"
         - "Designed hybrid retrieval (FAISS + BM25) and FlagLLM Reranker pipeline, improving Top-5 hit rate from 60% to over 90%"
         - "Built multimodal QA with InternVL2/Qwen-VL and automated evaluation framework with regression testing"
       zh:
-        - "主导开发MAEDA-Flow全栈RAG文档问答系统，支持5款EDA工具的技术文档知识库"
+        - "主导开发RAG-EDA全栈RAG文档问答系统，支持5款EDA工具的技术文档知识库"
         - "设计FAISS + BM25混合检索与FlagLLM Reranker精排流水线，Top-5命中率从60%提升至90%以上"
         - "构建基于InternVL2/Qwen-VL的多模态问答能力，并搭建覆盖召回率、精排与端到端准确率的自动化评测框架"
 
@@ -98,8 +98,8 @@ internships:
 # - highlights: Key achievements or responsibilities (en/zh)
 projects:
   - name:
-      en: "MAEDA-Flow: LLM-Powered Document QA System for EDA Tools"
-      zh: "MAEDA-Flow：基于大语言模型的EDA工具文档问答系统"
+      en: "RAG-EDA: LLM-Powered Document QA System for EDA Tools"
+      zh: "RAG-EDA：基于大语言模型的EDA工具文档问答系统"
     tech: "Python, PyTorch, LangChain, FAISS, Streamlit"
     date:
       en: "2024.10 - 2025.07"
@@ -108,11 +108,11 @@ projects:
       en: "Core Developer"
       zh: "核心开发者"
     description:
-      en: "A full-stack RAG-based QA system for EDA tool documentation, Empyrean Technology (Internship)"
-      zh: "华大九天（实习）· 面向EDA工具文档的全栈RAG问答系统"
+      en: "A full-stack RAG-based QA system for EDA tool documentation, deployed at Empyrean Technology"
+      zh: "面向EDA工具文档的全栈RAG问答系统，已在华大九天落地部署"
     highlights:
       en:
-        - "Designed and implemented a full-stack RAG-based QA system covering document parsing, vectorized retrieval, reranking, and LLM generation, supporting 5 EDA tool documentation knowledge bases (XTop, Qualib, Skipper, ALPS, OpenROAD)"
+        - "Designed and implemented a full-stack RAG-based QA system covering document parsing, vectorized retrieval, reranking, and LLM generation, supporting 5 EDA tool documentation knowledge bases; the system has been deployed at Empyrean Technology"
         - "Built a hybrid retrieval engine combining FAISS (semantic) and BM25 (keyword) with deduplication and metadata-based filtering, improving recall from 60% to over 90%"
         - "Integrated and fine-tuned FlagLLM Reranker for candidate document re-scoring with intelligent token-budget truncation, improving Top-5 hit rate from 60% to over 90%"
         - "Fine-tuned Qwen1.5-14B for the EDA domain with CoT-style prompt templates including reference relevance analysis; implemented answer quality self-verification with automatic retry mechanism"
@@ -120,7 +120,7 @@ projects:
         - "Built Streamlit interactive frontend with MySQL persistence layer, supporting user authentication, multi-KB switching, chat history, and user feedback collection; containerized with Docker for one-click deployment"
         - "Designed an automated evaluation framework with regression test scripts covering retrieval recall, reranker accuracy, and end-to-end QA accuracy, with automatic report generation"
       zh:
-        - "设计并实现了完整的RAG全栈问答系统，覆盖文档解析、向量化检索、重排序和大模型生成四个核心模块，支持5款EDA工具（XTop、Qualib、Skipper、ALPS、OpenROAD）的技术文档知识库"
+        - "设计并实现了完整的RAG全栈问答系统，覆盖文档解析、向量化检索、重排序和大模型生成四个核心模块，支持5款EDA工具的技术文档知识库，已在华大九天落地部署"
         - "构建了FAISS + BM25混合检索引擎，通过语义向量检索和关键词检索的多路召回策略，并结合去重与Metadata过滤机制，召回率从60%提升至90%以上"
         - "集成并微调了FlagLLM Reranker重排序模块，对候选文档进行精排打分，实现基于token预算和文档来源的智能截断策略，Top-5命中率从60%提升至90%以上"
         - "基于Qwen1.5-14B进行领域微调，设计了包含参考资料相关性分析和结构化回答的CoT风格Prompt模板，内置答案质量自检和自动重试机制"
