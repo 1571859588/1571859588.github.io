@@ -1,58 +1,53 @@
 /**
  * CV Single-Page Vector PDF Download
  *
- * Extracts CV content from the DOM, builds a clean minimal HTML page
- * with compact CSS in a narrower centered layout, opens a new window,
- * and triggers print → "Microsoft Print to PDF" for vector output.
+ * Extracts CV content from the DOM, builds a clean HTML page with
+ * narrow content area so dates align close to the longest text line.
+ * Opens in a new window for print → vector PDF.
  */
 
 function downloadCV(filename) {
   var cvEl = document.getElementById('cv-content');
   if (!cvEl) { alert('CV content not found'); return; }
 
-  // Clone and clean the content
   var clone = cvEl.cloneNode(true);
-  var scripts = clone.querySelectorAll('script, .cv-actions');
-  for (var i = 0; i < scripts.length; i++) {
-    scripts[i].parentNode.removeChild(scripts[i]);
-  }
+  var remove = clone.querySelectorAll('script, .cv-actions');
+  for (var i = 0; i < remove.length; i++) remove[i].parentNode.removeChild(remove[i]);
 
-  // Build compact CSS — narrower layout with proper margins
   var css = [
+    // ── Page setup: wide side margins → narrow content area ──
     '@page {',
     '  size: A4;',
-    '  margin: 10mm 18mm;',  // Wider side margins → narrower content → professional look
+    '  margin: 8mm 28mm;',   // 28mm sides → content width ~154mm, dates hug the text
     '}',
     '@media print {',
     '  body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }',
     '}',
     '* { margin: 0; padding: 0; box-sizing: border-box; }',
     'body {',
-    '  font-family: "Segoe UI", "Noto Sans SC", "Microsoft YaHei", "PingFang SC", Arial, Helvetica, sans-serif;',
-    '  font-size: 9px;',
-    '  line-height: 1.3;',
+    '  font-family: "Segoe UI", "Noto Sans SC", "Microsoft YaHei", "PingFang SC", Arial, sans-serif;',
+    '  font-size: 8.5px;',
+    '  line-height: 1.28;',
     '  color: #222;',
     '  background: #fff;',
     '}',
 
     // ── Header ──
     '.cv-header {',
-    '  display: flex; align-items: flex-start; gap: 10px;',
-    '  margin-bottom: 4px; padding-bottom: 4px;',
-    '  border-bottom: 2.5px solid #2e8b9e;',
+    '  display: flex; align-items: flex-start; gap: 8px;',
+    '  margin-bottom: 3px; padding-bottom: 3px;',
+    '  border-bottom: 2px solid #2e8b9e;',
     '}',
-    '.cv-photo img {',
-    '  width: 64px; height: 80px; object-fit: cover; border: 1px solid #ccc;',
-    '}',
+    '.cv-photo img { width: 58px; height: 72px; object-fit: cover; border: 1px solid #ccc; }',
     '.cv-header-info { flex: 1; }',
     '.cv-name {',
-    '  font-size: 16px; font-weight: 700; text-align: center;',
-    '  margin: 0 0 3px; color: #111;',
+    '  font-size: 15px; font-weight: 700; text-align: center;',
+    '  margin: 0 0 2px; color: #111;',
     '}',
     '.cv-contact {',
-    '  display: flex; flex-wrap: wrap; gap: 1px 10px;',
+    '  display: flex; flex-wrap: wrap; gap: 1px 8px;',
     '  justify-content: center;',
-    '  font-size: 8px; color: #555;',
+    '  font-size: 7.5px; color: #555;',
     '}',
     '.cv-contact span { display: inline-flex; align-items: center; gap: 2px; }',
     '.cv-contact a { color: #2a7a92; text-decoration: none; }',
@@ -60,8 +55,8 @@ function downloadCV(filename) {
 
     // ── Section titles ──
     '.cv-section-title {',
-    '  font-size: 11px; font-weight: 700; color: #1a1a1a;',
-    '  margin: 5px 0 2px; padding-bottom: 1px;',
+    '  font-size: 10.5px; font-weight: 700; color: #1a1a1a;',
+    '  margin: 4px 0 1.5px; padding-bottom: 1px;',
     '  border-bottom: 1.5px solid #2e8b9e;',
     '}',
 
@@ -70,50 +65,38 @@ function downloadCV(filename) {
     '.cv-entry:last-child { margin-bottom: 0; }',
     '.cv-entry-header {',
     '  display: flex; justify-content: space-between;',
-    '  align-items: baseline; gap: 6px; margin-bottom: 0;',
+    '  align-items: baseline; gap: 4px; margin-bottom: 0;',
     '}',
     '.cv-entry-header strong { font-size: 9px; color: #111; }',
-    '.cv-date { font-size: 8px; color: #666; white-space: nowrap; }',
-    '.cv-entry-content {',
-    '  font-size: 8.5px; line-height: 1.3; color: #333;',
-    '}',
+    '.cv-date { font-size: 8px; color: #555; white-space: nowrap; }',
+    '.cv-entry-content { font-size: 8px; line-height: 1.28; color: #333; }',
     '.cv-entry-content em { font-style: italic; }',
     '.cv-entry-content a { color: #2a7a92; text-decoration: none; }',
 
     // ── Lists ──
-    'ul.cv-list { margin: 0; padding-left: 13px; list-style: disc; }',
-    'ul.cv-list li {',
-    '  margin-bottom: 0.5px; line-height: 1.25; font-size: 8.5px;',
-    '}',
-    'ul.cv-highlights {',
-    '  margin: 1px 0 0; padding-left: 13px; list-style: disc;',
-    '}',
-    'ul.cv-highlights li {',
-    '  margin-bottom: 0.5px; line-height: 1.25; font-size: 8px;',
-    '}',
+    'ul.cv-list { margin: 0; padding-left: 12px; list-style: disc; }',
+    'ul.cv-list li { margin-bottom: 0.3px; line-height: 1.22; font-size: 8px; }',
+    'ul.cv-highlights { margin: 0.5px 0 0; padding-left: 12px; list-style: disc; }',
+    'ul.cv-highlights li { margin-bottom: 0.3px; line-height: 1.22; font-size: 7.5px; }',
 
     // ── Publications ──
-    '.cv-publication { margin-bottom: 1.5px; }',
-    '.cv-publication .cv-entry-content {',
-    '  font-size: 8px; line-height: 1.25;',
-    '}',
+    '.cv-publication { margin-bottom: 1px; }',
+    '.cv-publication .cv-entry-content { font-size: 7.5px; line-height: 1.22; }',
 
     // ── Contribution ──
     '.cv-contribution {',
-    '  margin-top: 1px; padding: 2px 4px; font-size: 7.5px;',
-    '  background: #f5f5f5; border-left: 2px solid #2e8b9e;',
+    '  margin-top: 1px; padding: 1px 4px; font-size: 7px;',
+    '  background: #f5f5f5; border-left: 1.5px solid #2e8b9e;',
     '}',
-    '.cv-contribution ul { margin: 1px 0 0; padding-left: 13px; }',
-    '.cv-contribution li { margin-bottom: 0.5px; font-size: 7.5px; }',
+    '.cv-contribution ul { margin: 0.5px 0 0; padding-left: 12px; }',
+    '.cv-contribution li { margin-bottom: 0.3px; font-size: 7px; }',
 
     // ── FA icons ──
     '.fa { font-size: 7px; margin-right: 1px; }'
   ].join('\n');
 
-  // Get Font Awesome CSS
   var faLink = '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">';
 
-  // Build the HTML document
   var html = [
     '<!DOCTYPE html>',
     '<html><head>',
@@ -126,8 +109,7 @@ function downloadCV(filename) {
     '</body></html>'
   ].join('\n');
 
-  // Open new window
-  var w = window.open('', '_blank', 'width=800,height=1000');
+  var w = window.open('', '_blank', 'width=700,height=900');
   if (!w) {
     alert('请允许弹出窗口后重试 / Please allow popups and try again');
     return;
@@ -137,18 +119,12 @@ function downloadCV(filename) {
   w.document.write(html);
   w.document.close();
 
-  // Print after resources load
   var printed = false;
   w.onload = function() {
     if (printed) return;
     printed = true;
-    setTimeout(function() {
-      w.focus();
-      w.print();
-    }, 500);
+    setTimeout(function() { w.focus(); w.print(); }, 500);
   };
-
-  // Fallback timer
   setTimeout(function() {
     if (!printed && !w.closed) {
       printed = true;
