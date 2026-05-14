@@ -6,7 +6,7 @@ author_profile: true
 ---
 
 <div class="cv-actions">
-  <button onclick="window.print()" class="btn btn--primary"><i class="fa fa-download"></i> 下载 PDF</button>
+  <button onclick="downloadCV('聂云滔_简历')" class="btn btn--primary"><i class="fa fa-download"></i> 下载 PDF</button>
   <a href="/cv/" class="btn btn--info">English</a>
 </div>
 
@@ -131,3 +131,6 @@ author_profile: true
 </ul>
 
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js"></script>
+<script src="/assets/js/cv-pdf.js"></script>
