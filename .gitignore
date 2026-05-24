@@ -15,3 +15,5 @@ package-lock.json
 poe_adapter.py
 
 others_blogs_sites/
+
+_posts/*-cn.md

@@ -56,10 +56,6 @@ layout: default
       </header>
       {% endunless %}
 
-      {% if page.toc %}
-        {% include custom_toc.html %}
-      {% endif %}
-
       <section class="page__content" itemprop="text">
         {{ content }}
 
@@ -152,5 +148,8 @@ layout: default
     </div>
   </div>
   {% endif %}
+  
+  {% if page.toc %}
+    {% include custom_toc.html %}
   {% endif %}
 </div>
