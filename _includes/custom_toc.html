@@ -1,4 +1,4 @@
-<!-- Custom TOC floating aside (JS-Generated with Tree Hierarchy) -->
+<!-- Custom TOC floating aside (Server-Side Liquid parsing of rendered HTML headings) -->
 <aside class="custom-toc-aside">
   <nav class="custom-toc-container">
     <header class="custom-toc-header">
@@ -10,7 +10,42 @@
       </h4>
     </header>
     <div id="dynamic-toc" class="dynamic-toc-menu">
-      <ul class="toc-tree"></ul>
+      <ul class="toc-tree">
+        {% comment %}Parse rendered HTML for <h2> through <h6> tags{% endcomment %}
+        {% assign fragments = page.content | split: '<h' %}
+        {% for frag in fragments %}
+          {% assign level_char = frag | slice: 0 %}
+          {% assign level_num = level_char | plus: 0 %}
+
+          {% comment %}Only process h2-h6 (exclude h1){% endcomment %}
+          {% if level_num >= 2 and level_num <= 6 %}
+            {% comment %}Ensure we matched a digit, not a letter{% endcomment %}
+            {% assign after_digit = frag | slice: 1 %}
+            {% if after_digit == ' ' or after_digit == '>' %}
+              {% comment %}Extract id from id="..." attribute{% endcomment %}
+              {% assign id_parts = frag | split: 'id="' %}
+              {% assign id_rest = id_parts[1] %}
+              {% if id_rest %}
+                {% assign id = id_rest | split: '"' | first %}
+              {% endif %}
+
+              {% comment %}Extract title text between > and </h{% endcomment %}
+              {% assign title_parts = frag | split: '>' %}
+              {% assign title_rest = title_parts[1] %}
+              {% if title_rest %}
+                {% assign title_end = title_rest | split: '</h' %}
+                {% assign title = title_end[0] | strip_html %}
+              {% endif %}
+
+              {% if id and title %}
+                <li class="toc-item toc-depth-{{ level_num }}">
+                  <a href="#{{ id }}" class="toc-link">{{ title }}</a>
+                </li>
+              {% endif %}
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+      </ul>
     </div>
   </nav>
 </aside>
@@ -87,7 +122,7 @@
     color: #3b82f6;
   }
 
-  /* ── Tree list reset ── */
+  /* Tree list reset */
   .toc-tree {
     list-style: none !important;
     margin: 0 !important;
@@ -101,7 +136,7 @@
     position: relative;
   }
 
-  /* ── Base link style ── */
+  /* Base link style */
   .toc-link {
     display: block;
     color: #64748b;
@@ -120,7 +155,6 @@
     border-left-color: #cbd5e1;
   }
 
-  /* ── Active state ── */
   .toc-link.active {
     color: #2563eb;
     font-weight: 600;
@@ -129,11 +163,8 @@
     border-radius: 0 4px 4px 0;
   }
 
-  /* ═══════════════════════════════════════════
-     Depth-based sizing & tree connectors
-     ═══════════════════════════════════════════ */
+  /* ── Depth-based sizing & tree connectors ── */
 
-  /* h2 — root level */
   .toc-depth-2 > .toc-link {
     font-size: 0.82rem;
     font-weight: 600;
@@ -141,7 +172,6 @@
     padding: 5px 10px;
   }
 
-  /* h3 — first child */
   .toc-depth-3 > .toc-link {
     font-size: 0.76rem;
     font-weight: 500;
@@ -149,7 +179,6 @@
     color: #475569;
   }
 
-  /* h4 — grandchild */
   .toc-depth-4 > .toc-link {
     font-size: 0.72rem;
     font-weight: 400;
@@ -157,7 +186,6 @@
     color: #64748b;
   }
 
-  /* h5 — great-grandchild */
   .toc-depth-5 > .toc-link {
     font-size: 0.69rem;
     font-weight: 400;
@@ -165,7 +193,6 @@
     color: #94a3b8;
   }
 
-  /* h6 — deepest */
   .toc-depth-6 > .toc-link {
     font-size: 0.67rem;
     font-weight: 400;
@@ -174,7 +201,7 @@
     font-style: italic;
   }
 
-  /* ── Tree connector lines (vertical + horizontal) ── */
+  /* Tree connector lines (vertical + horizontal) */
   .toc-depth-3 > .toc-link::before,
   .toc-depth-4 > .toc-link::before,
   .toc-depth-5 > .toc-link::before,
@@ -201,7 +228,6 @@
     background: #e2e8f0;
   }
 
-  /* deeper indent for vertical/horizontal lines on sub-items */
   .toc-depth-4 > .toc-link::before,
   .toc-depth-4 > .toc-link::after {
     left: 22px;
@@ -215,7 +241,6 @@
     left: 40px;
   }
 
-  /* ── Collapse deeper levels on short viewports ── */
   @media screen and (max-height: 700px) {
     .toc-depth-5,
     .toc-depth-6 {
@@ -235,45 +260,12 @@
 <script>
   (function() {
     try {
-      // ── 1. Build TOC from DOM headings ──
-      var contentArea = document.querySelector('.page__content');
-      if (!contentArea) return;
-
-      var headings = contentArea.querySelectorAll('h2, h3, h4, h5, h6');
-      if (headings.length === 0) {
+      var tocLinks = document.querySelectorAll('#dynamic-toc .toc-link');
+      if (tocLinks.length === 0) {
         var asideContainer = document.querySelector('.custom-toc-aside');
         if (asideContainer) asideContainer.style.display = 'none';
         return;
       }
-
-      var tocList = document.querySelector('.toc-tree');
-      if (!tocList) return;
-
-      for (var i = 0; i < headings.length; i++) {
-        var h = headings[i];
-        var level = parseInt(h.tagName.charAt(1));
-
-        // Ensure heading has an id; Kramdown auto-assigns them but fallback
-        if (!h.id) {
-          var generatedId = h.textContent.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
-          h.id = generatedId;
-        }
-
-        var li = document.createElement('li');
-        li.className = 'toc-item toc-depth-' + level;
-
-        var a = document.createElement('a');
-        a.href = '#' + h.id;
-        a.className = 'toc-link';
-        a.textContent = h.textContent.trim();
-
-        li.appendChild(a);
-        tocList.appendChild(li);
-      }
-
-      // ── 2. Scroll spy + smooth click ──
-      var tocLinks = tocList.querySelectorAll('.toc-link');
-      if (tocLinks.length === 0) return;
 
       var activeLink = null;
 
@@ -286,7 +278,6 @@
           var targetId = tocLinks[i].getAttribute('href').substring(1);
           var targetElement = document.getElementById(targetId);
           if (!targetElement) continue;
-
           var top = targetElement.getBoundingClientRect().top + scrollPosition;
           if (scrollPosition >= top - headerThreshold) {
             activeIndex = i;
@@ -296,17 +287,19 @@
         }
 
         var newActive = activeIndex >= 0 ? tocLinks[activeIndex] : null;
-
         if (newActive !== activeLink) {
           if (activeLink) activeLink.classList.remove('active');
           if (newActive) {
             newActive.classList.add('active');
             var tocRect = newActive.getBoundingClientRect();
-            var containerRect = tocList.parentElement.getBoundingClientRect();
-            if (tocRect.bottom > containerRect.bottom - 20) {
-              newActive.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-            } else if (tocRect.top < containerRect.top + 20) {
-              newActive.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            var containerRect = document.querySelector('.custom-toc-container');
+            if (containerRect) {
+              var cRect = containerRect.getBoundingClientRect();
+              if (tocRect.bottom > cRect.bottom - 20) {
+                newActive.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+              } else if (tocRect.top < cRect.top + 20) {
+                newActive.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+              }
             }
           }
           activeLink = newActive;
@@ -320,15 +313,10 @@
           var targetElement = document.getElementById(targetId);
           if (targetElement) {
             var offset = 80;
-            var bodyRect = document.body.getBoundingClientRect().top;
-            var elementRect = targetElement.getBoundingClientRect().top;
-            var offsetPosition = (elementRect - bodyRect) - offset;
-
             window.scrollTo({
-              top: offsetPosition,
+              top: targetElement.getBoundingClientRect().top + window.scrollY - offset,
               behavior: 'smooth'
             });
-
             history.pushState(null, null, '#' + targetId);
           }
         });
@@ -336,7 +324,6 @@
 
       window.addEventListener('scroll', highlightSection, { passive: true });
       highlightSection();
-
     } catch (error) {
       console.error("TOC JS Error:", error);
     }
