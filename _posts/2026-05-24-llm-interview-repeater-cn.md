@@ -7,6 +7,7 @@ categories:
 tags:
   - LLM常见面试题
   - 复读机问题
+toc: true
 ---
 
 # LLM常见面试题：大语言模型中「复读机问题」的深度剖析与解决方案
