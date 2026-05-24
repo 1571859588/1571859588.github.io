@@ -6,11 +6,13 @@
 - [x] 撰写大模型常见面试题：复读机问题 (英文版) 博客并添加到 `_posts/2026-05-24-llm-interview-repeater-en.md`
 - [x] 实现并优化博客右侧动态智能目录 (Dynamic Table of Contents with ScrollSpy)
 - [x] 重构目录系统 (fix/toc-styling)：分离目录和页面内容流，使用 position fixed 固定到侧边栏，支持无重叠的完美视觉，替换了中文标题及过滤大标题。
+- [x] 在 `.gitignore` 中配置忽略 `_posts/*-cn.md`，不再将中文博文推送到远程
+- [x] 从 Git 缓存中移除已被追踪的中文博文 `_posts/2026-05-24-llm-interview-repeater-cn.md` 的索引
 - [x] 更新 `PROGRESS.md` 文件
 - [x] 提交并推送到 GitHub 仓库 (使用 `git commit` & `git push`)
 
 ## 📂 项目关键文件路径
-- 中文博客: `_posts/2026-05-24-llm-interview-repeater-cn.md`
+- 中文博客 (仅限本地): `_posts/2026-05-24-llm-interview-repeater-cn.md` (已在 .gitignore 中忽略)
 - 英文博客: `_posts/2026-05-24-llm-interview-repeater-en.md`
 - 动态目录模版: `_includes/custom_toc.html`
 - 文章布局文件: `_layouts/single.html`
@@ -21,3 +23,4 @@
 - **2026-05-24**: 撰写并添加大语言模型常见面试题之“复读机问题”的中英文博客，创建并更新 `PROGRESS.md`，完成代码提交与推送。
 - **2026-05-24 (更新)**: 实现了响应式、高拟真、具微动画的右侧动态目录，支持点击平滑滚动跳转与滚动条高亮跟随 (ScrollSpy)，并过滤大标题。
 - **2026-05-24 (重构修复)**: 重构了 `custom_toc.html`，彻底解决目录覆盖重叠问题；移除中文显示标题，更新为带图标的英文标题，重构 JS 树形抓取确保深层标签显示正确。
+- **2026-05-24 (忽略中文版)**: 配合 `.gitignore` 规则 `_posts/*-cn.md`，从 Git 远程追踪索引中移除 `_posts/2026-05-24-llm-interview-repeater-cn.md`，保留本地文件，防止中文博文被推送到远程。
