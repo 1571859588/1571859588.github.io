@@ -1,4 +1,4 @@
-<!-- Custom TOC floating aside (Server-Side Liquid + Tree Hierarchy) -->
+<!-- Custom TOC floating aside (JS-Generated with Tree Hierarchy) -->
 <aside class="custom-toc-aside">
   <nav class="custom-toc-container">
     <header class="custom-toc-header">
@@ -10,72 +10,7 @@
       </h4>
     </header>
     <div id="dynamic-toc" class="dynamic-toc-menu">
-      <ul class="toc-tree">
-        {% capture newline %}
-{% endcapture %}
-        {% assign lines = page.content | split: newline %}
-        {% for line in lines %}
-          {% assign stripped = line | strip %}
-          {% assign first_char = stripped | slice: 0, 1 %}
-          {% if first_char == "#" %}
-            {% assign prefix = stripped | split: " " | first %}
-            {% assign is_valid_header = true %}
-            {% assign prefix_len = prefix.size %}
-
-            {% for i in (1..prefix_len) %}
-              {% assign idx = i | minus: 1 %}
-              {% assign char = prefix | slice: idx, 1 %}
-              {% if char != "#" %}
-                {% assign is_valid_header = false %}
-              {% endif %}
-            {% endfor %}
-
-            {% if is_valid_header and prefix_len >= 2 and prefix_len <= 6 %}
-              {% assign title = stripped | remove_first: prefix | strip %}
-
-              {% comment %} Replicate Kramdown's ID generation {% endcomment %}
-              {% assign id = title | downcase %}
-              {% assign id = id | replace: ' ', '-' %}
-              {% assign id = id | replace: '.', '' %}
-              {% assign id = id | replace: ',', '' %}
-              {% assign id = id | replace: '!', '' %}
-              {% assign id = id | replace: '?', '' %}
-              {% assign id = id | replace: ':', '' %}
-              {% assign id = id | replace: ';', '' %}
-              {% assign id = id | replace: '"', '' %}
-              {% assign id = id | replace: "'", '' %}
-              {% assign id = id | replace: '(', '' %}
-              {% assign id = id | replace: ')', '' %}
-              {% assign id = id | replace: '[', '' %}
-              {% assign id = id | replace: ']', '' %}
-              {% assign id = id | replace: '{', '' %}
-              {% assign id = id | replace: '}', '' %}
-              {% assign id = id | replace: '/', '' %}
-              {% assign id = id | replace: '\', '' %}
-              {% assign id = id | replace: '@', '' %}
-              {% assign id = id | replace: '#', '' %}
-              {% assign id = id | replace: '$', '' %}
-              {% assign id = id | replace: '%', '' %}
-              {% assign id = id | replace: '^', '' %}
-              {% assign id = id | replace: '&', '' %}
-              {% assign id = id | replace: '*', '' %}
-              {% assign id = id | replace: '+', '' %}
-              {% assign id = id | replace: '=', '' %}
-              {% assign id = id | replace: '<', '' %}
-              {% assign id = id | replace: '>', '' %}
-              {% assign id = id | replace: '|', '' %}
-              {% assign id = id | replace: '~', '' %}
-              {% assign id = id | replace: '`', '' %}
-              {% assign id = id | replace: '--', '-' %}
-              {% assign id = id | replace: '--', '-' %}
-
-              <li class="toc-item toc-depth-{{ prefix_len }}">
-                <a href="#{{ id }}" class="toc-link">{{ title }}</a>
-              </li>
-            {% endif %}
-          {% endif %}
-        {% endfor %}
-      </ul>
+      <ul class="toc-tree"></ul>
     </div>
   </nav>
 </aside>
@@ -261,26 +196,12 @@
     position: absolute;
     left: 10px;
     top: 0;
-    bottom: 50%;
+    height: 50%;
     width: 1px;
     background: #e2e8f0;
   }
 
-  /* Fix: for depth-3 items that are first after a depth-2, don't show full vertical line */
-  .toc-depth-3 > .toc-link::after {
-    bottom: 50%;
-    height: 50%;
-  }
-
-  /* Last child in a group — cap the vertical line */
-  .toc-depth-3:has(+ .toc-depth-2) > .toc-link::after,
-  .toc-depth-3:last-of-type > .toc-link::after,
-  .toc-depth-4:has(+ :not(.toc-depth-4):not(.toc-depth-5):not(.toc-depth-6)) > .toc-link::after,
-  .toc-depth-5:has(+ :not(.toc-depth-5):not(.toc-depth-6)) > .toc-link::after {
-    height: 50%;
-  }
-
-  /* deeper indent for vertical line on sub-items */
+  /* deeper indent for vertical/horizontal lines on sub-items */
   .toc-depth-4 > .toc-link::before,
   .toc-depth-4 > .toc-link::after {
     left: 22px;
@@ -294,7 +215,7 @@
     left: 40px;
   }
 
-  /* ── Collapse deeper levels when not in viewport proximity ── */
+  /* ── Collapse deeper levels on short viewports ── */
   @media screen and (max-height: 700px) {
     .toc-depth-5,
     .toc-depth-6 {
@@ -314,14 +235,45 @@
 <script>
   (function() {
     try {
-      var tocContainer = document.getElementById('dynamic-toc');
-      if (!tocContainer) return;
-      var tocLinks = tocContainer.querySelectorAll('.toc-link');
-      if (tocLinks.length === 0) {
+      // ── 1. Build TOC from DOM headings ──
+      var contentArea = document.querySelector('.page__content');
+      if (!contentArea) return;
+
+      var headings = contentArea.querySelectorAll('h2, h3, h4, h5, h6');
+      if (headings.length === 0) {
         var asideContainer = document.querySelector('.custom-toc-aside');
         if (asideContainer) asideContainer.style.display = 'none';
         return;
       }
+
+      var tocList = document.querySelector('.toc-tree');
+      if (!tocList) return;
+
+      for (var i = 0; i < headings.length; i++) {
+        var h = headings[i];
+        var level = parseInt(h.tagName.charAt(1));
+
+        // Ensure heading has an id; Kramdown auto-assigns them but fallback
+        if (!h.id) {
+          var generatedId = h.textContent.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+          h.id = generatedId;
+        }
+
+        var li = document.createElement('li');
+        li.className = 'toc-item toc-depth-' + level;
+
+        var a = document.createElement('a');
+        a.href = '#' + h.id;
+        a.className = 'toc-link';
+        a.textContent = h.textContent.trim();
+
+        li.appendChild(a);
+        tocList.appendChild(li);
+      }
+
+      // ── 2. Scroll spy + smooth click ──
+      var tocLinks = tocList.querySelectorAll('.toc-link');
+      if (tocLinks.length === 0) return;
 
       var activeLink = null;
 
@@ -343,15 +295,14 @@
           }
         }
 
-        var newActive = activeIndex >= 0 ? tocLinks[activeIndex] : (scrollPosition < 100 ? tocLinks[0] : null);
+        var newActive = activeIndex >= 0 ? tocLinks[activeIndex] : null;
 
         if (newActive !== activeLink) {
           if (activeLink) activeLink.classList.remove('active');
           if (newActive) {
             newActive.classList.add('active');
-            // Scroll TOC to keep active link visible
             var tocRect = newActive.getBoundingClientRect();
-            var containerRect = tocContainer.parentElement.getBoundingClientRect();
+            var containerRect = tocList.parentElement.getBoundingClientRect();
             if (tocRect.bottom > containerRect.bottom - 20) {
               newActive.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
             } else if (tocRect.top < containerRect.top + 20) {
