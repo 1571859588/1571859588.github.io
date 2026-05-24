@@ -1,4 +1,4 @@
-<!-- Custom TOC floating aside -->
+<!-- Custom TOC floating aside (Server-Side Liquid Generation) -->
 <aside class="custom-toc-aside">
   <nav class="custom-toc-container">
     <header class="custom-toc-header">
@@ -8,13 +8,80 @@
       </h4>
     </header>
     <div id="dynamic-toc" class="dynamic-toc-menu">
-      <!-- Generated dynamically by JavaScript -->
+      <ul>
+        {% capture newline %}
+{% endcapture %}
+        {% assign lines = page.content | split: newline %}
+        {% for line in lines %}
+          {% assign stripped = line | strip %}
+          {% assign first_char = stripped | slice: 0, 1 %}
+          {% if first_char == "#" %}
+            {% assign prefix = stripped | split: " " | first %}
+            {% assign is_valid_header = true %}
+            {% assign prefix_len = prefix.size %}
+            
+            {% comment %} Ensure the prefix consists ONLY of '#' characters {% endcomment %}
+            {% for i in (1..prefix_len) %}
+              {% assign idx = i | minus: 1 %}
+              {% assign char = prefix | slice: idx, 1 %}
+              {% if char != "#" %}
+                {% assign is_valid_header = false %}
+              {% endif %}
+            {% endfor %}
+
+            {% if is_valid_header and prefix_len >= 2 and prefix_len <= 6 %}
+              {% assign title = stripped | remove_first: prefix | strip %}
+              
+              {% comment %} Replicate Kramdown's ID generation {% endcomment %}
+              {% assign id = title | downcase %}
+              {% assign id = id | replace: ' ', '-' %}
+              {% assign id = id | replace: '.', '' %}
+              {% assign id = id | replace: ',', '' %}
+              {% assign id = id | replace: '!', '' %}
+              {% assign id = id | replace: '?', '' %}
+              {% assign id = id | replace: ':', '' %}
+              {% assign id = id | replace: ';', '' %}
+              {% assign id = id | replace: '"', '' %}
+              {% assign id = id | replace: "'", '' %}
+              {% assign id = id | replace: '(', '' %}
+              {% assign id = id | replace: ')', '' %}
+              {% assign id = id | replace: '[', '' %}
+              {% assign id = id | replace: ']', '' %}
+              {% assign id = id | replace: '{', '' %}
+              {% assign id = id | replace: '}', '' %}
+              {% assign id = id | replace: '/', '' %}
+              {% assign id = id | replace: '\', '' %}
+              {% assign id = id | replace: '@', '' %}
+              {% assign id = id | replace: '#', '' %}
+              {% assign id = id | replace: '$', '' %}
+              {% assign id = id | replace: '%', '' %}
+              {% assign id = id | replace: '^', '' %}
+              {% assign id = id | replace: '&', '' %}
+              {% assign id = id | replace: '*', '' %}
+              {% assign id = id | replace: '+', '' %}
+              {% assign id = id | replace: '=', '' %}
+              {% assign id = id | replace: '<', '' %}
+              {% assign id = id | replace: '>', '' %}
+              {% assign id = id | replace: '|', '' %}
+              {% assign id = id | replace: '~', '' %}
+              {% assign id = id | replace: '`', '' %}
+              
+              {% comment %} Clean up multiple dashes {% endcomment %}
+              {% assign id = id | replace: '--', '-' %}
+              {% assign id = id | replace: '--', '-' %}
+              
+              <li>
+                <a href="#{{ id }}" class="toc-link depth-{{ prefix_len }}">{{ title }}</a>
+              </li>
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+      </ul>
     </div>
   </nav>
 </aside>
 
 <style>
-  /* Fixed floating TOC container */
   .custom-toc-aside {
     display: none;
   }
@@ -23,7 +90,7 @@
     .custom-toc-aside {
       display: block;
       position: fixed;
-      right: max(20px, calc(50vw - 650px)); /* Keeps it nicely bounded next to content max-width */
+      right: max(20px, calc(50vw - 650px));
       top: 100px;
       width: 250px;
       max-height: calc(100vh - 140px);
@@ -44,7 +111,6 @@
     transition: all 0.3s ease;
   }
 
-  /* Scrollbar Styling */
   .custom-toc-container::-webkit-scrollbar {
     width: 4px;
   }
@@ -76,7 +142,6 @@
     font-size: 1rem;
   }
 
-  /* TOC Dynamic Menu */
   .dynamic-toc-menu ul {
     list-style: none !important;
     margin: 0 !important;
@@ -89,7 +154,6 @@
     list-style: none !important;
   }
 
-  /* Base TOC Link */
   .dynamic-toc-menu .toc-link {
     display: block;
     color: #64748b;
@@ -102,14 +166,12 @@
     transition: all 0.2s ease-in-out;
   }
 
-  /* Hover micro-animation */
   .dynamic-toc-menu .toc-link:hover {
     color: #0f172a;
     background: #f8fafc;
     border-radius: 4px;
   }
 
-  /* Active state highlight */
   .dynamic-toc-menu .toc-link.active {
     color: #3b82f6;
     font-weight: 600;
@@ -118,107 +180,34 @@
     border-radius: 0 4px 4px 0;
   }
 
-  /* Tree-like Hierarchical Indentation */
-  .dynamic-toc-menu .depth-2 {
-    font-size: 0.85rem;
-  }
-
-  .dynamic-toc-menu .depth-3 {
-    margin-left: 12px !important;
-    border-left: 1px solid #f1f5f9;
-    font-size: 0.75rem;
-  }
-
-  .dynamic-toc-menu .depth-4 {
-    margin-left: 24px !important;
-    border-left: 1px dashed #f1f5f9;
-    font-size: 0.70rem;
-    color: #94a3b8;
-  }
+  .dynamic-toc-menu .depth-2 { font-size: 0.85rem; }
+  .dynamic-toc-menu .depth-3 { margin-left: 12px !important; border-left: 1px solid #f1f5f9; font-size: 0.75rem; }
+  .dynamic-toc-menu .depth-4, .dynamic-toc-menu .depth-5, .dynamic-toc-menu .depth-6 { margin-left: 24px !important; border-left: 1px dashed #f1f5f9; font-size: 0.70rem; color: #94a3b8; }
 </style>
 
 <script>
   (function() {
     try {
-      const postBody = document.querySelector('.page__content');
       const tocContainer = document.getElementById('dynamic-toc');
-      const asideContainer = document.querySelector('.custom-toc-aside');
-      
-      if (!postBody) {
+      if (!tocContainer) return;
+      const tocLinks = tocContainer.querySelectorAll('.toc-link');
+      if (tocLinks.length === 0) {
+        const asideContainer = document.querySelector('.custom-toc-aside');
         if (asideContainer) asideContainer.style.display = 'none';
         return;
       }
-
-      // Try to find headers. Sometimes markdown generates h1, h2, h3 etc.
-      const headers = Array.from(postBody.querySelectorAll('h1, h2, h3, h4, h5, h6'));
-      
-      // Filter out headers that are empty or part of related posts
-      const validHeaders = headers.filter(header => {
-        if (header.closest('.page__related') || header.closest('.page__comments') || header.closest('.pagination')) return false;
-        const text = (header.textContent || header.innerText || '').trim();
-        return text.length > 0;
-      });
-
-      if (validHeaders.length === 0 || !tocContainer) {
-        if (asideContainer) asideContainer.style.display = 'none';
-        return;
-      }
-
-      const ul = document.createElement('ul');
-      
-      validHeaders.forEach(header => {
-        let id = header.id;
-        if (!id) {
-          id = (header.textContent || header.innerText).trim().toLowerCase()
-            .replace(/[^a-z0-9\u4e00-\u9fa5]+/gi, '-')
-            .replace(/^-|-$/g, '');
-          if (!id) id = 'section-' + Math.random().toString(36).substr(2, 9);
-          header.id = id;
-        }
-
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        a.href = '#' + header.id;
-        a.className = 'toc-link';
-        a.textContent = (header.textContent || header.innerText).trim();
-        
-        const tagName = header.tagName.toLowerCase();
-        // Base depth styling
-        if (tagName === 'h1' || tagName === 'h2') {
-          a.classList.add('depth-2');
-        } else if (tagName === 'h3') {
-          a.classList.add('depth-3');
-        } else if (tagName === 'h4' || tagName === 'h5' || tagName === 'h6') {
-          a.classList.add('depth-4');
-        }
-
-        li.appendChild(a);
-        ul.appendChild(li);
-      });
-
-      if (ul.children.length === 0) {
-        if (asideContainer) asideContainer.style.display = 'none';
-        return;
-      }
-
-      tocContainer.innerHTML = ''; // clear any existing
-      tocContainer.appendChild(ul);
-      
-      // Ensure the container is visible
-      if (asideContainer) {
-        asideContainer.style.display = 'block';
-      }
-
-      const tocLinks = ul.querySelectorAll('.toc-link');
 
       function highlightSection() {
         const scrollPosition = window.scrollY || window.pageYOffset;
         const headerThreshold = 120;
         let activeIndex = -1;
 
-        for (let i = 0; i < validHeaders.length; i++) {
-          if (!document.getElementById(validHeaders[i].id)) continue;
-          const top = validHeaders[i].getBoundingClientRect().top + scrollPosition;
+        for (let i = 0; i < tocLinks.length; i++) {
+          const targetId = tocLinks[i].getAttribute('href').substring(1);
+          const targetElement = document.getElementById(targetId);
+          if (!targetElement) continue;
+
+          const top = targetElement.getBoundingClientRect().top + scrollPosition;
           if (scrollPosition >= top - headerThreshold) {
             activeIndex = i;
           } else {
@@ -228,13 +217,7 @@
 
         tocLinks.forEach((link, idx) => {
           if (idx === activeIndex || (activeIndex === -1 && idx === 0 && scrollPosition < 100)) {
-            if (idx === activeIndex) {
-                link.classList.add('active');
-            } else if (idx === 0 && activeIndex === -1 && scrollPosition < 100){
-                link.classList.remove('active'); 
-            } else {
-               link.classList.remove('active');
-            }
+            link.classList.add('active');
           } else {
             link.classList.remove('active');
           }
@@ -266,9 +249,7 @@
       highlightSection();
 
     } catch (error) {
-      console.error("TOC Generation Error:", error);
-      const asideContainer = document.querySelector('.custom-toc-aside');
-      if (asideContainer) asideContainer.style.display = 'none';
+      console.error("TOC JS Error:", error);
     }
   })();
 </script>
