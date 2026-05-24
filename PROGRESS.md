@@ -6,7 +6,7 @@
 - [x] 撰写大模型常见面试题：复读机问题 (英文版) 博客并添加到 `_posts/2026-05-24-llm-interview-repeater-en.md`
 - [x] 实现并优化博客右侧动态智能目录 (Dynamic Table of Contents with ScrollSpy)
 - [x] 更新 `PROGRESS.md` 文件
-- [/] 提交并推送到 GitHub 仓库 (使用 `git commit` & `git push`)
+- [x] 提交并推送到 GitHub 仓库 (使用 `git commit` & `git push`)
 
 ## 📂 项目关键文件路径
 - 中文博客: `_posts/2026-05-24-llm-interview-repeater-cn.md`
