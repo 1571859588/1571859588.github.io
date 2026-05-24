@@ -19,3 +19,4 @@ others_blogs_sites/
 _posts/*-cn.md
 
 videos/
+.cache/
