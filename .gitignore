@@ -18,4 +18,10 @@ others_blogs_sites/
 
 _posts/*-cn.md
 
+# video extract utils
 videos/
+.cache/
+chi_sim.traineddata
+eng.traineddata
+.claude/settings.local.json
+tools/extract-video-text.mjs
