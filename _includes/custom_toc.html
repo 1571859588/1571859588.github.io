@@ -1,14 +1,16 @@
-<!-- Custom TOC floating aside (Server-Side Liquid Generation) -->
+<!-- Custom TOC floating aside (Server-Side Liquid + Tree Hierarchy) -->
 <aside class="custom-toc-aside">
   <nav class="custom-toc-container">
     <header class="custom-toc-header">
       <h4 class="custom-toc-title">
-        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M496 384H160v-16c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v16H16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h80v16c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-16h336c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16zM496 224H160v-16c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v16H16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h80v16c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-16h336c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16zM496 64H160V48c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v16H16C7.2 64 0 71.2 0 80v32c0 8.8 7.2 16 16 16h80v16c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-16h336c8.8 0 16-7.2 16-16V80c0-8.8-7.2-16-16-16z"></path></svg>
-        Table of Contents
+        <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7" />
+        </svg>
+        On this page
       </h4>
     </header>
     <div id="dynamic-toc" class="dynamic-toc-menu">
-      <ul>
+      <ul class="toc-tree">
         {% capture newline %}
 {% endcapture %}
         {% assign lines = page.content | split: newline %}
@@ -19,8 +21,7 @@
             {% assign prefix = stripped | split: " " | first %}
             {% assign is_valid_header = true %}
             {% assign prefix_len = prefix.size %}
-            
-            {% comment %} Ensure the prefix consists ONLY of '#' characters {% endcomment %}
+
             {% for i in (1..prefix_len) %}
               {% assign idx = i | minus: 1 %}
               {% assign char = prefix | slice: idx, 1 %}
@@ -31,7 +32,7 @@
 
             {% if is_valid_header and prefix_len >= 2 and prefix_len <= 6 %}
               {% assign title = stripped | remove_first: prefix | strip %}
-              
+
               {% comment %} Replicate Kramdown's ID generation {% endcomment %}
               {% assign id = title | downcase %}
               {% assign id = id | replace: ' ', '-' %}
@@ -65,13 +66,11 @@
               {% assign id = id | replace: '|', '' %}
               {% assign id = id | replace: '~', '' %}
               {% assign id = id | replace: '`', '' %}
-              
-              {% comment %} Clean up multiple dashes {% endcomment %}
               {% assign id = id | replace: '--', '-' %}
               {% assign id = id | replace: '--', '-' %}
-              
-              <li>
-                <a href="#{{ id }}" class="toc-link depth-{{ prefix_len }}">{{ title }}</a>
+
+              <li class="toc-item toc-depth-{{ prefix_len }}">
+                <a href="#{{ id }}" class="toc-link">{{ title }}</a>
               </li>
             {% endif %}
           {% endif %}
@@ -90,124 +89,253 @@
     .custom-toc-aside {
       display: block;
       position: fixed;
-      right: max(20px, calc(50vw - 650px));
+      right: max(20px, calc((100vw - 1280px) / 2 - 260px));
       top: 100px;
-      width: 250px;
+      width: 240px;
       max-height: calc(100vh - 140px);
       z-index: 1000;
+    }
+  }
+
+  @media screen and (min-width: 1600px) {
+    .custom-toc-aside {
+      right: max(32px, calc((100vw - 1440px) / 2 - 240px));
     }
   }
 
   .custom-toc-container {
     background: #ffffff;
     border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 16px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    border-radius: 10px;
+    padding: 18px 14px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.03);
     max-height: calc(100vh - 160px);
     overflow-y: auto;
     scrollbar-width: thin;
-    scrollbar-color: #cbd5e1 transparent;
+    scrollbar-color: #cbd5e0 transparent;
     transition: all 0.3s ease;
   }
 
   .custom-toc-container::-webkit-scrollbar {
     width: 4px;
   }
+  .custom-toc-container::-webkit-scrollbar-track {
+    background: transparent;
+  }
   .custom-toc-container::-webkit-scrollbar-thumb {
-    background-color: #cbd5e1;
+    background-color: #cbd5e0;
     border-radius: 4px;
+  }
+  .custom-toc-container::-webkit-scrollbar-thumb:hover {
+    background-color: #94a3b8;
   }
 
   .custom-toc-header {
-    margin-bottom: 12px;
+    margin-bottom: 10px;
   }
 
   .custom-toc-title {
-    font-size: 0.85rem;
+    font-size: 0.72rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #475569;
-    margin: 0 0 12px 0;
-    padding-bottom: 8px;
-    border-bottom: 2px solid #f1f5f9;
+    letter-spacing: 1.2px;
+    color: #64748b;
+    margin: 0 0 10px 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f1f5f9;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 7px;
   }
 
   .custom-toc-title svg {
     color: #3b82f6;
-    font-size: 1rem;
   }
 
-  .dynamic-toc-menu ul {
+  /* ── Tree list reset ── */
+  .toc-tree {
     list-style: none !important;
     margin: 0 !important;
     padding: 0 !important;
   }
 
-  .dynamic-toc-menu li {
-    margin: 4px 0 !important;
+  .toc-item {
+    margin: 0 !important;
     padding: 0 !important;
     list-style: none !important;
+    position: relative;
   }
 
-  .dynamic-toc-menu .toc-link {
+  /* ── Base link style ── */
+  .toc-link {
     display: block;
     color: #64748b;
-    font-size: 0.8rem;
-    font-weight: 500;
-    line-height: 1.4;
-    padding: 6px 12px;
     text-decoration: none !important;
+    line-height: 1.4;
+    padding: 5px 10px;
+    border-radius: 4px;
     border-left: 2px solid transparent;
-    transition: all 0.2s ease-in-out;
+    transition: all 0.15s ease;
+    position: relative;
   }
 
-  .dynamic-toc-menu .toc-link:hover {
+  .toc-link:hover {
     color: #0f172a;
     background: #f8fafc;
-    border-radius: 4px;
+    border-left-color: #cbd5e1;
   }
 
-  .dynamic-toc-menu .toc-link.active {
-    color: #3b82f6;
+  /* ── Active state ── */
+  .toc-link.active {
+    color: #2563eb;
     font-weight: 600;
-    border-left-color: #3b82f6;
     background: #eff6ff;
+    border-left-color: #3b82f6;
     border-radius: 0 4px 4px 0;
   }
 
-  .dynamic-toc-menu .depth-2 { font-size: 0.85rem; }
-  .dynamic-toc-menu .depth-3 { margin-left: 12px !important; border-left: 1px solid #f1f5f9; font-size: 0.75rem; }
-  .dynamic-toc-menu .depth-4, .dynamic-toc-menu .depth-5, .dynamic-toc-menu .depth-6 { margin-left: 24px !important; border-left: 1px dashed #f1f5f9; font-size: 0.70rem; color: #94a3b8; }
+  /* ═══════════════════════════════════════════
+     Depth-based sizing & tree connectors
+     ═══════════════════════════════════════════ */
+
+  /* h2 — root level */
+  .toc-depth-2 > .toc-link {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #334155;
+    padding: 5px 10px;
+  }
+
+  /* h3 — first child */
+  .toc-depth-3 > .toc-link {
+    font-size: 0.76rem;
+    font-weight: 500;
+    padding-left: 22px;
+    color: #475569;
+  }
+
+  /* h4 — grandchild */
+  .toc-depth-4 > .toc-link {
+    font-size: 0.72rem;
+    font-weight: 400;
+    padding-left: 34px;
+    color: #64748b;
+  }
+
+  /* h5 — great-grandchild */
+  .toc-depth-5 > .toc-link {
+    font-size: 0.69rem;
+    font-weight: 400;
+    padding-left: 44px;
+    color: #94a3b8;
+  }
+
+  /* h6 — deepest */
+  .toc-depth-6 > .toc-link {
+    font-size: 0.67rem;
+    font-weight: 400;
+    padding-left: 52px;
+    color: #94a3b8;
+    font-style: italic;
+  }
+
+  /* ── Tree connector lines (vertical + horizontal) ── */
+  .toc-depth-3 > .toc-link::before,
+  .toc-depth-4 > .toc-link::before,
+  .toc-depth-5 > .toc-link::before,
+  .toc-depth-6 > .toc-link::before {
+    content: "";
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    width: 8px;
+    height: 1px;
+    background: #e2e8f0;
+  }
+
+  .toc-depth-3 > .toc-link::after,
+  .toc-depth-4 > .toc-link::after,
+  .toc-depth-5 > .toc-link::after,
+  .toc-depth-6 > .toc-link::after {
+    content: "";
+    position: absolute;
+    left: 10px;
+    top: 0;
+    bottom: 50%;
+    width: 1px;
+    background: #e2e8f0;
+  }
+
+  /* Fix: for depth-3 items that are first after a depth-2, don't show full vertical line */
+  .toc-depth-3 > .toc-link::after {
+    bottom: 50%;
+    height: 50%;
+  }
+
+  /* Last child in a group — cap the vertical line */
+  .toc-depth-3:has(+ .toc-depth-2) > .toc-link::after,
+  .toc-depth-3:last-of-type > .toc-link::after,
+  .toc-depth-4:has(+ :not(.toc-depth-4):not(.toc-depth-5):not(.toc-depth-6)) > .toc-link::after,
+  .toc-depth-5:has(+ :not(.toc-depth-5):not(.toc-depth-6)) > .toc-link::after {
+    height: 50%;
+  }
+
+  /* deeper indent for vertical line on sub-items */
+  .toc-depth-4 > .toc-link::before,
+  .toc-depth-4 > .toc-link::after {
+    left: 22px;
+  }
+  .toc-depth-5 > .toc-link::before,
+  .toc-depth-5 > .toc-link::after {
+    left: 32px;
+  }
+  .toc-depth-6 > .toc-link::before,
+  .toc-depth-6 > .toc-link::after {
+    left: 40px;
+  }
+
+  /* ── Collapse deeper levels when not in viewport proximity ── */
+  @media screen and (max-height: 700px) {
+    .toc-depth-5,
+    .toc-depth-6 {
+      display: none;
+    }
+  }
+
+  @media screen and (max-height: 500px) {
+    .toc-depth-4,
+    .toc-depth-5,
+    .toc-depth-6 {
+      display: none;
+    }
+  }
 </style>
 
 <script>
   (function() {
     try {
-      const tocContainer = document.getElementById('dynamic-toc');
+      var tocContainer = document.getElementById('dynamic-toc');
       if (!tocContainer) return;
-      const tocLinks = tocContainer.querySelectorAll('.toc-link');
+      var tocLinks = tocContainer.querySelectorAll('.toc-link');
       if (tocLinks.length === 0) {
-        const asideContainer = document.querySelector('.custom-toc-aside');
+        var asideContainer = document.querySelector('.custom-toc-aside');
         if (asideContainer) asideContainer.style.display = 'none';
         return;
       }
 
-      function highlightSection() {
-        const scrollPosition = window.scrollY || window.pageYOffset;
-        const headerThreshold = 120;
-        let activeIndex = -1;
+      var activeLink = null;
 
-        for (let i = 0; i < tocLinks.length; i++) {
-          const targetId = tocLinks[i].getAttribute('href').substring(1);
-          const targetElement = document.getElementById(targetId);
+      function highlightSection() {
+        var scrollPosition = window.scrollY || window.pageYOffset;
+        var headerThreshold = 120;
+        var activeIndex = -1;
+
+        for (var i = 0; i < tocLinks.length; i++) {
+          var targetId = tocLinks[i].getAttribute('href').substring(1);
+          var targetElement = document.getElementById(targetId);
           if (!targetElement) continue;
 
-          const top = targetElement.getBoundingClientRect().top + scrollPosition;
+          var top = targetElement.getBoundingClientRect().top + scrollPosition;
           if (scrollPosition >= top - headerThreshold) {
             activeIndex = i;
           } else {
@@ -215,35 +343,45 @@
           }
         }
 
-        tocLinks.forEach((link, idx) => {
-          if (idx === activeIndex || (activeIndex === -1 && idx === 0 && scrollPosition < 100)) {
-            link.classList.add('active');
-          } else {
-            link.classList.remove('active');
+        var newActive = activeIndex >= 0 ? tocLinks[activeIndex] : (scrollPosition < 100 ? tocLinks[0] : null);
+
+        if (newActive !== activeLink) {
+          if (activeLink) activeLink.classList.remove('active');
+          if (newActive) {
+            newActive.classList.add('active');
+            // Scroll TOC to keep active link visible
+            var tocRect = newActive.getBoundingClientRect();
+            var containerRect = tocContainer.parentElement.getBoundingClientRect();
+            if (tocRect.bottom > containerRect.bottom - 20) {
+              newActive.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            } else if (tocRect.top < containerRect.top + 20) {
+              newActive.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            }
           }
-        });
+          activeLink = newActive;
+        }
       }
 
-      tocLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
+      for (var i = 0; i < tocLinks.length; i++) {
+        tocLinks[i].addEventListener('click', function(e) {
           e.preventDefault();
-          const targetId = this.getAttribute('href').substring(1);
-          const targetElement = document.getElementById(targetId);
+          var targetId = this.getAttribute('href').substring(1);
+          var targetElement = document.getElementById(targetId);
           if (targetElement) {
-            const offset = 80;
-            const bodyRect = document.body.getBoundingClientRect().top;
-            const elementRect = targetElement.getBoundingClientRect().top;
-            const offsetPosition = (elementRect - bodyRect) - offset;
+            var offset = 80;
+            var bodyRect = document.body.getBoundingClientRect().top;
+            var elementRect = targetElement.getBoundingClientRect().top;
+            var offsetPosition = (elementRect - bodyRect) - offset;
 
             window.scrollTo({
               top: offsetPosition,
               behavior: 'smooth'
             });
-            
+
             history.pushState(null, null, '#' + targetId);
           }
         });
-      });
+      }
 
       window.addEventListener('scroll', highlightSection, { passive: true });
       highlightSection();
