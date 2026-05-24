@@ -1,0 +1,268 @@
+<aside class="sidebar__right sticky-toc-aside">
+  <nav class="toc-container">
+    <header class="toc-header">
+      <h4 class="toc-title">
+        <i class="fa fa-align-right" aria-hidden="true"></i> 
+        目录
+      </h4>
+    </header>
+    <div id="dynamic-toc" class="dynamic-toc-menu">
+      <!-- Generated dynamically by JavaScript -->
+    </div>
+  </nav>
+</aside>
+
+<style>
+  /* Sticky TOC Sidebar Container */
+  .sticky-toc-aside {
+    display: none;
+  }
+
+  @media screen and (min-width: 1024px) {
+    .sticky-toc-aside {
+      display: block;
+      float: right;
+      width: 240px;
+      margin-left: 20px;
+      margin-top: 10px;
+      position: -webkit-sticky;
+      position: sticky;
+      top: 100px;
+      max-height: calc(100vh - 140px);
+      overflow-y: auto;
+      z-index: 10;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
+    }
+
+    /* Scrollbar Styling */
+    .sticky-toc-aside::-webkit-scrollbar {
+      width: 4px;
+    }
+    .sticky-toc-aside::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.1);
+      border-radius: 4px;
+    }
+  }
+
+  .toc-container {
+    background: #fdfdfd;
+    border: 1px solid #eef2f6;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+    transition: all 0.3s ease;
+  }
+
+  .toc-container:hover {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+  }
+
+  .toc-header {
+    margin-bottom: 12px;
+  }
+
+  .toc-title {
+    font-size: 0.85rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #4a5568;
+    margin: 0 !important;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #edf2f7;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .toc-title i {
+    color: #3182ce;
+    font-size: 0.9rem;
+  }
+
+  /* TOC Dynamic Menu */
+  .dynamic-toc-menu ul {
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .dynamic-toc-menu li {
+    margin: 2px 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+  }
+
+  /* Base TOC Link */
+  .dynamic-toc-menu .toc-link {
+    display: block;
+    color: #718096;
+    font-size: 0.78rem;
+    font-weight: 500;
+    line-height: 1.5;
+    padding: 6px 12px;
+    text-decoration: none !important;
+    border-left: 2px solid transparent;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-bottom: none !important;
+  }
+
+  /* Hover micro-animation */
+  .dynamic-toc-menu .toc-link:hover {
+    color: #2d3748;
+    padding-left: 16px;
+    background: rgba(0, 0, 0, 0.015);
+    border-radius: 4px;
+  }
+
+  /* Active state highlight */
+  .dynamic-toc-menu .toc-link.active {
+    color: #3182ce;
+    font-weight: 600;
+    border-left-color: #3182ce;
+    background: rgba(49, 130, 206, 0.05);
+    border-radius: 0 4px 4px 0;
+    padding-left: 16px;
+  }
+
+  /* Tree-like Hierarchical Indentation */
+  .dynamic-toc-menu .depth-3 {
+    margin-left: 10px !important;
+    border-left: 1px solid #edf2f7;
+    font-size: 0.74rem;
+  }
+
+  .dynamic-toc-menu .depth-4 {
+    margin-left: 20px !important;
+    border-left: 1px dashed #edf2f7;
+    font-size: 0.70rem;
+    color: #a0aec0;
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const postBody = document.querySelector('.page__content');
+    if (!postBody) return;
+
+    // Select H2, H3, H4 inside post body. Skip main title H1.
+    const headers = Array.from(postBody.querySelectorAll('h2, h3, h4'));
+    const tocContainer = document.getElementById('dynamic-toc');
+    
+    if (headers.length === 0 || !tocContainer) {
+      // If no headers, hide the entire aside
+      const aside = document.querySelector('.sticky-toc-aside');
+      if (aside) aside.style.display = 'none';
+      return;
+    }
+
+    const ul = document.createElement('ul');
+    
+    headers.forEach(header => {
+      // Exclude related posts or comments headers if they are placed inside
+      if (header.closest('.page__related') || header.closest('.page__comments') || header.closest('.pagination')) {
+        return;
+      }
+
+      // Ensure header has a valid ID for anchor jumping
+      let id = header.id;
+      if (!id) {
+        id = header.innerText.trim().toLowerCase()
+          .replace(/[^a-z0-9\u4e00-\u9fa5]+/gi, '-')
+          .replace(/^-|-$/g, '');
+        header.id = id;
+      }
+
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = '#' + id;
+      a.className = 'toc-link';
+      
+      // Clean header text for TOC
+      a.innerText = header.innerText.trim();
+      
+      // Apply depth classification
+      const tagName = header.tagName.toLowerCase();
+      if (tagName === 'h2') {
+        a.classList.add('depth-2');
+      } else if (tagName === 'h3') {
+        a.classList.add('depth-3');
+      } else if (tagName === 'h4') {
+        a.classList.add('depth-4');
+      }
+
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+
+    tocContainer.appendChild(ul);
+    const tocLinks = ul.querySelectorAll('.toc-link');
+
+    // ScrollSpy Highlighting Logic
+    function highlightSection() {
+      const scrollPosition = window.scrollY || window.pageYOffset;
+      const headerThreshold = 100; // Trigger when header is within 100px from top
+      let activeIndex = -1;
+
+      for (let i = 0; i < headers.length; i++) {
+        const top = headers[i].getBoundingClientRect().top + scrollPosition;
+        if (scrollPosition >= top - headerThreshold) {
+          activeIndex = i;
+        } else {
+          break;
+        }
+      }
+
+      tocLinks.forEach((link, idx) => {
+        if (idx === activeIndex) {
+          link.classList.add('active');
+          
+          // Auto-scroll the sidebar to keep active item in view if TOC overflows
+          const aside = document.querySelector('.sticky-toc-aside');
+          if (aside && aside.scrollHeight > aside.clientHeight) {
+            const linkTop = link.offsetTop;
+            const asideHeight = aside.offsetHeight;
+            if (linkTop > aside.scrollTop + asideHeight - 40) {
+              aside.scrollTop = linkTop - asideHeight + 40;
+            } else if (linkTop < aside.scrollTop + 40) {
+              aside.scrollTop = linkTop - 40;
+            }
+          }
+        } else {
+          link.classList.remove('active');
+        }
+      });
+    }
+
+    // Precise Click-to-Jump Smooth Scroll
+    tocLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href').substring(1);
+        const targetElement = document.getElementById(targetId);
+        if (targetElement) {
+          const offset = 85; // Fixed header navigation offset
+          const bodyRect = document.body.getBoundingClientRect().top;
+          const elementRect = targetElement.getBoundingClientRect().top;
+          const elementPosition = elementRect - bodyRect;
+          const offsetPosition = elementPosition - offset;
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          });
+          
+          // Silently update URL hash
+          history.pushState(null, null, '#' + targetId);
+        }
+      });
+    });
+
+    window.addEventListener('scroll', highlightSection);
+    highlightSection(); // Initial invocation on load
+  });
+</script>

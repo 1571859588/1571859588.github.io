@@ -7,6 +7,7 @@ categories:
 tags:
   - LLM常见面试题
   - 复读机问题
+toc: true
 ---
 
 # LLM Interview Questions: Deep Dive into the "Repeater/Repetition Problem" in Large Language Models
