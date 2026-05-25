@@ -28,8 +28,9 @@ To address this question, we must analyze it from the perspective of both the un
 ### 2.1 Autoregressive Nature and Self-Reinforcing Loops
 
 Large Language Models (LLMs) typically adopt a decoder-only architecture, meaning that each generated token is conditioned on the probability distribution of all previously generated tokens:
-$$P(x_t \mid x_{<t})$$
-
+$$
+P(x_t \mid x_{<t})
+$$
 Due to the nature of the self-attention mechanism, a newly generated token will establish a strong correlation with historically repeated tokens. This significantly amplifies the attention weights of identical words, forming a positive feedback loop. Ultimately, the probability space becomes severely compressed, forcing the model to predict the same tokens repeatedly.
 
 ### 2.2 The Limitation of Decoding Strategies
@@ -156,7 +157,10 @@ Here is a highly structured, professional answer outline to impress them:
 
 ## References
 
-1. **A Contrastive Framework for Neural Text Generation** (Su et al., 2022) — *Introduced Contrastive Search and analyzed the degradation/repetition of greedy decoding.*
-2. **ByteDance Technical Report** (2024) — *Discussed SFT overfitting issues, the repetition problem in dialogue agents, and alignment strategies such as DPO.*
-3. **The Curious Case of Neural Text Degeneration** (Holtzman et al., 2019) — *The foundational paper analyzing text degeneration and introducing Nucleus (Top-p) Sampling.*
+1. **Learning to Break the Loop: Analyzing and Mitigating Repetitions for Neural Text Generation** (Guan et al., NeurIPS 2022) — *Utilized Markov models to explain the self-reinforcement effect and proposed pseudo-repetition penalization (DITTO) to solve the repetition loop.*
+2. **A Theoretical Analysis of the Repetition Problem in Text Generation** (Fu et al., AAAI 2021) — *Formally simplified the text generation process into a first-order Markov chain, identifying the "high inflow" phenomenon as a major cause of repetition.*
+3. **Seaweed-7B: A Cost-Effective Mid-Sized Video Generation Foundation Model** (ByteDance, 2024) — *Discussed SFT post-training challenges (including aesthetic tuning overfitting) and utilized a dual-stage post-training pipeline (SFT + RLHF/DPO) to balance structure, consistency, and generation quality.*
+4. **A Contrastive Framework for Neural Text Generation** (Su et al., 2022) — *Introduced Contrastive Search and analyzed the degradation/repetition of greedy decoding.*
+5. **The Curious Case of Neural Text Degeneration** (Holtzman et al., 2019) — *The foundational paper analyzing text degeneration and introducing Nucleus (Top-p) Sampling.*
+
 
