@@ -31,14 +31,17 @@
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-	// Kramdown puts math in <script type="math/tex"> tags.
-	// Convert them to delimiters KaTeX auto-render can process.
-	document.querySelectorAll('script[type^="math/tex"]').forEach(function(el) {
-		var display = el.type.indexOf('display') >= 0;
-		var span = document.createElement('span');
-		span.textContent = (display ? '$$' : '$') + el.textContent + (display ? '$$' : '$');
-		el.parentNode.replaceChild(span, el);
-	});
+	// Kramdown converts $$ block math to \(...\) (should be display).
+	// Walk text nodes and convert \(...\) to $$...$$ for KaTeX.
+	var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+	var tn;
+	while (tn = walker.nextNode()) {
+		var p = tn.parentNode;
+		if (p && /^(SCRIPT|STYLE|PRE|CODE|TEXTAREA)$/i.test(p.tagName)) continue;
+		if (tn.textContent.indexOf('\\(') >= 0) {
+			tn.textContent = tn.textContent.replace(/\\\(([\s\S]*?)\\\)/g, '$$$$$1$$$$');
+		}
+	}
 
 	renderMathInElement(document.body, {
 		delimiters: [
