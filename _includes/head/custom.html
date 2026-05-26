@@ -25,34 +25,15 @@
 <link rel="stylesheet" href="{{ base_path }}/assets/css/academicons.css"/>
 
 
-<!-- KaTeX for math rendering -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
-<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<!-- MathJax for math rendering -->
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-	if (typeof renderMathInElement === 'undefined') return;
-
-	// Kramdown converts $$ block math to \(...\) (should be display).
-	// Walk text nodes and convert \(...\) to $$...$$ for KaTeX.
-	var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-	var tn;
-	while (tn = walker.nextNode()) {
-		var p = tn.parentNode;
-		if (p && /^(SCRIPT|STYLE|PRE|CODE|TEXTAREA)$/i.test(p.tagName)) continue;
-		if (tn.textContent.indexOf('\\(') >= 0) {
-			tn.textContent = tn.textContent.replace(/\\\(([\s\S]*?)\\\)/g, '$$$$$1$$$$');
-		}
-	}
-
-	renderMathInElement(document.body, {
-		delimiters: [
-			{left: '$$', right: '$$', display: true},
-			{left: '$',  right: '$',  display: false}
-		],
-		throwOnError: false
-	});
-});
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$']],
+    displayMath: [['\\(', '\\)']]
+  }
+};
 </script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 
 <!-- end custom head snippets -->
