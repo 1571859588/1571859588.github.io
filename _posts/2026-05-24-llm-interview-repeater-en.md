@@ -28,11 +28,9 @@ To address this question, we must analyze it from the perspective of both the un
 ### 2.1 Autoregressive Nature and Self-Reinforcing Loops
 
 Large Language Models (LLMs) typically adopt a decoder-only architecture, meaning that each generated token is conditioned on the probability distribution of all previously generated tokens:
-{::nomarkdown}
 $$
 P(x_t \mid x_{<t})
 $$
-{:/}
 Due to the nature of the self-attention mechanism, a newly generated token will establish a strong correlation with historically repeated tokens. This significantly amplifies the attention weights of identical words, forming a positive feedback loop. Ultimately, the probability space becomes severely compressed, forcing the model to predict the same tokens repeatedly.
 
 ### 2.2 The Limitation of Decoding Strategies
@@ -68,31 +66,27 @@ A paper by ByteDance points out that prolonged SFT training leads to rapid overf
 The underlying principle is to penalize the logits of tokens that have already been generated before calculating the Softmax probability distribution.
 
 For each token $i$ in the vocabulary, if it has already appeared in the generated text sequence $g$, its logit is adjusted as follows:
-{::nomarkdown}
 $$
 \text{logits}_i = \begin{cases} 
-\text{logits}_i / \theta & \text{if } \text{logits}_i \gt 0 \\
+\text{logits}_i / \theta & \text{if } \text{logits}_i > 0 \\
 \text{logits}_i \times \theta & \text{if } \text{logits}_i \le 0 
 \end{cases}
 $$
-{:/}
 where $\theta \ge 1.0$ is the penalty factor, which is commonly set between $1.05$ and $1.2$.
 
 - When $\theta = 1.0$, there is no penalty.
-- When $\theta \gt 1.0$, the logits of previously generated tokens are scaled down proportionally. This significantly decreases their probability after Softmax, encouraging the model to select alternative, ungenerated tokens.
+- When $\theta > 1.0$, the logits of previously generated tokens are scaled down proportionally. This significantly decreases their probability after Softmax, encouraging the model to select alternative, ungenerated tokens.
 
 ### 3.2 Presence Penalty & Frequency Penalty
 
 These two penalties, popularized by OpenAI, offer more fine-grained control over repetitive behavior by applying a linear subtraction to the logits:
-{::nomarkdown}
 $$
 \text{logits}'_i = \text{logits}_i - (c_i \times \mu_{\text{freq}} + \text{sgn}(c_i) \times \mu_{\text{pres}})
 $$
-{:/}
 where:
 
 - $c_i$ is the cumulative occurrence count of token $i$ in the generated text.
-- $\text{sgn}(c_i)$ is the sign function (which equals $1$ if $c_i \gt 0$, and $0$ otherwise).
+- $\text{sgn}(c_i)$ is the sign function (which equals $1$ if $c_i > 0$, and $0$ otherwise).
 - $\mu_{\text{freq}}$ is the **Frequency Penalty**. As a token's frequency increases, the penalty grows linearly, making it suitable for preventing the repetitive stacking of high-frequency words.
 - $\mu_{\text{pres}}$ is the **Presence Penalty**. As long as a token has appeared at least once, it receives a one-time fixed penalty, which is effective for guiding the model to introduce new topics and generate diverse vocabulary.
 
@@ -108,11 +102,9 @@ This hard constraint is commonly applied in Beam Search or standard text generat
 Contrastive Search is an advanced decoding method proposed in recent years.
 
 At each generation step, it balances the model's output probability against a **degeneration penalty**, which is measured by the maximum cosine similarity (representing the anisotropy penalty) between the candidate token's hidden state and those of the previously generated context:
-{::nomarkdown}
 $$
 x_t = \arg\max_{u \in V^{(k)}} \left\{ (1 - \alpha) \cdot P(u \mid x_{<t}) - \alpha \cdot \max_{j} \text{Sim}(h_u, h_{x_j}) \right\}
 $$
-{:/}
 where $h_u$ is the representation vector (hidden state) of candidate token $u$, $h_{x_j}$ represents the hidden states of past tokens, and $\alpha$ is a hyperparameter that controls the tradeoff between generation probability and repetition rejection. This ensures that the generated token is both highly probable and maintains a healthy degree of semantic separation from the preceding context.
 
 ### 3.5 Other Inference Adjustments
