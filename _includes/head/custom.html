@@ -25,17 +25,19 @@
 <link rel="stylesheet" href="{{ base_path }}/assets/css/academicons.css"/>
 
 
-<!-- Support for MathJax -->
-<script>
-MathJax = {
-  tex: {
-    inlineMath: [['$', '$'], ['\\(', '\\)']],
-    displayMath: [['$$', '$$'], ['\\[', '\\]']],
-    processEscapes: true
-  }
-};
+<!-- KaTeX for math rendering -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+	onload="renderMathInElement(document.body, {
+		delimiters: [
+			{left: '$$', right: '$$', display: true},
+			{left: '$', right: '$', display: false},
+			{left: '\\[', right: '\\]', display: true},
+			{left: '\\(', right: '\\)', display: false}
+		],
+		throwOnError: false
+	});">
 </script>
-<script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
 <!-- end custom head snippets -->
