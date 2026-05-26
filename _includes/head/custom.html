@@ -27,17 +27,27 @@
 
 <!-- KaTeX for math rendering -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
-	onload="renderMathInElement(document.body, {
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+	// Kramdown puts math in <script type="math/tex"> tags.
+	// Convert them to delimiters KaTeX auto-render can process.
+	document.querySelectorAll('script[type^="math/tex"]').forEach(function(el) {
+		var display = el.type.indexOf('display') >= 0;
+		var span = document.createElement('span');
+		span.textContent = (display ? '$$' : '$') + el.textContent + (display ? '$$' : '$');
+		el.parentNode.replaceChild(span, el);
+	});
+
+	renderMathInElement(document.body, {
 		delimiters: [
 			{left: '$$', right: '$$', display: true},
-			{left: '$', right: '$', display: false},
-			{left: '\\[', right: '\\]', display: true},
-			{left: '\\(', right: '\\)', display: false}
+			{left: '$',  right: '$',  display: false}
 		],
 		throwOnError: false
-	});">
+	});
+});
 </script>
 
 <!-- end custom head snippets -->
