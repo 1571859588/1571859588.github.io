@@ -1,6 +1,16 @@
 # 项目进度与文件路径管理 (Project Progress and File Path Management)
 
 ## 📌 当前任务进度
+- [x] 创建开发分支 `feature/sft-rl-post-training-blog`
+- [x] 撰写并润色大模型常见面试题：SFT后进行RL训练性能先降后升问题 (英文版) 博客 `_posts/2026-05-29-llm-interview-SFT-RL-en.md`
+- [x] 替换并翻译了 `2026-05-29-llm-interview-SFT-RL-en.md` 博客中所有残留的中文标注，以学术英文书面语表达
+- [x] 修正并检索了 References 中的精确学术论文引用（包含 Huawei 2026, RL Is Neither a Panacea Nor a Mirage, Reinforcement Fine-Tuning Naturally Mitigates Forgetting）
+- [x] 运行 python 自动化测试脚本验证 Markdown 内容格式、无残留中文以及文件完整性
+- [x] 更新 `PROGRESS.md` 进度文件
+- [x] 将开发分支 `feature/sft-rl-post-training-blog` 的修改提交并推送至 GitHub 远程仓库 (使用 `git commit` & `git push`)
+
+---
+*(以下为历史任务备份)*
 - [x] 创建开发分支 `feature/llm-repeater-blog`
 - [x] 撰写大模型常见面试题：复读机问题 (中文版) 博客并添加到 `_posts/2026-05-24-llm-interview-repeater-cn.md`
 - [x] 撰写大模型常见面试题：复读机问题 (英文版) 博客并添加到 `_posts/2026-05-24-llm-interview-repeater-en.md`
@@ -10,18 +20,22 @@
 - [x] 重构目录系统 (fix/toc-styling)：分离目录和页面内容流，使用 position fixed 固定到侧边栏，支持无重叠的完美视觉，替换了中文标题及过滤大标题。
 - [x] 在 `.gitignore` 中配置忽略 `_posts/*-cn.md`，不再将中文博文推送到远程
 - [x] 从 Git 缓存中移除已被追踪的中文博文 `_posts/2026-05-24-llm-interview-repeater-cn.md` 的索引
+- [x] 根据最新的英文润色版重新完整翻译了中文版备份 `_posts/2026-05-24-llm-interview-repeater-cn.md`，保持本地非追踪状态
 - [x] 更新 `PROGRESS.md` 文件
 - [x] 提交并推送到 GitHub 仓库 (使用 `git commit` & `git push`)
 
 ## 📂 项目关键文件路径
-- 中文博客 (仅限本地): `_posts/2026-05-24-llm-interview-repeater-cn.md` (已在 .gitignore 中忽略)
-- 英文博客: `_posts/2026-05-24-llm-interview-repeater-en.md`
+- SFT-RL性能变化英文博客: `_posts/2026-05-29-llm-interview-SFT-RL-en.md`
+- 复读机中文博客 (仅限本地): `_posts/2026-05-24-llm-interview-repeater-cn.md` (已在 .gitignore 中忽略)
+- 复读机英文博客: `_posts/2026-05-24-llm-interview-repeater-en.md`
 - 动态目录模版: `_includes/custom_toc.html`
 - 文章布局文件: `_layouts/single.html`
 - 配置文件: `_config.yml`
 - 进度记录: `PROGRESS.md`
 
 ## 📝 历史更新日志
+- **2026-05-29 (SFT-RL博文润色)**: 创建分支 `feature/sft-rl-post-training-blog`，逐句润色修正了 `2026-05-29-llm-interview-SFT-RL-en.md` 英文博客中的所有语法、语义和术语细节错误，完全消除了残留中文。补充了华为2026 coupling paper、SVD 奇异向量旋转、以及 RFT reward variance 隐式正则化等学术论文与概念的精准引用，并使用 Python 自动化脚本进行了全方位的内容合规性与格式校验。
+- **2026-05-29**: 根据最新的英文润色版重新完整翻译了中文版备份 `_posts/2026-05-24-llm-interview-repeater-cn.md`，保持本地非追踪状态。
 - **2026-05-24**: 撰写并添加大语言模型常见面试题之“复读机问题”的中英文博客，创建并更新 `PROGRESS.md`，完成代码提交与推送。
 - **2026-05-24 (更新)**: 实现了响应式、高拟真、具微动画的右侧动态目录，支持点击平滑滚动跳转与滚动条高亮跟随 (ScrollSpy)，并过滤大标题。
 - **2026-05-24 (重构修复)**: 重构了 `custom_toc.html`，彻底解决目录覆盖重叠问题；移除中文显示标题，更新为带图标的英文标题，重构 JS 树形抓取确保深层标签显示正确。

@@ -3,7 +3,7 @@ title: "Deep Dive into the \"Repeater/Repetition Problem\" in Large Language Mod
 date: 2026-05-24
 permalink: /posts/2026/05/llm-interview-repeater-en/
 categories:
-  - Interview
+  - LLM Interview
 tags:
   - LLM Common Interview Questions
   - Repeater/Repetition Problem
@@ -162,5 +162,4 @@ Here is a highly structured, professional answer outline to impress them:
 3. **Seaweed-7B: A Cost-Effective Mid-Sized Video Generation Foundation Model** (ByteDance, 2024) — *Discussed SFT post-training challenges (including aesthetic tuning overfitting) and utilized a dual-stage post-training pipeline (SFT + RLHF/DPO) to balance structure, consistency, and generation quality.*
 4. **A Contrastive Framework for Neural Text Generation** (Su et al., 2022) — *Introduced Contrastive Search and analyzed the degradation/repetition of greedy decoding.*
 5. **The Curious Case of Neural Text Degeneration** (Holtzman et al., 2019) — *The foundational paper analyzing text degeneration and introducing Nucleus (Top-p) Sampling.*
-
 
