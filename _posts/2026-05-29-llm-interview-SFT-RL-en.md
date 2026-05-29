@@ -15,7 +15,7 @@ During the post-training phase of Large Language Models (LLMs), a highly intrigu
 
 This U-shaped performance trajectory is a classic post-training question frequently asked in top-tier LLM algorithm interviews (e.g., at ByteDance, Alibaba, and Zhipu AI). It directly tests your deep understanding of the mathematical and geometric optimization landscapes of both the SFT and RL training stages.
 
-![U-Shaped Performance Curve during SFT-to-RL transition](/_posts/2026-05-29-llm-interview-SFT-RL-en.assets/image-20260529145901727.png)
+![U-Shaped Performance Curve during SFT-to-RL transition](/images/blogs/2026-05-29-llm-interview-SFT-RL-en.assets/image-20260529145901727.png)
 
 In this blog post, we will dissect the underlying mechanics behind this phenomenon, drawing on recent theoretical and empirical breakthroughs.
 
