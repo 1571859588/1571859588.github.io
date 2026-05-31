@@ -60,8 +60,14 @@ For a completed list of publications, see [this](https://1571859588.github.io/pu
 
 ## Recent Blog Posts
 
+<div class="blog-card-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; margin: 1.5em 0 2em;">
 {% for post in site.posts limit: 5 %}
-  {% include archive-single.html %}
+  {% include blog-card.html %}
 {% endfor %}
+</div>
 
-[View all posts](/year-archive/)
+<div style="text-align: center; margin-top: 0.5em;">
+  <a href="/year-archive/" class="btn btn--primary" style="padding: 10px 28px; font-size: 0.95rem;">
+    <i class="fa fa-archive" aria-hidden="true"></i> View All Posts
+  </a>
+</div>
