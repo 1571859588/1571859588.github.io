@@ -1,5 +1,5 @@
 ---
-title: "Deep Dive into the \"Repeater/Repetition Problem\" in Large Language Models"
+title: "Deep Dive into the 'Repeater/Repetition Problem' in Large Language Models"
 date: 2026-05-24
 permalink: /posts/2026/05/llm-interview-repeater-en/
 categories:
@@ -13,21 +13,21 @@ toc: true
 
 The following figure illustrates the repetition problem in LLMs:
 
-![Examples of Repetition Curse: (a) Token Repetition Scenario, (b) Paragraph Repetition Scenario](/images/blogs/2026-05-29-llm-interview-SFT-RL-en.assets/repetition phenomenon.png)
+![Examples of Repetition Curse: (a) Token Repetition Scenario, (b) Paragraph Repetition Scenario](/images/blogs/2026-05-24-llm-interview-repeater-en/repetition%20phenomenon.png)
 
   
 
-## 1. What is the \"Repeater/Repetition\" Problem?
+## 1. What is the "Repeater/Repetition" Problem?
 
-In Natural Language Generation (NLG) tasks, models may sometimes fall into a \"dead loop\" (infinite loop), repeatedly generating the same sentence, phrase, or paragraph.
+In Natural Language Generation (NLG) tasks, models may sometimes fall into an infinite loop, repeatedly generating the same sentence, phrase, or paragraph.
 
 For example:
 
-> \"Today's weather is good, let's go to the park. go to the park. go to the park. ...\"
+> "Today's weather is good, let's go to the park. go to the park. go to the park. ..."
 
-This kind of self-reinforcing loop makes the model unable to terminate the generation process, which severely degrades the user experience and is a classic symptom of text generation quality degradation.
+This self-reinforcing loop prevents the model from terminating the generation process, severely degrading the user experience. It is a classic symptom of text degeneration.
 
-## 2. Why Do LLMs Become \"Repeaters\"?
+## 2. Why Do LLMs Become "Repeaters"?
 
 To address this question, we must analyze it from the perspective of both the underlying model architecture and the decoding mechanism.
 
@@ -45,7 +45,7 @@ Due to the nature of the self-attention mechanism, a newly generated token will 
 
   > As pointed out in a recent paper, greedy decoding lacks the ability to escape from repetitive loops. Due to the self-reinforcing effect, the probability of repetition increases monotonically with the number of past repetitions, eventually stabilizing near a certain upper bound and causing the model to repeat endlessly.
 
-- **Suboptimal Sampling Parameters (e.g., Low Temperature or Top-p)**: If the temperature is set too low, the logits distribution becomes extremely sharpened. This allows high-probability tokens to monopolize the generation space, reducing randomness and easily causing the model to degrade into a repetitive state similar to greedy search.
+- **Suboptimal Sampling Parameters (e.g., Low Temperature or Top-p)**: If the temperature is set too low, the logits distribution becomes overly sharp, allowing high-probability tokens to monopolize the generation space, reducing randomness and easily causing the model to degrade into a repetitive state similar to greedy search.
 
 ### 2.3 The Bias of Pre-training & Fine-tuning datasets
 
@@ -55,11 +55,11 @@ The training corpora for LLMs originate from vast amounts of web data. This raw 
 - Spam ads, automated emails, and machine-generated repetitive code blocks;
 - Error logs captured by web crawlers.
 
-If a model overfits these repetitive patterns during pre-training or Supervised Fine-Tuning (SFT), it will easily trigger this \"repetitive behavior\" when encountering similar contexts during inference.
+If a model overfits these repetitive patterns during pre-training or Supervised Fine-Tuning (SFT), it will easily trigger this "repetitive behavior" when encountering similar contexts during inference.
 
 ### 2.4 Context Degradation & Attention Sinks
 
-When the length of the generated text approaches or exceeds the context window of the model, or when the model lacks sufficient long-context instruction tuning, the self-attention mechanism may experience the \"attention sink\" effect on early tokens or lose the ability to track long-range dependencies. Consequently, the model enters a \"distracted\" state where it struggles to generate logical, novel content, resorting instead to copying familiar, local, and \"safe\" sequences to continue generation.
+When the length of the generated text approaches or exceeds the context window of the model, or when the model lacks sufficient long-context instruction tuning, the self-attention mechanism may experience the "attention sink" effect on early tokens or lose the ability to track long-range dependencies. Consequently, the model enters a "distracted" state where it struggles to generate logical, novel content, resorting instead to copying familiar, local, and "safe" sequences to continue generation.
 
 ### 2.5 Prolonged SFT Training
 
