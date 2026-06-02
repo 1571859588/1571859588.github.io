@@ -1,13 +1,12 @@
 # 项目进度与文件路径管理 (Project Progress and File Path Management)
 
 ## 📌 当前任务进度
-- [x] 创建开发分支 `feature/sft-rl-post-training-blog`
-- [x] 撰写并润色大模型常见面试题：SFT后进行RL训练性能先降后升问题 (英文版) 博客 `_posts/2026-05-29-llm-interview-SFT-RL-en.md`
-- [x] 替换并翻译了 `2026-05-29-llm-interview-SFT-RL-en.md` 博客中所有残留的中文标注，以学术英文书面语表达
-- [x] 修正并检索了 References 中的精确学术论文引用（包含 Huawei 2026, RL Is Neither a Panacea Nor a Mirage, Reinforcement Fine-Tuning Naturally Mitigates Forgetting）
-- [x] 运行 python 自动化测试脚本验证 Markdown 内容格式、无残留中文以及文件完整性
+- [x] 切换并使用开发分支 `docx/repeater-blog`
+- [x] 润色并修正大模型常见面试题：复读机问题 (英文版) 博客 `_posts/2026-05-24-llm-interview-repeater-en.md` 的英文学术书面语表达
+- [x] 修复复读机英文博客中引用的配图路径，更正目录至 `2026-05-24-llm-interview-repeater-en` 并对文件名中的空格进行 URL 编码
+- [x] 移除博客中所有 Markdown 语法渲染冲突的转义双引号反斜杠 `\"` -> `"`
 - [x] 更新 `PROGRESS.md` 进度文件
-- [x] 将开发分支 `feature/sft-rl-post-training-blog` 的修改提交并推送至 GitHub 远程仓库 (使用 `git commit` & `git push`)
+- [x] 将开发分支 `docx/repeater-blog` 的修改提交并推送至 GitHub 远程仓库 (使用 `git commit` & `git push`)
 
 ---
 *(以下为历史任务备份)*
