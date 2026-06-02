@@ -5,8 +5,10 @@
 - [x] 润色并修正大模型常见面试题：复读机问题 (英文版) 博客 `_posts/2026-05-24-llm-interview-repeater-en.md` 的英文学术书面语表达
 - [x] 修复复读机英文博客中引用的配图路径，更正目录至 `2026-05-24-llm-interview-repeater-en` 并对文件名中的空格进行 URL 编码
 - [x] 移除博客中所有 Markdown 语法渲染冲突的转义双引号反斜杠 `\"` -> `"`
+- [x] 在 Git 远程和本地仓库中删除旧教程博客 `_posts/2026-02-26-my-first-markdown-blog.md`
+- [x] 润色并修正 HDL 学习体验博客 `_posts/2026-04-06-blog-post-1.md` 的英文书面语表达，使其更具学术与工程专业度
 - [x] 更新 `PROGRESS.md` 进度文件
-- [x] 将开发分支 `docx/repeater-blog` 的修改提交并推送至 GitHub 远程仓库 (使用 `git commit` & `git push`)
+- [x] 将开发分支 `docx/repeater-blog` 的最新修改（包含删除与修改文件）提交并推送至 GitHub 远程仓库 (使用 `git commit` & `git push`)
 
 ---
 *(以下为历史任务备份)*
