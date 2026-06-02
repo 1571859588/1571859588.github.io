@@ -11,6 +11,12 @@ tags:
 toc: true
 ---
 
+The following figure illustrates the repetition problem in LLMs:
+
+![Examples of Repetition Curse: (a) Token Repetition Scenario, (b) Paragraph Repetition Scenario](/images/blogs/2026-05-29-llm-interview-SFT-RL-en.assets/repetition phenomenon.png)
+
+  
+
 ## 1. What is the \"Repeater/Repetition\" Problem?
 
 In Natural Language Generation (NLG) tasks, models may sometimes fall into a \"dead loop\" (infinite loop), repeatedly generating the same sentence, phrase, or paragraph.
