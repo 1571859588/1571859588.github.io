@@ -7,6 +7,7 @@
 - [x] 移除博客中所有 Markdown 语法渲染冲突的转义双引号反斜杠 `\"` -> `"`
 - [x] 在 Git 远程和本地仓库中删除旧教程博客 `_posts/2026-02-26-my-first-markdown-blog.md`
 - [x] 润色并修正 HDL 学习体验博客 `_posts/2026-04-06-blog-post-1.md` 的英文书面语表达，使其更具学术与工程专业度
+- [x] 根据英文版 `_posts/2026-05-29-llm-interview-SFT-RL-en.md` 完整翻译并撰写本地中文版 `_posts/2026-05-29-llm-interview-SFT-RL-cn.md`（已通过 .gitignore 在 Git 中忽略，仅保留本地）
 - [x] 更新 `PROGRESS.md` 进度文件
 - [x] 将开发分支 `docx/repeater-blog` 的最新修改（包含删除与修改文件）提交并推送至 GitHub 远程仓库 (使用 `git commit` & `git push`)
 
