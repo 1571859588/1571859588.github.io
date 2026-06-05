@@ -31,6 +31,19 @@ MathJax = {
   tex: {
     inlineMath: [['$', '$']],
     displayMath: [['\\(', '\\)']]
+  },
+  startup: {
+    ready: function() {
+      MathJax.startup.defaultReady();
+      // Fix kramdown stripping backslashes before _ in math spans.
+      // kramdown treats \_ as a markdown escape, converting $seq\_len$ → $seq_len$.
+      // This preFilter runs on each math expression BEFORE TeX parsing,
+      // restoring \_ when _ is followed by 2+ lowercase letters.
+      // Safe: legitimate subscripts use single chars ($d_k$) or braces ($x_{ij}$).
+      MathJax.startup.input[0].preFilters.add(function(data) {
+        data.math = data.math.replace(/_([a-z]{2,})/g, '\\_$1');
+      });
+    }
   }
 };
 </script>
