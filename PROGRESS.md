@@ -1,14 +1,15 @@
 # 项目进度与文件路径管理 (Project Progress and File Path Management)
 
 ## 📌 当前任务进度
-- [x] 切换并使用开发分支 `docx/transformer-blog`
-- [x] 润色并修正大模型常见面试题：Transformer 连环问 (英文版) 博客 `_posts/2026-06-02-llm-interview-Transformer-en.md` 的英文学术书面语与精准专业术语表达
-- [x] 拓展 Transformer 架构的全局架构讲解，加入对论文图示 Figure 1 及其 Caption 的定位锚点与引用
-- [x] 深入剖析 Transformer 机制底层原理（引入对 $\sqrt{d_k}$ 分布方差变化推导，以及 Xavier 初始化对 embedding 乘以 $\sqrt{D}$ 的数学证明与论文原文引用）
-- [x] 修正 Layer Normalization 归一化维度的数学及 PyTorch 维度解释，纠正其对应的可学习参数维度为 $D$
-- [x] 完善 YAML 头部的标题、标签、Permalink 与 References（标明每篇引用论文在此博文中的作用与作用描述）
+- [x] 完善 `_posts/2026-06-02-llm-interview-Transformer-en.md` 中的所有公式推理和原理中间步骤
+  - [x] 提供适合高中生水平理解的均值（Mean）、方差（Variance）及其代数性质的科普说明
+  - [x] 补充 Self-Attention 在多头模式下的 $Q, K, V$ 张量维度变换与矩阵乘法步骤图解与数值示例
+  - [x] 补全 $\text{Var}(q \cdot k) = d_k$ 以及除以 $\sqrt{d_k}$ 使方差重新回到 $1$ 的完整数学推导
+  - [x] 提供 Softmax 输入方差过大导致梯度消失的数值对比示例（含 Case A/B 计算）
+  - [x] 补充 Xavier 初始化下 Embedding 乘以 $\sqrt{D}$ 对方差标定与信号保留（防止位置编码淹没语义）的详细原理解释
+  - [x] 提供 Layer Normalization 与 Batch Normalization 的具体数值计算与对比示例（Tensor 形状 $[2, 2, 3]$）
 - [x] 更新 `PROGRESS.md` 进度文件
-- [x] 将开发分支 `docx/transformer-blog` 的最新修改提交并推送至 GitHub 远程仓库 (使用 `git commit` & `git push`)
+- [x] 切换至开发分支 `feature/improve-transformer-derivations` 并提交与推送修改到远程仓库
 
 ---
 *(以下为历史任务备份)*
