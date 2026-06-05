@@ -35,6 +35,7 @@ The Transformer model, introduced by Vaswani et al. in the seminal paper *"Atten
 Below is the structural diagram of the Transformer model architecture.
 
 ![The Transformer model architecture](/images/blogs/2026-06-02-llm-interview-Transformer-en/transformer_architecture.png)
+
 *Figure 1: The Transformer - model architecture (Source: Vaswani et al., 2017). The encoder (left) maps an input sequence of symbol representations to a sequence of continuous representations, which the decoder (right) then uses to generate an output sequence of symbols one token at a time.*
 
 ---
