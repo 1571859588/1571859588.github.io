@@ -1,4 +1,28 @@
 <script src="{{ base_path }}/assets/js/main.min.js"></script>
 <script src="{{ base_path }}/assets/js/paper-details.js"></script>
 
+<!-- Fix kramdown stripping backslashes before _ in math spans.
+     kramdown treats \_ as a markdown escape, converting $seq\_len$ to $seq_len$.
+     MathJax then interprets _ as subscript instead of a literal underscore.
+     This runs synchronously before MathJax (async) processes the page. -->
+<script>
+(function() {
+  var content = document.querySelector('.page__content');
+  if (!content) return;
+  var walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT, null, false);
+  var nodes = [];
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+  nodes.forEach(function(node) {
+    var text = node.textContent;
+    var fixed = text.replace(/\$([^$\n]+?)\$/g, function(match, math) {
+      // Inside $...$, add \ before _ followed by 2+ lowercase letters.
+      // Safe: legitimate subscripts use single chars ($d_k$) or braces ($x_{ij}$).
+      var fixedMath = math.replace(/_([a-z]{2,})/g, '\\_$1');
+      return fixedMath !== math ? '$' + fixedMath + '$' : match;
+    });
+    if (fixed !== text) node.textContent = fixed;
+  });
+})();
+</script>
+
 {% include analytics.html %}

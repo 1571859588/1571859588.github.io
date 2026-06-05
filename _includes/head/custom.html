@@ -30,34 +30,7 @@
 MathJax = {
   tex: {
     inlineMath: [['$', '$']],
-    displayMath: [['$$', '$$']],
-    processEscapes: true
-  },
-  startup: {
-    pageReady: function() {
-      // Fix kramdown stripping backslashes before _ in math spans.
-      // kramdown treats \_ as a markdown escape, converting $seq\_len$ to $seq_len$.
-      // MathJax then interprets _ as subscript instead of a literal underscore.
-      // Heuristic: inside $...$, add \ before _ followed by 2+ lowercase letters.
-      // This is safe because in LaTeX, _len would only subscript 'l', which is almost
-      // never intended. Legitimate subscripts use single chars ($d_k$) or braces ($x_{ij}$).
-      (function() {
-        var content = document.querySelector('.page__content');
-        if (!content) return;
-        var walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT, null, false);
-        var nodes = [];
-        while (walker.nextNode()) nodes.push(walker.currentNode);
-        nodes.forEach(function(node) {
-          var text = node.textContent;
-          var fixed = text.replace(/\$([^$\n]+?)\$/g, function(match, math) {
-            var fixedMath = math.replace(/_([a-z]{2,})/g, '\\_$1');
-            return fixedMath !== math ? '$' + fixedMath + '$' : match;
-          });
-          if (fixed !== text) node.textContent = fixed;
-        });
-      })();
-      return MathJax.startup.defaultPageReady();
-    }
+    displayMath: [['\\(', '\\)']]
   }
 };
 </script>
