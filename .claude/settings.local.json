@@ -3,35 +3,7 @@
     "allow": [
       "Bash(bundle exec *)",
       "Bash(ruby --version)",
-      "Bash(gem list *)",
-      "Bash(curl -s \"https://1571859588.github.io/posts/2026/05/llm-interview-repeater-en/\")",
-      "Bash(grep -oP '.{0,40}tokens:.{0,80}')",
-      "Bash(curl -sI \"https://1571859588.github.io/posts/2026/05/llm-interview-repeater-en/\")",
-      "Bash(grep -oP 'textContent.replace.{0,100}')",
-      "Bash(grep -oP '.{0,200}DOMContentLoaded.{0,600}')",
-      "Bash(git add *)",
-      "Bash(git commit -m ' *)",
-      "Bash(git push *)",
-      "Bash(grep -oP '.{0,60}tokens:.{0,80}')",
-      "Bash(grep -oP '.{0,60}cases.{0,80}')",
-      "Bash(grep -oP '.{0,60}\\\\\\\\\\\\$h_u.{0,80}')",
-      "Bash(grep -oP 'h_u.{0,80}|c_i.{0,80}')",
-      "Bash(curl -sI \"https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.js\")",
-      "Bash(curl -sI \"https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/contrib/auto-render.min.js\")",
-      "Bash(curl -sI \"https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.css\")",
-      "Bash(curl -sI \"https://cdnjs.cloudflare.com/ajax/libs/katex/0.16.11/katex.min.js\")",
-      "Bash(curl -sI \"https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js\")",
-      "Bash(curl -sI \"https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js\")",
-      "Bash(curl -sI \"https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css\")",
-      "Bash(grep -oP '.{0,40}\\\\\\\\\\\\$i.{0,40}')",
-      "Bash(grep -oP 'textContent.replace.{0,50}')",
-      "Bash(grep -oP '.{0,40}\\\\$i.{0,40}|textContent.replace.{0,70}|display: true')",
-      "Bash(grep -oP 'MathJax = .{0,200}')",
-      "WebFetch(domain:1571859588.github.io)",
-      "PowerShell(Get-Content *)",
-      "PowerShell(bundle exec *)",
-      "PowerShell(git *)",
-      "PowerShell(git push *)"
+      "Bash(gem list *)"
     ]
   }
 }
