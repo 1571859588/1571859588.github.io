@@ -35,7 +35,11 @@ In the original Transformer architecture (Vaswani et al., 2017), position inform
     X_{\text{final}} = X_{\text{embedding}} + PE
     $$
 *   **Reference Diagram**: 
-    > *Placeholder: [Refer to Figure 1: The Transformer - model architecture (Source: Vaswani et al., 2017) left and right stack inputs, where "Positional Encoding" is added to the "Input Embedding" and "Output Embedding" respectively.]*
+
+    ![The Transformer model architecture](/images/blogs/2026-06-02-llm-interview-Transformer-en/transformer_architecture.png)
+
+    > *Figure 1: The Transformer - model architecture (Source: Vaswani et al., 2017). The encoder (left) maps an input sequence of symbol representations to a sequence of continuous representations, which the decoder (right) then uses to generate an output sequence of symbols one token at a time.* 
+    > Note that in this original encoder-decoder architecture, "Positional Encoding" is added to both the "Input Embedding" and "Output Embedding" at the bottom of the respective stacks.
 
 ### 1.2 Position Injection in LLaMA (RoPE)
 In LLaMA (Touvron et al., 2023), instead of adding positional vectors at the input layer, position information is applied directly within the Self-Attention layer of each Decoder block.
@@ -216,19 +220,23 @@ $$
 Let's compute the matrix multiplication step-by-step:
 1.  **Top-left element**:
     $$
-    \cos(\theta_j t)\cos(\theta_j s) + \sin(\theta_j t)\sin(\theta_j s) = \cos(\theta_j s - \theta_j t) = \cos(\theta_j(s - t))
+    \cos(\theta_j t)\cos(\theta_j s) + \sin(\theta_j t)\sin(\theta_j s) \\
+    = \cos(\theta_j s - \theta_j t) = \cos(\theta_j(s - t))
     $$
 2.  **Top-right element**:
     $$
-    \cos(\theta_j t)(-\sin(\theta_j s)) + \sin(\theta_j t)\cos(\theta_j s) = -(\sin(\theta_j s)\cos(\theta_j t) - \cos(\theta_j s)\sin(\theta_j t)) = -\sin(\theta_j(s - t))
+    \cos(\theta_j t)(-\sin(\theta_j s)) + \sin(\theta_j t)\cos(\theta_j s) \\
+    = -(\sin(\theta_j s)\cos(\theta_j t) - \cos(\theta_j s)\sin(\theta_j t)) = -\sin(\theta_j(s - t))
     $$
 3.  **Bottom-left element**:
     $$
-    -\sin(\theta_j t)\cos(\theta_j s) + \cos(\theta_j t)\sin(\theta_j s) = \sin(\theta_j s)\cos(\theta_j t) - \cos(\theta_j s)\sin(\theta_j t) = \sin(\theta_j(s - t))
+    -\sin(\theta_j t)\cos(\theta_j s) + \cos(\theta_j t)\sin(\theta_j s) \\
+    = \sin(\theta_j s)\cos(\theta_j t) - \cos(\theta_j s)\sin(\theta_j t) = \sin(\theta_j(s - t))
     $$
 4.  **Bottom-right element**:
     $$
-    (-\sin(\theta_j t))(-\sin(\theta_j s)) + \cos(\theta_j t)\cos(\theta_j s) = \cos(\theta_j t)\cos(\theta_j s) + \sin(\theta_j t)\sin(\theta_j s) = \cos(\theta_j(s - t))
+    (-\sin(\theta_j t))(-\sin(\theta_j s)) + \cos(\theta_j t)\cos(\theta_j s) \\
+    = \cos(\theta_j t)\cos(\theta_j s) + \sin(\theta_j t)\sin(\theta_j s) = \cos(\theta_j(s - t))
     $$
 
 Putting the elements back into the matrix:
