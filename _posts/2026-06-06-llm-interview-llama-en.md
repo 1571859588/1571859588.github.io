@@ -220,38 +220,33 @@ $$
 Let's compute the matrix multiplication step-by-step:
 1.  **Top-left element**:
     $$
-    \cos(\theta_j t)\cos(\theta_j s) + \sin(\theta_j t)\sin(\theta_j s)     
+    \begin{aligned}
+    \cos(\theta_j t)\cos(\theta_j s) + \sin(\theta_j t)\sin(\theta_j s) &= \cos(\theta_j s - \theta_j t) \\
+    &= \cos(\theta_j(s - t))
+    \end{aligned}
     $$
-
-    $$
-    = \cos(\theta_j s - \theta_j t) = \cos(\theta_j(s - t))
-    $$
-
 2.  **Top-right element**:
     $$
-    \cos(\theta_j t)(-\sin(\theta_j s)) + \sin(\theta_j t)\cos(\theta_j s) 
-    $$
-
-    
-    $$
-    = -(\sin(\theta_j s)\cos(\theta_j t) - \cos(\theta_j s)\sin(\theta_j t)) = -\sin(\theta_j(s - t))
+    \begin{aligned}
+    \cos(\theta_j t)(-\sin(\theta_j s)) + \sin(\theta_j t)\cos(\theta_j s) &= -(\sin(\theta_j s)\cos(\theta_j t) - \cos(\theta_j s)\sin(\theta_j t)) \\
+    &= -\sin(\theta_j(s - t))
+    \end{aligned}
     $$
 3.  **Bottom-left element**:
     $$
-    -\sin(\theta_j t)\cos(\theta_j s) + \cos(\theta_j t)\sin(\theta_j s) \\
-    $$
-
-    $$
-    = \sin(\theta_j s)\cos(\theta_j t) - \cos(\theta_j s)\sin(\theta_j t) = \sin(\theta_j(s - t))
+    \begin{aligned}
+    -\sin(\theta_j t)\cos(\theta_j s) + \cos(\theta_j t)\sin(\theta_j s) &= \sin(\theta_j s)\cos(\theta_j t) - \cos(\theta_j s)\sin(\theta_j t) \\
+    &= \sin(\theta_j(s - t))
+    \end{aligned}
     $$
 4.  **Bottom-right element**:
     $$
-    (-\sin(\theta_j t))(-\sin(\theta_j s)) + \cos(\theta_j t)\cos(\theta_j s) \\
+    \begin{aligned}
+    (-\sin(\theta_j t))(-\sin(\theta_j s)) + \cos(\theta_j t)\cos(\theta_j s) &= \cos(\theta_j t)\cos(\theta_j s) + \sin(\theta_j t)\sin(\theta_j s) \\
+    &= \cos(\theta_j(s - t))
+    \end{aligned}
     $$
 
-    $$
-    = \cos(\theta_j t)\cos(\theta_j s) + \sin(\theta_j t)\sin(\theta_j s) = \cos(\theta_j(s - t))
-    $$
 Putting the elements back into the matrix:
 $$
 \left(R_{\Theta, t}^{(j)}\right)^T R_{\Theta, s}^{(j)} = \begin{bmatrix}
