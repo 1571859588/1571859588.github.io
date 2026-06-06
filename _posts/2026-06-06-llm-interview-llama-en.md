@@ -43,6 +43,9 @@ In the original Transformer architecture (Vaswani et al., 2017), position inform
 
 ### 1.2 Position Injection in LLaMA (RoPE)
 In LLaMA (Touvron et al., 2023), instead of adding positional vectors at the input layer, position information is applied directly within the Self-Attention layer of each Decoder block.
+
+![LLaMA model architecture](/images/blogs/2026-06-06-llm-interview-llama-en/llama_architecture.png)
+
 *   **Location**: Inside the Multi-Head Attention module, right before computing the dot product between the Query ($Q$) and Key ($K$) vectors.
 *   **Formula**:
     $$
