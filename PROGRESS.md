@@ -1,13 +1,15 @@
 # 项目进度与文件路径管理 (Project Progress and File Path Management)
 
 ## 📌 当前任务进度
-- [x] 翻译、修正并大幅扩充 LLaMA 与 Transformer 位置编码博客 `_posts/2026-06-06-llm-interview-llama-en.md`
-  - [x] 对其中的位置编码公式（绝对 vs 相对）进行了详尽的高中生水平数学推导与原理解释
-  - [x] 提供 2D 旋转矩阵的数值运算示例（以 $90^\circ$ 为例）及相对距离推导（$R_t^T R_s = R_{s-t}$）证明
-  - [x] 拓展 Transformer 的全局位置注入架构，并与 LLaMA 的 Attention 级旋转位置注入对比（含 Figure 1 定位锚点）
-  - [x] 精准校对英文学术语法、关键专业术语并补齐 references 和 yaml 元数据
+- [x] 翻译、修正并大幅扩充 Layer Normalization 博客 `_posts/2026-06-07-llm-interview-layernorm-en.md`
+  - [x] 介绍深度学习常见的四种归一化方法，并定位其在图 `Figure 1: Comparison of normalization methods` 中的不同轴向表达
+  - [x] 详细阐明并推导了 LayerNorm 带来的模型稳定性（防止梯度爆炸/消失）和收敛加速（缓解 Covariate Shift 与优化面椭圆圆化）原理
+  - [x] 提供了权重缩放因子 $k$ 对应 LayerNorm 输出不变性的数学证明（即 Scale Invariance）
+  - [x] 提供了 NLP 下使用 BN 会面临的 variable-length padding 干扰均值/方差的具体数值计算示例，并说明推理时 batch size 独立性
+  - [x] 对比了 LayerNorm 与 RMSNorm 的公式及在 LLaMA 中运用的计算效率优势
+  - [x] 补充了 LayerNorm 在 CNN (ResNet) 中对空间信息破坏的解释，以及在现代 ViT / ConvNeXt 中的应用现状
 - [x] 更新 `PROGRESS.md` 进度文件
-- [x] 切换至开发分支 `feature/improve-llama-rope-derivations` 并提交与推送修改到远程仓库
+- [x] 切换至开发分支 `feature/improve-layernorm-reasons` 并提交与推送修改到远程仓库
 
 ---
 *(以下为历史任务备份)*
@@ -35,6 +37,7 @@
 ## 📂 项目关键文件路径
 - Transformer原理英文博客: `_posts/2026-06-02-llm-interview-Transformer-en.md`
 - LLaMA与RoPE位置编码英文博客: `_posts/2026-06-06-llm-interview-llama-en.md`
+- LayerNorm原理英文博客: `_posts/2026-06-07-llm-interview-layernorm-en.md`
 - SFT-RL性能变化英文博客: `_posts/2026-05-29-llm-interview-SFT-RL-en.md`
 - 复读机中文博客 (仅限本地): `_posts/2026-05-24-llm-interview-repeater-cn.md` (已在 .gitignore 中忽略)
 - 复读机英文博客: `_posts/2026-05-24-llm-interview-repeater-en.md`
@@ -44,6 +47,7 @@
 - 进度记录: `PROGRESS.md`
 
 ## 📝 历史更新日志
+- **2026-06-07 (LayerNorm原理博客扩充与公式证明)**: 创建分支 `feature/improve-layernorm-reasons`，翻译、润色并扩充了 `_posts/2026-06-07-llm-interview-layernorm-en.md`，详尽论证了 LayerNorm 的三点核心作用，证明了尺度不变性（Scale Invariance），提供了 variable-length padding 对 BN 影响的数值示例，对比了 RMSNorm 并在 CNN 与 Transformer 适用性上做了解释，配置了 Figure 1 定位与 4 篇 References 详细功用描述。
 - **2026-06-06 (LLaMA位置编码博文扩充与公式推导)**: 创建分支 `feature/improve-llama-rope-derivations`，翻译、润色并扩充了 `_posts/2026-06-06-llm-interview-llama-en.md`，详尽推导了三角函数位置编码的线性相对关系，推导了 $R_t^T R_s = R_{s-t}$ 以证明 RoPE 相对位置属性，提供了旋转矩阵 $90^\circ$ 及 Hadamard 计算形式的详细数学推导和数值示例，增加了与 Vanilla Transformer 全局架构差异的对比，配置了完整的 YAML 元数据与 References 列表。
 - **2026-06-05 (Transformer原理博文公式推理完善)**: 创建分支 `feature/improve-transformer-derivations`，完善了 `_posts/2026-06-02-llm-interview-Transformer-en.md` 中的所有原理公式步骤，增加了高中生科普形式的期望与方差代数运算步骤、Softmax 梯度消失 Case A/B 数值对比、Xavier 初始化乘 $\sqrt{D}$ 对方差和位置信息平衡的论证，以及 LN 和 BN 张量 $[2, 2, 3]$ 的具体计算对比。
 - **2026-05-29 (SFT-RL博文润色)**: 创建分支 `feature/sft-rl-post-training-blog`，逐句润色修正了 `2026-05-29-llm-interview-SFT-RL-en.md` 英文博客中的所有语法、语义和术语细节错误，完全消除了残留中文。补充了华为2026 coupling paper、SVD 奇异向量旋转、以及 RFT reward variance 隐式正则化等学术论文与概念的精准引用，并使用 Python 自动化脚本进行了全方位的内容合规性与格式校验。
