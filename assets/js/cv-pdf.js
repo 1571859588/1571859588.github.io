@@ -25,7 +25,7 @@ function downloadCV(filename) {
     '  .masthead, .page__footer, .greedy-nav, nav,',
     '  .sidebar, .author__avatar, .author__content,',
     '  .author__urls-wrapper, #sidebar, .page__title,',
-    '  .page__hero, .breadcrumbs, .cv-actions { display: none !important; }',
+    '  .page__hero, .breadcrumbs, .cv-actions, .cv-track-selector { display: none !important; }',
 
     // ── Full width layout ──
     '  body {',

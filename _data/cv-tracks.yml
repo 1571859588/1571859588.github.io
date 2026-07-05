@@ -1,0 +1,330 @@
+# CV Track Definitions
+# Each track defines a targeted CV direction with its own research interests,
+# projects, internships, and skills. Shared data (personal info, education,
+# awards) lives in cv.yml.
+#
+# To add a new track:
+#   1. Add a new entry below following the same structure
+#   2. Create _pages/cv-{key}.md and _pages/cv-{key}-zh.md (see existing for template)
+#
+# Key: used in page permalinks and include parameters (e.g., track="agent")
+
+tracks:
+  # ============================================================================
+  # AI Agent Track
+  # ============================================================================
+  agent:
+    name:
+      en: "AI Agent"
+      zh: "AI Agent"
+    description:
+      en: "Focus on multi-agent systems, tool-use agents, and LLM-based autonomous workflows."
+      zh: "聚焦多智能体系统、工具使用智能体以及基于大语言模型的自主工作流。"
+    research_interests:
+      en:
+        - "Multi-Agent Systems"
+        - "LLM Reasoning & Planning"
+        - "Tool-Use & Function Calling"
+        - "Agentic Workflows & Orchestration"
+        - "Human-Agent Collaboration"
+      zh:
+        - "多智能体系统"
+        - "大语言模型推理与规划"
+        - "工具使用与函数调用"
+        - "智能体工作流与编排"
+        - "人机协作"
+    internships:
+      - company:
+          en: "ChatEDA Lab"
+          zh: "ChatEDA"
+        location:
+          en: "China"
+          zh: "中国"
+        position:
+          en: "Research Intern"
+          zh: "研究实习生"
+        date:
+          en: "Oct. 2024 - Present"
+          zh: "2024.10 - 至今"
+        description:
+          en: "Research on LLM-powered multi-agent systems for Electronic Design Automation"
+          zh: "研究基于大语言模型的多智能体系统在电子设计自动化中的应用"
+        responsibilities:
+          en:
+            - "Led the development of RAG-EDA, a full-stack RAG-based document QA system for 5 EDA tools, deployed at Empyrean Technology"
+            - "Designed hybrid retrieval (FAISS + BM25) and FlagLLM Reranker pipeline, improving Top-5 hit rate from 60% to over 90%"
+            - "Built multimodal QA with InternVL2/Qwen-VL and automated evaluation framework with regression testing"
+            - "Developed an intelligent PDF parsing system for chip SPEC documents, integrating multi-tool extraction, OpenCV table recognition, and LLM-enhanced chunking"
+          zh:
+            - "主导开发RAG-EDA全栈RAG文档问答系统，支持5款EDA工具的技术文档知识库，已在华大九天落地部署"
+            - "设计FAISS + BM25混合检索与FlagLLM Reranker精排流水线，Top-5命中率从60%提升至90%以上"
+            - "构建基于InternVL2/Qwen-VL的多模态问答能力，并搭建覆盖召回率、精排与端到端准确率的自动化评测框架"
+            - "开发面向芯片SPEC文档的PDF智能解析系统，集成多工具协同提取、OpenCV表格识别与LLM增强分块策略"
+    projects:
+      - name:
+          en: "RAG-EDA: LLM-Powered Document QA System for EDA Tools"
+          zh: "RAG-EDA：基于大语言模型的EDA工具文档问答系统"
+        tech: "Python, PyTorch, LangChain, FAISS, Streamlit"
+        date:
+          en: "2024.10 - 2025.07"
+          zh: "2024.10 - 2025.07"
+        role:
+          en: "Core Developer"
+          zh: "核心开发者"
+        description:
+          en: "A full-stack RAG-based QA system for EDA tool documentation, deployed at Empyrean Technology"
+          zh: "面向EDA工具文档的全栈RAG问答系统，已在华大九天落地部署"
+        highlights:
+          en:
+            - "Designed and implemented a full-stack RAG pipeline (parsing → FAISS+BM25 hybrid retrieval → FlagLLM Reranker → Qwen1.5-14B generation) for 5 EDA tool knowledge bases; deployed at Empyrean Technology"
+            - "Built multi-channel retrieval with deduplication and metadata filtering, combined with fine-tuned Reranker re-scoring, improving recall and Top-5 hit rate from 60% to over 90%"
+            - "Fine-tuned Qwen1.5-14B with CoT-style prompts and answer self-verification; integrated InternVL2/Qwen-VL for multimodal image-text joint QA"
+            - "Built Streamlit frontend + MySQL backend with user auth, multi-KB switching, and chat history; containerized with Docker for one-click deployment"
+            - "Designed automated evaluation framework covering retrieval recall, reranker accuracy, and end-to-end QA with automatic report generation"
+          zh:
+            - "设计并实现完整RAG流水线（文档解析 → FAISS+BM25混合检索 → FlagLLM Reranker精排 → Qwen1.5-14B生成），支持5款EDA工具知识库，已在华大九天落地部署"
+            - "构建多路召回 + 去重与Metadata过滤 + Reranker精排打分策略，检索召回率与Top-5命中率从60%提升至90%以上"
+            - "基于Qwen1.5-14B领域微调，设计CoT风格Prompt与答案自检机制；集成InternVL2/Qwen-VL实现图文联合问答"
+            - "搭建Streamlit前端 + MySQL后端，支持用户登录、多知识库切换、聊天历史，Docker一键部署"
+            - "设计自动化评测框架，覆盖检索召回率、重排准确率、端到端问答准确率，支持实验报告自动生成"
+    skills:
+      - category:
+          en: "Programming Languages"
+          zh: "编程语言"
+        items: "Python, C/C++, Java"
+      - category:
+          en: "LLM & Agent Frameworks"
+          zh: "大模型与智能体框架"
+        items: "LangChain, AutoGen, CrewAI, OpenAI API, Prompt Engineering"
+      - category:
+          en: "Tools & Infrastructure"
+          zh: "工具与基础设施"
+        items: "PyTorch, Docker, Git, LaTeX"
+
+  # ============================================================================
+  # AI Infrastructure Track
+  # ============================================================================
+  infra:
+    name:
+      en: "AI Infrastructure"
+      zh: "AI 基础设施"
+    description:
+      en: "Focus on building scalable AI systems, RAG pipelines, model serving, and distributed training infrastructure."
+      zh: "聚焦构建可扩展的AI系统、RAG流水线、模型服务与分布式训练基础设施。"
+    research_interests:
+      en:
+        - "Retrieval-Augmented Generation (RAG)"
+        - "Large Language Model Serving & Inference"
+        - "Distributed Training Systems"
+        - "MLOps & AI Deployment"
+        - "Vector Databases & Information Retrieval"
+      zh:
+        - "检索增强生成（RAG）"
+        - "大语言模型服务与推理"
+        - "分布式训练系统"
+        - "MLOps与AI部署"
+        - "向量数据库与信息检索"
+    internships:
+      - company:
+          en: "ChatEDA Lab"
+          zh: "ChatEDA"
+        location:
+          en: "China"
+          zh: "中国"
+        position:
+          en: "Research Intern"
+          zh: "研究实习生"
+        date:
+          en: "Oct. 2024 - Present"
+          zh: "2024.10 - 至今"
+        description:
+          en: "Building scalable RAG infrastructure and document parsing pipelines for EDA domain"
+          zh: "为EDA领域构建可扩展的RAG基础设施与文档解析流水线"
+        responsibilities:
+          en:
+            - "Built a full-stack RAG pipeline serving 5 EDA tool knowledge bases, handling 10K+ documents with FAISS+BM25 hybrid indices"
+            - "Designed and deployed a multi-channel retrieval system with deduplication, metadata filtering, and FlagLLM Reranker scoring"
+            - "Containerized the entire system with Docker (Streamlit + MySQL + Retrieval backend) for one-click deployment at Empyrean Technology"
+            - "Developed high-throughput PDF parsing pipeline with MinerU, OpenCV table extraction, and configurable Flask orchestration"
+          zh:
+            - "构建全栈RAG流水线服务于5个EDA工具知识库，通过FAISS+BM25混合索引管理10K+文档"
+            - "设计并部署多路召回系统，包含去重、元数据过滤与FlagLLM Reranker精排打分"
+            - "通过Docker将完整系统（Streamlit + MySQL + 检索引擎）容器化，在华大九天实现一键部署"
+            - "开发高吞吐PDF解析流水线，集成MinerU、OpenCV表格提取与可配置Flask编排"
+    projects:
+      - name:
+          en: "RAG-EDA: Scalable Document QA Infrastructure for EDA Tools"
+          zh: "RAG-EDA：面向EDA工具的可扩展文档问答基础设施"
+        tech: "Python, PyTorch, LangChain, FAISS, Streamlit, Docker, MySQL"
+        date:
+          en: "2024.10 - 2025.07"
+          zh: "2024.10 - 2025.07"
+        role:
+          en: "Core Developer"
+          zh: "核心开发者"
+        description:
+          en: "A production-grade, containerized RAG system with hybrid retrieval, deployed at Empyrean Technology"
+          zh: "面向生产环境的容器化RAG系统，支持混合检索，已在华大九天部署"
+        highlights:
+          en:
+            - "Architected full-stack RAG pipeline (parsing → FAISS+BM25 hybrid retrieval → FlagLLM Reranker → Qwen1.5-14B) for 5 tool knowledge bases"
+            - "Designed multi-channel retrieval with deduplication and metadata filtering; fine-tuned Reranker for domain-specific re-scoring, boosting Top-5 hit rate from 60% to 90%+"
+            - "Built monitoring and automated evaluation framework covering retrieval recall, reranker accuracy, and end-to-end QA metrics with auto-generated reports"
+            - "Containerized entire stack (Streamlit frontend, MySQL backend, retrieval engine) with Docker; implemented user auth, multi-KB switching, and session management"
+          zh:
+            - "架构全栈RAG流水线（解析 → FAISS+BM25混合检索 → FlagLLM Reranker → Qwen1.5-14B），服务5个工具知识库"
+            - "设计多路召回 + 去重 + 元数据过滤策略，微调Reranker进行领域精排，Top-5命中率从60%提升至90%以上"
+            - "搭建监控与自动化评测框架，覆盖检索召回率、重排准确率、端到端QA指标，自动生成评测报告"
+            - "Docker容器化完整技术栈（Streamlit前端、MySQL后端、检索引擎）；实现用户认证、多知识库切换与会话管理"
+      - name:
+          en: "High-Throughput PDF Parsing Pipeline for EDA Documents"
+          zh: "面向EDA文档的高吞吐PDF解析流水线"
+        tech: "Python, OpenCV, Flask, MinerU, Docker"
+        date:
+          en: "2026.01 - 2026.05"
+          zh: "2026.01 - 2026.05"
+        role:
+          en: "Core Developer"
+          zh: "核心开发者"
+        description:
+          en: "A configurable, high-throughput PDF parsing pipeline with multi-tool orchestration and auto-verification"
+          zh: "可配置的高吞吐PDF解析流水线，支持多工具编排与自动验证"
+        highlights:
+          en:
+            - "Designed unified JSON Schema IR layer supporting 6 element types; orchestrated MinerU and pdf2kg parsers with bbox merging for robust extraction"
+            - "Built OpenCV table recognition with cell merging and cross-page stitching (Markdown/HTML output); designed caption-figure association via font style analysis"
+            - "Implemented LLM-enhanced chunking with ancestor summaries and token budget control; dual outline recognition via PDF bookmarks + font-size heuristics"
+            - "Deployed configurable Flask pipeline with Docker; built auto-verification loop to detect and re-parse missing elements"
+          zh:
+            - "设计基于JSON Schema的统一IR层，支持6类文档元素；编排MinerU与pdf2kg解析器，通过bbox合并实现多工具协同"
+            - "构建基于OpenCV的表格识别，支持单元格合并与跨页拼接（Markdown/HTML输出）；设计字体样式分析的图表-标题关联"
+            - "实现LLM增强分块策略，包含祖先章节摘要与token预算控制；PDF书签 + 字体大小的双重大纲识别"
+            - "部署Flask配置化流水线 + Docker；构建自动验证循环以检测并重新解析缺失元素"
+    skills:
+      - category:
+          en: "Programming Languages"
+          zh: "编程语言"
+        items: "Python, C/C++, Java, SQL"
+      - category:
+          en: "AI Infrastructure"
+          zh: "AI基础设施"
+        items: "PyTorch, LangChain, FAISS, BM25, Vector DBs, Docker"
+      - category:
+          en: "Backend & DevOps"
+          zh: "后端与运维"
+        items: "Flask, MySQL, Git, Docker, CI/CD"
+
+  # ============================================================================
+  # AI4EDA Track
+  # ============================================================================
+  eda:
+    name:
+      en: "AI4EDA"
+      zh: "AI4EDA"
+    description:
+      en: "Focus on applying Large Language Models and AI techniques to Electronic Design Automation challenges."
+      zh: "聚焦将大语言模型与AI技术应用于电子设计自动化领域。"
+    research_interests:
+      en:
+        - "Large Language Models for EDA"
+        - "Mixture-of-Experts Architecture"
+        - "Document Understanding for Chip Design"
+        - "Multi-Agent EDA Systems"
+        - "Intelligent Chip Design Automation"
+      zh:
+        - "大语言模型与EDA"
+        - "混合专家架构"
+        - "芯片设计文档理解"
+        - "多智能体EDA系统"
+        - "智能芯片设计自动化"
+    internships:
+      - company:
+          en: "ChatEDA Lab"
+          zh: "ChatEDA"
+        location:
+          en: "China"
+          zh: "中国"
+        position:
+          en: "Research Intern"
+          zh: "研究实习生"
+        date:
+          en: "Oct. 2024 - Present"
+          zh: "2024.10 - 至今"
+        description:
+          en: "Research on LLM applications in Electronic Design Automation"
+          zh: "研究大语言模型在电子设计自动化中的应用"
+        responsibilities:
+          en:
+            - "Led the development of RAG-EDA, a full-stack RAG-based document QA system for 5 EDA tools, deployed at Empyrean Technology"
+            - "Designed hybrid retrieval (FAISS + BM25) and FlagLLM Reranker pipeline, improving Top-5 hit rate from 60% to over 90%"
+            - "Built multimodal QA with InternVL2/Qwen-VL and automated evaluation framework with regression testing"
+            - "Developed an intelligent PDF parsing system for chip SPEC documents, integrating multi-tool extraction, OpenCV table recognition, and LLM-enhanced chunking"
+          zh:
+            - "主导开发RAG-EDA全栈RAG文档问答系统，支持5款EDA工具的技术文档知识库，已在华大九天落地部署"
+            - "设计FAISS + BM25混合检索与FlagLLM Reranker精排流水线，Top-5命中率从60%提升至90%以上"
+            - "构建基于InternVL2/Qwen-VL的多模态问答能力，并搭建覆盖召回率、精排与端到端准确率的自动化评测框架"
+            - "开发面向芯片SPEC文档的PDF智能解析系统，集成多工具协同提取、OpenCV表格识别与LLM增强分块策略"
+    projects:
+      - name:
+          en: "RAG-EDA: LLM-Powered Document QA System for EDA Tools"
+          zh: "RAG-EDA：基于大语言模型的EDA工具文档问答系统"
+        tech: "Python, PyTorch, LangChain, FAISS, Streamlit"
+        date:
+          en: "2024.10 - 2025.07"
+          zh: "2024.10 - 2025.07"
+        role:
+          en: "Core Developer"
+          zh: "核心开发者"
+        description:
+          en: "A full-stack RAG-based QA system for EDA tool documentation, deployed at Empyrean Technology"
+          zh: "面向EDA工具文档的全栈RAG问答系统，已在华大九天落地部署"
+        highlights:
+          en:
+            - "Designed and implemented a full-stack RAG pipeline (parsing → FAISS+BM25 hybrid retrieval → FlagLLM Reranker → Qwen1.5-14B generation) for 5 EDA tool knowledge bases; deployed at Empyrean Technology"
+            - "Built multi-channel retrieval with deduplication and metadata filtering, combined with fine-tuned Reranker re-scoring, improving recall and Top-5 hit rate from 60% to over 90%"
+            - "Fine-tuned Qwen1.5-14B with CoT-style prompts and answer self-verification; integrated InternVL2/Qwen-VL for multimodal image-text joint QA"
+            - "Built Streamlit frontend + MySQL backend with user auth, multi-KB switching, and chat history; containerized with Docker for one-click deployment"
+            - "Designed automated evaluation framework covering retrieval recall, reranker accuracy, and end-to-end QA with automatic report generation"
+          zh:
+            - "设计并实现完整RAG流水线（文档解析 → FAISS+BM25混合检索 → FlagLLM Reranker精排 → Qwen1.5-14B生成），支持5款EDA工具知识库，已在华大九天落地部署"
+            - "构建多路召回 + 去重与Metadata过滤 + Reranker精排打分策略，检索召回率与Top-5命中率从60%提升至90%以上"
+            - "基于Qwen1.5-14B领域微调，设计CoT风格Prompt与答案自检机制；集成InternVL2/Qwen-VL实现图文联合问答"
+            - "搭建Streamlit前端 + MySQL后端，支持用户登录、多知识库切换、聊天历史，Docker一键部署"
+            - "设计自动化评测框架，覆盖检索召回率、重排准确率、端到端问答准确率，支持实验报告自动生成"
+      - name:
+          en: "Intelligent PDF Parsing System for EDA Chip Design Documents"
+          zh: "面向EDA芯片设计文档的PDF智能解析系统"
+        tech: "Python, OpenCV, Flask, MinerU, Docker"
+        date:
+          en: "2026.01 - 2026.05"
+          zh: "2026.01 - 2026.05"
+        role:
+          en: "Core Developer"
+          zh: "核心开发者"
+        description:
+          en: "A complete PDF parsing pipeline for chip SPEC and EDA documents, supporting structured extraction and knowledge base construction; developed at ChatEDA Lab"
+          zh: "面向芯片SPEC文档和EDA技术文档的完整PDF解析流水线，支持结构化提取与知识库构建；在ChatEDA实验室完成开发"
+        highlights:
+          en:
+            - "Designed a unified IR layer based on JSON Schema supporting 6 element types; integrated MinerU (deep learning) and pdf2kg (rule-based) parsers with bbox merging for robust layout extraction"
+            - "Implemented OpenCV-based table recognition with cell merging and cross-page stitching (Markdown/HTML output), avoiding LLM costs; designed caption-figure association via font style analysis"
+            - "Built dual outline recognition (PDF bookmarks + font-size analysis) for automatic chapter hierarchy inference; designed LLM-enhanced chunking with ancestor summaries and token budget control"
+            - "Deployed configurable Flask pipeline with Docker; built auto-verification to detect and re-parse missing elements; supported mixed page-size SPEC documents (LPDDR5/DDR6)"
+          zh:
+            - "设计基于JSON Schema的统一IR层，支持6类文档元素；集成MinerU深度学习解析器与pdf2kg规则提取器，通过bbox合并实现多工具协同提取"
+            - "实现基于OpenCV的表格识别，支持单元格合并与跨页拼接（Markdown/HTML输出），避免LLM成本；设计基于字体样式分析的图表-标题智能关联"
+            - "构建PDF书签 + 字体大小的双重大纲识别策略，自动推断章节层级；设计LLM增强分块策略，生成祖先章节摘要并支持token预算控制"
+            - "搭建Flask配置化流水线 + Docker部署；构建自动化验证与修复流程，保障输出完整性；支持LPDDR5/DDR6等混合页面尺寸SPEC文档"
+    skills:
+      - category:
+          en: "Programming Languages"
+          zh: "编程语言"
+        items: "Python, C/C++, Java"
+      - category:
+          en: "AI & ML"
+          zh: "AI与机器学习"
+        items: "PyTorch, LangChain, LLM, FAISS, OpenCV"
+      - category:
+          en: "EDA & Tools"
+          zh: "EDA与工具"
+        items: "RAG Systems, Docker, Git, LaTeX, EDA Documentation"
