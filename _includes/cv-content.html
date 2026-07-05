@@ -1,0 +1,202 @@
+{% comment %}
+  Reusable CV content include.
+  Parameters:
+    - include.track : track key (e.g., "agent", "infra", "eda")
+    - include.lang  : language code ("en" or "zh")
+  Shared data from _data/cv.yml; track-specific data from _data/cv-tracks.yml.
+{% endcomment %}
+
+{% assign track = site.data.cv-tracks.tracks[include.track] %}
+{% assign lang = include.lang %}
+
+{% if lang == "zh" %}
+  {% assign name_label = "个人简历" %}
+  {% assign other_lang = "en" %}
+  {% assign other_lang_label = "English" %}
+  {% assign btn_download = "下载 PDF" %}
+  {% assign sec_interest = "研究兴趣" %}
+  {% assign sec_education = "教育经历" %}
+  {% assign sec_publications = "发表论文" %}
+  {% assign sec_projects = "项目经历" %}
+  {% assign sec_internships = "实习经历" %}
+  {% assign sec_awards = "荣誉奖项" %}
+  {% assign sec_skills = "技能" %}
+  {% assign label_supervisor = "导师" %}
+  {% assign pdf_filename_prefix = "聂云滔_简历" %}
+{% else %}
+  {% assign name_label = "Curriculum Vitae" %}
+  {% assign other_lang = "zh" %}
+  {% assign other_lang_label = "中文版" %}
+  {% assign btn_download = "Download PDF" %}
+  {% assign sec_interest = "Research Interests" %}
+  {% assign sec_education = "Education" %}
+  {% assign sec_publications = "Publications" %}
+  {% assign sec_projects = "Projects" %}
+  {% assign sec_internships = "Internships" %}
+  {% assign sec_awards = "Honors & Awards" %}
+  {% assign sec_skills = "Skills" %}
+  {% assign label_supervisor = "Supervisor" %}
+  {% assign pdf_filename_prefix = "Yuntao_Nie_CV" %}
+{% endif %}
+
+{% assign pdf_filename = pdf_filename_prefix | append: "_" | append: track.name.en | replace: " ", "_" %}
+
+<!-- Track Selector Bar -->
+<div class="cv-track-selector">
+  <div class="cv-track-tabs">
+    {% for t in site.data.cv-tracks.tracks %}
+      {% assign track_key = t[0] %}
+      {% assign track_info = t[1] %}
+      <a href="/cv-{{ track_key }}{% if lang == 'zh' %}-zh{% endif %}/"
+         class="cv-track-tab{% if track_key == include.track %} active{% endif %}">
+        {{ track_info.name[lang] }}
+      </a>
+    {% endfor %}
+  </div>
+  <div class="cv-track-lang">
+    <a href="/cv-{{ include.track }}{% if other_lang == 'en' %}/{% else %}-zh/{% endif %}"
+       class="btn btn--info btn--small">{{ other_lang_label }}</a>
+  </div>
+</div>
+
+<!-- CV Actions -->
+<div class="cv-actions">
+  <button onclick="downloadCV('{{ pdf_filename }}')" class="btn btn--primary"><i class="fa fa-download"></i> {{ btn_download }}</button>
+</div>
+
+<div class="cv-content" id="cv-content">
+
+<!-- Header -->
+<div class="cv-header">
+  {% if site.data.cv.personal.photo %}
+  <div class="cv-photo">
+    <img src="{{ site.data.cv.personal.photo }}" alt="{{ site.data.cv.personal.name[lang] }}">
+  </div>
+  {% endif %}
+  <div class="cv-header-info">
+    {% if lang == "zh" %}
+    <h2 class="cv-name">{{ site.data.cv.personal.name.zh }} ({{ site.data.cv.personal.name.en }})</h2>
+    {% else %}
+    <h2 class="cv-name">{{ site.data.cv.personal.name.en }}</h2>
+    {% endif %}
+    <div class="cv-contact">
+      <span><i class="fa fa-envelope"></i> {{ site.data.cv.personal.email }}</span>
+      <span><i class="fa fa-globe"></i> <a href="{{ site.data.cv.personal.website }}">{{ site.data.cv.personal.website }}</a></span>
+      <span><i class="fa fa-github"></i> <a href="https://github.com/{{ site.data.cv.personal.github }}">{{ site.data.cv.personal.github }}</a></span>
+      <span><i class="fa fa-map-marker"></i> {{ site.data.cv.personal.location[lang] }}</span>
+    </div>
+  </div>
+</div>
+
+<!-- Research Interests -->
+{% if track.research_interests[lang] %}
+<h2 class="cv-section-title">{{ sec_interest }}</h2>
+<ul class="cv-list">
+{% for interest in track.research_interests[lang] %}
+  <li>{{ interest }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+
+<!-- Education -->
+<h2 class="cv-section-title">{{ sec_education }}</h2>
+{% for edu in site.data.cv.education %}
+<div class="cv-entry">
+  <div class="cv-entry-header">
+    <strong>{{ edu.institution[lang] }}</strong>
+    <span class="cv-date">{{ edu.date[lang] }}</span>
+  </div>
+  <div class="cv-entry-content">
+    {{ edu.degree[lang] }}{% if edu.supervisor %}, {{ label_supervisor }}: <a href="{{ edu.supervisor_url }}">{{ edu.supervisor[lang] }}</a>{% endif %}
+  </div>
+</div>
+{% endfor %}
+
+<!-- Publications -->
+<h2 class="cv-section-title">{{ sec_publications }}</h2>
+{% assign sorted_papers = site.data.papers.papers | sort: "date" | reverse %}
+{% for paper in sorted_papers %}
+<div class="cv-entry cv-publication">
+  <div class="cv-entry-content">
+    <strong>{{ paper.title }}</strong><br>
+    {{ paper.authors | join: ", " }}<br>
+    <em>{{ paper.venue }}</em>, {{ paper.date | date: "%Y" }}
+    {% if site.show_contributions and paper.contribution %}
+    <div class="cv-contribution">
+      <strong>My Contribution:</strong>
+      {{ paper.contribution | markdownify }}
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endfor %}
+
+<!-- Projects -->
+{% if track.projects %}
+<h2 class="cv-section-title">{{ sec_projects }}</h2>
+{% for project in track.projects %}
+<div class="cv-entry">
+  <div class="cv-entry-header">
+    <strong>{{ project.name[lang] }}</strong>
+    <span class="cv-date">{{ project.date[lang] }}</span>
+  </div>
+  <div class="cv-entry-content">
+    <em>{{ project.role[lang] }}</em><br>
+    {{ project.description[lang] }}
+    {% if project.highlights[lang] %}
+    <ul class="cv-highlights">
+      {% for highlight in project.highlights[lang] %}
+      <li>{{ highlight }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+</div>
+{% endfor %}
+{% endif %}
+
+<!-- Internships -->
+{% if track.internships %}
+<h2 class="cv-section-title">{{ sec_internships }}</h2>
+{% for intern in track.internships %}
+<div class="cv-entry">
+  <div class="cv-entry-header">
+    <strong>{{ intern.company[lang] }}</strong>, {{ intern.location[lang] }}
+    <span class="cv-date">{{ intern.date[lang] }}</span>
+  </div>
+  <div class="cv-entry-content">
+    <em>{{ intern.position[lang] }}</em>
+    {% if intern.description[lang] %}<br>{{ intern.description[lang] }}{% endif %}
+    {% if intern.responsibilities[lang] %}
+    <ul class="cv-highlights">
+      {% for resp in intern.responsibilities[lang] %}
+      <li>{{ resp }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+</div>
+{% endfor %}
+{% endif %}
+
+<!-- Honors & Awards -->
+<h2 class="cv-section-title">{{ sec_awards }}</h2>
+<ul class="cv-list">
+{% for award in site.data.cv.awards %}
+  <li>{{ award.title[lang] }}{% if award.year %}, {{ award.year }}{% endif %}</li>
+{% endfor %}
+</ul>
+
+<!-- Skills -->
+{% if track.skills %}
+<h2 class="cv-section-title">{{ sec_skills }}</h2>
+<ul class="cv-list">
+{% for skill in track.skills %}
+  <li><strong>{{ skill.category[lang] }}</strong>: {{ skill.items }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+
+</div>
+
+<script src="/assets/js/cv-pdf.js"></script>
