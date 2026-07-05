@@ -29,17 +29,23 @@ bundle exec jekyll serve -l -H localhost
 | `_config.yml` | Site configuration (profile, social links, etc.) |
 | `_data/cv.yml` | Shared CV data (personal info, education, awards) |
 | `_data/cv-tracks.yml` | **Per-track CV data** (interests, projects, internships, skills) |
+| `_data/notes.yml` | **Notes series definitions** (titles, descriptions) |
 | `_data/papers.yml` | Publications list |
 | `_data/navigation.yml` | Header navigation menu |
 | `_includes/cv-content.html` | **Reusable CV render template** (param: `track` + `lang`) |
+| `_layouts/notes.html` | **3-column notes layout** (left nav + content + right TOC) |
 | `_pages/cv.md` | CV hub — track selection page (EN) |
 | `_pages/cv-zh.md` | CV hub — track selection page (CN) |
 | `_pages/cv-{track}.md` | Per-track CV page (EN) |
 | `_pages/cv-{track}-zh.md` | Per-track CV page (CN) |
+| `_pages/notes.md` | Notes hub — series listing page |
 | `_pages/about.md` | Homepage / About |
-| `_posts/` | Blog posts |
+| `_posts/` | Blog posts (formal) |
+| `_notes/` | **Informal notes** (Chinese, organized by series) |
 | `_sass/_cv.scss` | CV styles (including track selector + print) |
+| `_sass/_notes.scss` | Notes layout styles (3-column, responsive) |
 | `assets/js/cv-pdf.js` | One-click PDF download |
+| `assets/js/notes-toc.js` | Notes TOC scrollspy + mobile sidebar toggle |
 | `images/` | Images and avatars |
 | `files/` | PDFs and downloadable files |
 
@@ -51,6 +57,8 @@ bundle exec jekyll serve -l -H localhost
 - **Publications**: `_data/papers.yml`
 - **CV (shared data)**: `_data/cv.yml` — personal info, education, awards
 - **CV (track data)**: `_data/cv-tracks.yml` — track-specific content
+- **Notes (series)**: `_data/notes.yml` — series definitions
+- **Notes (content)**: `_notes/` — individual note files
 - **Navigation menu**: `_data/navigation.yml`
 - **Site settings**: `_config.yml`
 
@@ -228,6 +236,152 @@ In `_data/cv-tracks.yml`, find the track section (e.g., `agent:`) and add under 
 | Projects | `cv-tracks.yml` | Tailored to each direction |
 | Internships | `cv-tracks.yml` | Described from track's angle |
 | Skills | `cv-tracks.yml` | Track-relevant skill set |
+
+---
+
+## NOTES System（笔记专栏）
+
+The NOTES system hosts informal, fragmented Chinese-language notes organized into **series** (topic-based collections). Each note page features a 3-column layout: left chapter navigation + main content + right TOC with scroll tracking.
+
+### Current Series
+
+| Series ID | Title | Notes Count |
+|-----------|-------|-------------|
+| `llm-interview` | LLM 面试笔记 | 6 |
+| `ai-infra` | AI 基础设施 | 1 |
+| `eda-notes` | EDA 笔记 | 1 |
+| `misc` | 杂项笔记 | 1 |
+
+### Page Structure
+
+```
+/notes/                              → Notes hub（series cards）
+/notes/llm-interview/transformer/    → Individual note page (3-column layout)
+```
+
+Each note page has:
+- **Left sidebar** — all chapters in the current series (auto-generated), current page highlighted
+- **Main content** — the note body with LaTeX formulas ($...$) and images (![caption](url))
+- **Right TOC** — auto-generated from headings (h2–h4), with scroll-position tracking
+- **Previous / Next** — auto-generated chapter navigation at the bottom
+
+### How to Add a New Note
+
+Adding a note requires **only one step**: create a `.md` file in `_notes/`.
+
+#### Example: Adding "Attention 机制详解" to the LLM Interview series
+
+Create `_notes/llm-interview-attention.md`:
+
+```markdown
+---
+layout: notes
+title: "Attention 机制详解"
+series: llm-interview
+series_order: 3
+date: 2025-06-10
+---
+
+## 1. 什么是 Attention
+
+Attention 机制的核心思想是让模型在处理每个 token 时，
+动态地关注输入序列中**最相关的部分**。
+
+![Attention 示意图](/images/blogs/attention-diagram.png)
+
+## 2. Scaled Dot-Product Attention
+
+核心公式：
+
+\[
+\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right) V
+\]
+
+### 2.1 Q、K、V 的含义
+
+- **Q (Query)**：当前 token 想要"查询"什么
+- **K (Key)**：每个 token 提供了什么"索引"
+- **V (Value)**：每个 token 实际包含的"内容"
+
+## 3. 代码实现
+
+```python
+import torch
+
+def scaled_dot_product_attention(Q, K, V):
+    d_k = Q.size(-1)
+    scores = torch.matmul(Q, K.transpose(-2, -1)) / torch.sqrt(d_k)
+    attn_weights = torch.softmax(scores, dim=-1)
+    return torch.matmul(attn_weights, V)
+```
+```
+
+> That's it! The left sidebar, right TOC, breadcrumb, and prev/next links are all **auto-generated**. The note will automatically appear in the correct position within its series.
+
+### Frontmatter Reference
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `layout` | Yes | Always `notes` |
+| `title` | Yes | Note title (shown in sidebar, heading, and browser tab) |
+| `series` | Yes | Series ID matching a key in `_data/notes.yml` |
+| `series_order` | Yes | Integer position within the series (determines sidebar order) |
+| `date` | No | Publication date (shown below title), format: `YYYY-MM-DD` |
+
+### How to Add a New Series
+
+#### Step 1: Define the series in `_data/notes.yml`
+
+```yaml
+  - id: your-series-id
+    title: "你的系列标题"
+    description: "简短的系列描述，显示在 Hub 卡片上"
+```
+
+#### Step 2: Create at least one note with `series: your-series-id`
+
+The series will **automatically appear** on the Notes hub page and in the navigation once it has at least one note.
+
+### Content Features
+
+| Feature | Syntax | Notes |
+|---------|--------|-------|
+| LaTeX inline | `$E = mc^2$` | Same as Blog, via MathJax |
+| LaTeX block | `$$...$$` or `\[...\]` | Display math |
+| Images | `![caption](url)` | Standard Markdown, like Typora |
+| Code blocks | ```` ``` ```` (triple backtick) | Syntax highlighting via Rouge |
+| Tables | Standard Markdown table | Full support |
+| Blockquotes | `> quote` | Styled with blue left border |
+
+### How It Works
+
+```
+_data/notes.yml              _notes/*.md
+┌──────────────────┐         ┌──────────────────────────────┐
+│ series:           │         │ ---                           │
+│   - id: llm-int   │         │ layout: notes                 │
+│     title: "..."  │   +    │ series: llm-interview         │
+│     description   │         │ series_order: 1               │
+│   - id: ai-infra  │         │ title: "Transformer 详解"     │
+│     ...           │         │ ---                           │
+└──────────────────┘         │ Content...                    │
+         │                   └──────────────────────────────┘
+         │         ┌─────────────────┐
+         └─────────┤ _layouts/notes  │
+                   │ (auto-builds    │
+                   │  sidebar, TOC,  │
+                   │  breadcrumb,    │
+                   │  prev/next)     │
+                   └─────────────────┘
+```
+
+The `notes.html` layout automatically:
+1. Finds all `_notes/` files with the same `series` value
+2. Sorts them by `series_order`
+3. Renders the left sidebar with all chapters
+4. Parses the main content for headings to build the right TOC
+5. Generates prev/next chapter links
+6. Activates scrollspy to highlight the current TOC section
 
 ---
 
