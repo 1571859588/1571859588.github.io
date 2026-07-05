@@ -1,0 +1,24 @@
+# NOTES Series Definitions
+# Each series is a collection of notes organized by topic.
+# Chapters are auto-discovered from _notes/ files (grouped by "series" frontmatter).
+#
+# To add a new series:
+#   1. Add an entry below
+#   2. Create .md files in _notes/ with `series: <id>` frontmatter
+
+series:
+  - id: llm-interview
+    title: "LLM 面试笔记"
+    description: "大语言模型面试知识点梳理，涵盖 Transformer、LLaMA、LayerNorm 等核心架构"
+
+  - id: ai-infra
+    title: "AI 基础设施"
+    description: "AI 系统部署、推理优化、RAG 流水线等工程实践笔记"
+
+  - id: eda-notes
+    title: "EDA 笔记"
+    description: "电子设计自动化相关知识与 LLM4EDA 研究笔记"
+
+  - id: misc
+    title: "杂项笔记"
+    description: "编程语言、工具使用等零散笔记"
