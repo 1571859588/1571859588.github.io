@@ -103,7 +103,16 @@
     }
   }
 
-  // ── 4. Smooth scroll on click ──
+  // ── 4. Collapsible sidebar sections ──
+  var sectionToggles = sidebar ? sidebar.querySelectorAll('.notes-section-toggle') : [];
+  sectionToggles.forEach(function(toggle) {
+    toggle.addEventListener('click', function() {
+      var expanded = this.getAttribute('aria-expanded') === 'true';
+      this.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+    });
+  });
+
+  // ── 5. Smooth scroll on click ──
   tocLinks.forEach(function(link) {
     link.addEventListener('click', function(e) {
       e.preventDefault();

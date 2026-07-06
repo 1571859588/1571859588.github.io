@@ -44,7 +44,10 @@ layout: default
           {% if note_section != "" %}
             {% unless section_open %}
               <li class="notes-section-group">
-                <span class="notes-section-label">{{ note_section | split: "/" | last }}</span>
+                <button class="notes-section-toggle" aria-expanded="true">
+                  <span class="notes-section-arrow">▾</span>
+                  <span class="notes-section-label">{{ note_section | split: "/" | last }}</span>
+                </button>
                 <ul class="notes-section-list">
               {% assign section_open = true %}
             {% endunless %}

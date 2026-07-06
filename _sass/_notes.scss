@@ -138,14 +138,47 @@
   margin-top: 0.3em;
 }
 
+.notes-section-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+  width: 100%;
+  padding: 0.55em 0.75em 0.3em;
+  margin: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+
+  &:hover .notes-section-label {
+    color: #475569;
+  }
+
+  &[aria-expanded="false"] {
+    .notes-section-arrow {
+      transform: rotate(-90deg);
+    }
+    + .notes-section-list {
+      display: none;
+    }
+  }
+}
+
+.notes-section-arrow {
+  font-size: 0.65em;
+  color: #94a3b8;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+
 .notes-section-label {
-  display: block;
   font-size: 0.72em;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.8px;
   color: #94a3b8;
-  padding: 0.6em 0.75em 0.3em;
+  transition: color 0.15s;
 }
 
 .notes-section-list {
