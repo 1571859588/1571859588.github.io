@@ -131,22 +131,24 @@
   window.addEventListener('scroll', highlightToc, { passive: true });
   highlightToc();
 
-  // ── 6. Search term highlight (from URL hash #q=...) ──
-  function highlightSearchTerm() {
+  // ── 6. Search term highlight + scroll (from URL hash #q=...) ──
+  (function() {
     var hash = location.hash;
     if (hash.indexOf('#q=') !== 0) return;
     var q = decodeURIComponent(hash.slice(3));
     if (!q || q.length < 2) return;
-
     var body = document.querySelector('.notes-body');
     if (!body) return;
 
-    setTimeout(function() {
+    // Clear hash to prevent browser scroll interference
+    history.replaceState(null, '', location.pathname + location.search);
+
+    function doHighlight() {
       var walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT);
       var textNodes = [];
       while (walker.nextNode()) {
         var p = walker.currentNode.parentNode;
-        if (p.closest('script,style,pre,mark,.notes-search-hit,.notes-sidebar-search-hit')) continue;
+        if (p.closest('script,style,mark,.notes-search-hit,.notes-sidebar-search-hit')) continue;
         textNodes.push(walker.currentNode);
       }
 
@@ -154,7 +156,6 @@
       textNodes.forEach(function(node) {
         var text = node.textContent, idx = text.toLowerCase().indexOf(ql);
         if (idx === -1) return;
-
         var frag = document.createDocumentFragment(), lastIdx = 0;
         while (idx !== -1) {
           if (idx > lastIdx) frag.appendChild(document.createTextNode(text.slice(lastIdx, idx)));
@@ -170,9 +171,14 @@
         node.parentNode.replaceChild(frag, node);
       });
 
-      if (firstMark) firstMark.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 400);
-  }
+      if (firstMark) {
+        var top = firstMark.getBoundingClientRect().top + window.scrollY - 100;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      }
+    }
 
-  highlightSearchTerm();
+    // Try immediately, retry after MathJax settles
+    doHighlight();
+    setTimeout(doHighlight, 800);
+  })();
 })();
