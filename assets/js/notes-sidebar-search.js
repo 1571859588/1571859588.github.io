@@ -1,14 +1,13 @@
 /**
  * Sidebar search on individual note pages.
- * Reads titles/URLs directly from the rendered sidebar DOM.
- * No embedded data — foolproof, no escaping issues.
+ * Reads titles/URLs from the rendered sidebar DOM.
  */
 (function() {
   var input = document.getElementById('notes-sidebar-search-input');
   var box   = document.getElementById('notes-sidebar-search-results');
-  if (!input || !box) return;
+  if (!input || !box) { console.log('Sidebar search: missing elements'); return; }
 
-  // DEBUG: prove the script loaded by changing placeholder
+  // Prove script loaded
   input.placeholder = '✓ 搜索本专题…';
 
   // Build index from sidebar DOM links
@@ -23,6 +22,7 @@
       });
     }
   }
+  console.log('Sidebar search: ' + items.length + ' notes indexed');
 
   function esc(s) {
     var d = document.createElement('div');
@@ -43,12 +43,14 @@
 
   input.addEventListener('input', function() {
     var qr = this.value.trim();
+    console.log('Sidebar search: typing "' + qr + '"');
     if (qr.length < 1) { box.style.display = 'none'; box.innerHTML = ''; return; }
     var ql = qr.toLowerCase();
     var hits = [];
     for (var i = 0; i < items.length; i++) {
       if (items[i].t.toLowerCase().indexOf(ql) !== -1) hits.push(items[i]);
     }
+    console.log('Sidebar search: ' + hits.length + ' matches');
     if (hits.length === 0) {
       box.innerHTML = '<div class="notes-sidebar-search-empty">无匹配</div>';
     } else {
@@ -61,6 +63,7 @@
       box.innerHTML = html;
     }
     box.style.display = 'block';
+    console.log('Sidebar search: dropdown visible, innerHTML length ' + box.innerHTML.length);
   });
 
   input.addEventListener('keydown', function(e) {
