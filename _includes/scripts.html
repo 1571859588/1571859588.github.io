@@ -1,4 +1,3 @@
-<script>document.title='AAA';</script>
 <script src="{{ base_path }}/assets/js/main.min.js"></script>
 <script src="{{ base_path }}/assets/js/paper-details.js"></script>
 
@@ -16,8 +15,8 @@
   nodes.forEach(function(node) {
     var text = node.textContent;
     var fixed = text.replace(/\$([^$\n]+?)\$/g, function(match, math) {
-      /* Inside $...$, add \ before _ followed by 2+ lowercase letters.
-         Safe: legitimate subscripts use single chars or braces */
+      // Inside $...$, add \ before _ followed by 2+ lowercase letters.
+      // Safe: legitimate subscripts use single chars ($d_k$) or braces ($x_{ij}$).
       var fixedMath = math.replace(/_([a-z]{2,})/g, '\\_$1');
       return fixedMath !== math ? '$' + fixedMath + '$' : match;
     });
@@ -30,7 +29,7 @@
 <script>
 var NOTES_INDEX = [
 {% for note in site.notes %}
-  {% assign raw = note.content | strip_html | strip_newlines | truncate: 2000 %}
+  {% assign raw = note.content | strip_html | strip_newlines | truncate: 800 %}
   {t:{{ note.title | jsonify }}, s:{{ note.series_title | default: note.series | jsonify }}, u:{{ note.url | relative_url | jsonify }}, c:{{ raw | jsonify }}}{% unless forloop.last %},{% endunless %}
 {% endfor %}
 ];
@@ -38,28 +37,27 @@ var NOTES_INDEX = [
 <script src="{{ base_path }}/assets/js/notes-search.js"></script>
 {% endif %}
 
+{% if page.series %}
 <script>
 (function() {
-  var inp = document.getElementById('ns-si');
-  var box = document.getElementById('ns-sr');
+  var inp = document.getElementById('notes-sidebar-search-input');
+  var box = document.getElementById('notes-sidebar-search-results');
   if (!inp || !box) return;
-  inp.value = ''; inp.placeholder = '输入搜索…'; inp.style.border = '2px solid #3b82f6';
+  inp.placeholder = inp.placeholder + ' [' + document.querySelectorAll('.notes-chapter-link').length + ']';
 
-  /* Build index from sidebar links that ARE rendered at this point */
   var items = [];
   var links = document.querySelectorAll('.notes-chapter-link');
   for (var i = 0; i < links.length; i++) {
     var t = links[i].querySelector('.notes-chapter-title');
     if (t) items.push({ t: t.textContent.trim(), u: links[i].getAttribute('href') });
   }
-  inp.placeholder = items.length + ' 篇, 输入搜索…';
 
   function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
   function hl(t, q) {
-    var o = '', L = 0, lo = t.toLowerCase(), ql = q.toLowerCase(), idx;
-    while ((idx = lo.indexOf(ql, L)) !== -1) {
-      o += esc(t.substring(L, idx)) + '<mark class="notes-search-highlight">' + esc(t.substring(idx, idx + q.length)) + '</mark>';
-      L = idx + q.length;
+    var o = '', L = 0, lo = t.toLowerCase(), ql = q.toLowerCase(), i;
+    while ((i = lo.indexOf(ql, L)) !== -1) {
+      o += esc(t.substring(L, i)) + '<mark class="notes-search-highlight">' + esc(t.substring(i, i + q.length)) + '</mark>';
+      L = i + q.length;
     }
     return o + esc(t.substring(L));
   }
@@ -88,5 +86,6 @@ var NOTES_INDEX = [
   document.addEventListener('click', function(e) { if (!e.target.closest('#notes-sidebar-search')) { box.style.display = 'none'; box.innerHTML = ''; } });
 })();
 </script>
+{% endif %}
 
 {% include analytics.html %}

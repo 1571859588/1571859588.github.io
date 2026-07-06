@@ -31,7 +31,7 @@ jobs:
       - name: Build Jekyll
         run: bundle exec jekyll build
         env:
-          JEKYLL_ENV: development
+          JEKYLL_ENV: production
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4

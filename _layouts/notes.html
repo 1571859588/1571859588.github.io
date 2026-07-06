@@ -12,19 +12,18 @@ layout: default
 
   <!-- Left Sidebar: Series Chapter Navigation -->
   <aside class="notes-sidebar" id="notes-sidebar">
+    <div class="notes-sidebar-inner">
       {% assign current_series_id = page.series %}
       {% assign current_series_title = page.series_title | default: current_series_id %}
 
-      <!-- In-series search -->
-      <div class="notes-sidebar-search" id="notes-sidebar-search">
-        <input type="text" class="notes-sidebar-search-input" id="ns-si"
-               placeholder="搜索本专题…" autocomplete="off">
-        <div class="notes-sidebar-search-results" id="ns-sr" style="display:none"></div>
-      </div>
-
-    <div class="notes-sidebar-inner">
       <div class="notes-series-header">
         <h3 class="notes-series-title">{{ current_series_title }}</h3>
+      </div>
+
+      <div class="notes-sidebar-search" id="notes-sidebar-search">
+        <input type="text" class="notes-sidebar-search-input" id="notes-sidebar-search-input"
+               placeholder="搜索本专题…" autocomplete="off">
+        <div class="notes-sidebar-search-results" id="notes-sidebar-search-results" style="display:none"></div>
       </div>
 
       <nav class="notes-chapter-nav">
@@ -173,3 +172,59 @@ layout: default
 </div>
 
 <script src="{{ base_path }}/assets/js/notes-toc.js"></script>
+
+{% raw %}
+<script>
+(function() {
+  var q = new URLSearchParams(location.search).get('q');
+  if (!q || q.length < 2) return;
+  var body = document.querySelector('.notes-body');
+  if (!body) return;
+
+  // Walk text nodes, find and highlight matches
+  var walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT, null, false);
+  var textNodes = [];
+  while (walker.nextNode()) {
+    var p = walker.currentNode.parentNode;
+    // Skip script, style, code blocks, and already-marked text
+    if (p.tagName === 'SCRIPT' || p.tagName === 'STYLE' || p.tagName === 'MARK' ||
+        p.closest('pre') || p.closest('.notes-search-hit')) continue;
+    textNodes.push(walker.currentNode);
+  }
+
+  var first = null;
+  var re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+
+  textNodes.forEach(function(node) {
+    var text = node.textContent;
+    if (!re.test(text)) return;
+    re.lastIndex = 0; // reset after test
+
+    var frag = document.createDocumentFragment();
+    var lastIdx = 0;
+    var match;
+    while ((match = re.exec(text)) !== null) {
+      if (match.index > lastIdx) {
+        frag.appendChild(document.createTextNode(text.substring(lastIdx, match.index)));
+      }
+      var mark = document.createElement('mark');
+      mark.className = 'notes-search-mark';
+      mark.textContent = match[0];
+      frag.appendChild(mark);
+      if (!first) first = mark;
+      lastIdx = match.index + match[0].length;
+    }
+    if (lastIdx < text.length) {
+      frag.appendChild(document.createTextNode(text.substring(lastIdx)));
+    }
+    node.parentNode.replaceChild(frag, node);
+  });
+
+  if (first) {
+    setTimeout(function() {
+      first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 300);
+  }
+})();
+</script>
+{% endraw %}
