@@ -6,15 +6,10 @@ author_profile: true
 ---
 
 <div class="notes-hub">
-  <p class="notes-hub-subtitle">零散的技术笔记与学习记录。将本地笔记目录复制到 <code>notes-src/</code>，构建时自动同步。</p>
+  <p class="notes-hub-subtitle">零散的技术笔记与学习记录，按主题整理为系列。将本地笔记目录复制到 <code>notes-src/</code>，构建时自动同步。</p>
 
   <div class="notes-series-grid">
-  {% comment %}
-    Build unique series list from site.notes, grouped by series_title.
-    Use raw Chinese titles (NOT slugify which strips CJK in Jekyll 3.x).
-  {% endcomment %}
-
-  {% comment %}Step 1: collect unique series_titles (using a delimiter trick){% endcomment %}
+  {% comment %}Collect unique series{% endcomment %}
   {% assign series_list = "" | split: "" %}
   {% for note in site.notes %}
     {% assign st = note.series_title | default: note.series %}
@@ -23,28 +18,42 @@ author_profile: true
     {% endunless %}
   {% endfor %}
 
-  {% comment %}Step 2: for each unique series, render a card{% endcomment %}
   {% for st in series_list %}
-    {% comment %}Count notes in this series{% endcomment %}
-    {% assign count = 0 %}
-    {% assign first_note = nil %}
+    {% assign series_notes = "" | split: "" %}
+    {% assign last_note = nil %}
     {% for note in site.notes %}
       {% assign nt = note.series_title | default: note.series %}
       {% if nt == st %}
-        {% assign count = count | plus: 1 %}
-        {% unless first_note %}
-          {% assign first_note = note %}
-        {% endunless %}
+        {% assign series_notes = series_notes | push: note %}
+        {% assign last_note = note %}
       {% endif %}
     {% endfor %}
+    {% assign sorted = series_notes | sort: "series_order" %}
+    {% assign first = sorted | first %}
+    {% assign count = sorted | size %}
 
-    {% if first_note and count > 0 %}
+    {% if first and count > 0 %}
     <div class="notes-series-card">
-      <h3 class="notes-series-card-title">
-        <a href="{{ first_note.url | relative_url }}">{{ st }}</a>
-      </h3>
-      <p class="notes-series-card-desc">{{ count }} 篇笔记</p>
-      <a href="{{ first_note.url | relative_url }}" class="notes-series-card-link">开始阅读 →</a>
+      <div class="notes-series-card-top">
+        <h3 class="notes-series-card-title">
+          <a href="{{ first.url | relative_url }}">{{ st }}</a>
+        </h3>
+        <span class="notes-series-card-count">{{ count }} 篇</span>
+      </div>
+
+      {% comment %}Preview first 5 note titles{% endcomment %}
+      {% if count > 0 %}
+      <ul class="notes-series-card-toc">
+        {% for note in sorted limit:5 %}
+        <li>
+          <a href="{{ note.url | relative_url }}">{{ note.title }}</a>
+        </li>
+        {% endfor %}
+        {% if count > 5 %}
+        <li class="notes-series-card-more">…还有 {{ count | minus: 5 }} 篇</li>
+        {% endif %}
+      </ul>
+      {% endif %}
     </div>
     {% endif %}
   {% endfor %}
