@@ -1,6 +1,5 @@
 /**
- * Notes hub page — search functionality
- * Reads NOTES_INDEX (defined inline in _pages/notes.md)
+ * Notes hub page — search with keyword highlighting in results
  */
 (function() {
   if (typeof NOTES_INDEX === 'undefined') return;
@@ -9,8 +8,33 @@
   var resultsBox = document.getElementById('notes-search-results');
   if (!input || !resultsBox) return;
 
+  function esc(s) {
+    var d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  // Wrap all occurrences of `q` in `text` with <mark> (case-insensitive),
+  // preserving the original casing of matched text
+  function highlight(text, q) {
+    var idx = text.toLowerCase().indexOf(q.toLowerCase());
+    if (idx === -1) return esc(text);
+    var out = '';
+    var last = 0;
+    var lower = text.toLowerCase();
+    var ql = q.toLowerCase();
+    while ((idx = lower.indexOf(ql, last)) !== -1) {
+      out += esc(text.substring(last, idx));
+      out += '<mark class="notes-search-highlight">' + esc(text.substring(idx, idx + q.length)) + '</mark>';
+      last = idx + q.length;
+    }
+    out += esc(text.substring(last));
+    return out;
+  }
+
   function search(query) {
-    var q = query.toLowerCase().trim();
+    var qRaw = query.trim();
+    var q = qRaw.toLowerCase();
     if (q.length < 1) {
       resultsBox.style.display = 'none';
       resultsBox.innerHTML = '';
@@ -21,16 +45,18 @@
     for (var i = 0; i < NOTES_INDEX.length; i++) {
       var n = NOTES_INDEX[i];
       var score = 0;
+
       if (n.t.toLowerCase().indexOf(q) !== -1) score += 100;
       if (n.s.toLowerCase().indexOf(q) !== -1) score += 80;
-      if (n.c) {
+      if (n.c && n.c.toLowerCase().indexOf(q) !== -1) {
+        score += 50;
+        // Store context for display
         var ci = n.c.toLowerCase().indexOf(q);
-        if (ci !== -1) {
-          score += 50;
-          n._ctx = n.c.substring(Math.max(0, ci - 40), ci + q.length + 60);
-          if (ci > 40) n._ctx = '…' + n._ctx;
-          if (ci + q.length + 60 < n.c.length) n._ctx += '…';
-        }
+        var start = Math.max(0, ci - 40);
+        var end   = Math.min(n.c.length, ci + qRaw.length + 60);
+        n._ctx = n.c.substring(start, end);
+        if (start > 0) n._ctx = '…' + n._ctx;
+        if (end < n.c.length) n._ctx += '…';
       }
       if (score > 0) hits.push({ n: n, score: score });
     }
@@ -44,23 +70,19 @@
       var html = '';
       for (var j = 0; j < hits.length; j++) {
         var h = hits[j];
-        var ctx = h.n._ctx ? '<span class="notes-search-hit-context">' + esc(h.n._ctx) + '</span>' : '';
-        var qParam = encodeURIComponent(input.value.trim());
-        html += '<a href="' + h.n.u + '?q=' + qParam + '" class="notes-search-hit">' +
-                '<span class="notes-search-hit-title">' + esc(h.n.t) + '</span>' +
-                '<span class="notes-search-hit-series">' + esc(h.n.s) + '</span>' +
-                ctx +
+        var qEnc = encodeURIComponent(qRaw);
+        var ctxHtml = h.n._ctx
+          ? '<span class="notes-search-hit-context">' + highlight(h.n._ctx, qRaw) + '</span>'
+          : '';
+        html += '<a href="' + h.n.u + '?q=' + qEnc + '" class="notes-search-hit">' +
+                '<span class="notes-search-hit-title">' + highlight(h.n.t, qRaw) + '</span>' +
+                '<span class="notes-search-hit-series">' + highlight(h.n.s, qRaw) + '</span>' +
+                ctxHtml +
                 '</a>';
       }
       resultsBox.innerHTML = html;
     }
     resultsBox.style.display = 'block';
-  }
-
-  function esc(s) {
-    var d = document.createElement('div');
-    d.textContent = s;
-    return d.innerHTML;
   }
 
   input.addEventListener('input', function() { search(this.value); });
