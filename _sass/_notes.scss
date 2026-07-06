@@ -312,6 +312,14 @@
   margin: 0 !important;
 }
 
+/* Search result highlight */
+.notes-search-mark {
+  background: #fde68a;
+  color: #1e293b;
+  padding: 1px 2px;
+  border-radius: 2px;
+}
+
 /* ── Notes Body ── */
 .notes-body {
   font-size: 0.98em;

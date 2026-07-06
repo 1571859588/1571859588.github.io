@@ -45,7 +45,8 @@
       for (var j = 0; j < hits.length; j++) {
         var h = hits[j];
         var ctx = h.n._ctx ? '<span class="notes-search-hit-context">' + esc(h.n._ctx) + '</span>' : '';
-        html += '<a href="' + h.n.u + '" class="notes-search-hit">' +
+        var qParam = encodeURIComponent(input.value.trim());
+        html += '<a href="' + h.n.u + '?q=' + qParam + '" class="notes-search-hit">' +
                 '<span class="notes-search-hit-title">' + esc(h.n.t) + '</span>' +
                 '<span class="notes-search-hit-series">' + esc(h.n.s) + '</span>' +
                 ctx +
