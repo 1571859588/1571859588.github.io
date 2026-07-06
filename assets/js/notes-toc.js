@@ -134,7 +134,9 @@
   // ── 6. Search term highlight + scroll (from URL hash #q=...) ──
   (function() {
     var hash = location.hash;
+    console.log('notes-toc: hash=' + hash);
     if (hash.indexOf('#q=') !== 0) return;
+    console.log('notes-toc: search term=' + decodeURIComponent(hash.slice(3)));
     var q = decodeURIComponent(hash.slice(3));
     if (!q || q.length < 2) return;
     var body = document.querySelector('.notes-body');
