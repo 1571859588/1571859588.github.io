@@ -19,8 +19,8 @@ module NotesSync
   end
 
   def self.slugify(str)
-    str.downcase
-       .gsub(/[^a-z0-9]+/, '-')
+    str.strip
+       .gsub(/[^a-z0-9一-鿿㐀-䶿]+/i, '-')
        .gsub(/-{2,}/, '-')
        .gsub(/^-|-$/, '')
   end

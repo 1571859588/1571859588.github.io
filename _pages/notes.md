@@ -10,43 +10,42 @@ author_profile: true
 
   <div class="notes-series-grid">
   {% comment %}
-    Group notes by series_title (derived from _notes/ collection files).
-    Works without the Jekyll plugin — pure Liquid grouping.
+    Build unique series list from site.notes, grouped by series_title.
+    Use raw Chinese titles (NOT slugify which strips CJK in Jekyll 3.x).
   {% endcomment %}
 
-  {% assign seen = "" %}
+  {% comment %}Step 1: collect unique series_titles (using a delimiter trick){% endcomment %}
+  {% assign series_list = "" | split: "" %}
   {% for note in site.notes %}
     {% assign st = note.series_title | default: note.series %}
-    {% assign st_slug = st | slugify %}
-    {% unless seen contains st_slug %}
-      {% assign seen = seen | append: st_slug | append: "|" %}
+    {% unless series_list contains st %}
+      {% assign series_list = series_list | push: st %}
     {% endunless %}
   {% endfor %}
 
-  {% assign series_names = seen | split: "|" %}
-
-  {% for sname in series_names %}
-    {% assign sname_trimmed = sname | strip %}
-    {% if sname_trimmed != "" %}
-      {% comment %}Find all notes matching this series slug{% endcomment %}
-      {% assign matched = "" | split: "" %}
-      {% for note in site.notes %}
-        {% assign st = note.series_title | default: note.series %}
-        {% if st | slugify == sname_trimmed %}
-          {% assign matched = matched | push: note %}
-        {% endif %}
-      {% endfor %}
-      {% assign sorted_matched = matched | sort: "series_order" %}
-      {% assign first = sorted_matched | first %}
-      {% if first %}
-      <div class="notes-series-card">
-        <h3 class="notes-series-card-title">
-          <a href="{{ first.url | relative_url }}">{{ first.series_title | default: first.series }}</a>
-        </h3>
-        <p class="notes-series-card-desc">{{ sorted_matched.size }} 篇笔记</p>
-        <a href="{{ first.url | relative_url }}" class="notes-series-card-link">开始阅读 →</a>
-      </div>
+  {% comment %}Step 2: for each unique series, render a card{% endcomment %}
+  {% for st in series_list %}
+    {% comment %}Count notes in this series{% endcomment %}
+    {% assign count = 0 %}
+    {% assign first_note = nil %}
+    {% for note in site.notes %}
+      {% assign nt = note.series_title | default: note.series %}
+      {% if nt == st %}
+        {% assign count = count | plus: 1 %}
+        {% unless first_note %}
+          {% assign first_note = note %}
+        {% endunless %}
       {% endif %}
+    {% endfor %}
+
+    {% if first_note and count > 0 %}
+    <div class="notes-series-card">
+      <h3 class="notes-series-card-title">
+        <a href="{{ first_note.url | relative_url }}">{{ st }}</a>
+      </h3>
+      <p class="notes-series-card-desc">{{ count }} 篇笔记</p>
+      <a href="{{ first_note.url | relative_url }}" class="notes-series-card-link">开始阅读 →</a>
+    </div>
     {% endif %}
   {% endfor %}
   </div>
