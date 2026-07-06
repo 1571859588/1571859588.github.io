@@ -13,8 +13,8 @@
 
 /* ── Left Sidebar: Chapter Navigation ── */
 .notes-sidebar {
-  width: 260px;
-  min-width: 260px;
+  width: 230px;
+  min-width: 230px;
   height: calc(100vh - 60px);
   position: sticky;
   top: 60px;
@@ -321,29 +321,126 @@
     }
   }
 
+  /* ── Code blocks: dark theme (One Dark inspired) ── */
+  div.highlighter-rouge, figure.highlight {
+    margin: 1.2em 0;
+    padding: 0;
+    border: none;
+    border-radius: 8px;
+    background: #282c34;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+
+    &::before {
+      display: none; /* hide the file icon */
+    }
+
+    .highlight {
+      margin: 0;
+      padding: 1em 1.2em;
+      font-family: "JetBrains Mono", "Fira Code", "Consolas", "Courier New", monospace;
+      font-size: 0.88em;
+      line-height: 1.65;
+      color: #abb2bf;
+      background: #282c34;
+      overflow-x: auto;
+      border-radius: 8px;
+    }
+  }
+
+  /* Rouge syntax tokens — One Dark palette */
+  .highlight .c   { color: #5c6370; font-style: italic; } /* Comment */
+  .highlight .cm  { color: #5c6370; font-style: italic; }
+  .highlight .cp  { color: #5c6370; font-style: italic; }
+  .highlight .c1  { color: #5c6370; font-style: italic; }
+  .highlight .cs  { color: #5c6370; font-style: italic; }
+  .highlight .k   { color: #c678dd; font-weight: 600; } /* Keyword */
+  .highlight .kd  { color: #c678dd; }
+  .highlight .kn  { color: #c678dd; }
+  .highlight .kp  { color: #c678dd; }
+  .highlight .kr  { color: #c678dd; }
+  .highlight .kt  { color: #e5c07b; }
+  .highlight .kc  { color: #d19a66; }
+  .highlight .o   { color: #abb2bf; } /* Operator */
+  .highlight .ow  { color: #c678dd; }
+  .highlight .s   { color: #98c379; } /* String */
+  .highlight .s1  { color: #98c379; }
+  .highlight .s2  { color: #98c379; }
+  .highlight .sb  { color: #98c379; }
+  .highlight .sc  { color: #98c379; }
+  .highlight .sd  { color: #98c379; }
+  .highlight .se  { color: #e06c75; }
+  .highlight .sh  { color: #98c379; }
+  .highlight .si  { color: #e5c07b; }
+  .highlight .sx  { color: #98c379; }
+  .highlight .sr  { color: #56b6c2; }
+  .highlight .ss  { color: #98c379; }
+  .highlight .m   { color: #d19a66; } /* Number */
+  .highlight .mf  { color: #d19a66; }
+  .highlight .mh  { color: #d19a66; }
+  .highlight .mi  { color: #d19a66; }
+  .highlight .mo  { color: #d19a66; }
+  .highlight .il  { color: #d19a66; }
+  .highlight .n   { color: #abb2bf; } /* Name */
+  .highlight .na  { color: #d19a66; }
+  .highlight .nb  { color: #e5c07b; }
+  .highlight .nc  { color: #e5c07b; }
+  .highlight .nd  { color: #c678dd; }
+  .highlight .ne  { color: #e06c75; }
+  .highlight .nf  { color: #61afef; } /* Function */
+  .highlight .ni  { color: #e5c07b; }
+  .highlight .nl  { color: #abb2bf; }
+  .highlight .nn  { color: #abb2bf; }
+  .highlight .no  { color: #d19a66; } /* Constant */
+  .highlight .nt  { color: #e06c75; }
+  .highlight .nv  { color: #e06c75; }
+  .highlight .nx  { color: #abb2bf; }
+  .highlight .p   { color: #abb2bf; } /* Punctuation */
+  .highlight .bp  { color: #e5c07b; } /* Builtin.Pseudo */
+  .highlight .vc  { color: #e06c75; }
+  .highlight .vg  { color: #e06c75; }
+  .highlight .vi  { color: #e06c75; }
+  .highlight .w   { color: #abb2bf; }
+  .highlight .err { color: #e06c75; }
+  .highlight .g   { color: #abb2bf; }
+  .highlight .gd  { color: #e06c75; }
+  .highlight .ge  { color: #abb2bf; }
+  .highlight .gr  { color: #e06c75; }
+  .highlight .gh  { color: #e5c07b; }
+  .highlight .gi  { color: #98c379; }
+  .highlight .go  { color: #abb2bf; }
+  .highlight .gp  { color: #c678dd; }
+  .highlight .gs  { color: #abb2bf; }
+  .highlight .gu  { color: #e5c07b; }
+  .highlight .gt  { color: #e06c75; }
+
+  /* Plain pre (non-highlighted code) */
   pre {
-    background: #1e293b;
-    color: #e2e8f0;
+    background: #282c34;
+    color: #abb2bf;
     border-radius: 8px;
     padding: 1em 1.2em;
     overflow-x: auto;
     font-size: 0.88em;
-    line-height: 1.6;
-    margin: 1em 0;
+    line-height: 1.65;
+    margin: 1.2em 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
   }
 
+  /* Inline code */
   code {
     font-family: "JetBrains Mono", "Fira Code", "Consolas", monospace;
-    font-size: 0.9em;
-    background: #f1f5f9;
-    color: #1e293b;
-    padding: 0.15em 0.4em;
-    border-radius: 3px;
+    font-size: 0.88em;
+    background: #f0f0f3;
+    color: #c93b58;
+    padding: 0.15em 0.45em;
+    border-radius: 4px;
+    border: 1px solid #e0e0e4;
 
-    pre & {
+    pre &, .highlight & {
       background: none;
       color: inherit;
       padding: 0;
+      border: none;
       font-size: inherit;
     }
   }
@@ -436,8 +533,8 @@
 
 /* ── Right TOC ── */
 .notes-toc {
-  width: 220px;
-  min-width: 220px;
+  width: 190px;
+  min-width: 190px;
   height: calc(100vh - 60px);
   position: sticky;
   top: 60px;
