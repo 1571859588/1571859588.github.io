@@ -41,7 +41,7 @@ var NOTES_INDEX = [
 var SERIES_INDEX = [
 {% assign sn_notes = site.notes | where: "series", page.series | sort: "series_order" %}
 {% for sn in sn_notes %}
-  {% assign txt = sn.content | markdownify | strip_html | strip_newlines | truncate: 300 | replace: '</', '<\/' %}
+  {% assign txt = sn.content | markdownify | strip_html | strip_newlines | truncate: 3000 | replace: '</', '<\/' %}
   {t:{{ sn.title | jsonify }}, u:{{ sn.url | relative_url | jsonify }}, c:{{ txt | jsonify }}}{% unless forloop.last %},{% endunless %}
 {% endfor %}
 ];
