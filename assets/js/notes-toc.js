@@ -131,10 +131,11 @@
   window.addEventListener('scroll', highlightToc, { passive: true });
   highlightToc();
 
-  // ── 6. Search term highlight (from ?q= param) ──
+  // ── 6. Search term highlight (from sessionStorage) ──
   function highlightSearchTerm() {
-    var q = new URLSearchParams(location.search).get('q');
+    var q = sessionStorage.getItem('notes-search-q');
     if (!q || q.length < 2) return;
+    sessionStorage.removeItem('notes-search-q'); // Clear after use
     var body = document.querySelector('.notes-body');
     if (!body) return;
 
