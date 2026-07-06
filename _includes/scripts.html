@@ -37,7 +37,7 @@ var NOTES_INDEX = [
 <script src="{{ base_path }}/assets/js/notes-search.js"></script>
 {% endif %}
 
-{% if page.series %}
+{% if page.layout == 'notes' %}
 <script>
 var SERIES_INDEX = [
 {% assign sn_notes = site.notes | where: "series", page.series | sort: "series_order" %}
