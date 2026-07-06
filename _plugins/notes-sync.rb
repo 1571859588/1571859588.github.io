@@ -8,6 +8,6 @@ require_relative '../_scripts/sync-notes'
 Jekyll::Hooks.register :site, :after_init do |site|
   # site.config acts as the config object for the sync script
   sync_config = Struct.new(:notes_series).new([])
-  SyncNotes.generate!(SyncNotes::SRC_DIR, SyncNotes::DST_DIR, sync_config)
+  NotesSync.generate!(NotesSync::SRC_DIR, NotesSync::DST_DIR, sync_config)
   site.config['notes_series'] = sync_config.notes_series
 end
