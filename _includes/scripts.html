@@ -29,7 +29,7 @@
 <script>
 var NOTES_INDEX = [
 {% for note in site.notes %}
-  {% assign raw = note.content | strip_html | strip_newlines | truncate: 800 %}
+  {% assign raw = note.content | markdownify | strip_html | strip_newlines | truncate: 2000 %}
   {t:{{ note.title | jsonify }}, s:{{ note.series_title | default: note.series | jsonify }}, u:{{ note.url | relative_url | jsonify }}, c:{{ raw | jsonify }}}{% unless forloop.last %},{% endunless %}
 {% endfor %}
 ];
