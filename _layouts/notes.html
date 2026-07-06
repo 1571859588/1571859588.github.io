@@ -1,0 +1,200 @@
+---
+layout: default
+---
+
+{% include base_path %}
+
+{% if page.header.overlay_color or page.header.overlay_image or page.header.image %}
+  {% include page__hero.html %}
+{% endif %}
+
+<div id="main" role="main" class="notes-layout">
+
+  <!-- Left Sidebar: Series Chapter Navigation -->
+  <aside class="notes-sidebar" id="notes-sidebar">
+    <div class="notes-sidebar-inner">
+      {% comment %}Find current series from auto-generated config{% endcomment %}
+      {% assign current_series_id = page.series %}
+      {% assign current_series_title = page.series_title | default: current_series_id %}
+      {% assign current_series_info = nil %}
+      {% for s in site.notes_series %}
+        {% if s.id == current_series_id %}
+          {% assign current_series_info = s %}
+        {% endif %}
+      {% endfor %}
+
+      <div class="notes-series-header">
+        <h3 class="notes-series-title">{{ current_series_title }}</h3>
+        {% if current_series_info %}
+        <p class="notes-series-desc">{{ current_series_info.note_count }} 篇笔记</p>
+        {% endif %}
+      </div>
+
+      <nav class="notes-chapter-nav">
+        {% assign series_notes = site.notes | where: "series", current_series_id | sort: "series_order" %}
+
+        {% comment %}Group notes by section{% endcomment %}
+        {% assign current_section = "" %}
+        {% assign section_open = false %}
+
+        <ul class="notes-chapter-list">
+        {% for note in series_notes %}
+          {% assign note_section = note.section | default: "" %}
+
+          {% comment %}Close previous section if section changes{% endcomment %}
+          {% if note_section != current_section %}
+            {% if section_open %}
+              </ul></li>
+              {% assign section_open = false %}
+            {% endif %}
+            {% assign current_section = note_section %}
+          {% endif %}
+
+          {% comment %}If note has a section, group it{% endcomment %}
+          {% if note_section != "" %}
+            {% unless section_open %}
+              <li class="notes-section-group">
+                <span class="notes-section-label">{{ note_section | split: "/" | last }}</span>
+                <ul class="notes-section-list">
+              {% assign section_open = true %}
+            {% endunless %}
+            <li class="notes-chapter-item {% if note.url == page.url %}active{% endif %}">
+              <a href="{{ note.url | relative_url }}" class="notes-chapter-link">
+                <span class="notes-chapter-num">{{ note.series_order }}</span>
+                <span class="notes-chapter-title">{{ note.title }}</span>
+              </a>
+            </li>
+          {% else %}
+            <li class="notes-chapter-item {% if note.url == page.url %}active{% endif %}">
+              <a href="{{ note.url | relative_url }}" class="notes-chapter-link">
+                <span class="notes-chapter-num">{{ note.series_order }}</span>
+                <span class="notes-chapter-title">{{ note.title }}</span>
+              </a>
+            </li>
+          {% endif %}
+        {% endfor %}
+
+        {% if section_open %}
+          </ul></li>
+        {% endif %}
+        </ul>
+      </nav>
+
+      <div class="notes-sidebar-footer">
+        <a href="/notes/" class="notes-back-link">← 所有笔记系列</a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Mobile sidebar toggle -->
+  <button class="notes-sidebar-toggle" id="notes-sidebar-toggle" aria-label="Toggle sidebar">
+    <span class="notes-sidebar-toggle-icon"></span>
+  </button>
+
+  <!-- Main Content -->
+  <article class="notes-content" itemscope itemtype="http://schema.org/CreativeWork">
+    {% if page.title %}
+    <meta itemprop="headline" content="{{ page.title | markdownify | strip_html | strip_newlines | escape_once }}">
+    {% endif %}
+
+    <div class="notes-content-inner">
+      <header class="notes-header">
+        {% if page.series_order %}
+        <div class="notes-breadcrumb">
+          <a href="/notes/">{{ site.data.ui-text[site.locale].notes_label | default: "Notes" }}</a>
+          <span class="notes-sep">›</span>
+          <span>{{ current_series_title }}</span>
+          <span class="notes-sep">›</span>
+          <span>{{ page.title }}</span>
+        </div>
+        {% endif %}
+        <h1 class="notes-page-title" itemprop="headline">{{ page.title | markdownify | remove: "<p>" | remove: "</p>" }}</h1>
+        {% if page.date %}
+        <time class="notes-date" datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%Y-%m-%d" }}</time>
+        {% endif %}
+      </header>
+
+      <section class="notes-body" itemprop="text">
+        {{ content }}
+      </section>
+
+      <!-- Previous / Next navigation -->
+      <nav class="notes-pager">
+        {% assign prev = nil %}
+        {% assign next = nil %}
+        {% assign found = false %}
+        {% for note in series_notes %}
+          {% if found and next == nil %}
+            {% assign next = note %}
+          {% endif %}
+          {% if note.url == page.url %}
+            {% assign found = true %}
+          {% endif %}
+          {% unless found %}
+            {% assign prev = note %}
+          {% endunless %}
+        {% endfor %}
+
+        <div class="notes-pager-links">
+          {% if prev %}
+          <a href="{{ prev.url | relative_url }}" class="notes-pager-prev">
+            <span class="notes-pager-label">← 上一章</span>
+            <span class="notes-pager-title">{{ prev.title }}</span>
+          </a>
+          {% else %}
+          <span></span>
+          {% endif %}
+
+          {% if next %}
+          <a href="{{ next.url | relative_url }}" class="notes-pager-next">
+            <span class="notes-pager-label">下一章 →</span>
+            <span class="notes-pager-title">{{ next.title }}</span>
+          </a>
+          {% else %}
+          <span></span>
+          {% endif %}
+        </div>
+      </nav>
+    </div>
+  </article>
+
+  <!-- Right Sidebar: Table of Contents (ScrollSpy) -->
+  <aside class="notes-toc" id="notes-toc">
+    <div class="notes-toc-inner">
+      <h4 class="notes-toc-title">目录</h4>
+      <nav class="notes-toc-nav">
+        <ul class="notes-toc-list" id="notes-toc-list">
+          {% comment %}Parse rendered content for headings{% endcomment %}
+          {% assign fragments = content | split: '<h' %}
+          {% for frag in fragments %}
+            {% assign level_char = frag | slice: 0 %}
+            {% assign level_num = level_char | plus: 0 %}
+            {% if level_num >= 2 and level_num <= 4 %}
+              {% assign after_digit = frag | slice: 1 %}
+              {% if after_digit == ' ' or after_digit == '>' %}
+                {% assign id_parts = frag | split: 'id="' %}
+                {% assign id_rest = id_parts[1] %}
+                {% if id_rest %}
+                  {% assign id = id_rest | split: '"' | first %}
+                {% endif %}
+                {% assign title_parts = frag | split: '>' %}
+                {% assign title_rest = title_parts[1] %}
+                {% if title_rest %}
+                  {% assign title = title_rest | split: '</h' | first | strip_html %}
+                {% endif %}
+                {% if id and title %}
+                <li class="notes-toc-item toc-level-{{ level_num }}">
+                  <a href="#{{ id }}" class="notes-toc-link" data-toc-target="{{ id }}">{{ title }}</a>
+                </li>
+                {% endif %}
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </nav>
+    </div>
+  </aside>
+
+</div>
+
+<script src="{{ base_path }}/assets/js/notes-toc.js"></script>
