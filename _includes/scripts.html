@@ -37,7 +37,6 @@ var NOTES_INDEX = [
 <script src="{{ base_path }}/assets/js/notes-search.js"></script>
 {% endif %}
 
-{% if page.series %}
 <script>
 var SIDEBAR_NOTES = [
 {% assign sn_notes = site.notes | where: "series", page.series | sort: "series_order" %}
@@ -45,13 +44,13 @@ var SIDEBAR_NOTES = [
   {t:{{ sn.title | jsonify }}, u:{{ sn.url | relative_url | jsonify }}}{% unless forloop.last %},{% endunless %}
 {% endfor %}
 ];
-</script>
-<script>
 (function() {
-  if (typeof SIDEBAR_NOTES === 'undefined' || !SIDEBAR_NOTES.length) return;
   var inp = document.getElementById('notes-sidebar-search-input');
   var box = document.getElementById('notes-sidebar-search-results');
   if (!inp || !box) return;
+  inp.style.border = '2px solid #22c55e';
+  if (!SIDEBAR_NOTES.length) { inp.placeholder = '本专题无笔记'; return; }
+  inp.placeholder = SIDEBAR_NOTES.length + ' 篇可搜';
 
   function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
   function hl(t, q) {
@@ -87,6 +86,5 @@ var SIDEBAR_NOTES = [
   document.addEventListener('click', function(e) { if (!e.target.closest('#notes-sidebar-search')) { box.style.display = 'none'; box.innerHTML = ''; } });
 })();
 </script>
-{% endif %}
 
 {% include analytics.html %}
