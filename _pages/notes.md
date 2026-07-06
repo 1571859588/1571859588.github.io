@@ -10,6 +10,13 @@ toc: false
   <div class="notes-hub-main">
     <p class="notes-hub-subtitle">零散的技术笔记与学习记录，按主题整理为系列。</p>
 
+    <!-- Search -->
+    <div class="notes-search" id="notes-search">
+      <input type="text" class="notes-search-input" id="notes-search-input"
+             placeholder="搜索笔记…" autocomplete="off">
+      <div class="notes-search-results" id="notes-search-results" style="display:none"></div>
+    </div>
+
     {% assign series_list = "" | split: "" %}
     {% for note in site.notes %}
       {% assign st = note.series_title | default: note.series %}
@@ -18,7 +25,7 @@ toc: false
       {% endunless %}
     {% endfor %}
 
-    <div class="notes-series-grid">
+    <div class="notes-series-grid" id="notes-series-grid">
     {% for st in series_list %}
       {% assign series_notes = "" | split: "" %}
       {% for note in site.notes %}
@@ -54,7 +61,6 @@ toc: false
     </div>
   </div>
 
-  <!-- Right: series quick index (scrollspy) -->
   <aside class="notes-hub-sidebar" id="notes-hub-sidebar">
     <div class="notes-hub-sidebar-inner">
       <h4 class="notes-hub-sidebar-title">快速索引</h4>
@@ -81,6 +87,95 @@ toc: false
     </div>
   </aside>
 </div>
+
+<!-- Search index (embedded JSON) -->
+<script id="notes-search-data" type="application/json">
+[
+{% for note in site.notes %}
+  {
+    "title": {{ note.title | jsonify }},
+    "series": {{ note.series_title | default: note.series | jsonify }},
+    "url": {{ note.url | relative_url | jsonify }},
+    "snippet": {{ note.content | strip_html | strip_newlines | replace: '"', '\"' | truncate: 600 | jsonify }}
+  }{% unless forloop.last %},{% endunless %}
+{% endfor %}
+]
+</script>
+
+<script>
+(function() {
+  var input  = document.getElementById('notes-search-input');
+  var resultsBox = document.getElementById('notes-search-results');
+  var grid   = document.getElementById('notes-series-grid');
+  var dataEl = document.getElementById('notes-search-data');
+  if (!input || !resultsBox || !dataEl) return;
+
+  var notes = JSON.parse(dataEl.textContent);
+
+  function search(query) {
+    var q = query.toLowerCase().trim();
+    if (q.length < 1) { resultsBox.style.display = 'none'; return; }
+
+    var hits = [];
+    notes.forEach(function(n) {
+      var score = 0;
+      var context = '';
+
+      // Title match (high weight)
+      if (n.title.toLowerCase().indexOf(q) !== -1) { score += 100; context = n.title; }
+      // Series match
+      if (n.series.toLowerCase().indexOf(q) !== -1) { score += 80; context = n.series; }
+      // Content match (lower weight)
+      var ci = n.snippet.toLowerCase().indexOf(q);
+      if (ci !== -1) {
+        score += 40;
+        var start = Math.max(0, ci - 30);
+        var end   = Math.min(n.snippet.length, ci + q.length + 60);
+        context = (start > 0 ? '…' : '') + n.snippet.substring(start, end) + (end < n.snippet.length ? '…' : '');
+      }
+
+      if (score > 0) {
+        hits.push({ note: n, score: score, context: context });
+      }
+    });
+
+    hits.sort(function(a, b) { return b.score - a.score; });
+    hits = hits.slice(0, 15);
+
+    if (hits.length === 0) {
+      resultsBox.innerHTML = '<div class="notes-search-empty">无匹配结果</div>';
+    } else {
+      var html = '';
+      hits.forEach(function(h) {
+        html += '<a href="' + h.note.url + '" class="notes-search-hit">' +
+                '<span class="notes-search-hit-title">' + escapeHtml(h.note.title) + '</span>' +
+                '<span class="notes-search-hit-series">' + escapeHtml(h.note.series) + '</span>' +
+                '<span class="notes-search-hit-context">' + escapeHtml(h.context) + '</span>' +
+                '</a>';
+      });
+      resultsBox.innerHTML = html;
+    }
+    resultsBox.style.display = 'block';
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  input.addEventListener('input', function() { search(this.value); });
+  input.addEventListener('focus', function() { if (this.value.trim()) search(this.value); });
+
+  // Hide results on outside click
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('#notes-search')) resultsBox.style.display = 'none';
+  });
+
+  // Keyboard navigation
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') { resultsBox.style.display = 'none'; this.blur(); }
+  });
+})();
+</script>
 
 <script>
 (function() {
