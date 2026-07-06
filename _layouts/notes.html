@@ -13,21 +13,11 @@ layout: default
   <!-- Left Sidebar: Series Chapter Navigation -->
   <aside class="notes-sidebar" id="notes-sidebar">
     <div class="notes-sidebar-inner">
-      {% comment %}Find current series from auto-generated config{% endcomment %}
       {% assign current_series_id = page.series %}
       {% assign current_series_title = page.series_title | default: current_series_id %}
-      {% assign current_series_info = nil %}
-      {% for s in site.notes_series %}
-        {% if s.id == current_series_id %}
-          {% assign current_series_info = s %}
-        {% endif %}
-      {% endfor %}
 
       <div class="notes-series-header">
         <h3 class="notes-series-title">{{ current_series_title }}</h3>
-        {% if current_series_info %}
-        <p class="notes-series-desc">{{ current_series_info.note_count }} 篇笔记</p>
-        {% endif %}
       </div>
 
       <nav class="notes-chapter-nav">

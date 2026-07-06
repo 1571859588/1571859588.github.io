@@ -22,14 +22,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+
       - name: Sync notes-src → _notes
-        run: ruby _scripts/sync-notes.rb
+        run: |
+          echo "=== Running notes sync ==="
+          ruby _scripts/sync-notes.rb
+          echo "=== Generated _notes/ files ==="
+          ls -la _notes/ || echo "(empty or missing)"
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-
-      - name: Build with Jekyll
-        uses: actions/jekyll-build-pages@v1
+      - name: Build Jekyll site
+        run: bundle exec jekyll build
+        env:
+          JEKYLL_ENV: production
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
