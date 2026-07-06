@@ -1,0 +1,515 @@
+<!doctype html><html lang="en" class="no-js"><head><meta charset="utf-8"> <!-- begin SEO --><title>Python进阶笔记_名字绑定_闭包_类与协议 - Yuntao Nie</title><meta property="og:locale" content="en-US"><meta property="og:site_name" content="Yuntao Nie"><meta property="og:title" content="Python进阶笔记_名字绑定_闭包_类与协议"><link rel="canonical" href="https://1571859588.github.io/notes/Python%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0-%E5%90%8D%E5%AD%97%E7%BB%91%E5%AE%9A-%E9%97%AD%E5%8C%85-%E7%B1%BB%E4%B8%8E%E5%8D%8F%E8%AE%AE/"><meta property="og:url" content="https://1571859588.github.io/notes/Python%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0-%E5%90%8D%E5%AD%97%E7%BB%91%E5%AE%9A-%E9%97%AD%E5%8C%85-%E7%B1%BB%E4%B8%8E%E5%8D%8F%E8%AE%AE/"><meta property="og:description" content="Python 进阶笔记：名字绑定、可变性、闭包、类与协议"> <script type="application/ld+json"> { "@context" : "http://schema.org", "@type" : "Person", "name" : "Yuntao Nie", "url" : "https://1571859588.github.io", "sameAs" : null } </script> <!-- end SEO --><link href="https://1571859588.github.io/feed.xml" type="application/atom+xml" rel="alternate" title="Yuntao Nie Feed"> <!-- http://t.co/dKP3o1e --><meta name="HandheldFriendly" content="True"><meta name="MobileOptimized" content="320"><meta name="viewport" content="width=device-width, initial-scale=1.0"> <script> document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js '; </script> <!-- For all browsers --><link rel="stylesheet" href="https://1571859588.github.io/assets/css/main.css"><meta http-equiv="cleartype" content="on"> <!-- start custom head snippets --><link rel="apple-touch-icon" sizes="57x57" href="https://1571859588.github.io/images/apple-touch-icon-57x57.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="60x60" href="https://1571859588.github.io/images/apple-touch-icon-60x60.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="72x72" href="https://1571859588.github.io/images/apple-touch-icon-72x72.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="76x76" href="https://1571859588.github.io/images/apple-touch-icon-76x76.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="114x114" href="https://1571859588.github.io/images/apple-touch-icon-114x114.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="120x120" href="https://1571859588.github.io/images/apple-touch-icon-120x120.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="144x144" href="https://1571859588.github.io/images/apple-touch-icon-144x144.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="152x152" href="https://1571859588.github.io/images/apple-touch-icon-152x152.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="180x180" href="https://1571859588.github.io/images/apple-touch-icon-180x180.png?v=M44lzPylqQ"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-32x32.png?v=M44lzPylqQ" sizes="32x32"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/android-chrome-192x192.png?v=M44lzPylqQ" sizes="192x192"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-96x96.png?v=M44lzPylqQ" sizes="96x96"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-16x16.png?v=M44lzPylqQ" sizes="16x16"><link rel="manifest" href="https://1571859588.github.io/images/manifest.json?v=M44lzPylqQ"><link rel="mask-icon" href="https://1571859588.github.io/images/safari-pinned-tab.svg?v=M44lzPylqQ" color="#000000"><link rel="shortcut icon" href="/images/favicon.ico?v=M44lzPylqQ"><meta name="msapplication-TileColor" content="#000000"><meta name="msapplication-TileImage" content="https://1571859588.github.io/images/mstile-144x144.png?v=M44lzPylqQ"><meta name="msapplication-config" content="https://1571859588.github.io/images/browserconfig.xml?v=M44lzPylqQ"><meta name="theme-color" content="#ffffff"><link rel="stylesheet" href="https://1571859588.github.io/assets/css/academicons.css"/> <!-- MathJax for math rendering --> <script> MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['\\(', '\\)']] } }; </script> <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script> <!-- end custom head snippets --></head><body> <!--[if lt IE 9]><div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div><![endif]--><div class="masthead"><div class="masthead__inner-wrap"><div class="masthead__menu"><nav id="site-nav" class="greedy-nav"> <button><div class="navicon"></div></button><ul class="visible-links"><li class="masthead__menu-item masthead__menu-item--lg"><a href="https://1571859588.github.io/">Yuntao Nie</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/publications/">Publications</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/cv/">CV</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/notes/">Notes</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/year-archive/">Blog</a></li></ul><ul class="hidden-links hidden"></ul></nav></div></div></div><div id="main" role="main" class="notes-layout"> <!-- Left Sidebar: Series Chapter Navigation --><aside class="notes-sidebar" id="notes-sidebar"><div class="notes-sidebar-inner"><div class="notes-series-header"><h3 class="notes-series-title">python</h3></div><div class="notes-sidebar-search" id="notes-sidebar-search"> <input type="text" class="notes-sidebar-search-input" id="notes-sidebar-search-input" placeholder="搜索本专题…" autocomplete="off"><div class="notes-sidebar-search-results" id="notes-sidebar-search-results" style="display:none"></div></div><nav class="notes-chapter-nav"><ul class="notes-chapter-list"><li class="notes-chapter-item "> <a href="/notes/Python%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B02-%E8%BF%AD%E4%BB%A3%E5%99%A8-%E8%A3%85%E9%A5%B0%E5%99%A8-%E4%B8%8A%E4%B8%8B%E6%96%87%E7%AE%A1%E7%90%86%E5%99%A8/" class="notes-chapter-link"> <span class="notes-chapter-num">1</span> <span class="notes-chapter-title">Python进阶笔记2_迭代器_装饰器_上下文管理器</span> </a></li><li class="notes-chapter-item "> <a href="/notes/Python%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B03-%E5%B9%B6%E5%8F%91%E4%B8%8E%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90/" class="notes-chapter-link"> <span class="notes-chapter-num">2</span> <span class="notes-chapter-title">Python进阶笔记3_并发与性能分析</span> </a></li><li class="notes-chapter-item active"> <a href="/notes/Python%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0-%E5%90%8D%E5%AD%97%E7%BB%91%E5%AE%9A-%E9%97%AD%E5%8C%85-%E7%B1%BB%E4%B8%8E%E5%8D%8F%E8%AE%AE/" class="notes-chapter-link"> <span class="notes-chapter-num">3</span> <span class="notes-chapter-title">Python进阶笔记_名字绑定_闭包_类与协议</span> </a></li></ul></nav><div class="notes-sidebar-footer"> <a href="/notes/" class="notes-back-link">← 所有笔记系列</a></div></div></aside><!-- Mobile sidebar toggle --> <button class="notes-sidebar-toggle" id="notes-sidebar-toggle" aria-label="Toggle sidebar"> <span class="notes-sidebar-toggle-icon"></span> </button> <!-- Main Content --><article class="notes-content" itemscope itemtype="http://schema.org/CreativeWork"><meta itemprop="headline" content="Python进阶笔记_名字绑定_闭包_类与协议"><div class="notes-content-inner"><header class="notes-header"><div class="notes-breadcrumb"> <a href="/notes/">Notes</a> <span class="notes-sep">›</span> <span>python</span> <span class="notes-sep">›</span> <span>Python进阶笔记_名字绑定_闭包_类与协议</span></div><h1 class="notes-page-title" itemprop="headline">Python进阶笔记_名字绑定_闭包_类与协议</h1></header><section class="notes-body" itemprop="text"><h1 id="python-进阶笔记名字绑定可变性闭包类与协议">Python 进阶笔记：名字绑定、可变性、闭包、类与协议</h1><blockquote><p>更新时间：2026-06-30 状态：学习笔记（针对进阶概念逐一拆解） 读者背景：已掌握 Python 基础语法，对”名字绑定、闭包、装饰器、特殊方法”等概念有疑惑 关联：<code class="language-plaintext highlighter-rouge">pytorch/PyTorch常见操作速查.md</code>（PyTorch 中大量用到这些概念）</p></blockquote><hr /><h2 id="一句话结论">一句话结论</h2><p>Python 变量不是”盒子”，是”标签”——<strong>赋值是贴标签，不是复制对象</strong>。这个核心认知解释了 mutate/rebind 区别、默认参数陷阱、浅拷贝共享内部对象、闭包延迟绑定等所有”反直觉”现象。本文逐一拆解这些概念，每个都配可运行代码。</p><hr /><h2 id="一名字绑定python-变量的本质">一、名字绑定：Python 变量的本质</h2><h3 id="11-核心认知变量是标签不是盒子">1.1 核心认知：变量是标签，不是盒子</h3><p>很多语言里变量是”盒子”（装值的容器），赋值是把值放进盒子。<strong>Python 不是这样</strong>。</p><p>Python 变量是”标签”——<strong>名字绑定到对象</strong>。赋值 = 在对象上贴一个名字标签。</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>       <span class="c1"># 创建列表对象 [1,2]，贴上标签 a
+</span><span class="n">b</span> <span class="o">=</span> <span class="n">a</span>            <span class="c1"># 把标签 b 也贴到同一个列表对象上（不是复制！）
+</span><span class="n">b</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>      <span class="c1"># 通过标签 b 修改了这个对象
+</span>
+<span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>         <span class="c1"># [1, 2, 3]    ← a 看到了变化，因为 a 和 b 指向同一个对象
+</span><span class="k">print</span><span class="p">(</span><span class="n">a</span> <span class="ow">is</span> <span class="n">b</span><span class="p">)</span>    <span class="c1"># True         ← is 比较身份：是同一个对象吗？
+</span><span class="k">print</span><span class="p">(</span><span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="p">)</span>    <span class="c1"># True         ← == 比较值：值相等吗？
+</span></code></pre></div></div><p><strong>图解</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>传统"盒子"模型（错误理解）：        Python"标签"模型（正确理解）：
+┌─────┐    ┌─────┐               [1, 2, 3]  ← 对象（在堆内存里）
+│  a  │    │  b  │                ↑    ↑
+│[1,2]│    │[1,2]│               a    b     ← 两个名字标签都贴在同一个对象上
+└─────┘    └─────┘               （赋值不复制，只多贴一个标签）
+（两个独立盒子，各装各的）
+</code></pre></div></div><h3 id="12-函数参数同样是名字绑定">1.2 函数参数同样是名字绑定</h3><p>函数收到的是<strong>对象引用</strong>，既不是”按引用传递”也不是”按值传递”——是”按对象引用传递”。</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">mutate</span><span class="p">(</span><span class="n">xs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="n">xs</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>          <span class="c1"># 通过 xs 这个标签修改了对象本身
+</span>
+<span class="k">def</span> <span class="nf">rebind</span><span class="p">(</span><span class="n">xs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="n">xs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>              <span class="c1"># 只让局部名字 xs 指向新列表（原对象没动）
+</span>
+<span class="n">data</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">mutate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>               <span class="c1"># [1]        ← mutate 改了原对象
+</span>
+<span class="n">rebind</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>               <span class="c1"># 仍然是 [1] ← rebind 只改了局部名字，原对象没变
+</span>
+<span class="n">data2</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="n">mutate</span><span class="p">(</span><span class="n">data2</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">data2</span><span class="p">)</span>              <span class="c1"># [2, 3, 1]  ← mutate 改了原对象
+</span>
+<span class="n">rebind</span><span class="p">(</span><span class="n">data2</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">data2</span><span class="p">)</span>              <span class="c1"># 仍然是 [2, 3, 1] ← rebind 没影响原对象
+</span></code></pre></div></div><p><strong>为什么 mutate 能改、rebind 不能改</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>调用 mutate(data) 时：
+  函数内 xs 和外层 data 贴在同一个对象上
+  xs.append(1) 修改了这个对象 → data 看到了变化
+
+调用 rebind(data) 时：
+  函数内 xs 和外层 data 贴在同一个对象上
+  xs = [1] 让 xs 贴到一个新对象上 → data 还贴在原对象上，没变化
+  
+  ┌── 调用前 ──┐        ┌── xs = [1] 之后 ──┐
+  │            │        │                   │
+  [2,3,1] ← data, xs    [2,3,1] ← data      [1] ← xs（新对象）
+                        （原对象没变）        （xs 指向新对象了）
+</code></pre></div></div><blockquote><p><strong>记忆</strong>：函数参数是”把外层名字贴的对象再贴一个局部名字”。在函数内<strong>修改对象</strong>（append/sort）调用方能看到，<strong>重新绑定名字</strong>（=）调用方看不到。</p></blockquote><hr /><h2 id="二可变对象不可变对象与拷贝">二、可变对象、不可变对象与拷贝</h2><h3 id="21-可变-vs-不可变">2.1 可变 vs 不可变</h3><table><thead><tr><th>类型</th><th>可变？</th><th>例子</th><th>说明</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">int</code>/<code class="language-plaintext highlighter-rouge">float</code>/<code class="language-plaintext highlighter-rouge">bool</code></td><td>不可变</td><td><code class="language-plaintext highlighter-rouge">x = 1; x += 1</code> 其实是创建了新对象</td><td>数字”修改”其实是重新绑定</td></tr><tr><td><code class="language-plaintext highlighter-rouge">str</code>/<code class="language-plaintext highlighter-rouge">bytes</code></td><td>不可变</td><td><code class="language-plaintext highlighter-rouge">s = "ab"; s += "c"</code> 创建新字符串</td><td>字符串拼接产生新对象</td></tr><tr><td><code class="language-plaintext highlighter-rouge">tuple</code></td><td>不可变（如果元素都不可变）</td><td><code class="language-plaintext highlighter-rouge">(1, 2, 3)</code></td><td>不能增删元素</td></tr><tr><td><code class="language-plaintext highlighter-rouge">list</code></td><td><strong>可变</strong></td><td><code class="language-plaintext highlighter-rouge">[1,2].append(3)</code> 改原对象</td><td>常见陷阱来源</td></tr><tr><td><code class="language-plaintext highlighter-rouge">dict</code></td><td><strong>可变</strong></td><td><code class="language-plaintext highlighter-rouge">d["k"]=v</code> 改原对象</td><td> </td></tr><tr><td><code class="language-plaintext highlighter-rouge">set</code></td><td><strong>可变</strong></td><td><code class="language-plaintext highlighter-rouge">s.add(x)</code> 改原对象</td><td> </td></tr><tr><td>自定义实例</td><td><strong>通常可变</strong></td><td><code class="language-plaintext highlighter-rouge">obj.attr = x</code> 改原对象</td><td> </td></tr></tbody></table><p><strong>不可变对象的”修改”其实是重新绑定</strong>：</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>    <span class="c1"># 比如打印 140730123456
+</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>       <span class="c1"># 这不是"修改 1 变成 2"，是创建新对象 2，把 x 贴过去
+</span><span class="k">print</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>    <span class="c1"># 地址变了，说明是新对象
+</span>
+<span class="n">s</span> <span class="o">=</span> <span class="s">"hello"</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">s</span> <span class="o">+</span> <span class="s">" world"</span>   <span class="c1"># 创建新字符串，不是修改原字符串
+</span><span class="k">print</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>    <span class="c1"># 地址变了
+</span></code></pre></div></div><h3 id="22-默认参数陷阱新手必踩">2.2 默认参数陷阱（新手必踩）</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 错误：同一个列表会被多次调用共享
+</span><span class="k">def</span> <span class="nf">collect_bad</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="n">result</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">collect_bad</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>   <span class="c1"># [1]
+</span><span class="k">print</span><span class="p">(</span><span class="n">collect_bad</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>   <span class="c1"># [1, 2]    ← 不是 [2]！上次调用的列表还在！
+</span><span class="k">print</span><span class="p">(</span><span class="n">collect_bad</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>   <span class="c1"># [1, 2, 3] ← 越积越多
+</span>
+<span class="c1"># 正确：用 None 表示"未提供"
+</span><span class="k">def</span> <span class="nf">collect</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="bp">None</span> <span class="o">=</span> <span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">result</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">collect</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>   <span class="c1"># [1]
+</span><span class="k">print</span><span class="p">(</span><span class="n">collect</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>   <span class="c1"># [2]    ← 每次都是新列表
+</span><span class="k">print</span><span class="p">(</span><span class="n">collect</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>   <span class="c1"># [3]
+</span></code></pre></div></div><p><strong>为什么 <code class="language-plaintext highlighter-rouge">collect_bad</code> 会共享</strong>：</p><blockquote><p>默认参数在<strong>函数定义时求值</strong>（只创建一次），而不是每次调用时求值。</p></blockquote><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">collect_bad</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="p">...</span>
+
+<span class="c1"># 等价于这样理解：
+</span><span class="n">_default_result</span> <span class="o">=</span> <span class="p">[]</span>          <span class="c1"># 函数定义时就创建了这一个列表对象
+</span><span class="k">def</span> <span class="nf">collect_bad</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="n">_default_result</span><span class="p">):</span>
+    <span class="n">result</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span>
+<span class="c1"># 每次 collect_bad(1) 调用，result 都指向同一个 _default_result
+# 所以 append 的值会累积
+</span></code></pre></div></div><p><strong>逐句拆解正确写法</strong>：</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">collect</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="bp">None</span> <span class="o">=</span> <span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+</code></pre></div></div><table><thead><tr><th>部分</th><th>含义</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">result: list[int] \| None</code></td><td>类型注解：result 可以是 <code class="language-plaintext highlighter-rouge">list[int]</code> 或 <code class="language-plaintext highlighter-rouge">None</code></td></tr><tr><td><code class="language-plaintext highlighter-rouge">\|</code></td><td>联合类型，表示”或”（Python 3.10+ 语法，等价于旧版 <code class="language-plaintext highlighter-rouge">Union[list[int], None]</code>）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">= None</code></td><td>默认值是 None（每次调用都是 None，不是共享对象）</td></tr></tbody></table><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+</code></pre></div></div><table><thead><tr><th>部分</th><th>含义</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">if result is None:</code></td><td>如果调用时没传 result（默认 None），就进这个分支</td></tr><tr><td><code class="language-plaintext highlighter-rouge">result = []</code></td><td>在函数内部创建一个新列表（每次调用都是新的）</td></tr></tbody></table><p><strong>为什么用 <code class="language-plaintext highlighter-rouge">is None</code> 而不是 <code class="language-plaintext highlighter-rouge">== None</code></strong>：<code class="language-plaintext highlighter-rouge">is</code> 比较身份（是不是同一个 None 对象），<code class="language-plaintext highlighter-rouge">==</code> 比较值。对于 None 用 <code class="language-plaintext highlighter-rouge">is</code> 是惯例，更快更安全（避免某些对象重写 <code class="language-plaintext highlighter-rouge">__eq__</code> 导致误判）。</p><p><strong>为什么需要这个模式</strong>：因为默认参数在定义时只创建一次（共享），而 <code class="language-plaintext highlighter-rouge">None</code> 是不可变的单例（每次都是同一个 None，但不会”累积”），所以用 None 当哨兵，在函数内部判断后创建新列表。</p><h3 id="23-浅拷贝-vs-深拷贝">2.3 浅拷贝 vs 深拷贝</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">copy</span>
+
+<span class="n">src</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
+<span class="n">shallow</span> <span class="o">=</span> <span class="n">src</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>           <span class="c1"># 只复制最外层列表，内部对象还是共享的
+</span><span class="n">deep</span> <span class="o">=</span> <span class="n">copy</span><span class="p">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>      <span class="c1"># 递归复制所有层级，完全独立
+</span>
+<span class="n">shallow</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">append</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">shallow</span><span class="p">)</span>                 <span class="c1"># [[1, 9], [2]]
+</span><span class="k">print</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>                     <span class="c1"># [[1, 9], [2]]    ← src 也变了！内部对象共享
+</span><span class="k">print</span><span class="p">(</span><span class="n">deep</span><span class="p">)</span>                    <span class="c1"># [[1], [2]]        ← deep 不受影响
+</span>
+<span class="n">src</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">append</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">shallow</span><span class="p">)</span>                 <span class="c1"># [[1, 9], [2, 3]]  ← shallow 的内部对象也变了（共享）
+</span><span class="k">print</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>                     <span class="c1"># [[1, 9], [2, 3]]
+</span><span class="k">print</span><span class="p">(</span><span class="n">deep</span><span class="p">)</span>                    <span class="c1"># [[1], [2]]        ← deep 完全独立
+</span></code></pre></div></div><p><strong>图解浅拷贝</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>src = [[1], [2]]
+
+浅拷贝 shallow = src.copy()：
+
+src     ──→ [  ↓     ↓  ]      ← 外层列表是新的（复制了）
+shallow ──→ [  ↓     ↓  ]         但内部 [1] 和 [2] 是共享的
+                │     │
+                ↓     ↓
+              [1]   [2]          ← 同一个内部对象
+
+所以 shallow[0].append(9) 改的是共享的 [1]，src 也能看到
+</code></pre></div></div><p><strong>图解深拷贝</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>src  ──→ [ ptr → [1], ptr → [2] ]          ← 外层
+                                        ↓
+deep ──→ [ ptr → [1]', ptr → [2]' ]       ← 外层是新的，内部 [1]' [2]' 也是新的副本
+
+deep 和 src 没有任何共享对象，互不影响
+</code></pre></div></div><p><strong>深拷贝的代价</strong>（重要提醒）：</p><blockquote><p>深拷贝并非默认答案。对大型张量或模型状态做无意复制可能产生巨大的内存和时间开销。更好的做法是先明确：<strong>哪些数据需要独占，哪些可以只读共享</strong>。</p></blockquote><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># PyTorch 场景：不要随便 deepcopy 模型
+</span><span class="kn">import</span> <span class="nn">copy</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">BigModel</span><span class="p">()</span>
+<span class="n">model_copy</span> <span class="o">=</span> <span class="n">copy</span><span class="p">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>  <span class="c1"># 可能复制几 GB 参数，很慢很耗内存
+</span>
+<span class="c1"># 更好的做法：用 PyTorch 自己的机制
+</span><span class="n">model</span><span class="p">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">model</span><span class="p">.</span><span class="n">state_dict</span><span class="p">())</span>  <span class="c1"># 只复制参数
+</span></code></pre></div></div><hr /><h2 id="三作用域闭包与-legb">三、作用域、闭包与 LEGB</h2><h3 id="31-legb-查找规则">3.1 LEGB 查找规则</h3><p>Python 查找名字时按 <strong>LEGB</strong> 顺序：</p><table><thead><tr><th>层级</th><th>名称</th><th>说明</th><th>例子</th></tr></thead><tbody><tr><td><strong>L</strong></td><td>Local</td><td>当前函数内部</td><td>函数体里定义的变量</td></tr><tr><td><strong>E</strong></td><td>Enclosing</td><td>外层函数（嵌套函数时）</td><td>外层函数的局部变量</td></tr><tr><td><strong>G</strong></td><td>Global</td><td>模块级</td><td>模块顶层定义的变量</td></tr><tr><td><strong>B</strong></td><td>Builtins</td><td>内置</td><td><code class="language-plaintext highlighter-rouge">len</code>、<code class="language-plaintext highlighter-rouge">print</code>、<code class="language-plaintext highlighter-rouge">int</code> 等</td></tr></tbody></table><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span> <span class="o">=</span> <span class="s">"global"</span>          <span class="c1"># G 层
+</span>
+<span class="k">def</span> <span class="nf">outer</span><span class="p">():</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="s">"enclosing"</span>   <span class="c1"># E 层
+</span>    
+    <span class="k">def</span> <span class="nf">inner</span><span class="p">():</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="s">"local"</span>   <span class="c1"># L 层
+</span>        <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>      <span class="c1"># 先找 L，找到 "local"
+</span>    
+    <span class="n">inner</span><span class="p">()</span>
+
+<span class="n">outer</span><span class="p">()</span>               <span class="c1"># 输出 "local"
+</span></code></pre></div></div><h3 id="32-闭包是什么">3.2 闭包是什么</h3><p><strong>闭包 = 函数 + 它记住的外层变量</strong>。</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Callable</span>
+
+<span class="k">def</span> <span class="nf">make_multiplier</span><span class="p">(</span><span class="n">scale</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">multiply</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">scale</span>      <span class="c1"># multiply 记住了外层的 scale
+</span>    <span class="k">return</span> <span class="n">multiply</span>           <span class="c1"># 返回 multiply 函数本身（不是调用结果）
+</span>
+<span class="n">double</span> <span class="o">=</span> <span class="n">make_multiplier</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>   <span class="c1"># double 现在是一个函数
+</span><span class="k">print</span><span class="p">(</span><span class="n">double</span><span class="p">(</span><span class="mf">3.0</span><span class="p">))</span>              <span class="c1"># 6.0
+</span></code></pre></div></div><p><strong>逐句解释</strong>：</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">make_multiplier</span><span class="p">(</span><span class="n">scale</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]:</span>
+</code></pre></div></div><table><thead><tr><th>部分</th><th>含义</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">make_multiplier(scale: float)</code></td><td>函数名，接收一个 float 参数 scale</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-&gt; Callable[[float], float]</code></td><td>返回值类型注解：返回一个”可调用对象”（函数），它接收 float 返回 float</td></tr><tr><td><code class="language-plaintext highlighter-rouge">Callable</code></td><td>来自 <code class="language-plaintext highlighter-rouge">collections.abc</code>，表示”可调用的东西”（函数、实现了 <code class="language-plaintext highlighter-rouge">__call__</code> 的对象等）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">Callable[[float], float]</code></td><td><code class="language-plaintext highlighter-rouge">[float]</code> 是参数类型列表，后面的 <code class="language-plaintext highlighter-rouge">float</code> 是返回类型</td></tr></tbody></table><p><strong>闭包的工作原理</strong>：</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">make_multiplier</span><span class="p">(</span><span class="n">scale</span><span class="p">):</span>       <span class="c1"># 外层函数
+</span>    <span class="k">def</span> <span class="nf">multiply</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>              <span class="c1"># 内层函数
+</span>        <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">scale</span>          <span class="c1"># 引用了外层的 scale
+</span>    <span class="k">return</span> <span class="n">multiply</span>
+
+<span class="n">double</span> <span class="o">=</span> <span class="n">make_multiplier</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
+<span class="c1"># 此时 double 是 multiply 函数，但它"记住"了 scale=2.0
+# 即使 make_multiplier 已经返回了，scale 依然存活
+</span>
+<span class="n">triple</span> <span class="o">=</span> <span class="n">make_multiplier</span><span class="p">(</span><span class="mf">3.0</span><span class="p">)</span>
+<span class="c1"># triple 是另一个 multiply 函数，记住的是 scale=3.0
+# double 和 triple 各自记住了不同的 scale，互不干扰
+</span>
+<span class="k">print</span><span class="p">(</span><span class="n">double</span><span class="p">(</span><span class="mf">5.0</span><span class="p">))</span>    <span class="c1"># 10.0  (5 * 2.0)
+</span><span class="k">print</span><span class="p">(</span><span class="n">triple</span><span class="p">(</span><span class="mf">5.0</span><span class="p">))</span>    <span class="c1"># 15.0  (5 * 3.0)
+</span></code></pre></div></div><p><strong>为什么叫”闭包”</strong>：内层函数”封闭”了外层函数的变量，即使外层函数已经执行完毕返回了，这些变量依然被内层函数记住，不会被垃圾回收。</p><p><strong>闭包的常见用途</strong>：</p><ul><li>工厂函数（如 make_multiplier 生成不同倍数的函数）</li><li>装饰器（装饰器本质就是闭包）</li><li>回调函数（记住创建时的上下文）</li></ul><h3 id="33-循环中闭包的延迟绑定经典陷阱">3.3 循环中闭包的延迟绑定（经典陷阱）</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 错误：三个函数最终都读取同一个 i，结果都是 2
+</span><span class="n">bad</span> <span class="o">=</span> <span class="p">[</span><span class="k">lambda</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+<span class="k">print</span><span class="p">([</span><span class="n">fn</span><span class="p">()</span> <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="n">bad</span><span class="p">])</span>  <span class="c1"># [2, 2, 2]
+</span>
+<span class="c1"># 正确：用默认参数在每轮定义时保存当前值
+</span><span class="n">good</span> <span class="o">=</span> <span class="p">[</span><span class="k">lambda</span> <span class="n">i</span><span class="o">=</span><span class="n">i</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+<span class="k">print</span><span class="p">([</span><span class="n">fn</span><span class="p">()</span> <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="n">good</span><span class="p">])</span>  <span class="c1"># [0, 1, 2]
+</span></code></pre></div></div><p><strong>为什么 bad 是 [2, 2, 2]</strong>：</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">bad</span> <span class="o">=</span> <span class="p">[</span><span class="k">lambda</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+<span class="c1"># 等价于：
+</span><span class="n">bad</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+    <span class="n">bad</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">i</span><span class="p">)</span>    <span class="c1"># 创建了 3 个函数，但函数体里的 i 不是"当前值"，是"名字 i"
+</span>
+<span class="c1"># 循环结束后，i 的值是 2（最后一次循环的值）
+# 此时调用 bad[0]()，函数去找 i，找到的是循环结束后的 i=2
+</span>
+<span class="k">print</span><span class="p">([</span><span class="n">fn</span><span class="p">()</span> <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="n">bad</span><span class="p">])</span>
+<span class="c1"># 调用 bad[0]()：找 i → 2
+# 调用 bad[1]()：找 i → 2
+# 调用 bad[2]()：找 i → 2
+# 所以输出 [2, 2, 2]
+</span></code></pre></div></div><p><strong>关键认知</strong>：闭包在<strong>调用时</strong>才读取外层名字，不是在<strong>定义时</strong>。定义时只是记住了”有个叫 i 的名字”，调用时才去查 i 的当前值。</p><p><strong>为什么 good 是 [0, 1, 2]</strong>：</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">good</span> <span class="o">=</span> <span class="p">[</span><span class="k">lambda</span> <span class="n">i</span><span class="o">=</span><span class="n">i</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+<span class="c1"># lambda i=i: i 的意思是：
+#   定义一个函数，它有一个参数 i，默认值是"当前循环的 i 值"
+#   函数体返回这个参数 i
+</span>
+<span class="c1"># 等价于：
+</span><span class="n">good</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+    <span class="n">good</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="k">lambda</span> <span class="n">i</span><span class="o">=</span><span class="n">i</span><span class="p">:</span> <span class="n">i</span><span class="p">)</span>
+    <span class="c1">#               ↑ 这个 i=i 把当前 i 的值"快照"到默认参数里
+</span>    <span class="c1"># 第一轮：lambda i=0: i   默认参数 i=0
+</span>    <span class="c1"># 第二轮：lambda i=1: i   默认参数 i=1
+</span>    <span class="c1"># 第三轮：lambda i=2: i   默认参数 i=2
+</span>
+<span class="k">print</span><span class="p">([</span><span class="n">fn</span><span class="p">()</span> <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="n">good</span><span class="p">])</span>
+<span class="c1"># 调用 good[0]()：没传参，用默认值 i=0 → 返回 0
+# 调用 good[1]()：没传参，用默认值 i=1 → 返回 1
+# 调用 good[2]()：没传参，用默认值 i=2 → 返回 2
+# 所以输出 [0, 1, 2]
+</span></code></pre></div></div><p><strong><code class="language-plaintext highlighter-rouge">lambda i=i: i</code> 拆解</strong>：</p><table><thead><tr><th>部分</th><th>含义</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">lambda</code></td><td>匿名函数关键字</td></tr><tr><td><code class="language-plaintext highlighter-rouge">i=i</code></td><td>参数名 i，默认值是”当前外层 i 的值”（等号右边在定义时求值）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">: i</code></td><td>函数体：返回参数 i</td></tr></tbody></table><p><strong>本质</strong>：利用”默认参数在定义时求值”的特性，把每轮循环的 i 值”冻结”到各自的函数里。</p><h3 id="34-nonlocal-和-global">3.4 nonlocal 和 global</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 重新绑定外层函数的名字 → 用 nonlocal
+</span><span class="k">def</span> <span class="nf">make_counter</span><span class="p">():</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">def</span> <span class="nf">increment</span><span class="p">():</span>
+        <span class="k">nonlocal</span> <span class="n">count</span>      <span class="c1"># 告诉 Python：count 是外层函数的，不是新建局部变量
+</span>        <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>          <span class="c1"># 重新绑定外层的 count
+</span>        <span class="k">return</span> <span class="n">count</span>
+    <span class="k">return</span> <span class="n">increment</span>
+
+<span class="n">counter</span> <span class="o">=</span> <span class="n">make_counter</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">counter</span><span class="p">())</span>  <span class="c1"># 1
+</span><span class="k">print</span><span class="p">(</span><span class="n">counter</span><span class="p">())</span>  <span class="c1"># 2
+</span><span class="k">print</span><span class="p">(</span><span class="n">counter</span><span class="p">())</span>  <span class="c1"># 3
+</span></code></pre></div></div><p><strong>如果不用 nonlocal 会怎样</strong>：</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">make_counter_bad</span><span class="p">():</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">def</span> <span class="nf">increment</span><span class="p">():</span>
+        <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>     <span class="c1"># 报错！Python 认为 count 是局部变量（因为有赋值），但还没定义就用了
+</span>        <span class="k">return</span> <span class="n">count</span>
+    <span class="k">return</span> <span class="n">increment</span>
+<span class="c1"># UnboundLocalError: local variable 'count' referenced before assignment
+</span></code></pre></div></div><p><strong>global 的用法</strong>（重新绑定模块全局变量）：</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="k">def</span> <span class="nf">set_global</span><span class="p">():</span>
+    <span class="k">global</span> <span class="n">x</span>           <span class="c1"># 告诉 Python：x 是模块全局的
+</span>    <span class="n">x</span> <span class="o">=</span> <span class="mi">100</span>            <span class="c1"># 重新绑定全局 x
+</span>
+<span class="n">set_global</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>   <span class="c1"># 100
+</span></code></pre></div></div><p><strong>原话解释</strong>：</p><blockquote><p>“如果需要在内层函数中重新绑定外层函数的名字，使用 nonlocal；重新绑定模块全局名字则使用 global。优先通过参数和返回值传递状态，通常更易测试。”</p></blockquote><p>翻译：</p><ul><li>“重新绑定外层函数的名字” = 在内层函数里给外层函数的变量<strong>赋新值</strong>（不是修改对象，是 <code class="language-plaintext highlighter-rouge">=</code> 赋值）→ 用 <code class="language-plaintext highlighter-rouge">nonlocal</code></li><li>“重新绑定模块全局名字” = 在函数里给全局变量赋新值 → 用 <code class="language-plaintext highlighter-rouge">global</code></li><li>“优先通过参数和返回值传递状态” = 能用参数传进来、用 return 传出去，就别用 nonlocal/global，因为纯函数更好测试</li></ul><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 不推荐：用 nonlocal 传递状态
+</span><span class="k">def</span> <span class="nf">make_counter</span><span class="p">():</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">def</span> <span class="nf">increment</span><span class="p">():</span>
+        <span class="k">nonlocal</span> <span class="n">count</span>
+        <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">count</span>
+    <span class="k">return</span> <span class="n">increment</span>
+
+<span class="c1"># 推荐：用参数和返回值（更易测试）
+</span><span class="k">def</span> <span class="nf">increment</span><span class="p">(</span><span class="n">count</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">count</span> <span class="o">+</span> <span class="mi">1</span>
+
+<span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">count</span> <span class="o">=</span> <span class="n">increment</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>   <span class="c1"># 1
+</span><span class="n">count</span> <span class="o">=</span> <span class="n">increment</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>   <span class="c1"># 2
+</span></code></pre></div></div><hr /><h2 id="四类数据模型与协议">四、类、数据模型与协议</h2><h3 id="41-dataclass-装饰器">4.1 @dataclass 装饰器</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+
+<span class="o">@</span><span class="n">dataclass</span>
+<span class="k">class</span> <span class="nc">Batch</span><span class="p">:</span>
+    <span class="n">samples</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span>
+</code></pre></div></div><p><strong><code class="language-plaintext highlighter-rouge">@</code> 是什么</strong>：<code class="language-plaintext highlighter-rouge">@dataclass</code> 是<strong>装饰器</strong>，作用是”在类定义完成后自动给它加功能”。</p><p><strong><code class="language-plaintext highlighter-rouge">@dataclass</code> 帮你自动生成了什么</strong>：</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 加了 @dataclass 后，等价于自动生成了这些方法：
+</span><span class="k">class</span> <span class="nc">Batch</span><span class="p">:</span>
+    <span class="n">samples</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">samples</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]):</span>   <span class="c1"># 自动生成
+</span>        <span class="bp">self</span><span class="p">.</span><span class="n">samples</span> <span class="o">=</span> <span class="n">samples</span>
+    
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>                               <span class="c1"># 自动生成
+</span>        <span class="k">return</span> <span class="sa">f</span><span class="s">"Batch(samples=</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">samples</span><span class="si">}</span><span class="s">)"</span>
+    
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>                          <span class="c1"># 自动生成
+</span>        <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">samples</span> <span class="o">==</span> <span class="n">other</span><span class="p">.</span><span class="n">samples</span>
+</code></pre></div></div><p><strong>不加 @dataclass 要手写多少</strong>：</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 不用 @dataclass，要手写
+</span><span class="k">class</span> <span class="nc">Batch</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">samples</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">samples</span> <span class="o">=</span> <span class="n">samples</span>
+    
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s">"Batch(samples=</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">samples</span><span class="si">}</span><span class="s">)"</span>
+    
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Batch</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">samples</span> <span class="o">==</span> <span class="n">other</span><span class="p">.</span><span class="n">samples</span>
+
+<span class="c1"># 用 @dataclass，一行搞定
+</span><span class="o">@</span><span class="n">dataclass</span>
+<span class="k">class</span> <span class="nc">Batch</span><span class="p">:</span>
+    <span class="n">samples</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span>
+</code></pre></div></div><p><strong>装饰器的使用方式</strong>：在 <code class="language-plaintext highlighter-rouge">class</code> 或 <code class="language-plaintext highlighter-rouge">def</code> 上面一行写 <code class="language-plaintext highlighter-rouge">@装饰器名</code>，Python 会在定义完成后自动调用装饰器函数处理这个类/函数。</p><h3 id="42-特殊方法魔法方法">4.2 特殊方法（魔法方法）</h3><p>Python 的特殊方法（双下划线开头结尾）让对象接入语言协议：</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Iterator</span>
+
+<span class="o">@</span><span class="n">dataclass</span>
+<span class="k">class</span> <span class="nc">Batch</span><span class="p">:</span>
+    <span class="n">samples</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span>
+
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">samples</span><span class="p">)</span>          <span class="c1"># 让 len(batch) 能用
+</span>
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">samples</span><span class="p">)</span>         <span class="c1"># 让 for sample in batch 能用
+</span>
+<span class="n">batch</span> <span class="o">=</span> <span class="n">Batch</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]])</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">batch</span><span class="p">))</span>    <span class="c1"># 2          ← 触发 __len__
+</span><span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">:</span>              <span class="c1"># 触发 __iter__
+</span>    <span class="k">print</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+<span class="c1"># [1.0, 2.0]
+# [3.0, 4.0]
+</span></code></pre></div></div><p><strong>常见特殊方法</strong>：</p><table><thead><tr><th>方法</th><th>触发方式</th><th>典型用途</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">__init__</code></td><td>创建实例后</td><td>初始化实例状态</td></tr><tr><td><code class="language-plaintext highlighter-rouge">__repr__</code></td><td><code class="language-plaintext highlighter-rouge">repr(obj)</code>、调试器</td><td>无歧义的调试表示</td></tr><tr><td><code class="language-plaintext highlighter-rouge">__call__</code></td><td><code class="language-plaintext highlighter-rouge">obj(...)</code></td><td>让实例表现得像函数</td></tr><tr><td><code class="language-plaintext highlighter-rouge">__enter__</code> / <code class="language-plaintext highlighter-rouge">__exit__</code></td><td><code class="language-plaintext highlighter-rouge">with</code></td><td>管理资源生命周期</td></tr><tr><td><code class="language-plaintext highlighter-rouge">__iter__</code> / <code class="language-plaintext highlighter-rouge">__next__</code></td><td><code class="language-plaintext highlighter-rouge">for</code>、<code class="language-plaintext highlighter-rouge">next</code></td><td>定义迭代协议</td></tr><tr><td><code class="language-plaintext highlighter-rouge">__getitem__</code></td><td><code class="language-plaintext highlighter-rouge">obj[key]</code></td><td>索引、切片或映射访问</td></tr><tr><td><code class="language-plaintext highlighter-rouge">__len__</code></td><td><code class="language-plaintext highlighter-rouge">len(obj)</code></td><td>长度</td></tr><tr><td><code class="language-plaintext highlighter-rouge">__eq__</code></td><td><code class="language-plaintext highlighter-rouge">obj1 == obj2</code></td><td>相等比较</td></tr></tbody></table><blockquote><p><strong>核心思想</strong>：Python 不看你”是什么类型”，看你”实现了什么方法”——这叫<strong>协议</strong>（protocol）。实现了 <code class="language-plaintext highlighter-rouge">__iter__</code> 就能被 <code class="language-plaintext highlighter-rouge">for</code> 遍历，不管你是 list、dict 还是自定义类。</p></blockquote><h3 id="43-实例方法类方法静态方法">4.3 实例方法、类方法、静态方法</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">@</span><span class="n">dataclass</span>
+<span class="k">class</span> <span class="nc">Device</span><span class="p">:</span>
+    <span class="n">kind</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">index</span><span class="p">:</span> <span class="nb">int</span>
+
+    <span class="c1"># 实例方法：第一个参数是 self，操作具体对象
+</span>    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">kind</span><span class="si">}</span><span class="s">:</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">index</span><span class="si">}</span><span class="s">"</span>
+
+    <span class="c1"># 类方法：第一个参数是 cls（类本身），常用于备选构造器
+</span>    <span class="o">@</span><span class="nb">classmethod</span>
+    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s">"Device"</span><span class="p">:</span>
+        <span class="n">kind</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="n">value</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s">":"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">cls</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">index</span><span class="p">))</span>
+        <span class="c1">#      ↑ cls 是类本身，等价于 Device(kind=..., index=...)
+</span>
+    <span class="c1"># 静态方法：不接收 self 也不接收 cls，只是放在类命名空间里的工具函数
+</span>    <span class="o">@</span><span class="nb">staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_valid_kind</span><span class="p">(</span><span class="n">kind</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">kind</span> <span class="ow">in</span> <span class="p">(</span><span class="s">"cpu"</span><span class="p">,</span> <span class="s">"cuda"</span><span class="p">,</span> <span class="s">"mps"</span><span class="p">)</span>
+</code></pre></div></div><p><strong>完整可测试代码</strong>：</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+
+<span class="o">@</span><span class="n">dataclass</span>
+<span class="k">class</span> <span class="nc">Device</span><span class="p">:</span>
+    <span class="n">kind</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">index</span><span class="p">:</span> <span class="nb">int</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">kind</span><span class="si">}</span><span class="s">:</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">index</span><span class="si">}</span><span class="s">"</span>
+
+    <span class="o">@</span><span class="nb">classmethod</span>
+    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s">"Device"</span><span class="p">:</span>
+        <span class="n">kind</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="n">value</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s">":"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">cls</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">index</span><span class="p">))</span>
+
+    <span class="o">@</span><span class="nb">staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_valid_kind</span><span class="p">(</span><span class="n">kind</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">kind</span> <span class="ow">in</span> <span class="p">(</span><span class="s">"cpu"</span><span class="p">,</span> <span class="s">"cuda"</span><span class="p">,</span> <span class="s">"mps"</span><span class="p">)</span>
+
+
+<span class="c1"># === 测试 ===
+</span>
+<span class="c1"># 1. 实例方法：通过实例调用
+</span><span class="n">d1</span> <span class="o">=</span> <span class="n">Device</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s">"cuda"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">d1</span><span class="p">)</span>                    <span class="c1"># cuda:0（触发 __str__）
+</span><span class="k">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">d1</span><span class="p">))</span>               <span class="c1"># cuda:0
+</span>
+<span class="c1"># 2. 类方法：通过类调用，用于备选构造器
+</span><span class="n">d2</span> <span class="o">=</span> <span class="n">Device</span><span class="p">.</span><span class="n">parse</span><span class="p">(</span><span class="s">"cuda:1"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">d2</span><span class="p">)</span>                    <span class="c1"># cuda:1
+</span><span class="k">print</span><span class="p">(</span><span class="n">d2</span><span class="p">.</span><span class="n">kind</span><span class="p">,</span> <span class="n">d2</span><span class="p">.</span><span class="n">index</span><span class="p">)</span>     <span class="c1"># cuda 1
+</span>
+<span class="n">d3</span> <span class="o">=</span> <span class="n">Device</span><span class="p">.</span><span class="n">parse</span><span class="p">(</span><span class="s">"cpu:0"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">d3</span><span class="p">)</span>                    <span class="c1"># cpu:0
+</span>
+<span class="c1"># 3. 静态方法：通过类调用，工具函数
+</span><span class="k">print</span><span class="p">(</span><span class="n">Device</span><span class="p">.</span><span class="n">is_valid_kind</span><span class="p">(</span><span class="s">"cuda"</span><span class="p">))</span>   <span class="c1"># True
+</span><span class="k">print</span><span class="p">(</span><span class="n">Device</span><span class="p">.</span><span class="n">is_valid_kind</span><span class="p">(</span><span class="s">"tpu"</span><span class="p">))</span>    <span class="c1"># False
+</span></code></pre></div></div><p><strong>三种方法的区别</strong>：</p><table><thead><tr><th>方法类型</th><th>装饰器</th><th>第一个参数</th><th>能访问什么</th><th>用途</th></tr></thead><tbody><tr><td>实例方法</td><td>无</td><td><code class="language-plaintext highlighter-rouge">self</code>（实例）</td><td>实例属性、类属性</td><td>操作具体对象</td></tr><tr><td>类方法</td><td><code class="language-plaintext highlighter-rouge">@classmethod</code></td><td><code class="language-plaintext highlighter-rouge">cls</code>（类）</td><td>类属性、创建实例</td><td>备选构造器</td></tr><tr><td>静态方法</td><td><code class="language-plaintext highlighter-rouge">@staticmethod</code></td><td>无</td><td>什么都不隐式接收</td><td>组织在类里的工具函数</td></tr></tbody></table><p><strong><code class="language-plaintext highlighter-rouge">cls</code> 是什么</strong>：</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">@</span><span class="nb">classmethod</span>
+<span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s">"Device"</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">cls</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">index</span><span class="p">))</span>
+</code></pre></div></div><ul><li><code class="language-plaintext highlighter-rouge">cls</code> 是<strong>类本身</strong>（不是实例），就像 <code class="language-plaintext highlighter-rouge">self</code> 是实例本身</li><li><code class="language-plaintext highlighter-rouge">cls(kind=kind, index=int(index))</code> 等价于 <code class="language-plaintext highlighter-rouge">Device(kind=kind, index=int(index))</code></li><li>为什么用 <code class="language-plaintext highlighter-rouge">cls</code> 而不是写死 <code class="language-plaintext highlighter-rouge">Device</code>：如果有人继承 <code class="language-plaintext highlighter-rouge">class MyDevice(Device)</code>，调用 <code class="language-plaintext highlighter-rouge">MyDevice.parse("cuda:0")</code> 时，<code class="language-plaintext highlighter-rouge">cls</code> 会是 <code class="language-plaintext highlighter-rouge">MyDevice</code>，返回的是 <code class="language-plaintext highlighter-rouge">MyDevice</code> 实例而不是 <code class="language-plaintext highlighter-rouge">Device</code> 实例——这就是多态</li></ul><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 继承场景：cls 的价值
+</span><span class="k">class</span> <span class="nc">GpuDevice</span><span class="p">(</span><span class="n">Device</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="n">g</span> <span class="o">=</span> <span class="n">GpuDevice</span><span class="p">.</span><span class="n">parse</span><span class="p">(</span><span class="s">"cuda:0"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">g</span><span class="p">))</span>    <span class="c1"># &lt;class 'GpuDevice'&gt;  ← 返回的是子类实例，不是 Device
+# 如果 parse 里写死 Device(...)，这里返回的就是 Device 实例，丢失了子类信息
+</span></code></pre></div></div><p><strong><code class="language-plaintext highlighter-rouge">-&gt; "Device"</code> 为什么要引号</strong>：因为 <code class="language-plaintext highlighter-rouge">Device</code> 在定义 <code class="language-plaintext highlighter-rouge">parse</code> 方法时还没定义完（类体还在执行中），直接写 <code class="language-plaintext highlighter-rouge">Device</code> 会报 <code class="language-plaintext highlighter-rouge">NameError</code>。用字符串 <code class="language-plaintext highlighter-rouge">"Device"</code> 是<strong>前向引用</strong>，告诉 Python”这是个类型注解，先别急着解析”。Python 3.10+ 可以用 <code class="language-plaintext highlighter-rouge">from __future__ import annotations</code> 让所有注解都自动变成字符串。</p><hr /><h2 id="五完整测试脚本">五、完整测试脚本</h2><p>把以上所有概念放在一个文件里，可直接运行验证：</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s">"""python 进阶概念完整测试脚本
+运行：python python_concepts_test.py
+"""</span>
+
+<span class="c1"># ============ 1. 名字绑定 ============
+</span><span class="k">print</span><span class="p">(</span><span class="s">"=== 1. 名字绑定 ==="</span><span class="p">)</span>
+<span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">a</span>
+<span class="n">b</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"a = </span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>              <span class="c1"># [1, 2, 3]
+</span><span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"a is b = </span><span class="si">{</span><span class="n">a</span> <span class="ow">is</span> <span class="n">b</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>    <span class="c1"># True
+</span><span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"a == b = </span><span class="si">{</span><span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>    <span class="c1"># True
+</span>
+<span class="c1"># ============ 2. 函数参数：mutate vs rebind ============
+</span><span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">=== 2. 函数参数 ==="</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">mutate</span><span class="p">(</span><span class="n">xs</span><span class="p">):</span>
+    <span class="n">xs</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">rebind</span><span class="p">(</span><span class="n">xs</span><span class="p">):</span>
+    <span class="n">xs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">mutate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"mutate 后 data = </span><span class="si">{</span><span class="n">data</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>     <span class="c1"># [1]
+</span>
+<span class="n">rebind</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"rebind 后 data = </span><span class="si">{</span><span class="n">data</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>     <span class="c1"># [1]（没变）
+</span>
+<span class="c1"># ============ 3. 默认参数陷阱 ============
+</span><span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">=== 3. 默认参数陷阱 ==="</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">collect_bad</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="n">result</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="k">def</span> <span class="nf">collect</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">result</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"collect_bad(1) = </span><span class="si">{</span><span class="n">collect_bad</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>   <span class="c1"># [1]
+</span><span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"collect_bad(2) = </span><span class="si">{</span><span class="n">collect_bad</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>   <span class="c1"># [1, 2]（累积了！）
+</span><span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"collect(1) = </span><span class="si">{</span><span class="n">collect</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>           <span class="c1"># [1]
+</span><span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"collect(2) = </span><span class="si">{</span><span class="n">collect</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>           <span class="c1"># [2]（每次新的）
+</span>
+<span class="c1"># ============ 4. 浅拷贝 vs 深拷贝 ============
+</span><span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">=== 4. 浅拷贝 vs 深拷贝 ==="</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+
+<span class="n">src</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
+<span class="n">shallow</span> <span class="o">=</span> <span class="n">src</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">deep</span> <span class="o">=</span> <span class="n">copy</span><span class="p">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+
+<span class="n">shallow</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">append</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"shallow = </span><span class="si">{</span><span class="n">shallow</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>    <span class="c1"># [[1, 9], [2]]
+</span><span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"src = </span><span class="si">{</span><span class="n">src</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>            <span class="c1"># [[1, 9], [2]]（共享内部对象）
+</span><span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"deep = </span><span class="si">{</span><span class="n">deep</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>          <span class="c1"># [[1], [2]]（完全独立）
+</span>
+<span class="c1"># ============ 5. 闭包 ============
+</span><span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">=== 5. 闭包 ==="</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">make_multiplier</span><span class="p">(</span><span class="n">scale</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">multiply</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">scale</span>
+    <span class="k">return</span> <span class="n">multiply</span>
+
+<span class="n">double</span> <span class="o">=</span> <span class="n">make_multiplier</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
+<span class="n">triple</span> <span class="o">=</span> <span class="n">make_multiplier</span><span class="p">(</span><span class="mf">3.0</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"double(3.0) = </span><span class="si">{</span><span class="n">double</span><span class="p">(</span><span class="mf">3.0</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>    <span class="c1"># 6.0
+</span><span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"triple(3.0) = </span><span class="si">{</span><span class="n">triple</span><span class="p">(</span><span class="mf">3.0</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>    <span class="c1"># 9.0
+</span>
+<span class="c1"># ============ 6. 循环中闭包延迟绑定 ============
+</span><span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">=== 6. 循环中闭包 ==="</span><span class="p">)</span>
+
+<span class="n">bad</span> <span class="o">=</span> <span class="p">[</span><span class="k">lambda</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"bad = </span><span class="si">{</span><span class="p">[</span><span class="n">fn</span><span class="p">()</span> <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="n">bad</span><span class="p">]</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>   <span class="c1"># [2, 2, 2]
+</span>
+<span class="n">good</span> <span class="o">=</span> <span class="p">[</span><span class="k">lambda</span> <span class="n">i</span><span class="o">=</span><span class="n">i</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"good = </span><span class="si">{</span><span class="p">[</span><span class="n">fn</span><span class="p">()</span> <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="n">good</span><span class="p">]</span><span class="si">}</span><span class="s">"</span><span class="p">)</span> <span class="c1"># [0, 1, 2]
+</span>
+<span class="c1"># ============ 7. nonlocal ============
+</span><span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">=== 7. nonlocal ==="</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">make_counter</span><span class="p">():</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">def</span> <span class="nf">increment</span><span class="p">():</span>
+        <span class="k">nonlocal</span> <span class="n">count</span>
+        <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">count</span>
+    <span class="k">return</span> <span class="n">increment</span>
+
+<span class="n">counter</span> <span class="o">=</span> <span class="n">make_counter</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"counter() = </span><span class="si">{</span><span class="n">counter</span><span class="p">()</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>    <span class="c1"># 1
+</span><span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"counter() = </span><span class="si">{</span><span class="n">counter</span><span class="p">()</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>    <span class="c1"># 2
+</span><span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"counter() = </span><span class="si">{</span><span class="n">counter</span><span class="p">()</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>    <span class="c1"># 3
+</span>
+<span class="c1"># ============ 8. dataclass + 特殊方法 ============
+</span><span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">=== 8. dataclass + 特殊方法 ==="</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Iterator</span>
+
+<span class="o">@</span><span class="n">dataclass</span>
+<span class="k">class</span> <span class="nc">Batch</span><span class="p">:</span>
+    <span class="n">samples</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span>
+
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">samples</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">samples</span><span class="p">)</span>
+
+<span class="n">batch</span> <span class="o">=</span> <span class="n">Batch</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]])</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"len(batch) = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>    <span class="c1"># 2
+</span><span class="k">print</span><span class="p">(</span><span class="s">"遍历 batch:"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  </span><span class="si">{</span><span class="n">sample</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+
+<span class="c1"># ============ 9. classmethod / staticmethod ============
+</span><span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">=== 9. classmethod / staticmethod ==="</span><span class="p">)</span>
+
+<span class="o">@</span><span class="n">dataclass</span>
+<span class="k">class</span> <span class="nc">Device</span><span class="p">:</span>
+    <span class="n">kind</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">index</span><span class="p">:</span> <span class="nb">int</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">kind</span><span class="si">}</span><span class="s">:</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">index</span><span class="si">}</span><span class="s">"</span>
+
+    <span class="o">@</span><span class="nb">classmethod</span>
+    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s">"Device"</span><span class="p">:</span>
+        <span class="n">kind</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="n">value</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s">":"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">cls</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">index</span><span class="p">))</span>
+
+    <span class="o">@</span><span class="nb">staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_valid_kind</span><span class="p">(</span><span class="n">kind</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">kind</span> <span class="ow">in</span> <span class="p">(</span><span class="s">"cpu"</span><span class="p">,</span> <span class="s">"cuda"</span><span class="p">,</span> <span class="s">"mps"</span><span class="p">)</span>
+
+<span class="n">d1</span> <span class="o">=</span> <span class="n">Device</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s">"cuda"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"d1 = </span><span class="si">{</span><span class="n">d1</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>                              <span class="c1"># cuda:0
+</span>
+<span class="n">d2</span> <span class="o">=</span> <span class="n">Device</span><span class="p">.</span><span class="n">parse</span><span class="p">(</span><span class="s">"cuda:1"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"d2 = </span><span class="si">{</span><span class="n">d2</span><span class="si">}</span><span class="s">, kind=</span><span class="si">{</span><span class="n">d2</span><span class="p">.</span><span class="n">kind</span><span class="si">}</span><span class="s">, index=</span><span class="si">{</span><span class="n">d2</span><span class="p">.</span><span class="n">index</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>  <span class="c1"># cuda:1
+</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"is_valid_kind('cuda') = </span><span class="si">{</span><span class="n">Device</span><span class="p">.</span><span class="n">is_valid_kind</span><span class="p">(</span><span class="s">'cuda'</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>   <span class="c1"># True
+</span><span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"is_valid_kind('tpu') = </span><span class="si">{</span><span class="n">Device</span><span class="p">.</span><span class="n">is_valid_kind</span><span class="p">(</span><span class="s">'tpu'</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>     <span class="c1"># False
+</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">=== 全部测试通过 ==="</span><span class="p">)</span>
+</code></pre></div></div><hr /><h2 id="六概念速查表">六、概念速查表</h2><table><thead><tr><th>概念</th><th>一句话记忆</th></tr></thead><tbody><tr><td>名字绑定</td><td>变量是标签不是盒子，赋值是贴标签不是复制</td></tr><tr><td>mutate vs rebind</td><td>修改对象（append）调用方可见，重新绑定（=）不可见</td></tr><tr><td>默认参数陷阱</td><td>默认参数在定义时创建一次，用 None 哨兵规避</td></tr><tr><td><code class="language-plaintext highlighter-rouge">x \| None</code></td><td>联合类型，x 可以是指定类型或 None（3.10+ 语法）</td></tr><tr><td>浅拷贝</td><td>只复制最外层，内部对象共享</td></tr><tr><td>深拷贝</td><td>递归复制所有层级，完全独立（但有性能代价）</td></tr><tr><td>闭包</td><td>函数 + 它记住的外层变量</td></tr><tr><td>Callable[[A], B]</td><td>类型注解：接收 A 返回 B 的可调用对象</td></tr><tr><td>延迟绑定</td><td>闭包在调用时才读外层名字，不是定义时</td></tr><tr><td><code class="language-plaintext highlighter-rouge">lambda i=i: i</code></td><td>用默认参数冻结当前值，规避延迟绑定</td></tr><tr><td>nonlocal</td><td>在内层函数重新绑定外层函数的变量</td></tr><tr><td>global</td><td>在函数内重新绑定全局变量</td></tr><tr><td>@dataclass</td><td>自动生成 <strong>init</strong>/<strong>repr</strong>/<strong>eq</strong></td></tr><tr><td>@classmethod</td><td>第一个参数是 cls（类本身），用于备选构造器</td></tr><tr><td>@staticmethod</td><td>不接收 self/cls，类命名空间里的工具函数</td></tr><tr><td>特殊方法</td><td><strong>len</strong>/<strong>iter</strong> 等让对象接入 Python 协议</td></tr></tbody></table><hr /><h2 id="七关联笔记">七、关联笔记</h2><ul><li><code class="language-plaintext highlighter-rouge">pytorch/PyTorch常见操作速查.md</code>（PyTorch 中大量用到这些概念）</li><li><code class="language-plaintext highlighter-rouge">backend/FastAPI学习笔记.md</code>（Pydantic 模型、依赖注入用到类和闭包）</li><li><code class="language-plaintext highlighter-rouge">typescript/TypeScript学习笔记.md</code>（类型注解对比）</li><li><code class="language-plaintext highlighter-rouge">技术工具学习索引.md</code></li></ul></section><!-- Previous / Next navigation --><nav class="notes-pager"><div class="notes-pager-links"> <a href="/notes/Python%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B03-%E5%B9%B6%E5%8F%91%E4%B8%8E%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90/" class="notes-pager-prev"> <span class="notes-pager-label">← 上一章</span> <span class="notes-pager-title">Python进阶笔记3_并发与性能分析</span> </a> <span></span></div></nav></div></article><!-- Right Sidebar: Table of Contents (built by JS from DOM) --><aside class="notes-toc" id="notes-toc"><div class="notes-toc-inner"><h4 class="notes-toc-title">目录</h4><nav class="notes-toc-nav"><ul class="notes-toc-list" id="notes-toc-list"> <!-- Populated by notes-toc.js --></ul></nav></div></aside></div><script src="https://1571859588.github.io/assets/js/notes-toc.js"></script> <script> (function() { var q = new URLSearchParams(location.search).get('q'); if (!q || q.length < 2) return; var body = document.querySelector('.notes-body'); if (!body) return; // Walk text nodes, find and highlight matches var walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT, null, false); var textNodes = []; while (walker.nextNode()) { var p = walker.currentNode.parentNode; // Skip script, style, code blocks, and already-marked text if (p.tagName === 'SCRIPT' || p.tagName === 'STYLE' || p.tagName === 'MARK' || p.closest('pre') || p.closest('.notes-search-hit')) continue; textNodes.push(walker.currentNode); } var first = null; var re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'); textNodes.forEach(function(node) { var text = node.textContent; if (!re.test(text)) return; re.lastIndex = 0; // reset after test var frag = document.createDocumentFragment(); var lastIdx = 0; var match; while ((match = re.exec(text)) !== null) { if (match.index > lastIdx) { frag.appendChild(document.createTextNode(text.substring(lastIdx, match.index))); } var mark = document.createElement('mark'); mark.className = 'notes-search-mark'; mark.textContent = match[0]; frag.appendChild(mark); if (!first) first = mark; lastIdx = match.index + match[0].length; } if (lastIdx < text.length) { frag.appendChild(document.createTextNode(text.substring(lastIdx))); } node.parentNode.replaceChild(frag, node); }); if (first) { setTimeout(function() { first.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300); } })(); </script><div class="page__footer"><footer> <!-- start custom footer snippets --> <a href="/sitemap/">Sitemap</a> <!-- end custom footer snippets --><div class="page__footer-follow"><ul class="social-icons"><li><strong>Follow:</strong></li><li><a href="http://github.com/1571859588"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a></li><li><a href="https://1571859588.github.io/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li></ul></div><div class="page__footer-copyright"> &copy; 2026 Yuntao Nie, Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://github.com/academicpages/academicpages.github.io">AcademicPages</a>, a fork of <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.<br /> Site last updated 2026-07-06</div></footer></div><script src="https://1571859588.github.io/assets/js/main.min.js"></script> <script src="https://1571859588.github.io/assets/js/paper-details.js"></script> <!-- Fix kramdown stripping backslashes before _ in math spans. kramdown treats \_ as a markdown escape, converting $seq\_len$ to $seq_len$. MathJax then interprets _ as subscript instead of a literal underscore. This runs synchronously before MathJax (async) processes the page. --> <script> (function() { var content = document.querySelector('.page__content'); if (!content) return; var walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT, null, false); var nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode); nodes.forEach(function(node) { var text = node.textContent; var fixed = text.replace(/\$([^$\n]+?)\$/g, function(match, math) { // Inside $...$, add \ before _ followed by 2+ lowercase letters. // Safe: legitimate subscripts use single chars ($d_k$) or braces ($x_{ij}$). var fixedMath = math.replace(/_([a-z]{2,})/g, '\\_$1'); return fixedMath !== math ? '$' + fixedMath + '$' : match; }); if (fixed !== text) node.textContent = fixed; }); })(); </script> <script> var SERIES_INDEX = [ {t:"Python进阶笔记2_迭代器_装饰器_上下文管理器", u:"/notes/Python%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B02-%E8%BF%AD%E4%BB%A3%E5%99%A8-%E8%A3%85%E9%A5%B0%E5%99%A8-%E4%B8%8A%E4%B8%8B%E6%96%87%E7%AE%A1%E7%90%86%E5%99%A8/"}, {t:"Python进阶笔记3_并发与性能分析", u:"/notes/Python%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B03-%E5%B9%B6%E5%8F%91%E4%B8%8E%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90/"}, {t:"Python进阶笔记_名字绑定_闭包_类与协议", u:"/notes/Python%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0-%E5%90%8D%E5%AD%97%E7%BB%91%E5%AE%9A-%E9%97%AD%E5%8C%85-%E7%B1%BB%E4%B8%8E%E5%8D%8F%E8%AE%AE/"} ]; (function() { if (!SERIES_INDEX.length) return; var inp = document.getElementById('notes-sidebar-search-input'); var box = document.getElementById('notes-sidebar-search-results'); if (!inp || !box) return; function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; } function hl(t, q) { var o = '', L = 0, lo = t.toLowerCase(), ql = q.toLowerCase(), i; while ((i = lo.indexOf(ql, L)) !== -1) { o += esc(t.substring(L, i)) + '<mark class="notes-search-highlight">' + esc(t.substring(i, i + q.length)) + '</mark>'; L = i + q.length; } return o + esc(t.substring(L)); } inp.addEventListener('input', function() { var q = this.value.trim(); if (!q) { box.style.display = 'none'; box.innerHTML = ''; return; } var ql = q.toLowerCase(), hits = []; for (var i = 0; i < SERIES_INDEX.length; i++) { if (SERIES_INDEX[i].t.toLowerCase().indexOf(ql) !== -1) hits.push(SERIES_INDEX[i]); } if (!hits.length) { box.innerHTML = '<div class="notes-sidebar-search-empty">无匹配</div>'; } else { var h = ''; for (var j = 0; j < Math.min(hits.length, 15); j++) { h += '<a href="' + hits[j].u + '" class="notes-sidebar-search-hit" data-q="' + esc(q) + '">' + '<span class="notes-sidebar-search-hit-title">' + hl(hits[j].t, q) + '</span></a>'; } box.innerHTML = h; } box.style.display = 'block'; }); inp.addEventListener('keydown', function(e) { if (e.key === 'Escape') { box.style.display = 'none'; box.innerHTML = ''; this.blur(); } }); box.addEventListener('click', function(e) { var a = e.target.closest('.notes-sidebar-search-hit'); if (a && a.dataset.q) sessionStorage.setItem('notes-search-q', a.dataset.q); }); document.addEventListener('click', function(e) { if (!e.target.closest('#notes-sidebar-search')) { box.style.display = 'none'; box.innerHTML = ''; } }); })(); </script></body></html>

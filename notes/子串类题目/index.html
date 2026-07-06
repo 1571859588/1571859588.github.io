@@ -1,0 +1,328 @@
+<!doctype html><html lang="en" class="no-js"><head><meta charset="utf-8"> <!-- begin SEO --><title>子串类题目 - Yuntao Nie</title><meta property="og:locale" content="en-US"><meta property="og:site_name" content="Yuntao Nie"><meta property="og:title" content="子串类题目"><link rel="canonical" href="https://1571859588.github.io/notes/%E5%AD%90%E4%B8%B2%E7%B1%BB%E9%A2%98%E7%9B%AE/"><meta property="og:url" content="https://1571859588.github.io/notes/%E5%AD%90%E4%B8%B2%E7%B1%BB%E9%A2%98%E7%9B%AE/"><meta property="og:description" content="LeetCode Hot 100 子串类题目"> <script type="application/ld+json"> { "@context" : "http://schema.org", "@type" : "Person", "name" : "Yuntao Nie", "url" : "https://1571859588.github.io", "sameAs" : null } </script> <!-- end SEO --><link href="https://1571859588.github.io/feed.xml" type="application/atom+xml" rel="alternate" title="Yuntao Nie Feed"> <!-- http://t.co/dKP3o1e --><meta name="HandheldFriendly" content="True"><meta name="MobileOptimized" content="320"><meta name="viewport" content="width=device-width, initial-scale=1.0"> <script> document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js '; </script> <!-- For all browsers --><link rel="stylesheet" href="https://1571859588.github.io/assets/css/main.css"><meta http-equiv="cleartype" content="on"> <!-- start custom head snippets --><link rel="apple-touch-icon" sizes="57x57" href="https://1571859588.github.io/images/apple-touch-icon-57x57.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="60x60" href="https://1571859588.github.io/images/apple-touch-icon-60x60.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="72x72" href="https://1571859588.github.io/images/apple-touch-icon-72x72.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="76x76" href="https://1571859588.github.io/images/apple-touch-icon-76x76.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="114x114" href="https://1571859588.github.io/images/apple-touch-icon-114x114.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="120x120" href="https://1571859588.github.io/images/apple-touch-icon-120x120.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="144x144" href="https://1571859588.github.io/images/apple-touch-icon-144x144.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="152x152" href="https://1571859588.github.io/images/apple-touch-icon-152x152.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="180x180" href="https://1571859588.github.io/images/apple-touch-icon-180x180.png?v=M44lzPylqQ"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-32x32.png?v=M44lzPylqQ" sizes="32x32"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/android-chrome-192x192.png?v=M44lzPylqQ" sizes="192x192"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-96x96.png?v=M44lzPylqQ" sizes="96x96"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-16x16.png?v=M44lzPylqQ" sizes="16x16"><link rel="manifest" href="https://1571859588.github.io/images/manifest.json?v=M44lzPylqQ"><link rel="mask-icon" href="https://1571859588.github.io/images/safari-pinned-tab.svg?v=M44lzPylqQ" color="#000000"><link rel="shortcut icon" href="/images/favicon.ico?v=M44lzPylqQ"><meta name="msapplication-TileColor" content="#000000"><meta name="msapplication-TileImage" content="https://1571859588.github.io/images/mstile-144x144.png?v=M44lzPylqQ"><meta name="msapplication-config" content="https://1571859588.github.io/images/browserconfig.xml?v=M44lzPylqQ"><meta name="theme-color" content="#ffffff"><link rel="stylesheet" href="https://1571859588.github.io/assets/css/academicons.css"/> <!-- MathJax for math rendering --> <script> MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['\\(', '\\)']] } }; </script> <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script> <!-- end custom head snippets --></head><body> <!--[if lt IE 9]><div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div><![endif]--><div class="masthead"><div class="masthead__inner-wrap"><div class="masthead__menu"><nav id="site-nav" class="greedy-nav"> <button><div class="navicon"></div></button><ul class="visible-links"><li class="masthead__menu-item masthead__menu-item--lg"><a href="https://1571859588.github.io/">Yuntao Nie</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/publications/">Publications</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/cv/">CV</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/notes/">Notes</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/year-archive/">Blog</a></li></ul><ul class="hidden-links hidden"></ul></nav></div></div></div><div id="main" role="main" class="notes-layout"> <!-- Left Sidebar: Series Chapter Navigation --><aside class="notes-sidebar" id="notes-sidebar"><div class="notes-sidebar-inner"><div class="notes-series-header"><h3 class="notes-series-title">leetcode</h3></div><div class="notes-sidebar-search" id="notes-sidebar-search"> <input type="text" class="notes-sidebar-search-input" id="notes-sidebar-search-input" placeholder="搜索本专题…" autocomplete="off"><div class="notes-sidebar-search-results" id="notes-sidebar-search-results" style="display:none"></div></div><nav class="notes-chapter-nav"><ul class="notes-chapter-list"><li class="notes-chapter-item "> <a href="/notes/%E5%8F%8C%E6%8C%87%E9%92%88%E7%B1%BB%E9%A2%98%E7%9B%AE/" class="notes-chapter-link"> <span class="notes-chapter-num">1</span> <span class="notes-chapter-title">双指针类题目</span> </a></li><li class="notes-chapter-item "> <a href="/notes/%E5%93%88%E5%B8%8C%E7%B1%BB%E9%A2%98%E7%9B%AE/" class="notes-chapter-link"> <span class="notes-chapter-num">2</span> <span class="notes-chapter-title">哈希类题目</span> </a></li><li class="notes-chapter-item active"> <a href="/notes/%E5%AD%90%E4%B8%B2%E7%B1%BB%E9%A2%98%E7%9B%AE/" class="notes-chapter-link"> <span class="notes-chapter-num">3</span> <span class="notes-chapter-title">子串类题目</span> </a></li><li class="notes-chapter-item "> <a href="/notes/%E6%99%AE%E9%80%9A%E6%95%B0%E7%BB%84%E7%B1%BB%E9%A2%98%E7%9B%AE/" class="notes-chapter-link"> <span class="notes-chapter-num">4</span> <span class="notes-chapter-title">普通数组类题目</span> </a></li><li class="notes-chapter-item "> <a href="/notes/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%B1%BB%E9%A2%98%E7%9B%AE/" class="notes-chapter-link"> <span class="notes-chapter-num">5</span> <span class="notes-chapter-title">滑动窗口类题目</span> </a></li><li class="notes-chapter-item "> <a href="/notes/%E7%9F%A9%E9%98%B5%E7%B1%BB%E9%A2%98%E7%9B%AE/" class="notes-chapter-link"> <span class="notes-chapter-num">6</span> <span class="notes-chapter-title">矩阵类题目</span> </a></li><li class="notes-chapter-item "> <a href="/notes/%E9%93%BE%E8%A1%A8%E7%B1%BB%E9%A2%98%E7%9B%AE/" class="notes-chapter-link"> <span class="notes-chapter-num">7</span> <span class="notes-chapter-title">链表类题目</span> </a></li><li class="notes-chapter-item "> <a href="/notes/%E9%93%BE%E8%A1%A8%E7%B1%BB%E9%A2%98%E7%9B%AE-%E8%BF%9B%E9%98%B6/" class="notes-chapter-link"> <span class="notes-chapter-num">8</span> <span class="notes-chapter-title">链表类题目_进阶</span> </a></li></ul></nav><div class="notes-sidebar-footer"> <a href="/notes/" class="notes-back-link">← 所有笔记系列</a></div></div></aside><!-- Mobile sidebar toggle --> <button class="notes-sidebar-toggle" id="notes-sidebar-toggle" aria-label="Toggle sidebar"> <span class="notes-sidebar-toggle-icon"></span> </button> <!-- Main Content --><article class="notes-content" itemscope itemtype="http://schema.org/CreativeWork"><meta itemprop="headline" content="子串类题目"><div class="notes-content-inner"><header class="notes-header"><div class="notes-breadcrumb"> <a href="/notes/">Notes</a> <span class="notes-sep">›</span> <span>leetcode</span> <span class="notes-sep">›</span> <span>子串类题目</span></div><h1 class="notes-page-title" itemprop="headline">子串类题目</h1></header><section class="notes-body" itemprop="text"><h1 id="leetcode-hot-100-子串类题目">LeetCode Hot 100 子串类题目</h1><blockquote><p>更新时间：2026-07-02 来源：LeetCode Hot 100 子串专题 状态：刷题笔记，含完整代码 + 推导 + 面试追问</p></blockquote><hr /><h2 id="一句话总结">一句话总结</h2><p>子串类题目的核心：<strong>在数组/字符串中找满足条件的连续子段</strong>。常见技巧：<strong>前缀和 + 哈希表</strong>（把子段和问题转化为前缀和之差）、<strong>单调队列</strong>（维护窗口内的极值）、<strong>变长滑动窗口 + 频次计数</strong>（覆盖型问题）。关键认知：<strong>连续子段 = 两个前缀的差</strong>，这是子串问题的万能钥匙。</p><hr /><h2 id="题目索引">题目索引</h2><table><thead><tr><th>题号</th><th>题目</th><th>难度</th><th>核心技巧</th></tr></thead><tbody><tr><td>560</td><td>和为 K 的子数组</td><td>中等</td><td>前缀和 + 哈希表计数</td></tr><tr><td>239</td><td>滑动窗口最大值</td><td>困难</td><td>定长窗口 + 单调递减队列</td></tr><tr><td>76</td><td>最小覆盖子串</td><td>困难</td><td>变长窗口 + 字符频次覆盖</td></tr></tbody></table><hr /><h2 id="q1-560-和为-k-的子数组前缀和--哈希表">Q1: 560. 和为 K 的子数组（前缀和 + 哈希表）</h2><p><strong>题目</strong>：给你一个整数数组 <code class="language-plaintext highlighter-rouge">nums</code> 和一个整数 <code class="language-plaintext highlighter-rouge">k</code>，请你统计并返回 <strong>该数组中和为 <code class="language-plaintext highlighter-rouge">k</code> 的子数组的个数</strong>。子数组是数组中元素的连续非空序列。</p><blockquote><p>🔗 题目链接：<a href="https://leetcode.cn/problems/subarray-sum-equals-k/?envType=study-plan-v2&amp;envId=top-100-liked">560. 和为 K 的子数组 - 力扣</a> 难度：中等 | 标签：数组、哈希表、前缀和</p></blockquote><p><strong>示例</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>输入：nums = [1,1,1], k = 2
+输出：2
+
+输入：nums = [1,2,3], k = 3
+输出：2
+</code></pre></div></div><p><strong>提示</strong>：</p><ul><li><code class="language-plaintext highlighter-rouge">1 &lt;= nums.length &lt;= 2 * 10^4</code></li><li><code class="language-plaintext highlighter-rouge">-1000 &lt;= nums[i] &lt;= 1000</code></li><li><code class="language-plaintext highlighter-rouge">-10^7 &lt;= k &lt;= 10^7</code></li></ul><blockquote><p>📌 <strong>说明</strong>：本题在 <code class="language-plaintext highlighter-rouge">哈希类题目.md</code> Q2 和字节面试复盘中均有记录，此处答案与之一致，方便统一记忆。</p></blockquote><h3 id="思路讲解通俗版">思路讲解（通俗版）</h3><p><strong>核心公式</strong>：<code class="language-plaintext highlighter-rouge">子数组和 = 前缀和之差</code></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sum(nums[i..j]) = pref[j] - pref[i-1]
+</code></pre></div></div><p>要让 <code class="language-plaintext highlighter-rouge">sum(nums[i..j]) = k</code>，就是 <code class="language-plaintext highlighter-rouge">pref[j] - pref[i-1] = k</code>，移项得：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pref[i-1] = pref[j] - k
+</code></pre></div></div><p><strong>翻译成人话</strong>：当我们遍历到位置 <code class="language-plaintext highlighter-rouge">j</code> 时，<strong>回头看有多少个之前的前缀和等于 <code class="language-plaintext highlighter-rouge">pref[j] - k</code></strong>，每个这样的前缀和都对应一个和为 <code class="language-plaintext highlighter-rouge">k</code> 的子数组。</p><p>用哈希表 <code class="language-plaintext highlighter-rouge">prefix_count</code> 记录”之前出现过的前缀和 → 出现次数”，就能 O(1) 查出有多少个符合条件的起点。</p><p><strong>初始化 <code class="language-plaintext highlighter-rouge">{0: 1}</code> 的原因</strong>：处理”从数组开头到当前位置的子数组”——即 <code class="language-plaintext highlighter-rouge">i = 0</code> 时 <code class="language-plaintext highlighter-rouge">pref[i-1] = pref[-1] = 0</code>，需要预先在哈希表里放一个 <code class="language-plaintext highlighter-rouge">0</code>。</p><h4 id="用具体例子理解关键">用具体例子理解（关键！）</h4><p>先看一个<strong>不初始化 <code class="language-plaintext highlighter-rouge">{0:1}</code> 会出 bug</strong> 的例子：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nums = [3, 1, 2], k = 3
+
+期望答案: 2
+  子数组 [3]       → 和 = 3 ✓  （从下标 0 到 0）
+  子数组 [1, 2]    → 和 = 3 ✓  （从下标 1 到 2）
+</code></pre></div></div><p><strong>情况一：不初始化 <code class="language-plaintext highlighter-rouge">{0:1}</code>（错误做法）</strong></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>prefix_count = {}   ← 空的，没放 {0:1}
+
+j=0, num=3: prefix_sum=3, 找 prefix_sum-k = 3-3 = 0
+            在 prefix_count 里查 0 → 没有！❌ 漏掉了子数组 [3]
+            prefix_count = {3: 1}
+
+j=1, num=1: prefix_sum=4, 找 4-3 = 1 → 没有
+            prefix_count = {3:1, 4:1}
+
+j=2, num=2: prefix_sum=6, 找 6-3 = 3 → 有1个 ✓ count=1
+            prefix_count = {3:1, 4:1, 6:1}
+
+最终 count = 1   ❌ 漏了一个！正确答案应该是 2
+</code></pre></div></div><p><strong>情况二：初始化 <code class="language-plaintext highlighter-rouge">{0:1}</code>（正确做法）</strong></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>prefix_count = {0: 1}   ← 预先放一个"前缀和为0出现过1次"
+
+j=0, num=3: prefix_sum=3, 找 3-3 = 0 → 有1个 ✓ count=1  ← 子数组 [3] 被找到了！
+            prefix_count = {0:1, 3:1}
+
+j=1, num=1: prefix_sum=4, 找 4-3 = 1 → 没有
+            prefix_count = {0:1, 3:1, 4:1}
+
+j=2, num=2: prefix_sum=6, 找 6-3 = 3 → 有1个 ✓ count=2  ← 子数组 [1,2] 被找到了！
+            prefix_count = {0:1, 3:1, 4:1, 6:1}
+
+最终 count = 2   ✓ 正确！
+</code></pre></div></div><h4 id="为什么从开头开始的子数组需要前缀和-0">为什么”从开头开始的子数组”需要前缀和 0？</h4><p>回到核心公式 <code class="language-plaintext highlighter-rouge">sum(nums[i..j]) = pref[j] - pref[i-1]</code>，当子数组从下标 0 开始时（<code class="language-plaintext highlighter-rouge">i=0</code>）：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sum(nums[0..j]) = pref[j] - pref[-1]
+
+pref[-1] 是什么？是"下标 -1 的前缀和"，也就是"数组开始之前"的累加和
+→ 数组还没开始累加，和自然是 0
+
+所以: sum(nums[0..j]) = pref[j] - 0 = pref[j]
+</code></pre></div></div><p><strong>翻译成人话</strong>：如果从头开始的子数组和正好等于 <code class="language-plaintext highlighter-rouge">k</code>，那么 <code class="language-plaintext highlighter-rouge">pref[j]</code> 本身就等于 <code class="language-plaintext highlighter-rouge">k</code>，此时要找 <code class="language-plaintext highlighter-rouge">pref[j] - k = 0</code>。哈希表里必须有 <code class="language-plaintext highlighter-rouge">0</code> 这个”虚拟前缀和”，才能匹配到这种情况。</p><blockquote><p>💡 <strong>记忆口诀</strong>：<code class="language-plaintext highlighter-rouge">{0:1}</code> = “<strong>数组开始前，累加和是 0</strong>“。它代表的是下标 <code class="language-plaintext highlighter-rouge">-1</code> 处的那个虚拟前缀，专门用来匹配”从下标 0 开始的子数组”。不初始化它，就会漏掉所有以数组开头为起点的合法子数组。</p></blockquote><h3 id="解法">解法</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">subarraySum</span><span class="p">(</span><span class="n">nums</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="s">"""
+    时间 O(n)，空间 O(n)
+    核心：pref[j] - pref[i-1] = k → pref[i-1] = pref[j] - k
+    遍历到 j 时，看哈希表里有多少个 pref[j] - k
+    """</span>
+    <span class="n">prefix_sum</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">prefix_count</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>  <span class="c1"># 初始化 {0:1} 处理从开头开始的子数组
+</span>
+    <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">:</span>
+        <span class="n">prefix_sum</span> <span class="o">+=</span> <span class="n">num</span>
+        <span class="k">if</span> <span class="n">prefix_sum</span> <span class="o">-</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">prefix_count</span><span class="p">:</span>
+            <span class="n">count</span> <span class="o">+=</span> <span class="n">prefix_count</span><span class="p">[</span><span class="n">prefix_sum</span> <span class="o">-</span> <span class="n">k</span><span class="p">]</span>
+        <span class="n">prefix_count</span><span class="p">[</span><span class="n">prefix_sum</span><span class="p">]</span> <span class="o">=</span> <span class="n">prefix_count</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">prefix_sum</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">count</span>
+</code></pre></div></div><h3 id="推导过程">推导过程</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nums = [1, 2, 3], k = 3
+
+pref[j] - pref[i-1] = k   →   pref[i-1] = pref[j] - k
+
+i=0, num=1: pre=1, pre-k=-2(无), {0:1, 1:1}
+i=1, num=2: pre=3, pre-k=0(有1个!), count=1, {0:1, 1:1, 3:1}  → 子数组 [1,2]
+i=2, num=3: pre=6, pre-k=3(有1个!), count=2, {0:1, 1:1, 3:1, 6:1}  → 子数组 [3]
+
+答案: 2 ✓
+</code></pre></div></div><h3 id="为什么不能用滑动窗口">为什么不能用滑动窗口</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>滑动窗口的前提：窗口扩大时单调增，窗口缩小时单调减
+→ 当 left 右移时，sum 必须变小（或不变）
+
+但本题 nums[i] 可以是负数！
+  nums = [3, -2, 1], k = 2
+  left=0, right=0: sum=3 &gt; 2，按滑动窗口要收缩 left
+  但收缩后 sum=0 &lt; 2，又该扩大——可实际上 [3,-2,1] 整段和就是 2！
+  滑动窗口会漏掉这种情况
+</code></pre></div></div><p><strong>结论</strong>：含负数时前缀和+哈希表是正解，滑动窗口不适用。</p><h3 id="同类变体">同类变体</h3><table><thead><tr><th>变体</th><th>题目</th><th>差异</th></tr></thead><tbody><tr><td>是否存在</td><td>子数组和是否等于 K</td><td>Set 替代 Map（不计数）</td></tr><tr><td>最长子数组</td><td>和为 K 的最长子数组长度</td><td>Map 只存首次出现位置</td></tr><tr><td>取模版</td><td>和可被 K 整除的子数组</td><td><code class="language-plaintext highlighter-rouge">(pre % K + K) % K</code> 处理负数</td></tr><tr><td>乘积版</td><td>乘积最大子数组</td><td>用 log 转换或动态规划</td></tr></tbody></table><h3 id="面试追问">面试追问</h3><table><thead><tr><th>追问</th><th>答案</th></tr></thead><tbody><tr><td>为什么初始化 <code class="language-plaintext highlighter-rouge">{0: 1}</code>？</td><td>处理从下标 0 开始的子数组，此时 <code class="language-plaintext highlighter-rouge">pref[i-1] = pref[-1] = 0</code></td></tr><tr><td>如果 nums 全是正数？</td><td>可以用滑动窗口 O(n)，但前缀和+哈希表也 O(n) 且更通用</td></tr><tr><td>如果 k=0？</td><td>同样适用，找 <code class="language-plaintext highlighter-rouge">pref[j] - 0 = pref[j]</code> 的之前出现次数</td></tr><tr><td>空间能优化吗？</td><td>不能，最坏需要存 n 个不同的前缀和</td></tr></tbody></table><hr /><h2 id="q2-239-滑动窗口最大值定长窗口--单调队列">Q2: 239. 滑动窗口最大值（定长窗口 + 单调队列）</h2><p><strong>题目</strong>：给你一个整数数组 <code class="language-plaintext highlighter-rouge">nums</code>，有一个大小为 <code class="language-plaintext highlighter-rouge">k</code> 的滑动窗口从数组的最左侧移动到数组的最右侧。你只可以看到在滑动窗口内的 <code class="language-plaintext highlighter-rouge">k</code> 个数字。滑动窗口每次只向右移动一位。返回 <strong>滑动窗口中的最大值</strong>。</p><blockquote><p>🔗 题目链接：<a href="https://leetcode.cn/problems/sliding-window-maximum/description/?envType=study-plan-v2&amp;envId=top-100-liked">239. 滑动窗口最大值 - 力扣</a> 难度：困难 | 标签：队列、数组、滑动窗口、单调队列、堆（优先队列）</p></blockquote><p><strong>示例</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>输入：nums = [1,3,-1,-3,5,3,6,7], k = 3
+输出：[3,3,5,5,6,7]
+解释：
+滑动窗口的位置                最大值
+---------------               -----
+[1  3  -1] -3  5  3  6  7       3
+ 1 [3  -1  -3] 5  3  6  7       3
+ 1  3 [-1  -3  5] 3  6  7       5
+ 1  3  -1 [-3  5  3] 6  7       5
+ 1  3  -1  -3 [5  3  6] 7       6
+ 1  3  -1  -3  5 [3  6  7]      7
+
+输入：nums = [1], k = 1
+输出：[1]
+</code></pre></div></div><p><strong>提示</strong>：</p><ul><li><code class="language-plaintext highlighter-rouge">1 &lt;= nums.length &lt;= 10^5</code></li><li><code class="language-plaintext highlighter-rouge">-10^4 &lt;= nums[i] &lt;= 10^4</code></li><li><code class="language-plaintext highlighter-rouge">1 &lt;= k &lt;= nums.length</code></li></ul><h3 id="思路讲解通俗版-1">思路讲解（通俗版）</h3><p><strong>朴素做法</strong>：每个窗口遍历一遍找最大值，O(n*k)，k 接近 n 时退化成 O(n²)，必超时。</p><p><strong>核心优化：单调递减队列</strong></p><p>想象维护一个队列，<strong>队首永远是当前窗口的最大值</strong>。怎么做到？</p><ol><li><strong>入队时从队尾弹出比新元素小的</strong>：因为新元素更大、更靠后，比它小的元素永远没机会当最大值了，直接踢掉</li><li><strong>队首如果不在窗口内，从队头弹出</strong>：窗口右移后，过期的最大值要清理</li></ol><p>这样队列里存的是<strong>一个递减的候选序列</strong>，队首就是当前窗口最大值。</p><p><strong>关键认知</strong>：单调队列 = “我比你们都晚来，又比你们都大，那你们就别想当最大值了”。</p><h3 id="解法-1">解法</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span>
+
+<span class="k">def</span> <span class="nf">maxSlidingWindow</span><span class="p">(</span><span class="n">nums</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="s">"""
+    时间 O(n)，空间 O(k)
+    核心：单调递减队列，队首永远是当前窗口最大值
+    队列存下标，方便判断是否过期
+    """</span>
+    <span class="n">dq</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>  <span class="c1"># 存下标，对应元素保持递减
+</span>    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nums</span><span class="p">):</span>
+        <span class="c1"># 1. 队尾弹出：比新元素小的都踢掉（它们永远当不了最大值）
+</span>        <span class="k">while</span> <span class="n">dq</span> <span class="ow">and</span> <span class="n">nums</span><span class="p">[</span><span class="n">dq</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span> <span class="o">&lt;=</span> <span class="n">num</span><span class="p">:</span>
+            <span class="n">dq</span><span class="p">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="n">dq</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+        <span class="c1"># 2. 队首过期：如果队首下标超出窗口范围，弹出
+</span>        <span class="k">if</span> <span class="n">dq</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">i</span> <span class="o">-</span> <span class="n">k</span><span class="p">:</span>
+            <span class="n">dq</span><span class="p">.</span><span class="n">popleft</span><span class="p">()</span>
+
+        <span class="c1"># 3. 窗口形成后（i &gt;= k-1），记录队首对应的元素值
+</span>        <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">result</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">dq</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div></div><h3 id="关键代码逐行解析">关键代码逐行解析</h3><h4 id="1-deque-是什么有什么特性">1. <code class="language-plaintext highlighter-rouge">deque</code> 是什么？有什么特性？</h4><p><code class="language-plaintext highlighter-rouge">deque</code>（发音 “deck”，全称 <strong>double-ended queue 双端队列</strong>）是 Python <code class="language-plaintext highlighter-rouge">collections</code> 模块提供的容器，<strong>两端都能高效地增删元素</strong>。</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span>
+
+<span class="n">d</span> <span class="o">=</span> <span class="n">deque</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+
+<span class="c1"># 两端都能 O(1) 操作：
+</span><span class="n">d</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>        <span class="c1"># 右端入队: deque([1,2,3,4])
+</span><span class="n">d</span><span class="p">.</span><span class="n">appendleft</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>    <span class="c1"># 左端入队: deque([0,1,2,3,4])
+</span><span class="n">d</span><span class="p">.</span><span class="n">pop</span><span class="p">()</span>            <span class="c1"># 右端出队: 返回 4, deque([0,1,2,3])
+</span><span class="n">d</span><span class="p">.</span><span class="n">popleft</span><span class="p">()</span>        <span class="c1"># 左端出队: 返回 0, deque([1,2,3])
+</span>
+<span class="c1"># 也支持下标访问（O(n)，慎用）：
+</span><span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>   <span class="c1"># 队首元素
+</span><span class="n">d</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># 队尾元素
+</span></code></pre></div></div><p><strong><code class="language-plaintext highlighter-rouge">deque</code> vs <code class="language-plaintext highlighter-rouge">list</code> 的复杂度对比</strong>（核心！）：</p><table><thead><tr><th>操作</th><th><code class="language-plaintext highlighter-rouge">list</code></th><th><code class="language-plaintext highlighter-rouge">deque</code></th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">append(x)</code> 右端添加</td><td><strong>O(1)</strong></td><td><strong>O(1)</strong></td></tr><tr><td><code class="language-plaintext highlighter-rouge">pop()</code> 右端删除</td><td><strong>O(1)</strong></td><td><strong>O(1)</strong></td></tr><tr><td><code class="language-plaintext highlighter-rouge">pop(0)</code> / <code class="language-plaintext highlighter-rouge">pop(i)</code> 左端/中间删除</td><td><strong>O(n)</strong> ❌（要整体挪元素）</td><td>—</td></tr><tr><td><code class="language-plaintext highlighter-rouge">popleft()</code> 左端删除</td><td>—</td><td><strong>O(1)</strong> ✅</td></tr><tr><td><code class="language-plaintext highlighter-rouge">insert(0, x)</code> 左端插入</td><td><strong>O(n)</strong> ❌</td><td>—</td></tr><tr><td><code class="language-plaintext highlighter-rouge">appendleft(x)</code> 左端插入</td><td>—</td><td><strong>O(1)</strong> ✅</td></tr><tr><td><code class="language-plaintext highlighter-rouge">d[i]</code> 下标访问</td><td><strong>O(1)</strong></td><td><strong>O(n)</strong>（要遍历到第 i 个）</td></tr></tbody></table><p><strong>关键差异</strong>：<code class="language-plaintext highlighter-rouge">list</code> 在左端增删要移动后面所有元素（O(n)），而 <code class="language-plaintext highlighter-rouge">deque</code> 左端增删是 O(1)。<strong>所以需要频繁从两端操作时，用 <code class="language-plaintext highlighter-rouge">deque</code> 而不是 <code class="language-plaintext highlighter-rouge">list</code></strong>。</p><blockquote><p>⚠️ 注意：<code class="language-plaintext highlighter-rouge">deque</code> 的 <code class="language-plaintext highlighter-rouge">d[0]</code> 和 <code class="language-plaintext highlighter-rouge">d[-1]</code> 虽然也支持，但严格说是 O(n) 访问。不过 CPython 实现对 <code class="language-plaintext highlighter-rouge">d[0]</code> 和 <code class="language-plaintext highlighter-rouge">d[-1]</code> 做了特殊优化，实际接近 O(1)。本题只访问两端，所以没问题。</p></blockquote><h4 id="2-单调队列原理详解从零推导">2. 单调队列原理详解（从零推导）</h4><p><strong>问题</strong>：滑动窗口每次右移一位，如何快速知道新窗口的最大值？</p><p><strong>思路演进</strong>：</p><p><strong>① 朴素做法（O(n*k)）</strong>：每个窗口扫一遍找最大值。k 接近 n 时是 O(n²)，必超时。</p><p><strong>② 想用大顶堆？</strong> 堆能 O(log n) 取最大值，但<strong>删除指定元素</strong>（窗口左出的那个）要 O(n) 找位置，整体不优。可以用懒删除堆（存下标，过期堆顶弹出），但实现繁琐且是 O(n log n)。</p><p><strong>③ 单调队列的核心洞察</strong>：</p><blockquote><p><strong>“如果一个元素比后面来的元素小，那它就永远当不了最大值了——后面那个更大、更晚离开窗口，凭什么让小的当老大？”</strong></p></blockquote><p>这就是单调递减队列的灵魂。用例子说明：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>窗口大小 k=3，当前窗口是 [1, 3, -1]，最大值是 3
+
+当窗口右移，新进来一个 5：
+  原窗口里的 1, 3, -1 都比 5 小，而且都比 5 早离开窗口
+  → 它们永远不可能再当最大值了，直接踢掉！
+  → 队列里只留 [5]，5 就是新窗口最大值
+
+当窗口右移，新进来一个 -3：
+  -3 比 5 小，但它可能在未来（5 离开后）当最大值
+  → 保留 -3，队列变成 [5, -3]
+  → 最大值还是队首 5
+</code></pre></div></div><p><strong>维护规则</strong>（单调递减队列）：</p><ol><li><strong>入队（从队尾）</strong>：新元素 <code class="language-plaintext highlighter-rouge">num</code> 要入队前，<strong>从队尾依次弹出所有 <code class="language-plaintext highlighter-rouge">≤ num</code> 的元素</strong>（它们比 <code class="language-plaintext highlighter-rouge">num</code> 小又比 <code class="language-plaintext highlighter-rouge">num</code> 早离开，没用了），然后把 <code class="language-plaintext highlighter-rouge">num</code> 入队。这样保证队列从队首到队尾<strong>严格递减</strong>。</li><li><strong>出队（从队首）</strong>：窗口右移后，如果<strong>队首元素的下标已经不在窗口范围内</strong>（下标 <code class="language-plaintext highlighter-rouge">≤ i - k</code>），从队首弹出。</li><li><strong>取最大值</strong>：<strong>队首永远是当前窗口最大值</strong>（因为队列递减，最大的在队首）。</li></ol><p><strong>为什么存下标而不是存值？</strong> 因为要判断”队首是否还在窗口内”，必须知道下标。存值就不知道位置了。</p><h4 id="3-为什么时间复杂度是-on最关键的疑问">3. 为什么时间复杂度是 O(n)？（最关键的疑问）</h4><p>很多人看到代码里有 <code class="language-plaintext highlighter-rouge">while</code> 循环嵌套在 <code class="language-plaintext highlighter-rouge">for</code> 里，第一反应是 O(n²)。<strong>这是错的</strong>，正确答案是 <strong>O(n)</strong>。</p><p><strong>核心论证：均摊分析（Amortized Analysis）</strong></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>每个元素（每个下标 i）的生命周期：
+  ① 入队一次：dq.append(i)         → 1 次操作
+  ② 最多被弹出一次：dq.pop() 或 dq.popleft()  → 1 次操作
+
+整个算法运行期间：
+  n 个元素 → 最多 n 次 append + n 次 pop
+  总操作数 ≤ 2n
+  → 时间复杂度 O(n)
+</code></pre></div></div><p><strong>用”账单”类比理解</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>把 while 循环里每次 pop() 想象成"付账"。
+每个元素入队时"存了 1 块钱"，被弹出时"花掉这 1 块钱"。
+
+虽然某一步的 while 可能弹出很多元素（一次性花很多钱），
+但这些钱是之前那些元素入队时存下来的，不是凭空多出来的。
+
+n 个元素总共存了 n 块钱，最多花 n 块钱，所以总花费 ≤ 2n → O(n)。
+</code></pre></div></div><p><strong>用具体例子看”某一步 while 很猛，但整体仍 O(n)”</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], k = 3
+
+i=0, num=1:  队列空, 入队 → dq=[0]
+i=1, num=2:  while弹 nums[0]=1&lt;=2, 入队 → dq=[1]          ← 这一步 pop 1 次
+i=2, num=3:  while弹 nums[1]=2&lt;=3, 入队 → dq=[2]          ← 这一步 pop 1 次
+i=3, num=4:  while弹 nums[2]=3&lt;=4, 入队 → dq=[3]          ← 这一步 pop 1 次
+...每步都弹 1 个，看似 while 在工作，但每个元素只被弹一次
+
+极端例子: nums = [1, 2, 3, ..., 100, 0], k = 3
+i=99, num=100: while 弹掉前面所有比 100 小的（可能弹很多个！）
+                但这些元素之前入队时已经"存过钱"了
+                总弹出次数不会超过总入队次数 = n
+</code></pre></div></div><p><strong>对比一下 O(n²) 的朴素做法</strong>：</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 朴素做法：每个窗口扫一遍，O(n*k)
+</span><span class="k">def</span> <span class="nf">naive</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span> <span class="o">-</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">result</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">k</span><span class="p">]))</span>  <span class="c1"># ← 每次都 O(k) 重算
+</span>    <span class="k">return</span> <span class="n">result</span>
+<span class="c1"># k 接近 n 时退化成 O(n²)，10^5 数据要算 10^10 次，必超时
+</span></code></pre></div></div><p>朴素做法的浪费在于：<strong>上一个窗口和下一个窗口有 k-1 个元素重叠，最大值信息没有复用</strong>。单调队列通过”踢掉没用的元素”把信息复用到了极致。</p><h4 id="4-deque-操作复杂度总结回到本题">4. <code class="language-plaintext highlighter-rouge">deque</code> 操作复杂度总结（回到本题）</h4><table><thead><tr><th>代码中用到的操作</th><th>复杂度</th><th>说明</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">dq.pop()</code> 队尾弹出</td><td><strong>O(1)</strong></td><td>单调队列入队时清理队尾</td></tr><tr><td><code class="language-plaintext highlighter-rouge">dq.append(i)</code> 队尾入队</td><td><strong>O(1)</strong></td><td>新元素入队</td></tr><tr><td><code class="language-plaintext highlighter-rouge">dq.popleft()</code> 队首弹出</td><td><strong>O(1)</strong></td><td>清理过期的队首（deque 的核心优势）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">dq[0]</code> 队首访问</td><td><strong>O(1)</strong>（CPython 优化）</td><td>取当前窗口最大值</td></tr><tr><td><code class="language-plaintext highlighter-rouge">dq[-1]</code> 队尾访问</td><td><strong>O(1)</strong>（CPython 优化）</td><td>比较队尾元素和新元素</td></tr></tbody></table><blockquote><p>💡 <strong>如果用 <code class="language-plaintext highlighter-rouge">list</code> 代替 <code class="language-plaintext highlighter-rouge">deque</code></strong>：<code class="language-plaintext highlighter-rouge">pop(0)</code> 是 O(n)，整体退化成 O(n²)，和朴素做法一样慢。<strong>这就是为什么必须用 <code class="language-plaintext highlighter-rouge">deque</code></strong>。</p></blockquote><blockquote><p>💡 <strong>记忆口诀</strong>：</p><ul><li><strong>deque = 双端都能 O(1) 增删的队列</strong>（list 只有右端 O(1)）</li><li><strong>单调队列 = “后来者更大，先来者滚蛋”</strong>，每个元素只进出各一次 → O(n)</li><li><strong>存下标 = 为了判断过期</strong>，队首下标 <code class="language-plaintext highlighter-rouge">≤ i-k</code> 就弹出</li></ul></blockquote><h3 id="推导过程-1">推导过程</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nums = [1, 3, -1, -3, 5, 3, 6, 7], k = 3
+        0  1   2   3  4  5  6  7
+
+i=0, num=1:  队尾弹(无), dq=[0],     队首0&lt;=0-3? 否,  i&lt;2 不记录
+i=1, num=3:  队尾弹 nums[0]=1&lt;=3, dq=[1],     队首1&lt;=1-3? 否,  i&lt;2 不记录
+i=2, num=-1: 队尾弹 nums[1]=3&gt;-1不弹, dq=[1,2], 队首1&lt;=2-3? 否,  i&gt;=2 记录 nums[1]=3
+i=3, num=-3: 队尾弹 nums[2]=-1&gt;-3不弹, dq=[1,2,3], 队首1&lt;=3-3? 是! 弹出, dq=[2,3], 记录 nums[2]=-1? 
+             等等，这里要重新看：队首1&lt;=0，是。popleft后 dq=[2,3]。但 nums[2]=-1 不是最大值...
+</code></pre></div></div><p><strong>修正推导</strong>（仔细对照代码逻辑）：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nums = [1, 3, -1, -3, 5, 3, 6, 7], k = 3
+
+i=0, num=1:  while循环不执行(队空), dq=[0],            队首0&lt;=0-3=-3? 否,  i=0&lt;2 不记录
+i=1, num=3:  while: nums[dq[-1]=0]=1&lt;=3 弹出, dq=[1],  队首1&lt;=1-3=-2? 否,  i=1&lt;2 不记录
+i=2, num=-1: while: nums[1]=3&gt;-1 不弹, dq=[1,2],       队首1&lt;=2-3=-1? 否,  i=2&gt;=2 记录 nums[1]=3 → [3]
+i=3, num=-3: while: nums[2]=-1&gt;-3 不弹, dq=[1,2,3],    队首1&lt;=3-3=0? 否,   记录 nums[1]=3 → [3,3]
+i=4, num=5:  while: nums[3]=-3&lt;=5弹, nums[2]=-1&lt;=5弹, nums[1]=3&lt;=5弹, dq=[4]
+             队首4&lt;=4-3=1? 否,                         记录 nums[4]=5 → [3,3,5]
+i=5, num=3:  while: nums[4]=5&gt;3 不弹, dq=[4,5],        队首4&lt;=5-3=2? 否,   记录 nums[4]=5 → [3,3,5,5]
+i=6, num=6:  while: nums[5]=3&lt;=6弹, nums[4]=5&lt;=6弹, dq=[6]
+             队首6&lt;=6-3=3? 否,                         记录 nums[6]=6 → [3,3,5,5,6]
+i=7, num=7:  while: nums[6]=6&lt;=7弹, dq=[7],            队首7&lt;=7-3=4? 否,   记录 nums[7]=7 → [3,3,5,5,6,7]
+
+答案: [3,3,5,5,6,7] ✓
+</code></pre></div></div><h3 id="为什么是存下标而不是存值">为什么是”存下标”而不是”存值”</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>存下标的好处：
+  1. 能判断队首是否过期：dq[0] &lt;= i - k 表示超出窗口左边界
+  2. 能通过 nums[dq[0]] 拿到值
+
+如果存值：
+  无法判断队首是否还在窗口内（不知道它的位置）
+</code></pre></div></div><h3 id="为什么是--而不是-">为什么是 <code class="language-plaintext highlighter-rouge">&lt;=</code> 而不是 <code class="language-plaintext highlighter-rouge">&lt;</code></h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">while</span> <span class="n">dq</span> <span class="ow">and</span> <span class="n">nums</span><span class="p">[</span><span class="n">dq</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span> <span class="o">&lt;=</span> <span class="n">num</span><span class="p">:</span>  <span class="c1"># 注意是 &lt;=
+</span>    <span class="n">dq</span><span class="p">.</span><span class="n">pop</span><span class="p">()</span>
+</code></pre></div></div><ul><li>用 <code class="language-plaintext highlighter-rouge">&lt;=</code>：相等的也弹出，<strong>队列严格递减</strong>。队首是唯一最大值。</li><li>用 <code class="language-plaintext highlighter-rouge">&lt;</code>：相等的保留，队列非严格递减。队首可能有多 个相等的最大值，但效果一样对（因为相等的值都能当最大值）。</li></ul><p>两种都能 AC，<strong>用 <code class="language-plaintext highlighter-rouge">&lt;=</code> 更清晰</strong>：队列里不会有两个相等元素，逻辑更干净。</p><h3 id="复杂度分析">复杂度分析</h3><ul><li><strong>时间 O(n)</strong>：每个元素最多入队一次、出队一次，均摊 O(1)。</li><li><strong>空间 O(k)</strong>：队列最多存 k 个元素（窗口大小内）。</li></ul><h3 id="面试追问-1">面试追问</h3><table><thead><tr><th>追问</th><th>答案</th></tr></thead><tbody><tr><td>能不能用大顶堆？</td><td>可以，堆存 (值, 下标)，每次取堆顶判断下标是否过期。但 Python heapq 是小顶堆，要存负值。时间 O(n log n)，比单调队列慢</td></tr><tr><td>能不能用动态规划/ST 表？</td><td>可以，O(n log n) 预处理 + O(1) 查询，但空间 O(n log n)，且不能处理流式数据</td></tr><tr><td>单调队列能求最小值吗？</td><td>把比较方向反过来（队尾弹出比新元素大的），就是单调递增队列，队首是最小值</td></tr><tr><td>如果是数据流（无限输入）怎么办？</td><td>单调队列仍适用，但要注意内存——可以分块处理或限流</td></tr></tbody></table><h3 id="常见坑">常见坑</h3><ol><li><strong>队首过期判断放在入队之后</strong>：必须先入队再判断过期，否则新元素可能被错误清理。</li><li><strong>记录结果的时机 <code class="language-plaintext highlighter-rouge">i &gt;= k-1</code></strong>：前 <code class="language-plaintext highlighter-rouge">k-1</code> 个元素还没形成完整窗口，不能记录。</li><li><strong><code class="language-plaintext highlighter-rouge">&lt;=</code> 还是 <code class="language-plaintext highlighter-rouge">&lt;</code></strong>：用 <code class="language-plaintext highlighter-rouge">&lt;=</code> 保证严格递减，避免边界困惑。</li></ol><hr /><h2 id="q3-76-最小覆盖子串变长窗口--频次覆盖">Q3: 76. 最小覆盖子串（变长窗口 + 频次覆盖）</h2><p><strong>题目</strong>：给定两个字符串 <code class="language-plaintext highlighter-rouge">s</code> 和 <code class="language-plaintext highlighter-rouge">t</code>，长度分别是 <code class="language-plaintext highlighter-rouge">m</code> 和 <code class="language-plaintext highlighter-rouge">n</code>。返回 <code class="language-plaintext highlighter-rouge">s</code> 中的 <strong>最短窗口子串</strong>，使得该子串包含 <code class="language-plaintext highlighter-rouge">t</code> 中的每一个字符（包括重复字符）。如果没有这样的子串，返回空字符串 <code class="language-plaintext highlighter-rouge">""</code>。测试用例保证答案唯一。</p><blockquote><p>🔗 题目链接：<a href="https://leetcode.cn/problems/minimum-window-substring/?envType=study-plan-v2&amp;envId=top-100-liked">76. 最小覆盖子串 - 力扣</a> 难度：困难 | 标签：滑动窗口、哈希表、字符串</p></blockquote><p><strong>示例</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>输入：s = "ADOBECODEBANC", t = "ABC"
+输出："BANC"
+解释：最小覆盖子串 "BANC" 包含来自字符串 t 的 'A'、'B' 和 'C'。
+
+输入：s = "a", t = "a"
+输出："a"
+解释：整个字符串 s 是最小覆盖子串。
+
+输入: s = "a", t = "aa"
+输出: ""
+解释: t 中两个字符 'a' 均应包含在 s 的子串中，
+     因此没有符合条件的子字符串，返回空字符串。
+</code></pre></div></div><p><strong>提示</strong>：</p><ul><li><code class="language-plaintext highlighter-rouge">m == s.length</code>, <code class="language-plaintext highlighter-rouge">n == t.length</code></li><li><code class="language-plaintext highlighter-rouge">1 &lt;= m, n &lt;= 10^5</code></li><li><code class="language-plaintext highlighter-rouge">s</code> 和 <code class="language-plaintext highlighter-rouge">t</code> 由英文字母组成</li></ul><p><strong>进阶</strong>：你能设计一个在 O(m + n) 时间内解决此问题的算法吗？</p><h3 id="思路讲解通俗版-2">思路讲解（通俗版）</h3><p><strong>目标</strong>：在 <code class="language-plaintext highlighter-rouge">s</code> 里找一段最短的子串，里面<strong>包含 <code class="language-plaintext highlighter-rouge">t</code> 的所有字符</strong>（包括重复的，比如 <code class="language-plaintext highlighter-rouge">t = "AAB"</code> 就要包含两个 A）。</p><p><strong>变长滑动窗口套路</strong>：</p><ol><li><strong>右指针扩张</strong>：不断扩大窗口，直到窗口”覆盖”了 <code class="language-plaintext highlighter-rouge">t</code> 的所有字符</li><li><strong>左指针收缩</strong>：一旦覆盖了，尝试缩小窗口（左指针右移），看能不能更短还仍然覆盖</li><li><strong>记录最优</strong>：每次覆盖时更新最短子串</li></ol><p><strong>如何判断”覆盖”</strong>：维护两个频次表——<code class="language-plaintext highlighter-rouge">t_count</code>（t 需要的字符频次）和 <code class="language-plaintext highlighter-rouge">window_count</code>（当前窗口的字符频次）。用一个变量 <code class="language-plaintext highlighter-rouge">formed</code> 记录”已经满足的字符种类数”：当 <code class="language-plaintext highlighter-rouge">window_count[c] == t_count[c]</code> 时，<code class="language-plaintext highlighter-rouge">formed += 1</code>；当 <code class="language-plaintext highlighter-rouge">formed == len(t_count)</code>（所有种类都满足）时，窗口覆盖了 <code class="language-plaintext highlighter-rouge">t</code>。</p><p><strong>核心优化</strong>：不用每次都比较整个频次表（O(字符集大小)），用 <code class="language-plaintext highlighter-rouge">formed</code> 增量维护，每次判断 O(1)。</p><h3 id="解法-2">解法</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+
+<span class="k">def</span> <span class="nf">minWindow</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="s">"""
+    时间 O(m + n)，空间 O(字符集大小)
+    核心：变长滑动窗口 + 频次覆盖 + formed 计数
+    """</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">""</span>
+
+    <span class="n">t_count</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>           <span class="c1"># t 需要的字符频次
+</span>    <span class="n">window_count</span> <span class="o">=</span> <span class="p">{}</span>              <span class="c1"># 当前窗口的字符频次
+</span>    <span class="n">required</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">t_count</span><span class="p">)</span>        <span class="c1"># 需要满足的不同字符种类数
+</span>    <span class="n">formed</span> <span class="o">=</span> <span class="mi">0</span>                     <span class="c1"># 已经满足的种类数
+</span>
+    <span class="n">left</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1"># ans = (窗口长度, 左边界, 右边界)
+</span>    <span class="n">ans</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="s">'inf'</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">right</span><span class="p">,</span> <span class="n">ch</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+        <span class="c1"># 1. 右指针进入窗口
+</span>        <span class="n">window_count</span><span class="p">[</span><span class="n">ch</span><span class="p">]</span> <span class="o">=</span> <span class="n">window_count</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">ch</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+
+        <span class="c1"># 如果该字符频次刚好等于 t 中频次，formed + 1
+</span>        <span class="k">if</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">t_count</span> <span class="ow">and</span> <span class="n">window_count</span><span class="p">[</span><span class="n">ch</span><span class="p">]</span> <span class="o">==</span> <span class="n">t_count</span><span class="p">[</span><span class="n">ch</span><span class="p">]:</span>
+            <span class="n">formed</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="c1"># 2. 窗口已覆盖 t，尝试收缩左指针
+</span>        <span class="k">while</span> <span class="n">left</span> <span class="o">&lt;=</span> <span class="n">right</span> <span class="ow">and</span> <span class="n">formed</span> <span class="o">==</span> <span class="n">required</span><span class="p">:</span>
+            <span class="c1"># 更新最优答案
+</span>            <span class="k">if</span> <span class="n">right</span> <span class="o">-</span> <span class="n">left</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">ans</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">ans</span> <span class="o">=</span> <span class="p">(</span><span class="n">right</span> <span class="o">-</span> <span class="n">left</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
+
+            <span class="c1"># 左指针要出的字符
+</span>            <span class="n">left_char</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">left</span><span class="p">]</span>
+            <span class="n">window_count</span><span class="p">[</span><span class="n">left_char</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="c1"># 如果出的字符是 t 需要的，且频次不够了，formed - 1
+</span>            <span class="k">if</span> <span class="n">left_char</span> <span class="ow">in</span> <span class="n">t_count</span> <span class="ow">and</span> <span class="n">window_count</span><span class="p">[</span><span class="n">left_char</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">t_count</span><span class="p">[</span><span class="n">left_char</span><span class="p">]:</span>
+                <span class="n">formed</span> <span class="o">-=</span> <span class="mi">1</span>
+
+            <span class="n">left</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="s">""</span> <span class="k">if</span> <span class="n">ans</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="nb">float</span><span class="p">(</span><span class="s">'inf'</span><span class="p">)</span> <span class="k">else</span> <span class="n">s</span><span class="p">[</span><span class="n">ans</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span><span class="n">ans</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+</code></pre></div></div><h3 id="推导过程-2">推导过程</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>s = "ADOBECODEBANC", t = "ABC"
+     0 1 2 3 4 5 6 7 8 9 10 11 12
+t_count = {'A':1, 'B':1, 'C':1}, required=3
+
+right=0, ch='A': window={'A':1}, A满足 formed=1
+right=1, ch='D': window={'A':1,'D':1}, formed=1
+right=2, ch='O': window={'A':1,'D':1,'O':1}, formed=1
+right=3, ch='B': window={'A':1,'D':1,'O':1,'B':1}, B满足 formed=2
+right=4, ch='E': formed=2
+right=5, ch='C': window=...{'C':1}, C满足 formed=3 → 覆盖！
+   尝试收缩：ans=(6,0,5), 出 s[0]='A' window['A']=0 &lt; 1 formed=2, left=1
+right=6, ch='O': formed=2
+right=7, ch='D': formed=2
+right=8, ch='E': formed=2
+right=9, ch='B': window['B']=2, formed=2 (B已满足，不重复加)
+right=10, ch='A': window['A']=1, A满足 formed=3 → 覆盖！
+   尝试收缩：ans=(6,0,5) vs (5,6,10) → (5,6,10)
+   出 s[6]='O' formed=3, ans=(5,7,10)
+   出 s[7]='D' formed=3, ans=(5,8,10)
+   出 s[8]='E' formed=3, ans=(5,9,10)
+   出 s[9]='B' window['B']=1 仍满足 formed=3, ans=(5,10,10)? 
+       长度1不可能覆盖3字符，重新看：right=10,left=9,窗口"BA"长度2
+   出 s[9]='B' window['B']=1&gt;=1 仍满足, left=10, ans=(2,9,10)→长度2不够
+   等等，window['B'] 从 2 减到 1，仍 &gt;= t_count['B']=1，formed 不变
+   出 s[10]='A' window['A']=0 &lt; 1, formed=2, left=11
+right=11, ch='N': formed=2
+right=12, ch='C': window['C']=2, formed=2 (C已满足)
+   等等，window['C']之前从1减到0了吗？检查：right=5时进C window['C']=1
+   之后没有C出去，所以 window['C']=1, formed 那时是 3→2 是因为 A 出去了
+   right=12, ch='C': window['C']=2, 但 C 已经满足(formed 之前不减)，formed 仍 2
+   ...还需要A
+</code></pre></div></div><p><strong>简化看关键步骤</strong>：</p><ul><li>第一次覆盖在 <code class="language-plaintext highlighter-rouge">right=5</code>，窗口 <code class="language-plaintext highlighter-rouge">"ADOBEC"</code> 长度 6</li><li>第二次覆盖在 <code class="language-plaintext highlighter-rouge">right=10</code>，收缩到窗口 <code class="language-plaintext highlighter-rouge">"BA"</code> 长度 2（不够，因为 A 又出去了）</li><li>第三次覆盖在 <code class="language-plaintext highlighter-rouge">right=12</code>，窗口 <code class="language-plaintext highlighter-rouge">"BANC"</code> 长度 4</li><li>最优答案：<code class="language-plaintext highlighter-rouge">"BANC"</code> 长度 4</li></ul><h3 id="为什么-formed--required-时才收缩">为什么 <code class="language-plaintext highlighter-rouge">formed == required</code> 时才收缩</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>formed: 已经满足频次要求的字符种类数
+required: t 中不同字符的种类数
+
+formed == required 表示所有字符都达到所需频次
+→ 此时窗口覆盖 t，可以尝试收缩找更短的
+
+如果 formed &lt; required
+→ 还有字符没满足，收缩只会让情况更糟，应该继续扩张右指针
+</code></pre></div></div><h3 id="和题-438-的区别重要">和题 438 的区别（重要）</h3><table><thead><tr><th>维度</th><th>438 找到字母异位词</th><th>76 最小覆盖子串</th></tr></thead><tbody><tr><td>窗口类型</td><td><strong>定长</strong>（窗口大小 = len(p)）</td><td><strong>变长</strong>（窗口大小可变）</td></tr><tr><td>频次要求</td><td><strong>完全相等</strong>（window_count == p_count）</td><td><strong>覆盖即可</strong>（window_count[c] &gt;= t_count[c]）</td></tr><tr><td>判定方式</td><td>Counter 直接 <code class="language-plaintext highlighter-rouge">==</code> 比较</td><td><code class="language-plaintext highlighter-rouge">formed</code> 计数（满足的种类数）</td></tr><tr><td>结果</td><td>所有起始索引</td><td>最短的子串</td></tr><tr><td>时间复杂度</td><td>O(n)</td><td>O(m + n)</td></tr></tbody></table><p><strong>核心差异</strong>：438 要求窗口里字符频次<strong>严格等于</strong>目标；76 只要求<strong>大于等于</strong>目标。</p><h3 id="复杂度分析-1">复杂度分析</h3><ul><li><strong>时间 O(m + n)</strong>：右指针遍历 <code class="language-plaintext highlighter-rouge">s</code> 一次 O(m)，左指针最多移动 m 次（均摊），构建 <code class="language-plaintext highlighter-rouge">t_count</code> 是 O(n)。</li><li><strong>空间 O(字符集大小)</strong>：本题字符集是英文字母，O(52) = O(1)。</li></ul><h3 id="面试追问-2">面试追问</h3><table><thead><tr><th>追问</th><th>答案</th></tr></thead><tbody><tr><td>不用 <code class="language-plaintext highlighter-rouge">formed</code> 计数，直接比较 Counter 行不行？</td><td>行，但每次比较 O(字符集大小)，整体 O(m * 字符集)，字符集大时慢</td></tr><tr><td>如果要返回所有最小覆盖子串？</td><td>收缩时记录所有长度等于最优的窗口，但题目保证答案唯一</td></tr><tr><td>如果字符集是 Unicode？</td><td>Counter 仍有效，空间 O(不同字符数)</td></tr><tr><td>能不能用前缀和？</td><td>不适合。前缀和解决”数值求和”，频次覆盖是”计数比较”，不是同类问题</td></tr></tbody></table><h3 id="常见坑-1">常见坑</h3><ol><li><strong><code class="language-plaintext highlighter-rouge">formed</code> 增减时机</strong>：进入字符时 <code class="language-plaintext highlighter-rouge">window_count[ch] == t_count[ch]</code> 才 +1；出去字符时 <code class="language-plaintext highlighter-rouge">window_count[ch] &lt; t_count[ch]</code> 才 -1。<strong>注意是 <code class="language-plaintext highlighter-rouge">==</code> 和 <code class="language-plaintext highlighter-rouge">&lt;</code>，不是 <code class="language-plaintext highlighter-rouge">&gt;=</code></strong>。</li><li><strong><code class="language-plaintext highlighter-rouge">formed</code> 重复计数</strong>：如果字符频次从 1 涨到 2（已经满足过），不能重复 +1。用 <code class="language-plaintext highlighter-rouge">==</code> 判断能避免。</li><li><strong>收缩时先更新答案再出字符</strong>：保证答案记录的是”覆盖状态下的窗口”。</li><li><strong>空答案判断</strong>：用 <code class="language-plaintext highlighter-rouge">ans[0] == float('inf')</code> 表示从未覆盖过。</li></ol><hr /><h2 id="子串类问题通用思路">子串类问题通用思路</h2><h3 id="选择技巧的决策树">选择技巧的决策树</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>题目类型？
+│
+├─ 求"和为 K 的子数组个数/是否存在"
+│  └─ 前缀和 + 哈希表（含负数也适用）
+│     代表题: 560
+│
+├─ 求"定长窗口的最大/最小值"
+│  └─ 单调队列
+│     代表题: 239
+│
+├─ 求"满足覆盖条件的最短/最长子串"
+│  └─ 变长滑动窗口 + 频次计数
+│     代表题: 76（最短）, 3（最长无重复）
+│
+├─ 求"定长窗口的频次匹配"
+│  └─ 定长滑动窗口 + Counter
+│     代表题: 438
+│
+└─ 求"乘积/最大子数组"
+   └─ 动态规划
+      代表题: 53 最大子数组和, 152 乘积最大子数组
+</code></pre></div></div><h3 id="前缀和万能公式">前缀和万能公式</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>子段和 = 两个前缀的差
+sum(nums[i..j]) = pref[j] - pref[i-1]
+
+变形应用：
+  和为 K     → pref[i-1] = pref[j] - K    （哈希表查）
+  和能整除 K → pref[i-1] ≡ pref[j] (mod K)（同余）
+  最长和为 K → 哈希表存首次出现位置
+</code></pre></div></div><hr /><h2 id="相关题目交叉引用">相关题目交叉引用</h2><ul><li><strong>题 560. 和为 K 的子数组</strong>：在 <code class="language-plaintext highlighter-rouge">哈希类题目.md</code> Q2 也有记录（答案一致）</li><li><strong>题 3. 无重复字符的最长子串</strong> 和 <strong>题 438. 找到字母异位词</strong>：见 <code class="language-plaintext highlighter-rouge">滑动窗口类题目.md</code></li><li><strong>题 76. 最小覆盖子串</strong> 的频次覆盖思路与 <strong>题 438</strong> 的频次相等思路对比记忆</li><li><strong>题 239. 滑动窗口最大值</strong> 的单调队列思路可推广到 <strong>题 155 最小栈</strong>、<strong>题 739 每日温度</strong></li></ul></section><!-- Previous / Next navigation --><nav class="notes-pager"><div class="notes-pager-links"> <a href="/notes/%E5%93%88%E5%B8%8C%E7%B1%BB%E9%A2%98%E7%9B%AE/" class="notes-pager-prev"> <span class="notes-pager-label">← 上一章</span> <span class="notes-pager-title">哈希类题目</span> </a> <a href="/notes/%E6%99%AE%E9%80%9A%E6%95%B0%E7%BB%84%E7%B1%BB%E9%A2%98%E7%9B%AE/" class="notes-pager-next"> <span class="notes-pager-label">下一章 →</span> <span class="notes-pager-title">普通数组类题目</span> </a></div></nav></div></article><!-- Right Sidebar: Table of Contents (built by JS from DOM) --><aside class="notes-toc" id="notes-toc"><div class="notes-toc-inner"><h4 class="notes-toc-title">目录</h4><nav class="notes-toc-nav"><ul class="notes-toc-list" id="notes-toc-list"> <!-- Populated by notes-toc.js --></ul></nav></div></aside></div><script src="https://1571859588.github.io/assets/js/notes-toc.js"></script> <script> (function() { var q = new URLSearchParams(location.search).get('q'); if (!q || q.length < 2) return; var body = document.querySelector('.notes-body'); if (!body) return; // Walk text nodes, find and highlight matches var walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT, null, false); var textNodes = []; while (walker.nextNode()) { var p = walker.currentNode.parentNode; // Skip script, style, code blocks, and already-marked text if (p.tagName === 'SCRIPT' || p.tagName === 'STYLE' || p.tagName === 'MARK' || p.closest('pre') || p.closest('.notes-search-hit')) continue; textNodes.push(walker.currentNode); } var first = null; var re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'); textNodes.forEach(function(node) { var text = node.textContent; if (!re.test(text)) return; re.lastIndex = 0; // reset after test var frag = document.createDocumentFragment(); var lastIdx = 0; var match; while ((match = re.exec(text)) !== null) { if (match.index > lastIdx) { frag.appendChild(document.createTextNode(text.substring(lastIdx, match.index))); } var mark = document.createElement('mark'); mark.className = 'notes-search-mark'; mark.textContent = match[0]; frag.appendChild(mark); if (!first) first = mark; lastIdx = match.index + match[0].length; } if (lastIdx < text.length) { frag.appendChild(document.createTextNode(text.substring(lastIdx))); } node.parentNode.replaceChild(frag, node); }); if (first) { setTimeout(function() { first.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300); } })(); </script><div class="page__footer"><footer> <!-- start custom footer snippets --> <a href="/sitemap/">Sitemap</a> <!-- end custom footer snippets --><div class="page__footer-follow"><ul class="social-icons"><li><strong>Follow:</strong></li><li><a href="http://github.com/1571859588"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a></li><li><a href="https://1571859588.github.io/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li></ul></div><div class="page__footer-copyright"> &copy; 2026 Yuntao Nie, Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://github.com/academicpages/academicpages.github.io">AcademicPages</a>, a fork of <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.<br /> Site last updated 2026-07-06</div></footer></div><script src="https://1571859588.github.io/assets/js/main.min.js"></script> <script src="https://1571859588.github.io/assets/js/paper-details.js"></script> <!-- Fix kramdown stripping backslashes before _ in math spans. kramdown treats \_ as a markdown escape, converting $seq\_len$ to $seq_len$. MathJax then interprets _ as subscript instead of a literal underscore. This runs synchronously before MathJax (async) processes the page. --> <script> (function() { var content = document.querySelector('.page__content'); if (!content) return; var walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT, null, false); var nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode); nodes.forEach(function(node) { var text = node.textContent; var fixed = text.replace(/\$([^$\n]+?)\$/g, function(match, math) { // Inside $...$, add \ before _ followed by 2+ lowercase letters. // Safe: legitimate subscripts use single chars ($d_k$) or braces ($x_{ij}$). var fixedMath = math.replace(/_([a-z]{2,})/g, '\\_$1'); return fixedMath !== math ? '$' + fixedMath + '$' : match; }); if (fixed !== text) node.textContent = fixed; }); })(); </script> <script> var SERIES_INDEX = [ {t:"双指针类题目", u:"/notes/%E5%8F%8C%E6%8C%87%E9%92%88%E7%B1%BB%E9%A2%98%E7%9B%AE/"}, {t:"哈希类题目", u:"/notes/%E5%93%88%E5%B8%8C%E7%B1%BB%E9%A2%98%E7%9B%AE/"}, {t:"子串类题目", u:"/notes/%E5%AD%90%E4%B8%B2%E7%B1%BB%E9%A2%98%E7%9B%AE/"}, {t:"普通数组类题目", u:"/notes/%E6%99%AE%E9%80%9A%E6%95%B0%E7%BB%84%E7%B1%BB%E9%A2%98%E7%9B%AE/"}, {t:"滑动窗口类题目", u:"/notes/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%B1%BB%E9%A2%98%E7%9B%AE/"}, {t:"矩阵类题目", u:"/notes/%E7%9F%A9%E9%98%B5%E7%B1%BB%E9%A2%98%E7%9B%AE/"}, {t:"链表类题目", u:"/notes/%E9%93%BE%E8%A1%A8%E7%B1%BB%E9%A2%98%E7%9B%AE/"}, {t:"链表类题目_进阶", u:"/notes/%E9%93%BE%E8%A1%A8%E7%B1%BB%E9%A2%98%E7%9B%AE-%E8%BF%9B%E9%98%B6/"} ]; (function() { if (!SERIES_INDEX.length) return; var inp = document.getElementById('notes-sidebar-search-input'); var box = document.getElementById('notes-sidebar-search-results'); if (!inp || !box) return; function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; } function hl(t, q) { var o = '', L = 0, lo = t.toLowerCase(), ql = q.toLowerCase(), i; while ((i = lo.indexOf(ql, L)) !== -1) { o += esc(t.substring(L, i)) + '<mark class="notes-search-highlight">' + esc(t.substring(i, i + q.length)) + '</mark>'; L = i + q.length; } return o + esc(t.substring(L)); } inp.addEventListener('input', function() { var q = this.value.trim(); if (!q) { box.style.display = 'none'; box.innerHTML = ''; return; } var ql = q.toLowerCase(), hits = []; for (var i = 0; i < SERIES_INDEX.length; i++) { if (SERIES_INDEX[i].t.toLowerCase().indexOf(ql) !== -1) hits.push(SERIES_INDEX[i]); } if (!hits.length) { box.innerHTML = '<div class="notes-sidebar-search-empty">无匹配</div>'; } else { var h = ''; for (var j = 0; j < Math.min(hits.length, 15); j++) { h += '<a href="' + hits[j].u + '" class="notes-sidebar-search-hit" data-q="' + esc(q) + '">' + '<span class="notes-sidebar-search-hit-title">' + hl(hits[j].t, q) + '</span></a>'; } box.innerHTML = h; } box.style.display = 'block'; }); inp.addEventListener('keydown', function(e) { if (e.key === 'Escape') { box.style.display = 'none'; box.innerHTML = ''; this.blur(); } }); box.addEventListener('click', function(e) { var a = e.target.closest('.notes-sidebar-search-hit'); if (a && a.dataset.q) sessionStorage.setItem('notes-search-q', a.dataset.q); }); document.addEventListener('click', function(e) { if (!e.target.closest('#notes-sidebar-search')) { box.style.display = 'none'; box.innerHTML = ''; } }); })(); </script></body></html>

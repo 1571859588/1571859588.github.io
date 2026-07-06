@@ -1,0 +1,377 @@
+<!doctype html><html lang="en" class="no-js"><head><meta charset="utf-8"> <!-- begin SEO --><title>Vite项目部署到Linux并通过frpc暴露公网 - Yuntao Nie</title><meta property="og:locale" content="en-US"><meta property="og:site_name" content="Yuntao Nie"><meta property="og:title" content="Vite项目部署到Linux并通过frpc暴露公网"><link rel="canonical" href="https://1571859588.github.io/notes/Vite%E9%A1%B9%E7%9B%AE%E9%83%A8%E7%BD%B2%E5%88%B0Linux%E5%B9%B6%E9%80%9A%E8%BF%87frpc%E6%9A%B4%E9%9C%B2%E5%85%AC%E7%BD%91/"><meta property="og:url" content="https://1571859588.github.io/notes/Vite%E9%A1%B9%E7%9B%AE%E9%83%A8%E7%BD%B2%E5%88%B0Linux%E5%B9%B6%E9%80%9A%E8%BF%87frpc%E6%9A%B4%E9%9C%B2%E5%85%AC%E7%BD%91/"><meta property="og:description" content="Vite 项目部署到 Linux 并通过 frpc 暴露公网：完整链路实战"> <script type="application/ld+json"> { "@context" : "http://schema.org", "@type" : "Person", "name" : "Yuntao Nie", "url" : "https://1571859588.github.io", "sameAs" : null } </script> <!-- end SEO --><link href="https://1571859588.github.io/feed.xml" type="application/atom+xml" rel="alternate" title="Yuntao Nie Feed"> <!-- http://t.co/dKP3o1e --><meta name="HandheldFriendly" content="True"><meta name="MobileOptimized" content="320"><meta name="viewport" content="width=device-width, initial-scale=1.0"> <script> document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js '; </script> <!-- For all browsers --><link rel="stylesheet" href="https://1571859588.github.io/assets/css/main.css"><meta http-equiv="cleartype" content="on"> <!-- start custom head snippets --><link rel="apple-touch-icon" sizes="57x57" href="https://1571859588.github.io/images/apple-touch-icon-57x57.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="60x60" href="https://1571859588.github.io/images/apple-touch-icon-60x60.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="72x72" href="https://1571859588.github.io/images/apple-touch-icon-72x72.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="76x76" href="https://1571859588.github.io/images/apple-touch-icon-76x76.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="114x114" href="https://1571859588.github.io/images/apple-touch-icon-114x114.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="120x120" href="https://1571859588.github.io/images/apple-touch-icon-120x120.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="144x144" href="https://1571859588.github.io/images/apple-touch-icon-144x144.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="152x152" href="https://1571859588.github.io/images/apple-touch-icon-152x152.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="180x180" href="https://1571859588.github.io/images/apple-touch-icon-180x180.png?v=M44lzPylqQ"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-32x32.png?v=M44lzPylqQ" sizes="32x32"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/android-chrome-192x192.png?v=M44lzPylqQ" sizes="192x192"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-96x96.png?v=M44lzPylqQ" sizes="96x96"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-16x16.png?v=M44lzPylqQ" sizes="16x16"><link rel="manifest" href="https://1571859588.github.io/images/manifest.json?v=M44lzPylqQ"><link rel="mask-icon" href="https://1571859588.github.io/images/safari-pinned-tab.svg?v=M44lzPylqQ" color="#000000"><link rel="shortcut icon" href="/images/favicon.ico?v=M44lzPylqQ"><meta name="msapplication-TileColor" content="#000000"><meta name="msapplication-TileImage" content="https://1571859588.github.io/images/mstile-144x144.png?v=M44lzPylqQ"><meta name="msapplication-config" content="https://1571859588.github.io/images/browserconfig.xml?v=M44lzPylqQ"><meta name="theme-color" content="#ffffff"><link rel="stylesheet" href="https://1571859588.github.io/assets/css/academicons.css"/> <!-- MathJax for math rendering --> <script> MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['\\(', '\\)']] } }; </script> <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script> <!-- end custom head snippets --></head><body> <!--[if lt IE 9]><div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div><![endif]--><div class="masthead"><div class="masthead__inner-wrap"><div class="masthead__menu"><nav id="site-nav" class="greedy-nav"> <button><div class="navicon"></div></button><ul class="visible-links"><li class="masthead__menu-item masthead__menu-item--lg"><a href="https://1571859588.github.io/">Yuntao Nie</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/publications/">Publications</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/cv/">CV</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/notes/">Notes</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/year-archive/">Blog</a></li></ul><ul class="hidden-links hidden"></ul></nav></div></div></div><div id="main" role="main" class="notes-layout"> <!-- Left Sidebar: Series Chapter Navigation --><aside class="notes-sidebar" id="notes-sidebar"><div class="notes-sidebar-inner"><div class="notes-series-header"><h3 class="notes-series-title">devops</h3></div><div class="notes-sidebar-search" id="notes-sidebar-search"> <input type="text" class="notes-sidebar-search-input" id="notes-sidebar-search-input" placeholder="搜索本专题…" autocomplete="off"><div class="notes-sidebar-search-results" id="notes-sidebar-search-results" style="display:none"></div></div><nav class="notes-chapter-nav"><ul class="notes-chapter-list"><li class="notes-chapter-item "> <a href="/notes/Docker%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="notes-chapter-link"> <span class="notes-chapter-num">1</span> <span class="notes-chapter-title">Docker学习笔记</span> </a></li><li class="notes-chapter-item active"> <a href="/notes/Vite%E9%A1%B9%E7%9B%AE%E9%83%A8%E7%BD%B2%E5%88%B0Linux%E5%B9%B6%E9%80%9A%E8%BF%87frpc%E6%9A%B4%E9%9C%B2%E5%85%AC%E7%BD%91/" class="notes-chapter-link"> <span class="notes-chapter-num">2</span> <span class="notes-chapter-title">Vite项目部署到Linux并通过frpc暴露公网</span> </a></li><li class="notes-chapter-item "> <a href="/notes/frpc%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="notes-chapter-link"> <span class="notes-chapter-num">3</span> <span class="notes-chapter-title">frpc学习笔记</span> </a></li></ul></nav><div class="notes-sidebar-footer"> <a href="/notes/" class="notes-back-link">← 所有笔记系列</a></div></div></aside><!-- Mobile sidebar toggle --> <button class="notes-sidebar-toggle" id="notes-sidebar-toggle" aria-label="Toggle sidebar"> <span class="notes-sidebar-toggle-icon"></span> </button> <!-- Main Content --><article class="notes-content" itemscope itemtype="http://schema.org/CreativeWork"><meta itemprop="headline" content="Vite项目部署到Linux并通过frpc暴露公网"><div class="notes-content-inner"><header class="notes-header"><div class="notes-breadcrumb"> <a href="/notes/">Notes</a> <span class="notes-sep">›</span> <span>devops</span> <span class="notes-sep">›</span> <span>Vite项目部署到Linux并通过frpc暴露公网</span></div><h1 class="notes-page-title" itemprop="headline">Vite项目部署到Linux并通过frpc暴露公网</h1></header><section class="notes-body" itemprop="text"><h1 id="vite-项目部署到-linux-并通过-frpc-暴露公网完整链路实战">Vite 项目部署到 Linux 并通过 frpc 暴露公网：完整链路实战</h1><blockquote><p>更新时间：2026-06-29（新增 frpc 安装步骤 + screen 后台运行方式）| 适用：Vite 5.x / Node 18+ / frp 0.52+ / pm2 5+ 状态：综合部署实战笔记，跨 Vite / Node / pm2 / frpc / Linux 多个工具 关联笔记：<code class="language-plaintext highlighter-rouge">frontend/Vite学习笔记.md</code>、<code class="language-plaintext highlighter-rouge">devops/frpc学习笔记.md</code>、<code class="language-plaintext highlighter-rouge">troubleshooting/Node生态/Node npm pnpm corepack 和 pm2 进程管理.md</code></p></blockquote><hr /><h2 id="一句话结论">一句话结论</h2><p><strong>Windows 开发的 Vite 项目，<code class="language-plaintext highlighter-rouge">npm run build</code> 后把 <code class="language-plaintext highlighter-rouge">dist/</code> 整个目录传到 Linux 服务器，用静态服务器（<code class="language-plaintext highlighter-rouge">serve</code> 或 <code class="language-plaintext highlighter-rouge">vite preview</code>）+ pm2 托管跑起来，再通过 frpc 隧道把本地端口映射到阿里云公网端口，外部用户即可通过 <code class="language-plaintext highlighter-rouge">阿里云IP:端口</code> 访问。</strong> 阿里云那边<strong>不一定需要 Nginx</strong>——纯端口转发场景 frps 直接搞定；要域名/HTTPS/多服务复用 80 端口才需要 Nginx。</p><hr /><h2 id="二整体架构图先看清全貌">二、整体架构图（先看清全貌）</h2><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─────────────────────────────────────────────────────────────────┐
+│  外部用户浏览器                                                   │
+│  访问 http://阿里云IP:8080                                       │
+└──────────────────────────┬──────────────────────────────────────┘
+                           │ 公网
+                           ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  阿里云服务器（公网，别人负责）                                    │
+│  ┌──────────────┐                                                │
+│  │   frps       │  监听 8080 端口（remotePort）                  │
+│  │   服务端      │  监听 7000 端口（bindPort，frpc 连接用）       │
+│  └──────────────┘                                                │
+│  需要做：                                                        │
+│  1. 安全组放行 8080 和 7000 端口                                 │
+│  2. 防火墙放行（如果开了）                                       │
+│  3. 跑 frps                                                     │
+│  不一定需要 Nginx（见第六章）                                    │
+└──────────────────────────┬──────────────────────────────────────┘
+                           │ frp 隧道（frpc 主动连 frps）
+                           ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  本地 Linux 开发服务器（你负责）                                  │
+│  ┌──────────────┐    ┌──────────────┐                           │
+│  │   frpc       │    │  pm2 托管的   │                           │
+│  │   客户端      │───→│  静态服务     │                           │
+│  │  连接 frps    │    │  serve dist  │                           │
+│  └──────────────┘    │  端口 4173    │                           │
+│                      └──────────────┘                           │
+│  ┌──────────────┐                                                │
+│  │   dist/      │  ← 从 Windows 传过来的构建产物                 │
+│  │  静态文件     │                                                │
+│  └──────────────┘                                                │
+└─────────────────────────────────────────────────────────────────┘
+                           ▲
+                           │ 开发阶段在 Windows
+                           ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  Windows 开发机                                                  │
+│  1. 写代码                                                       │
+│  2. npm run build → 生成 dist/                                   │
+│  3. scp / rsync 把 dist 传到 Linux 服务器                        │
+└─────────────────────────────────────────────────────────────────┘
+</code></pre></div></div><p><strong>数据流向</strong>：用户请求 → 阿里云 frps → 隧道 → 本地 frpc → 本地静态服务 → 返回 dist 里的文件。</p><hr /><h2 id="三windows-开发--build--传到-linux">三、Windows 开发 → build → 传到 Linux</h2><h3 id="31-windows-上-build-产物能直接给-linux-用吗能">3.1 Windows 上 build 产物能直接给 Linux 用吗？——能</h3><p><strong>核心结论</strong>：<code class="language-plaintext highlighter-rouge">dist/</code> 是<strong>纯静态文件</strong>（HTML + JS + CSS + 图片），与操作系统无关，Windows build 出来的 dist 在 Linux 上能直接用，<strong>不需要在 Linux 上重新 build</strong>。</p><p><strong>为什么能跨平台</strong>：</p><ul><li>HTML/CSS/JS 是文本文件，浏览器解析，跟服务器 OS 无关</li><li>文件内容不包含任何 Windows 特定的东西（路径、换行符等不影响浏览器解析）</li><li>Vite/Rollup 打包时已经处理好了所有依赖</li></ul><p><strong>唯一要注意的小点</strong>：</p><table><thead><tr><th>注意点</th><th>说明</th><th>处理</th></tr></thead><tbody><tr><td>换行符</td><td>Windows 是 CRLF，Linux 是 LF</td><td>静态文件不影响（浏览器都认），不用担心</td></tr><tr><td>文件名大小写</td><td>Windows 不敏感，Linux 敏感</td><td>Vite 打包产物都是小写带 hash，不会出问题</td></tr><tr><td>文件编码</td><td>都用 UTF-8</td><td>默认就是</td></tr><tr><td>base 路径</td><td>如果部署在子路径要配</td><td>见 Vite 笔记第十章坑2</td></tr></tbody></table><h3 id="32-在-windows-上-build">3.2 在 Windows 上 build</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 进入项目目录</span>
+<span class="nb">cd </span>D:<span class="se">\p</span>rojects<span class="se">\m</span>y-vite-app
+
+<span class="c"># 安装依赖（首次或依赖变化时）</span>
+pnpm <span class="nb">install</span>
+
+<span class="c"># 生产构建</span>
+pnpm build
+<span class="c"># 或 npm run build</span>
+</code></pre></div></div><p>构建完成后，<code class="language-plaintext highlighter-rouge">dist/</code> 目录就是你要的产物。</p><h3 id="33-把-dist-传到-linux-服务器">3.3 把 dist 传到 Linux 服务器</h3><p><strong>方式一：scp（最简单）</strong></p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Windows PowerShell / Git Bash 都能用 scp</span>
+<span class="c"># 把整个 dist 目录传到 Linux 服务器的 /home/user/docqa 目录</span>
+scp <span class="nt">-r</span> D:<span class="se">\p</span>rojects<span class="se">\m</span>y-vite-app<span class="se">\d</span>ist user@linux-server-ip:/home/user/docqa/
+
+<span class="c"># 如果用 SSH 密钥免密，更顺滑（见 troubleshooting/远程连接与传输/SSH 免密登录）</span>
+</code></pre></div></div><p><strong>方式二：rsync（推荐，增量传输）</strong></p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># rsync 只传变化的文件，大项目更新很快</span>
+<span class="c"># Windows 上用 Git Bash 或 WSL 跑</span>
+rsync <span class="nt">-avz</span> <span class="nt">--delete</span> D:/projects/my-vite-app/dist/ user@linux-server-ip:/home/user/docqa/dist/
+</code></pre></div></div><blockquote><p><code class="language-plaintext highlighter-rouge">--delete</code> 会删除目标端多余文件，保持和源端完全一致。第一次传用 scp，后续更新用 rsync。</p></blockquote><p><strong>方式三：打包再传（适合慢网络）</strong></p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Windows 上先打包</span>
+<span class="nb">cd </span>D:<span class="se">\p</span>rojects<span class="se">\m</span>y-vite-app
+<span class="nb">tar</span> <span class="nt">-czf</span> dist.tar.gz dist/
+
+<span class="c"># 传过去</span>
+scp dist.tar.gz user@linux-server-ip:/home/user/docqa/
+
+<span class="c"># Linux 上解压</span>
+ssh user@linux-server-ip
+<span class="nb">cd</span> /home/user/docqa
+<span class="nb">tar</span> <span class="nt">-xzf</span> dist.tar.gz
+</code></pre></div></div><h3 id="34-linux-上的目录结构">3.4 Linux 上的目录结构</h3><p>传完后，Linux 服务器上大概长这样：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/home/user/docqa/
+├── dist/                    ← 你传过来的构建产物
+│   ├── index.html
+│   └── assets/
+│       ├── index-a1b2c3.js
+│       ├── index-d4e5f6.css
+│       └── logo-g7h8i9.png
+├── package.json             ← 可选，如果用 vite preview 需要
+├── /etc/frp/
+│   ├── frpc                 ← frpc 二进制（下载解压复制过来）
+│   └── config.toml          ← frpc 配置
+└── start.sh                 ← 启动脚本（可选）
+</code></pre></div></div><hr /><h2 id="四在-linux-上启动-distpm2-托管">四、在 Linux 上启动 dist（pm2 托管）</h2><h3 id="41-关键认知pm2-不能直接启动-dist">4.1 关键认知：pm2 不能”直接启动 dist”</h3><p><code class="language-plaintext highlighter-rouge">pm2</code> 是进程管理器，它启动的是<strong>命令</strong>（进程），不是文件。<code class="language-plaintext highlighter-rouge">dist/</code> 是一堆静态文件，pm2 本身不能”运行”它们。</p><p>你需要一个<strong>静态文件服务器</strong>来托管 dist，然后用 pm2 把这个服务器进程托管起来（后台跑、自动重启、查日志）。</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pm2 启动的是"静态服务器进程"
+        ↓
+静态服务器监听某端口（如 4173）
+        ↓
+浏览器访问 端口 → 静态服务器读 dist 里的文件返回
+</code></pre></div></div><h3 id="42-pm2-start-pnpm-start-是什么意思">4.2 <code class="language-plaintext highlighter-rouge">pm2 start "pnpm start"</code> 是什么意思</h3><p>你提到的 <code class="language-plaintext highlighter-rouge">pm2 start "pnpm start" --name docqa20260505</code>，意思是：</p><ol><li><code class="language-plaintext highlighter-rouge">pnpm start</code> 执行的是项目 <code class="language-plaintext highlighter-rouge">package.json</code> 里的 <code class="language-plaintext highlighter-rouge">start</code> 脚本</li><li>这个 <code class="language-plaintext highlighter-rouge">start</code> 脚本的内容<strong>决定了实际跑什么</strong></li><li>如果 <code class="language-plaintext highlighter-rouge">start</code> 是 <code class="language-plaintext highlighter-rouge">"vite preview"</code>，那 pm2 实际跑的是 vite preview</li><li>如果 <code class="language-plaintext highlighter-rouge">start</code> 是 <code class="language-plaintext highlighter-rouge">"serve dist"</code>，那 pm2 实际跑的是 serve dist</li></ol><p><strong>所以能不能用 <code class="language-plaintext highlighter-rouge">pm2 start "pnpm start"</code>，取决于 package.json 里 start 脚本写的啥。</strong></p><h3 id="43-三种启动-dist-的方式任选其一">4.3 三种启动 dist 的方式（任选其一）</h3><h4 id="方式-a用-serve最简单推荐">方式 A：用 <code class="language-plaintext highlighter-rouge">serve</code>（最简单，推荐）</h4><p><code class="language-plaintext highlighter-rouge">serve</code> 是一个超轻量的静态文件服务器，专为托管 dist 这类静态文件设计。</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 全局安装 serve</span>
+pnpm add <span class="nt">-g</span> serve
+<span class="c"># 或 npm install -g serve</span>
+
+<span class="c"># 测试一下能不能跑</span>
+<span class="nb">cd</span> /home/user/docqa
+serve dist <span class="nt">-l</span> 4173
+<span class="c"># 访问 http://linux-server-ip:4173 看看</span>
+
+<span class="c"># 用 pm2 托管</span>
+pm2 start <span class="s2">"serve dist -l 4173"</span> <span class="nt">--name</span> docqa20260505
+
+<span class="c"># 查看状态</span>
+pm2 status
+pm2 logs docqa20260505
+</code></pre></div></div><h4 id="方式-b用-vite-preview如果项目源码也在">方式 B：用 <code class="language-plaintext highlighter-rouge">vite preview</code>（如果项目源码也在）</h4><p>如果你把整个项目（含 package.json 和 node_modules）都传过去了，可以用 vite 自带的预览服务器：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># package.json 的 scripts 里</span>
+<span class="o">{</span>
+  <span class="s2">"scripts"</span>: <span class="o">{</span>
+    <span class="s2">"start"</span>: <span class="s2">"vite preview --port 4173 --host"</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="c"># 启动</span>
+pm2 start <span class="s2">"pnpm start"</span> <span class="nt">--name</span> docqa20260505
+<span class="c"># 或更稳妥的写法</span>
+pm2 start pnpm <span class="nt">--name</span> docqa20260505 <span class="nt">--</span> start
+</code></pre></div></div><blockquote><p><code class="language-plaintext highlighter-rouge">--host</code> 让服务监听所有网卡（默认只监听 localhost，外部访问不到）。</p></blockquote><h4 id="方式-c用-nginx生产最推荐但不用-pm2-托管">方式 C：用 Nginx（生产最推荐，但不用 pm2 托管）</h4><p>如果 Linux 服务器装了 Nginx，直接让 Nginx 托管 dist，<strong>不需要 pm2</strong>（Nginx 自己就是 systemd 管理的常驻服务）。</p><div class="language-nginx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># /etc/nginx/conf.d/docqa.conf</span>
+<span class="k">server</span> <span class="p">{</span>
+    <span class="kn">listen</span> <span class="mi">4173</span><span class="p">;</span>
+    <span class="kn">server_name</span> <span class="s">_</span><span class="p">;</span>
+    <span class="kn">root</span> <span class="n">/home/user/docqa/dist</span><span class="p">;</span>
+    <span class="kn">index</span> <span class="s">index.html</span><span class="p">;</span>
+
+    <span class="kn">location</span> <span class="n">/</span> <span class="p">{</span>
+        <span class="kn">try_files</span> <span class="nv">$uri</span> <span class="nv">$uri</span><span class="n">/</span> <span class="n">/index.html</span><span class="p">;</span>     <span class="c1"># SPA 路由回退</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>nginx <span class="nt">-t</span>              <span class="c"># 测试配置</span>
+<span class="nb">sudo </span>systemctl reload nginx
+</code></pre></div></div><blockquote><p>方式 C 不用 pm2，因为 Nginx 本身就是常驻服务。pm2 主要用于托管 Node 进程。</p></blockquote><h3 id="44-推荐方案serve--pm2">4.4 推荐方案：serve + pm2</h3><p>对于你的场景（前端静态 + frpc 暴露），<strong>方式 A（serve + pm2）最合适</strong>：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 一次性配置</span>
+pnpm add <span class="nt">-g</span> serve
+<span class="nb">cd</span> /home/user/docqa
+
+<span class="c"># 启动并托管</span>
+pm2 start <span class="s2">"serve dist -l 4173"</span> <span class="nt">--name</span> docqa20260505
+
+<span class="c"># 保存进程列表（开机自启）</span>
+pm2 save
+pm2 startup        <span class="c"># 按提示执行生成的命令</span>
+
+<span class="c"># 日常操作</span>
+pm2 logs docqa20260505          <span class="c"># 看日志</span>
+pm2 restart docqa20260505       <span class="c"># 重启（更新 dist 后）</span>
+pm2 stop docqa20260505          <span class="c"># 停止</span>
+pm2 delete docqa20260505        <span class="c"># 删除托管</span>
+</code></pre></div></div><p><strong>更新前端代码后的流程</strong>：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. Windows 上重新 build</span>
+pnpm build
+
+<span class="c"># 2. 传到 Linux（rsync 增量）</span>
+rsync <span class="nt">-avz</span> <span class="nt">--delete</span> D:/projects/my-vite-app/dist/ user@linux-ip:/home/user/docqa/dist/
+
+<span class="c"># 3. Linux 上重启 pm2 进程（serve 会重新读 dist）</span>
+ssh user@linux-ip
+pm2 restart docqa20260505
+</code></pre></div></div><hr /><h2 id="五frpc-配置把本地端口映射到阿里云">五、frpc 配置：把本地端口映射到阿里云</h2><h3 id="51-你的角色配置-frpc客户端">5.1 你的角色：配置 frpc（客户端）</h3><p>你不负责阿里云，所以你只需要：</p><ol><li>知道阿里云 frps 的连接地址和端口（问负责阿里云的同事）</li><li>知道阿里云那边给你分配的 remotePort（外部访问用的端口）</li><li>在本地 Linux 配置 frpc，把本地 4173 映射到阿里云的 remotePort</li></ol><h3 id="52-安装-frpc">5.2 安装 frpc</h3><p>frpc 是开源项目 <a href="https://github.com/fatedier/frp">fatedier/frp</a> 的客户端二进制，<strong>不需要编译，下载解压即用</strong>。安装就是把 <code class="language-plaintext highlighter-rouge">frpc</code> 这个可执行文件放到 Linux 服务器上。</p><h4 id="方式一下载官方二进制推荐最简单">方式一：下载官方二进制（推荐，最简单）</h4><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. 下载（以 v0.61.0 为例，去 https://github.com/fatedier/frp/releases 看最新版）</span>
+wget https://github.com/fatedier/frp/releases/download/v0.61.0/frp_0.61.0_linux_amd64.tar.gz
+
+<span class="c"># 2. 解压</span>
+<span class="nb">tar</span> <span class="nt">-zxvf</span> frp_0.61.0_linux_amd64.tar.gz
+<span class="nb">cd </span>frp_0.61.0_linux_amd64
+<span class="c"># 目录里有两个关键文件：frpc（客户端，你要的） 和 frps（服务端，阿里云上用）</span>
+
+<span class="c"># 3. 放到固定目录（惯例用 /etc/frp）</span>
+<span class="nb">sudo mkdir</span> <span class="nt">-p</span> /etc/frp
+<span class="nb">sudo cp </span>frpc /etc/frp/
+<span class="c"># frps 用不到可以不复制（那是阿里云上跑的）</span>
+
+<span class="c"># 4. 验证</span>
+/etc/frp/frpc <span class="nt">--version</span>
+<span class="c"># 输出类似：0.61.0</span>
+
+<span class="c"># 5. 清理下载的压缩包</span>
+<span class="nb">cd</span> ..
+<span class="nb">rm</span> <span class="nt">-rf</span> frp_0.61.0_linux_amd64 frp_0.61.0_linux_amd64.tar.gz
+</code></pre></div></div><p>安装完成后，<code class="language-plaintext highlighter-rouge">/etc/frp/</code> 目录下只有 <code class="language-plaintext highlighter-rouge">frpc</code> 一个文件，配置文件等会儿也放这里。</p><h4 id="方式二用包管理器部分发行版有但版本可能旧">方式二：用包管理器（部分发行版有，但版本可能旧）</h4><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Ubuntu/Debian（版本可能较旧，不推荐）</span>
+<span class="nb">sudo </span>apt <span class="nb">install </span>frpc
+
+<span class="c"># 或用 snap</span>
+<span class="nb">sudo </span>snap <span class="nb">install </span>frp
+</code></pre></div></div><blockquote><p><strong>推荐方式一</strong>：GitHub Releases 的二进制是官方最新版，且不依赖包管理器，跨发行版一致。</p></blockquote><h4 id="关于版本和格式的重要说明">关于版本和格式的重要说明</h4><table><thead><tr><th>FRP 版本</th><th>配置格式</th><th>配置文件名</th></tr></thead><tbody><tr><td>&lt; 0.52</td><td>INI</td><td><code class="language-plaintext highlighter-rouge">frpc.ini</code></td></tr><tr><td>≥ 0.52</td><td><strong>TOML</strong></td><td><code class="language-plaintext highlighter-rouge">frpc.toml</code> 或 <code class="language-plaintext highlighter-rouge">config.toml</code>（名字随意）</td></tr></tbody></table><p>你用的命令是 <code class="language-plaintext highlighter-rouge">./frpc -c config.toml</code>，说明是 <strong>≥ 0.52 的新版</strong>，配置文件叫 <code class="language-plaintext highlighter-rouge">config.toml</code>（名字可以自定义，<code class="language-plaintext highlighter-rouge">-c</code> 参数指定哪个都行）。本文档统一用 <code class="language-plaintext highlighter-rouge">config.toml</code> 这个名字，与你的实际用法一致。</p><blockquote><p>如果在网上看到教程用 <code class="language-plaintext highlighter-rouge">[common]</code> 段落和 <code class="language-plaintext highlighter-rouge">frpc.ini</code>，那是旧版 INI 格式，<strong>别照抄</strong>。新版 TOML 用 <code class="language-plaintext highlighter-rouge">[[proxies]]</code> 数组定义代理。</p></blockquote><h3 id="53-configtoml-配置">5.3 config.toml 配置</h3><blockquote><p>配置文件放在 <code class="language-plaintext highlighter-rouge">/etc/frp/config.toml</code>（你的实际路径）。下面内容与 <code class="language-plaintext highlighter-rouge">frpc.toml</code> 完全等价，只是文件名不同。</p></blockquote><div class="language-toml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /etc/frp/config.toml</span>
+
+<span class="c"># 阿里云 frps 的连接信息（问同事要）</span>
+<span class="py">serverAddr</span> <span class="p">=</span> <span class="s">"阿里云公网IP"</span>
+<span class="py">serverPort</span> <span class="p">=</span> <span class="mi">7000</span>                    <span class="c"># frps 的 bindPort</span>
+<span class="c"># 如果有 token 认证</span>
+<span class="c"># auth.token = "xxx"</span>
+
+<span class="c"># 你的前端服务代理</span>
+<span class="nn">[[proxies]]</span>
+<span class="py">name</span> <span class="p">=</span> <span class="s">"docqa-web"</span>
+<span class="py">type</span> <span class="p">=</span> <span class="s">"tcp"</span>                         <span class="c"># TCP 转发</span>
+<span class="py">localIP</span> <span class="p">=</span> <span class="s">"127.0.0.1"</span>
+<span class="py">localPort</span> <span class="p">=</span> <span class="mi">4173</span>                     <span class="c"># 本地 serve 监听的端口</span>
+<span class="py">remotePort</span> <span class="p">=</span> <span class="mi">8080</span>                    <span class="c"># 阿里云上暴露的端口（外部访问用）</span>
+</code></pre></div></div><p><strong>关键参数解释</strong>：</p><table><thead><tr><th>参数</th><th>含义</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">serverAddr</code></td><td>阿里云公网 IP</td></tr><tr><td><code class="language-plaintext highlighter-rouge">serverPort</code></td><td>frps 的 bindPort，frpc 用这个端口连 frps（不是用户访问的端口）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">type = "tcp"</code></td><td>TCP 转发，最简单</td></tr><tr><td><code class="language-plaintext highlighter-rouge">localPort</code></td><td>你本地服务的端口（serve 跑的 4173）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">remotePort</code></td><td>阿里云上暴露给外部的端口（用户访问 <code class="language-plaintext highlighter-rouge">阿里IP:remotePort</code>）</td></tr></tbody></table><h3 id="54-启动-frpc两种后台方式pm2-或-screen">5.4 启动 frpc（两种后台方式：pm2 或 screen）</h3><p>启动 frpc 有两种常见做法：用 <strong>pm2 托管</strong>（推荐，自动重启+开机自启）或用 <strong>screen 后台运行</strong>（简单直接，你的命令用的就是这个）。两种选其一即可。</p><h4 id="方式-a用-pm2-托管推荐生产用">方式 A：用 pm2 托管（推荐，生产用）</h4><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 测试配置（前台跑，Ctrl+C 退出）</span>
+/etc/frp/frpc <span class="nt">-c</span> /etc/frp/config.toml
+
+<span class="c"># 确认能连上后，用 pm2 托管</span>
+pm2 start /etc/frp/frpc <span class="nt">--name</span> frpc <span class="nt">--</span> <span class="nt">-c</span> /etc/frp/config.toml
+
+pm2 save
+pm2 startup        <span class="c"># 开机自启</span>
+</code></pre></div></div><h4 id="方式-b用-screen-后台运行你的命令用的方式">方式 B：用 screen 后台运行（你的命令用的方式）</h4><p><strong>screen 是什么</strong>：Linux 终端复用工具，能创建一个”虚拟终端窗口”，在里面跑的程序即使你 SSH 断开也不会被杀掉。适合临时跑一个需要持续运行的进程。相比 pm2，screen 更轻量但<strong>没有自动重启</strong>功能（进程崩了就没了），适合开发/测试阶段。</p><p><strong>先装 screen</strong>（大部分 Linux 自带，没有就装）：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Ubuntu/Debian</span>
+<span class="nb">sudo </span>apt <span class="nb">install </span>screen
+
+<span class="c"># CentOS/RHEL</span>
+<span class="nb">sudo </span>yum <span class="nb">install </span>screen
+<span class="c"># 或 sudo dnf install screen</span>
+
+<span class="c"># 验证</span>
+screen <span class="nt">--version</span>
+</code></pre></div></div><p><strong>用 screen 跑 frpc（你的命令）</strong>：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. 新建一个名为 frpc 的 screen 会话</span>
+screen <span class="nt">-S</span> frpc
+<span class="c"># 此时进入一个新的终端窗口</span>
+
+<span class="c"># 2. 在这个窗口里运行 frpc</span>
+<span class="nb">cd</span> /etc/frp <span class="o">&amp;&amp;</span> ./frpc <span class="nt">-c</span> config.toml
+<span class="c"># frpc 开始前台运行，显示连接日志</span>
+
+<span class="c"># 3. 让 frpc 继续在后台跑，自己退出 screen 窗口</span>
+<span class="c">#    按 Ctrl+A，松开，再按 D（detach 分离）</span>
+<span class="c">#    会提示 [detached from ...frpc]</span>
+
+<span class="c"># 此时你回到了原来的终端，frpc 还在 screen 里跑着</span>
+<span class="c"># 即使你关闭 SSH，frpc 也不会停</span>
+</code></pre></div></div><p><strong>screen 常用命令速查</strong>：</p><table><thead><tr><th>命令</th><th>作用</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">screen -S frpc</code></td><td>新建名为 frpc 的会话并进入</td></tr><tr><td><code class="language-plaintext highlighter-rouge">screen -r frpc</code></td><td>重新进入（attach）名为 frpc 的会话</td></tr><tr><td><code class="language-plaintext highlighter-rouge">screen -ls</code></td><td>查看所有会话（带 * 的是当前所在的）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">screen -d frpc</code></td><td>强制分离（detach）某个会话（在外面执行）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">screen -X -S frpc quit</code></td><td>杀掉整个 frpc 会话（停止 frpc）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">Ctrl+A</code> 然后 <code class="language-plaintext highlighter-rouge">D</code></td><td>在会话内分离（保留运行）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">Ctrl+A</code> 然后 <code class="language-plaintext highlighter-rouge">K</code></td><td>在会话内杀掉当前窗口（会终止 frpc）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">exit</code></td><td>在会话内输入，结束当前会话（会终止 frpc）</td></tr></tbody></table><p><strong>screen vs pm2 对比</strong>：</p><table><thead><tr><th>维度</th><th>screen</th><th>pm2</th></tr></thead><tbody><tr><td>自动重启</td><td>❌ 崩了就没了</td><td>✅ 崩了自动拉起</td></tr><tr><td>开机自启</td><td>❌ 需额外配 systemd</td><td>✅ <code class="language-plaintext highlighter-rouge">pm2 startup</code> 一键</td></tr><tr><td>查日志</td><td><code class="language-plaintext highlighter-rouge">screen -r</code> 进去看</td><td><code class="language-plaintext highlighter-rouge">pm2 logs frpc</code></td></tr><tr><td>资源占用</td><td>极低</td><td>略高（Node 进程）</td></tr><tr><td>适合场景</td><td>临时/开发/测试</td><td>生产长期运行</td></tr><tr><td>学习成本</td><td>低</td><td>中</td></tr></tbody></table><blockquote><p><strong>建议</strong>：开发阶段用 screen 快速验证；上线后改用 pm2 或 systemd 托管，保证崩溃自愈。</p></blockquote><h3 id="55-验证链路">5.5 验证链路</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. 本地服务是否起来</span>
+curl http://127.0.0.1:4173
+<span class="c"># 应该返回 HTML</span>
+
+<span class="c"># 2. frpc 是否连上 frps</span>
+<span class="c"># pm2 方式：</span>
+pm2 logs frpc
+<span class="c"># screen 方式：</span>
+screen <span class="nt">-r</span> frpc        <span class="c"># 进去看日志</span>
+<span class="c"># 看到 "login to server success" 就连上了（Ctrl+A D 退出）</span>
+
+<span class="c"># 3. 外部访问测试</span>
+<span class="c"># 在任意联网设备上访问 http://阿里云IP:8080</span>
+<span class="c"># 应该能看到你的前端页面</span>
+</code></pre></div></div><h3 id="56-完整启动顺序">5.6 完整启动顺序</h3><p><strong>用 pm2 方式</strong>：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. 启动静态服务</span>
+pm2 start <span class="s2">"serve dist -l 4173"</span> <span class="nt">--name</span> docqa20260505
+
+<span class="c"># 2. 启动 frpc</span>
+pm2 start /etc/frp/frpc <span class="nt">--name</span> frpc <span class="nt">--</span> <span class="nt">-c</span> /etc/frp/config.toml
+
+<span class="c"># 3. 保存</span>
+pm2 save
+
+<span class="c"># 4. 查看</span>
+pm2 status
+<span class="c"># 应该看到 docqa20260505 和 frpc 都是 online</span>
+</code></pre></div></div><p><strong>用 screen 方式</strong>（你的命令）：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. 启动静态服务（还是用 pm2 托管，静态服务不适合 screen）</span>
+pm2 start <span class="s2">"serve dist -l 4173"</span> <span class="nt">--name</span> docqa20260505
+
+<span class="c"># 2. 启动 frpc（用 screen）</span>
+screen <span class="nt">-S</span> frpc
+<span class="nb">cd</span> /etc/frp <span class="o">&amp;&amp;</span> ./frpc <span class="nt">-c</span> config.toml
+<span class="c"># Ctrl+A D 分离退出</span>
+
+<span class="c"># 3. 验证 screen 在跑</span>
+screen <span class="nt">-ls</span>
+<span class="c"># 应该看到 frpc 会话</span>
+</code></pre></div></div><hr /><h2 id="六阿里云那边需要做什么你了解即可">六、阿里云那边需要做什么？（你了解即可）</h2><p>你不负责阿里云，但需要理解那边的工作，方便联调。</p><h3 id="61-纯端口转发场景不需要-nginx">6.1 纯端口转发场景：不需要 Nginx</h3><p>如果只是 <code class="language-plaintext highlighter-rouge">阿里IP:端口</code> 直接访问，<strong>不需要 Nginx</strong>，frps 直接搞定：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>用户访问 http://阿里IP:8080
+         ↓
+阿里云 frps 监听 8080（remotePort）
+         ↓ 通过隧道转发给 frpc
+本地 frpc 收到流量
+         ↓ 转给本地 4173
+本地 serve 返回 dist 内容
+</code></pre></div></div><p>阿里云需要做的：</p><ol><li><strong>安全组放行端口</strong>（阿里云控制台 → ECS → 安全组 → 添加入方向规则）：<ul><li>放行 7000 端口（frpc 连接用，建议限制源 IP 为你的 Linux 服务器 IP）</li><li>放行 8080 端口（外部访问用，源 IP 填 0.0.0.0/0 表示所有人可访问）</li></ul></li><li><strong>服务器防火墙放行</strong>（如果开了 ufw/firewalld）：<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Ubuntu ufw</span>
+<span class="nb">sudo </span>ufw allow 7000/tcp
+<span class="nb">sudo </span>ufw allow 8080/tcp
+   
+<span class="c"># CentOS firewalld</span>
+<span class="nb">sudo </span>firewall-cmd <span class="nt">--permanent</span> <span class="nt">--add-port</span><span class="o">=</span>7000/tcp
+<span class="nb">sudo </span>firewall-cmd <span class="nt">--permanent</span> <span class="nt">--add-port</span><span class="o">=</span>8080/tcp
+<span class="nb">sudo </span>firewall-cmd <span class="nt">--reload</span>
+</code></pre></div></div></li><li><strong>跑 frps</strong>（参考 <code class="language-plaintext highlighter-rouge">devops/frpc学习笔记.md</code> 第二章）：<div class="language-toml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># frps.toml（阿里云上）</span>
+<span class="py">bindPort</span> <span class="p">=</span> <span class="mi">7000</span>
+<span class="c"># auth.token = "xxx"   # 如果加认证</span>
+</code></pre></div></div><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./frps <span class="nt">-c</span> frps.toml
+<span class="c"># 或用 systemd 托管</span>
+</code></pre></div></div></li></ol><h3 id="62-什么时候阿里云需要-nginx">6.2 什么时候阿里云需要 Nginx</h3><p>如果需求升级到以下任一，阿里云就需要 Nginx 做反向代理：</p><table><thead><tr><th>需求</th><th>为什么需要 Nginx</th></tr></thead><tbody><tr><td>用域名访问（如 <code class="language-plaintext highlighter-rouge">docqa.example.com</code>）</td><td>Nginx 按域名分发到不同 frp 端口</td></tr><tr><td>用 80/443 端口</td><td>80 端口只能一个进程监听，Nginx 统一接管再分发</td></tr><tr><td>HTTPS</td><td>Nginx 装 SSL 证书，frp 走内网 HTTP</td></tr><tr><td>多个服务复用端口</td><td>Nginx 按路径/域名分发</td></tr></tbody></table><p><strong>带 Nginx 的架构</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>用户访问 https://docqa.example.com
+         ↓
+阿里云 Nginx (443, 装了 SSL 证书)
+         ↓ 反向代理到本地端口
+阿里云 frps (监听某端口)
+         ↓ 隧道
+本地 frpc
+         ↓
+本地 serve
+</code></pre></div></div><p>这种场景阿里云的 Nginx 配置大致：</p><div class="language-nginx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">server</span> <span class="p">{</span>
+    <span class="kn">listen</span> <span class="mi">443</span> <span class="s">ssl</span><span class="p">;</span>
+    <span class="kn">server_name</span> <span class="s">docqa.example.com</span><span class="p">;</span>
+
+    <span class="kn">ssl_certificate</span>     <span class="n">/path/to/cert.pem</span><span class="p">;</span>
+    <span class="kn">ssl_certificate_key</span> <span class="n">/path/to/key.pem</span><span class="p">;</span>
+
+    <span class="kn">location</span> <span class="n">/</span> <span class="p">{</span>
+        <span class="kn">proxy_pass</span> <span class="s">http://127.0.0.1:8080</span><span class="p">;</span>     <span class="c1"># 指向 frps 暴露的端口</span>
+        <span class="kn">proxy_set_header</span> <span class="s">Host</span> <span class="nv">$host</span><span class="p">;</span>
+        <span class="kn">proxy_set_header</span> <span class="s">X-Real-IP</span> <span class="nv">$remote_addr</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div><h3 id="63-你需要跟阿里云负责人确认的信息">6.3 你需要跟阿里云负责人确认的信息</h3><p>联调前问清楚这几条：</p><ol><li>frps 的连接地址和 bindPort（<code class="language-plaintext highlighter-rouge">serverAddr</code> 和 <code class="language-plaintext highlighter-rouge">serverPort</code>）</li><li>是否有 auth.token 认证</li><li>给你分配的 remotePort 是多少（外部访问端口）</li><li>remotePort 是否已在安全组放行</li><li>是否走了 Nginx（如果走了，问 Nginx 转发到哪个端口，你的 remotePort 要对应）</li></ol><hr /><h2 id="七linux-开发-vs-windows-开发的区别">七、Linux 开发 vs Windows 开发的区别</h2><p>你说”会在 Linux 上进行开发”，以下是关键区别。</p><h3 id="71-核心差异对照">7.1 核心差异对照</h3><table><thead><tr><th>维度</th><th>Windows</th><th>Linux</th></tr></thead><tbody><tr><td>路径分隔符</td><td><code class="language-plaintext highlighter-rouge">\</code>（<code class="language-plaintext highlighter-rouge">D:\projects\app</code>）</td><td><code class="language-plaintext highlighter-rouge">/</code>（<code class="language-plaintext highlighter-rouge">/home/user/app</code>）</td></tr><tr><td>换行符</td><td>CRLF（<code class="language-plaintext highlighter-rouge">\r\n</code>）</td><td>LF（<code class="language-plaintext highlighter-rouge">\n</code>）</td></tr><tr><td>文件名大小写</td><td>不敏感（<code class="language-plaintext highlighter-rouge">App.js</code> = <code class="language-plaintext highlighter-rouge">app.js</code>）</td><td><strong>敏感</strong>（<code class="language-plaintext highlighter-rouge">App.js</code> ≠ <code class="language-plaintext highlighter-rouge">app.js</code>）</td></tr><tr><td>Shell</td><td>cmd / PowerShell / Git Bash</td><td>bash / zsh</td></tr><tr><td>包管理</td><td>装安装包</td><td>apt / yum / dnf</td></tr><tr><td>Node 安装</td><td>官方安装包</td><td>nvm / n / apt</td></tr><tr><td>进程管理</td><td>任务管理器 / pm2</td><td>systemctl / pm2</td></tr><tr><td>权限模型</td><td>简单</td><td>严格的 user/group/other</td></tr></tbody></table><h3 id="72-在-linux-上开发-vite-项目的差异">7.2 在 Linux 上开发 Vite 项目的差异</h3><p><strong>基本没差异</strong>——Vite/Node/pnpm 是跨平台的，写代码体验一样。要注意的：</p><ol><li><p><strong>文件名大小写</strong>：Windows 上 <code class="language-plaintext highlighter-rouge">import Button from './button'</code> 能引用 <code class="language-plaintext highlighter-rouge">Button.jsx</code>，Linux 上会报错。<strong>习惯用精确大小写</strong>。</p></li><li><strong>换行符</strong>：用 Git 时配 <code class="language-plaintext highlighter-rouge">.gitattributes</code> 统一成 LF： ```<ul><li>text=auto eol=lf ```</li></ul></li><li><strong>Node 版本管理</strong>：Linux 用 nvm：<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-o-</span> https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+nvm <span class="nb">install </span>22
+nvm use 22
+</code></pre></div></div></li><li><strong>pnpm 启用</strong>：Linux 用 corepack：<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>corepack <span class="nb">enable
+</span>corepack prepare pnpm@latest <span class="nt">--activate</span>
+</code></pre></div></div></li><li><strong>开发服务器访问</strong>：<code class="language-plaintext highlighter-rouge">pnpm dev</code> 默认只监听 localhost，局域网访问要加 <code class="language-plaintext highlighter-rouge">--host</code>：<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vite <span class="nt">--host</span>    <span class="c"># 或在 vite.config.js 配 server.host: true</span>
+</code></pre></div></div></li></ol><h3 id="73-ubuntu-vs-centos-区别">7.3 Ubuntu vs CentOS 区别</h3><p>两者都是 Linux，<strong>对你开发 Vite 项目几乎无差异</strong>，区别在系统管理：</p><table><thead><tr><th>维度</th><th>Ubuntu / Debian</th><th>CentOS / RHEL</th></tr></thead><tbody><tr><td>包管理</td><td><code class="language-plaintext highlighter-rouge">apt</code> / <code class="language-plaintext highlighter-rouge">apt-get</code></td><td><code class="language-plaintext highlighter-rouge">yum</code> / <code class="language-plaintext highlighter-rouge">dnf</code>（CentOS 8+）</td></tr><tr><td>安装命令</td><td><code class="language-plaintext highlighter-rouge">sudo apt install nginx</code></td><td><code class="language-plaintext highlighter-rouge">sudo dnf install nginx</code></td></tr><tr><td>默认防火墙</td><td><code class="language-plaintext highlighter-rouge">ufw</code></td><td><code class="language-plaintext highlighter-rouge">firewalld</code></td></tr><tr><td>放行端口</td><td><code class="language-plaintext highlighter-rouge">sudo ufw allow 8080/tcp</code></td><td><code class="language-plaintext highlighter-rouge">sudo firewall-cmd --permanent --add-port=8080/tcp &amp;&amp; sudo firewall-cmd --reload</code></td></tr><tr><td>服务管理</td><td><code class="language-plaintext highlighter-rouge">systemctl</code>（相同）</td><td><code class="language-plaintext highlighter-rouge">systemctl</code>（相同）</td></tr><tr><td>默认用户</td><td>ubuntu / 普通用户</td><td>root / centos</td></tr><tr><td>SELinux</td><td>无</td><td>有（可能拦服务，新手坑）</td></tr><tr><td>适合场景</td><td>个人/创业/云原生</td><td>企业/传统运维</td></tr></tbody></table><p><strong>对你写 Vite 代码、跑 pm2、配 frpc 完全没影响</strong>——这些工具跨发行版一致。唯一可能踩的是 CentOS 的 SELinux（如果服务起不来但日志没报错，试试 <code class="language-plaintext highlighter-rouge">setenforce 0</code> 临时关闭排查）。</p><hr /><h2 id="八常见问题速查">八、常见问题速查</h2><h3 id="q1-pm2-启动了但访问不了">Q1: pm2 启动了但访问不了？</h3><p>按顺序排查：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. pm2 进程是否 online</span>
+pm2 status
+
+<span class="c"># 2. 看日志有没有报错</span>
+pm2 logs docqa20260505
+
+<span class="c"># 3. 本地能不能访问</span>
+curl http://127.0.0.1:4173
+
+<span class="c"># 4. 端口是否在监听</span>
+ss <span class="nt">-tlnp</span> | <span class="nb">grep </span>4173
+<span class="c"># 应该看到 LISTEN</span>
+
+<span class="c"># 5. 防火墙是否放行（如果外部要直接访问）</span>
+<span class="nb">sudo </span>ufw allow 4173/tcp       <span class="c"># Ubuntu</span>
+</code></pre></div></div><h3 id="q2-frpc-连不上-frps">Q2: frpc 连不上 frps？</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pm2 logs frpc
+<span class="c"># 常见报错：</span>
+<span class="c"># - "connection refused"：frps 没起或端口不对</span>
+<span class="c"># - "auth token mismatch"：token 不一致</span>
+<span class="c"># - "i/o timeout"：阿里云安全组没放行 7000 端口</span>
+</code></pre></div></div><h3 id="q3-外部访问阿里云端口-404-或拒绝连接">Q3: 外部访问阿里云端口 404 或拒绝连接？</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. frps 是否在跑（阿里云上）</span>
+ssh 阿里云
+ps aux | <span class="nb">grep </span>frps
+
+<span class="c"># 2. remotePort 是否监听</span>
+ss <span class="nt">-tlnp</span> | <span class="nb">grep </span>8080
+
+<span class="c"># 3. 阿里云安全组是否放行 8080（控制台查）</span>
+
+<span class="c"># 4. 服务器防火墙是否放行</span>
+<span class="nb">sudo </span>ufw status        <span class="c"># Ubuntu</span>
+<span class="nb">sudo </span>firewall-cmd <span class="nt">--list-ports</span>    <span class="c"># CentOS</span>
+</code></pre></div></div><h3 id="q4-更新了-dist-但页面没变">Q4: 更新了 dist 但页面没变？</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># serve 会缓存，重启一下</span>
+pm2 restart docqa20260505
+
+<span class="c"># 浏览器也可能缓存，强制刷新 Ctrl+F5</span>
+</code></pre></div></div><h3 id="q5-pm2-重启后进程没了">Q5: pm2 重启后进程没了？</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 没执行 pm2 save 和 startup</span>
+pm2 save                          <span class="c"># 保存当前进程列表</span>
+pm2 startup                       <span class="c"># 生成开机自启命令，按提示执行</span>
+</code></pre></div></div><hr /><h2 id="九完整操作清单一图流">九、完整操作清单（一图流）</h2><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>【Windows 开发机】
+1. cd D:\projects\my-vite-app
+2. pnpm install
+3. pnpm build                          → 生成 dist/
+4. scp -r dist user@linux-ip:/home/user/docqa/
+
+【Linux 服务器】
+5. cd /home/user/docqa
+6. pnpm add -g serve                   → 装静态服务器
+7. pm2 start "serve dist -l 4173" --name docqa20260505
+8. curl http://127.0.0.1:4173          → 验证本地服务
+
+9. 安装 frpc：
+   wget https://github.com/fatedier/frp/releases/download/v0.61.0/frp_0.61.0_linux_amd64.tar.gz
+   tar -zxvf frp_0.61.0_linux_amd64.tar.gz
+   sudo mkdir -p /etc/frp &amp;&amp; sudo cp frp_0.61.0_linux_amd64/frpc /etc/frp/
+10. 写 /etc/frp/config.toml（serverAddr=阿里云IP, localPort=4173, remotePort=8080）
+
+11a.（pm2 方式）pm2 start /etc/frp/frpc --name frpc -- -c /etc/frp/config.toml
+     pm2 save &amp;&amp; pm2 startup
+11b.（screen 方式）screen -S frpc → cd /etc/frp &amp;&amp; ./frpc -c config.toml → Ctrl+A D
+
+12. 验证：pm2 logs frpc 或 screen -r frpc → 看到 "login to server success"
+
+【阿里云服务器（别人负责）】
+13. 安全组放行 7000 和 8080 端口
+14. 跑 frps（bindPort=7000）
+
+【验证】
+15. 任意设备访问 http://阿里云IP:8080  → 看到前端页面 ✓
+</code></pre></div></div><hr /><h2 id="十踩坑记录">十、踩坑记录</h2><blockquote><p>待实际使用后补充。预留常见坑方向：</p></blockquote><ul><li><strong>坑1（预期）</strong>：serve 默认只监听 localhost，外部访问不到 → 加 <code class="language-plaintext highlighter-rouge">--host</code> 或 <code class="language-plaintext highlighter-rouge">-l tcp://0.0.0.0:4173</code>。</li><li><strong>坑2（预期）</strong>：frpc 连不上 frps → 检查阿里云安全组是否放行 7000 端口。</li><li><strong>坑3（预期）</strong>：外部访问 8080 超时 → 阿里云安全组没放行 8080。</li><li><strong>坑4（预期）</strong>：pm2 restart 后进程没了 → 没执行 <code class="language-plaintext highlighter-rouge">pm2 save</code> + <code class="language-plaintext highlighter-rouge">pm2 startup</code>。</li><li><strong>坑5（预期）</strong>：更新 dist 后页面没变 → serve 缓存，<code class="language-plaintext highlighter-rouge">pm2 restart</code> 一下。</li><li><strong>坑6（预期）</strong>：SPA 路由刷新 404 → serve 默认不回退 index.html，用 <code class="language-plaintext highlighter-rouge">serve dist -l 4173 --single</code> 或换 Nginx 配 try_files。</li><li><strong>坑7（预期）</strong>：CentOS 上 frpc 起不来 → SELinux 拦截，<code class="language-plaintext highlighter-rouge">setenforce 0</code> 排查。</li><li><strong>坑8（预期）</strong>：Windows 传文件到 Linux 权限不对 → <code class="language-plaintext highlighter-rouge">chmod -R 755 dist/</code>。</li></ul><hr /><h2 id="十一相关链接">十一、相关链接</h2><ul><li><code class="language-plaintext highlighter-rouge">frontend/Vite学习笔记.md</code>（Vite 构建、dist 结构、第十章部署基础）</li><li><code class="language-plaintext highlighter-rouge">devops/frpc学习笔记.md</code>（frpc 详细配置、frps 服务端搭建）</li><li><code class="language-plaintext highlighter-rouge">troubleshooting/Node生态/Node npm pnpm corepack 和 pm2 进程管理.md</code>（pm2 命令详解）</li><li><code class="language-plaintext highlighter-rouge">troubleshooting/远程连接与传输/SCP 文件传输到远程服务器.md</code>（scp 传文件）</li><li><code class="language-plaintext highlighter-rouge">troubleshooting/远程连接与传输/SSH 免密登录 (Windows 公钥配置).md</code>（免密传输配置）</li><li><code class="language-plaintext highlighter-rouge">troubleshooting/Linux系统管理/Linux 端口占用 进程排查和释放.md</code>（端口排查）</li><li><code class="language-plaintext highlighter-rouge">技术工具学习索引.md</code></li></ul></section><!-- Previous / Next navigation --><nav class="notes-pager"><div class="notes-pager-links"> <a href="/notes/Docker%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="notes-pager-prev"> <span class="notes-pager-label">← 上一章</span> <span class="notes-pager-title">Docker学习笔记</span> </a> <a href="/notes/frpc%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="notes-pager-next"> <span class="notes-pager-label">下一章 →</span> <span class="notes-pager-title">frpc学习笔记</span> </a></div></nav></div></article><!-- Right Sidebar: Table of Contents (built by JS from DOM) --><aside class="notes-toc" id="notes-toc"><div class="notes-toc-inner"><h4 class="notes-toc-title">目录</h4><nav class="notes-toc-nav"><ul class="notes-toc-list" id="notes-toc-list"> <!-- Populated by notes-toc.js --></ul></nav></div></aside></div><script src="https://1571859588.github.io/assets/js/notes-toc.js"></script> <script> (function() { var q = new URLSearchParams(location.search).get('q'); if (!q || q.length < 2) return; var body = document.querySelector('.notes-body'); if (!body) return; // Walk text nodes, find and highlight matches var walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT, null, false); var textNodes = []; while (walker.nextNode()) { var p = walker.currentNode.parentNode; // Skip script, style, code blocks, and already-marked text if (p.tagName === 'SCRIPT' || p.tagName === 'STYLE' || p.tagName === 'MARK' || p.closest('pre') || p.closest('.notes-search-hit')) continue; textNodes.push(walker.currentNode); } var first = null; var re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'); textNodes.forEach(function(node) { var text = node.textContent; if (!re.test(text)) return; re.lastIndex = 0; // reset after test var frag = document.createDocumentFragment(); var lastIdx = 0; var match; while ((match = re.exec(text)) !== null) { if (match.index > lastIdx) { frag.appendChild(document.createTextNode(text.substring(lastIdx, match.index))); } var mark = document.createElement('mark'); mark.className = 'notes-search-mark'; mark.textContent = match[0]; frag.appendChild(mark); if (!first) first = mark; lastIdx = match.index + match[0].length; } if (lastIdx < text.length) { frag.appendChild(document.createTextNode(text.substring(lastIdx))); } node.parentNode.replaceChild(frag, node); }); if (first) { setTimeout(function() { first.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300); } })(); </script><div class="page__footer"><footer> <!-- start custom footer snippets --> <a href="/sitemap/">Sitemap</a> <!-- end custom footer snippets --><div class="page__footer-follow"><ul class="social-icons"><li><strong>Follow:</strong></li><li><a href="http://github.com/1571859588"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a></li><li><a href="https://1571859588.github.io/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li></ul></div><div class="page__footer-copyright"> &copy; 2026 Yuntao Nie, Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://github.com/academicpages/academicpages.github.io">AcademicPages</a>, a fork of <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.<br /> Site last updated 2026-07-06</div></footer></div><script src="https://1571859588.github.io/assets/js/main.min.js"></script> <script src="https://1571859588.github.io/assets/js/paper-details.js"></script> <!-- Fix kramdown stripping backslashes before _ in math spans. kramdown treats \_ as a markdown escape, converting $seq\_len$ to $seq_len$. MathJax then interprets _ as subscript instead of a literal underscore. This runs synchronously before MathJax (async) processes the page. --> <script> (function() { var content = document.querySelector('.page__content'); if (!content) return; var walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT, null, false); var nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode); nodes.forEach(function(node) { var text = node.textContent; var fixed = text.replace(/\$([^$\n]+?)\$/g, function(match, math) { // Inside $...$, add \ before _ followed by 2+ lowercase letters. // Safe: legitimate subscripts use single chars ($d_k$) or braces ($x_{ij}$). var fixedMath = math.replace(/_([a-z]{2,})/g, '\\_$1'); return fixedMath !== math ? '$' + fixedMath + '$' : match; }); if (fixed !== text) node.textContent = fixed; }); })(); </script> <script> var SERIES_INDEX = [ {t:"Docker学习笔记", u:"/notes/Docker%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"}, {t:"Vite项目部署到Linux并通过frpc暴露公网", u:"/notes/Vite%E9%A1%B9%E7%9B%AE%E9%83%A8%E7%BD%B2%E5%88%B0Linux%E5%B9%B6%E9%80%9A%E8%BF%87frpc%E6%9A%B4%E9%9C%B2%E5%85%AC%E7%BD%91/"}, {t:"frpc学习笔记", u:"/notes/frpc%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"} ]; (function() { if (!SERIES_INDEX.length) return; var inp = document.getElementById('notes-sidebar-search-input'); var box = document.getElementById('notes-sidebar-search-results'); if (!inp || !box) return; function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; } function hl(t, q) { var o = '', L = 0, lo = t.toLowerCase(), ql = q.toLowerCase(), i; while ((i = lo.indexOf(ql, L)) !== -1) { o += esc(t.substring(L, i)) + '<mark class="notes-search-highlight">' + esc(t.substring(i, i + q.length)) + '</mark>'; L = i + q.length; } return o + esc(t.substring(L)); } inp.addEventListener('input', function() { var q = this.value.trim(); if (!q) { box.style.display = 'none'; box.innerHTML = ''; return; } var ql = q.toLowerCase(), hits = []; for (var i = 0; i < SERIES_INDEX.length; i++) { if (SERIES_INDEX[i].t.toLowerCase().indexOf(ql) !== -1) hits.push(SERIES_INDEX[i]); } if (!hits.length) { box.innerHTML = '<div class="notes-sidebar-search-empty">无匹配</div>'; } else { var h = ''; for (var j = 0; j < Math.min(hits.length, 15); j++) { h += '<a href="' + hits[j].u + '" class="notes-sidebar-search-hit" data-q="' + esc(q) + '">' + '<span class="notes-sidebar-search-hit-title">' + hl(hits[j].t, q) + '</span></a>'; } box.innerHTML = h; } box.style.display = 'block'; }); inp.addEventListener('keydown', function(e) { if (e.key === 'Escape') { box.style.display = 'none'; box.innerHTML = ''; this.blur(); } }); box.addEventListener('click', function(e) { var a = e.target.closest('.notes-sidebar-search-hit'); if (a && a.dataset.q) sessionStorage.setItem('notes-search-q', a.dataset.q); }); document.addEventListener('click', function(e) { if (!e.target.closest('#notes-sidebar-search')) { box.style.display = 'none'; box.innerHTML = ''; } }); })(); </script></body></html>

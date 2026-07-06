@@ -1,0 +1,460 @@
+<!doctype html><html lang="en" class="no-js"><head><meta charset="utf-8"> <!-- begin SEO --><title>2026-06-15-字节 - Yuntao Nie</title><meta property="og:locale" content="en-US"><meta property="og:site_name" content="Yuntao Nie"><meta property="og:title" content="2026-06-15-字节"><link rel="canonical" href="https://1571859588.github.io/notes/2026-06-15-%E5%AD%97%E8%8A%82/"><meta property="og:url" content="https://1571859588.github.io/notes/2026-06-15-%E5%AD%97%E8%8A%82/"><meta property="og:description" content="字节跳动 AI Agent 开发岗 — 面试复盘与学习笔记"><meta property="og:type" content="article"><meta property="article:published_time" content="2026-06-15T00:00:00+00:00"> <script type="application/ld+json"> { "@context" : "http://schema.org", "@type" : "Person", "name" : "Yuntao Nie", "url" : "https://1571859588.github.io", "sameAs" : null } </script> <!-- end SEO --><link href="https://1571859588.github.io/feed.xml" type="application/atom+xml" rel="alternate" title="Yuntao Nie Feed"> <!-- http://t.co/dKP3o1e --><meta name="HandheldFriendly" content="True"><meta name="MobileOptimized" content="320"><meta name="viewport" content="width=device-width, initial-scale=1.0"> <script> document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js '; </script> <!-- For all browsers --><link rel="stylesheet" href="https://1571859588.github.io/assets/css/main.css"><meta http-equiv="cleartype" content="on"> <!-- start custom head snippets --><link rel="apple-touch-icon" sizes="57x57" href="https://1571859588.github.io/images/apple-touch-icon-57x57.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="60x60" href="https://1571859588.github.io/images/apple-touch-icon-60x60.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="72x72" href="https://1571859588.github.io/images/apple-touch-icon-72x72.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="76x76" href="https://1571859588.github.io/images/apple-touch-icon-76x76.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="114x114" href="https://1571859588.github.io/images/apple-touch-icon-114x114.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="120x120" href="https://1571859588.github.io/images/apple-touch-icon-120x120.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="144x144" href="https://1571859588.github.io/images/apple-touch-icon-144x144.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="152x152" href="https://1571859588.github.io/images/apple-touch-icon-152x152.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="180x180" href="https://1571859588.github.io/images/apple-touch-icon-180x180.png?v=M44lzPylqQ"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-32x32.png?v=M44lzPylqQ" sizes="32x32"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/android-chrome-192x192.png?v=M44lzPylqQ" sizes="192x192"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-96x96.png?v=M44lzPylqQ" sizes="96x96"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-16x16.png?v=M44lzPylqQ" sizes="16x16"><link rel="manifest" href="https://1571859588.github.io/images/manifest.json?v=M44lzPylqQ"><link rel="mask-icon" href="https://1571859588.github.io/images/safari-pinned-tab.svg?v=M44lzPylqQ" color="#000000"><link rel="shortcut icon" href="/images/favicon.ico?v=M44lzPylqQ"><meta name="msapplication-TileColor" content="#000000"><meta name="msapplication-TileImage" content="https://1571859588.github.io/images/mstile-144x144.png?v=M44lzPylqQ"><meta name="msapplication-config" content="https://1571859588.github.io/images/browserconfig.xml?v=M44lzPylqQ"><meta name="theme-color" content="#ffffff"><link rel="stylesheet" href="https://1571859588.github.io/assets/css/academicons.css"/> <!-- MathJax for math rendering --> <script> MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['\\(', '\\)']] } }; </script> <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script> <!-- end custom head snippets --></head><body> <!--[if lt IE 9]><div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div><![endif]--><div class="masthead"><div class="masthead__inner-wrap"><div class="masthead__menu"><nav id="site-nav" class="greedy-nav"> <button><div class="navicon"></div></button><ul class="visible-links"><li class="masthead__menu-item masthead__menu-item--lg"><a href="https://1571859588.github.io/">Yuntao Nie</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/publications/">Publications</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/cv/">CV</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/notes/">Notes</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/year-archive/">Blog</a></li></ul><ul class="hidden-links hidden"></ul></nav></div></div></div><div id="main" role="main" class="notes-layout"> <!-- Left Sidebar: Series Chapter Navigation --><aside class="notes-sidebar" id="notes-sidebar"><div class="notes-sidebar-inner"><div class="notes-series-header"><h3 class="notes-series-title">面试经历</h3></div><div class="notes-sidebar-search" id="notes-sidebar-search"> <input type="text" class="notes-sidebar-search-input" id="notes-sidebar-search-input" placeholder="搜索本专题…" autocomplete="off"><div class="notes-sidebar-search-results" id="notes-sidebar-search-results" style="display:none"></div></div><nav class="notes-chapter-nav"><ul class="notes-chapter-list"><li class="notes-section-group"> <button class="notes-section-toggle" aria-expanded="true"> <span class="notes-section-arrow">▾</span> <span class="notes-section-label">agent开发</span> </button><ul class="notes-section-list"><li class="notes-chapter-item active"> <a href="/notes/2026-06-15-%E5%AD%97%E8%8A%82/" class="notes-chapter-link"> <span class="notes-chapter-num">1</span> <span class="notes-chapter-title">2026-06-15-字节</span> </a></li></ul></li></ul></nav><div class="notes-sidebar-footer"> <a href="/notes/" class="notes-back-link">← 所有笔记系列</a></div></div></aside><!-- Mobile sidebar toggle --> <button class="notes-sidebar-toggle" id="notes-sidebar-toggle" aria-label="Toggle sidebar"> <span class="notes-sidebar-toggle-icon"></span> </button> <!-- Main Content --><article class="notes-content" itemscope itemtype="http://schema.org/CreativeWork"><meta itemprop="headline" content="2026-06-15-字节"><div class="notes-content-inner"><header class="notes-header"><div class="notes-breadcrumb"> <a href="/notes/">Notes</a> <span class="notes-sep">›</span> <span>面试经历</span> <span class="notes-sep">›</span> <span>2026-06-15-字节</span></div><h1 class="notes-page-title" itemprop="headline">2026-06-15-字节</h1><time class="notes-date" datetime="2026-06-15T00:00:00+00:00">2026-06-15</time></header><section class="notes-body" itemprop="text"><h1 id="字节跳动-ai-agent-开发岗--面试复盘与学习笔记">字节跳动 AI Agent 开发岗 — 面试复盘与学习笔记</h1><blockquote><p><strong>面试时间</strong>：约 60 分钟（有效内容约 55 分钟） <strong>岗位方向</strong>：AI 应用开发（客服领域 Agent 落地） <strong>面试轮次</strong>：一面（技术面） <strong>视频来源</strong>：EV 录屏，Whisper small 转录 + AI 结构化分析</p></blockquote><hr /><h2 id="面试整体结构">面试整体结构</h2><table><thead><tr><th>阶段</th><th>时间戳</th><th>主题</th><th>问题数</th><th>核心考点</th></tr></thead><tbody><tr><td>开场</td><td>00:00-04:30</td><td>自我介绍 + 项目介绍</td><td>—</td><td>RAG/EDA 项目经验</td></tr><tr><td>一</td><td>04:31-08:09</td><td>RAG 系统深挖</td><td>4</td><td>混合检索、相似度算法选型</td></tr><tr><td>二</td><td>08:00-10:55</td><td>Agent vs 传统 RAG</td><td>2</td><td>Agent 架构认知、技术选型判断</td></tr><tr><td>三</td><td>10:55-15:36</td><td>Agent 系统设计（天气查询）</td><td>3</td><td>Function Calling、Tool Use、Skill/MCP</td></tr><tr><td>四</td><td>15:32-24:58</td><td>多功能 Agent + Multi-Agent</td><td>3</td><td>意图识别、记忆管理、多 Agent 协作</td></tr><tr><td>五</td><td>25:05-27:19</td><td>编程语言 + 计算机基础</td><td>4</td><td>Java、Go、网络分层、MySQL</td></tr><tr><td>六</td><td>27:19-35:47</td><td>AI 编程实践</td><td>5</td><td>Prompt 工程、AI 安全、上下文管理</td></tr><tr><td>七</td><td>35:47-40:19</td><td>计算机基础继续</td><td>4</td><td>TCP/UDP、进程/线程、IPC</td></tr><tr><td>八</td><td>40:19-54:20</td><td>算法题</td><td>3</td><td>子数组和为K、两数之和、LCA</td></tr><tr><td>九</td><td>54:20-59:48</td><td>候选人反问</td><td>3</td><td>技术栈、职业发展</td></tr></tbody></table><hr /><h2 id="阶段一rag-系统深挖0431-0809">阶段一：RAG 系统深挖（04:31-08:09）</h2><h3 id="q1-0539-相似度匹配用了什么算法">Q1 [05:39] 相似度匹配用了什么算法？</h3><p><strong>面试官原话</strong>：</p><blockquote><p>“我看你刚才聊的那个 RAG 里面，你用到一些 embedding 啊，以及一些相似度匹配的，你们相似度匹配用的是什么算法？”</p></blockquote><p><strong>候选人现场回答</strong>：余弦相似度（COS）+ BM25 + TF-IDF 混合检索</p><p><strong>✅ 标准参考答案</strong>：</p><blockquote><p>我们采用的是<strong>混合检索（Hybrid Search）</strong>策略，由两路召回 + 一路融合组成：</p><p><strong>第一路：稠密检索（Dense Retrieval）</strong></p><ul><li>将文档 chunk 和用户 query 分别通过 embedding 模型（如 BGE-large）编码为向量</li><li>使用<strong>余弦相似度（Cosine Similarity）</strong>计算 query 向量与文档向量的夹角余弦值</li><li>余弦相似度公式：<code class="language-plaintext highlighter-rouge">cos(A,B) = (A·B) / (||A|| × ||B||)</code></li><li>余弦值范围 [-1, 1]，值越接近 1 表示语义越相似</li><li>向量维度归一化后，余弦相似度等价于点积，可以用向量数据库（FAISS/Milvus）的 ANN 索引加速</li></ul><p><strong>第二路：稀疏检索（Sparse Retrieval）</strong></p><ul><li>使用 <strong>BM25</strong> 做关键词级召回——基于词频（TF）和逆文档频率（IDF）计算相关性</li><li>BM25 相比 TF-IDF 的优势：对词频做了饱和处理（避免长文档过匹配），引入了文档长度归一化</li></ul><p><strong>融合：RRF（Reciprocal Rank Fusion）</strong></p><ul><li>两路结果各自排 top-K，用 RRF 公式 <code class="language-plaintext highlighter-rouge">Σ 1/(k + rank)</code> 融合排序</li><li>融合后送入 reranker（如 BGE-reranker）做精排，最终返回 top-N 给 LLM 生成答案</li></ul><p><strong>为什么需要混合检索</strong>：</p><ul><li>稠密检索擅长捕捉<strong>语义相近</strong>的内容（”怎么修复” vs “如何解决”）</li><li>稀疏检索擅长<strong>精确关键词匹配</strong>（函数名、API 名称、错误码）</li><li>在我们 EDA 工具场景，API 名称拼写和大小写非常关键，纯向量检索容易漏掉，必须混合</li></ul></blockquote><hr /><h3 id="q2-0652-余弦-vs-其他相似度算法各自适用场景">Q2 [06:52] 余弦 vs 其他相似度算法，各自适用场景？</h3><p><strong>面试官原话</strong>：</p><blockquote><p>“余弦或者其他的一些相似度算法，它们的适用场景是什么？什么场景下用余弦，什么场景下改用其他的？”</p></blockquote><p><strong>候选人现场回答</strong>：余弦对语义相似好，但 EDA 场景中 API 名称大小写变化会导致余弦漏掉，所以需要 BM25 补充</p><p><strong>✅ 标准参考答案</strong>：</p><blockquote><p>三种主要相似度度量及其适用场景：</p><p><strong>1. 余弦相似度（Cosine Similarity）</strong></p><ul><li>衡量的是<strong>方向</strong>而非距离：<code class="language-plaintext highlighter-rouge">cos(A,B) = (A·B)/(||A||·||B||)</code></li><li>适合 <strong>文本/语义</strong> 场景：两个文本的向量方向一致 = 语义相似，不关心向量的模长（即不关心文档长度）</li><li>典型用途：文本 embedding 检索、推荐系统中用户-物品相似度</li><li>局限性：对精确字符匹配不敏感，”GetUserName” 和 “get_user_name” 在语义空间里可能很近，但代码层面完全不同</li></ul><p><strong>2. 欧氏距离（Euclidean Distance）</strong></p><ul><li>衡量的是<strong>绝对距离</strong>：<code class="language-plaintext highlighter-rouge">d(A,B) = √Σ(Ai-Bi)²</code></li><li>适合 <strong>数值型 / 低维特征</strong> 场景：坐标距离、价格差异、传感器读数</li><li>受向量模长（scale）影响大→ 使用前通常需要标准化</li><li>在高维稀疏空间中效果差（维度灾难）</li></ul><p><strong>3. 点积 / 内积（Dot Product）</strong></p><ul><li><code class="language-plaintext highlighter-rouge">A·B = Σ Ai×Bi</code>，值越大越相似</li><li>向量已 L2 归一化时，点积 = 余弦相似度</li><li>未归一化时，受向量模长影响——长向量即使方向不那么一致也可能得分高</li><li>常用于模型最后一层输出（logits）和注意力机制中的 Q·K</li></ul><p><strong>选择决策表</strong>：</p><table><thead><tr><th>场景</th><th>推荐算法</th><th>原因</th></tr></thead><tbody><tr><td>文本语义检索</td><td>余弦</td><td>只关心语义方向，不关心文档长度</td></tr><tr><td>图像特征匹配</td><td>欧氏/余弦</td><td>取决于特征是否归一化</td></tr><tr><td>推荐系统评分预测</td><td>点积</td><td>矩阵分解模型天然输出</td></tr><tr><td>代码/API 精确匹配</td><td>BM25（非向量）</td><td>关键词精确匹配优于语义模糊匹配</td></tr></tbody></table></blockquote><hr /><h3 id="q3-0800-agent-做检索-vs-传统-rag">Q3 [08:00] Agent 做检索 vs 传统 RAG</h3><p><strong>面试官原话</strong>：</p><blockquote><p>“现在也有一种思路，就是用 Agent 的方式来做检索。这两种思路你怎么看？”</p></blockquote><p><strong>候选人现场回答</strong>：之前试过大模型判断 trunk/query 相关性迭代检索，但成本高，没上线；认为 Agent 是未来趋势但目前业务不需要</p><p><strong>✅ 标准参考答案</strong>：</p><blockquote><p>这是 <strong>标准 RAG 和 Agentic RAG</strong> 的对比问题：</p><p><strong>传统 RAG（标准流程）</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Query → Embedding → ANN检索(一次) → Rerank → 拼接→ LLM生成 → 回答
+</code></pre></div></div><ul><li>一次检索 + 一次生成，流程固定</li><li>优点：延迟低（&lt;1s）、成本可控、实现简单</li><li>缺点：检索质量取决于 query 表达，复杂问题（多跳推理、需要多文档信息整合）表现差</li></ul><p><strong>Agentic RAG（智能检索）</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Query → Agent规划 → 子查询1 → 检索 → 评估 → 子查询2 → 检索 → 评估 → ... → 综合生成
+</code></pre></div></div><ul><li>Agent 可以<strong>多次迭代检索</strong>，根据中间结果调整策略</li><li>核心技术：Self-RAG、CRAG（Corrective RAG）、ReAct</li></ul><p><strong>具体差异</strong>： | 维度 | 传统 RAG | Agentic RAG | |——|———|————| | 检索次数 | 固定 1 次 | 动态，可能多次 | | Query 处理 | 直接用原始 query | Agent 可改写、拆分、补全 query | | 结果评估 | 无/只用 reranker | Agent 判断检索质量，不行就换策略 | | 多源检索 | 不支持 | 可同时查向量库+关键词库+API | | 延迟 | 低（&lt;1s） | 高（可能 5-10s+） | | 成本 | 1 次 LLM 调用 | 多次 LLM 调用 | | 适用场景 | 简单 FAQ | 复杂推理、多步查询 |</p><p><strong>我的判断</strong>：</p><ul><li>不能一刀切说”Agent 更好”——它是一个<strong>准确率换延迟和成本</strong>的 trade-off</li><li>实际推荐分两层：高频简单查询走传统 RAG（毫秒级），复杂问题检测后升级为 Agent 检索</li><li>如果你们要做客服 Agent，大概率也会是这种分层架构</li></ul></blockquote><hr /><h3 id="q4-0926-只用-agent-做文档检索怎么做">Q4 [09:26] 只用 Agent 做文档检索，怎么做？</h3><p><strong>面试官原话</strong>：</p><blockquote><p>“比如说就是检索文档，基于关键词来检索文档，如果只用 Agent 来做的话，是怎么做的？”</p></blockquote><p><strong>候选人现场回答</strong>：两种方法——Agent 猜相似关键词 grep 文档；把特定 API 做成支持库让 Agent 匹配</p><p><strong>✅ 标准参考答案</strong>：</p><blockquote><p>Agent 做文档检索的核心是 <strong>Tool Use + ReAct 循环</strong>：</p><p><strong>Step 1：给 Agent 配备工具集</strong></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Tools = [
+semantic_search(query, top_k)  # 向量语义检索
+keyword_search(query, top_k)   # BM25 关键词检索
+grep_search(pattern, path)     # 精确文本搜索
+read_file(path, offset, limit) # 读取具体文件内容
+]
+</code></pre></div></div><p><strong>Step 2：Agent 推理-行动循环（ReAct）</strong></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Thought: 用户在问 BGE 模型的 API 用法，这涉及精确的函数名
+Action: keyword_search("BGE model encode function")
+Observation: 返回了 5 个文档片段，但都没有给出具体的 API 调用方式
+
+Thought: 关键词检索没找到，可能是函数名拼写或大小写不同
+Action: grep_search("def encode", "docs/bge/")
+Observation: 找到了 `def Encode(text, model_name)` 函数定义
+
+Thought: 需要看完整的参数说明
+Action: read_file("docs/bge/api.md", 0, 200)
+Observation: 获取到完整文档
+
+Answer: BGE 模型调用方式是...
+</code></pre></div></div><p><strong>Step 3：结构化输出</strong></p><ul><li>Agent 整合多次检索结果，生成带引用的回答</li><li>如果检索不到，诚实地告诉用户并建议替代方案</li></ul><p><strong>与纯 RAG 的区别</strong>：</p><ul><li>纯 RAG 是<strong>固定路径</strong>：query → 一次检索 → LLM 回答</li><li>Agent 检索是<strong>自适应路径</strong>：query → 选择工具 → 检索 → 评估 → 不够就换工具再检索 → 回答</li></ul><p><strong>关键设计要点</strong>：</p><ul><li>工具描述要写得清晰（Agent 需要理解每个工具干什么、参数是什么）</li><li>加一个 max_iterations 防止无限循环</li><li>如果能力有限（只搜文档不能执行代码），在 system prompt 里声明边界</li></ul></blockquote><hr /><h2 id="阶段二agent-系统设计1055-2458">阶段二：Agent 系统设计（10:55-24:58）</h2><h3 id="q5-1051-设计一个天气查询-agent">Q5 [10:51] 设计一个天气查询 Agent</h3><p><strong>面试官原话</strong>：</p><blockquote><p>“就是现在让你设计一个天气查询的 Agent，你会怎么设计？”</p></blockquote><p><strong>候选人现场回答</strong>：用户输入自然语言 → 提取地点和时间 → 信息不全就追问 → 调用天气 API</p><p><strong>面试官追问 [12:10]</strong>：Agent 的输出是什么？工具怎么结合？</p><p><strong>候选人现场回答</strong>：把天气 API 封装成 function，给大模型 function 定义，模型返回结构化调用参数</p><p><strong>✅ 标准参考答案</strong>：</p><blockquote><p><strong>整体架构（基于 Function Calling）</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>用户: "今天北京天气怎么样？"
+      │
+      ▼
+┌─────────────────┐
+│   System Prompt  │  定义 Agent 角色 + 可用工具
+└────────┬────────┘
+      │
+      ▼
+┌─────────────────┐
+│   LLM 推理       │  理解意图，决定是否调用工具
+└────────┬────────┘
+      │ (需要调用 get_weather)
+      ▼
+┌─────────────────┐
+│   Function Call  │  输出: {name: "get_weather", args: {city:"北京", date:"今天"}}
+└────────┬────────┘
+      │
+      ▼
+┌─────────────────┐
+│   执行函数        │  HTTP request → 天气 API → 返回 JSON
+└────────┬────────┘
+      │
+      ▼
+┌─────────────────┐
+│   LLM 总结       │  将 API 返回的 JSON 转成自然语言
+└────────┬────────┘
+      │
+      ▼
+  "北京今天晴，气温 25-35°C，南风 2 级"
+</code></pre></div></div><p><strong>Function Schema 设计示例</strong>：</p><div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+</span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"get_weather"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"查询指定城市和日期的天气信息"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"parameters"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+ </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span><span class="w">
+ </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+   </span><span class="nl">"city"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+     </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+     </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"城市名称，如'北京'、'上海'"</span><span class="w">
+   </span><span class="p">},</span><span class="w">
+   </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+     </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+     </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"日期，格式 YYYY-MM-DD。'今天'→当天日期，'明天'→次日"</span><span class="w">
+   </span><span class="p">}</span><span class="w">
+ </span><span class="p">},</span><span class="w">
+ </span><span class="nl">"required"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"city"</span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div><p><strong>信息补全策略</strong>：</p><ul><li>缺地点 → “请问你想查哪个城市的天气？”</li><li>缺日期 → 默认当天</li><li>地点模糊（如”朝阳”）→ “你是指北京朝阳区还是辽宁朝阳市？”</li></ul><p><strong>System Prompt 示例</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>你是一个天气查询助手。用户会向你询问天气信息。
+当用户提供的查询信息不完整时（缺少地点），你需要追问补充。
+调用 get_weather 函数获取天气数据后，用友好的语言回复用户。
+</code></pre></div></div></blockquote><hr /><h3 id="q6-1425-skill-vs-mcp">Q6 [14:25] Skill vs MCP</h3><p><strong>面试官追问</strong>：Skill 的目的是什么？什么时候用 Skill？</p><p><strong>候选人现场回答</strong>：MCP 会给出大量参数占上下文，Skill 像目录更轻量</p><p><strong>✅ 标准参考答案</strong>：</p><blockquote><p><strong>Skill 的定义与目的</strong>：</p><ul><li>Skill 是对工具能力的<strong>高层抽象和封装</strong>，本质是”意图 → 工具调用链”的映射</li><li>目的：让 Agent 在众多工具中<strong>快速路由到正确的工具</strong>，而不是每次都把所有工具定义塞进 context</li></ul><p><strong>MCP（Model Context Protocol）</strong>：</p><ul><li>一个标准化的工具注册协议，定义了工具的发现、描述、调用方式</li><li>优点：标准化、跨平台</li><li>缺点：所有注册工具的 schema 都要发给 LLM，工具多了会<strong>严重占用上下文窗口</strong></li></ul><p><strong>Skill 的设计思路</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>用户说"查天气" → Skill路由 → 只加载 weather 相关的 tool schema
+用户说"订机票" → Skill路由 → 只加载 flight 相关的 tool schema
+</code></pre></div></div><ul><li>Skill 像一个<strong>工具箱管理器</strong>：先识别用户意图，再按需加载对应工具</li><li>避免一次性把所有工具的 function definition 塞进 system prompt</li></ul><p><strong>对比总结</strong>： | 维度 | MCP（工具协议） | Skill（能力封装） | |——|—————-|——————| | 层次 | 协议层，定义工具如何注册和描述 | 应用层，定义工具如何组织和路由 | | 关注点 | 工具的标准化描述 | 工具的智能调度 | | 关系 | 底层基础设施 | 上层调度逻辑 | | 类比 | USB 协议（设备如何连接） | 设备管理器（用哪个设备） |</p><p><strong>使用场景</strong>：</p><ul><li>工具数量少（&lt;10 个）→ 直接用 MCP 给所有 tool schema</li><li>工具数量多（&gt;20 个）→ 用 Skill 做路由，按意图按需加载</li><li>复杂业务场景 → Skill 可以封装多步工具调用链（如”订机票” Skill = 查航班 + 比价 + 下单 + 支付）</li></ul></blockquote><hr /><h3 id="q7-1532-多功能扩展天气--出行--闲聊--旅游攻略">Q7 [15:32] 多功能扩展：天气 + 出行 + 闲聊 + 旅游攻略</h3><p><strong>面试官原话</strong>：</p><blockquote><p>“我现在这个天气系统想要增加一些功能：闲聊、出行计划、旅游攻略……增加了这么多功能之后，你会怎么设计这个 Agent？”</p></blockquote><p><strong>候选人现场回答</strong>：意图识别 → 分发到不同处理逻辑；记忆按主题分层；不同意图切换不同记忆</p><p><strong>✅ 标准参考答案</strong>：</p><blockquote><p>这是一个<strong>多意图 Agent 架构</strong>问题，核心思路是<strong>路由层 + 执行层分离</strong>：</p><p><strong>架构设计</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>               ┌──────────────┐
+用户输入 ──────▶│  意图识别器    │──────▶ 意图分类
+               │  (Router)    │
+               └──────┬───────┘
+                      │
+      ┌───────┬───────┼───────┬───────┐
+      ▼       ▼       ▼       ▼       ▼
+   ┌────┐ ┌────┐ ┌────┐ ┌────┐ ┌────┐
+   │天气│ │出行│ │闲聊│ │攻略│ │兜底│
+   │Agent│Agent│Agent│Agent│Agent│
+   └──┬─┘ └──┬─┘ └──┬─┘ └──┬─┘ └──┬─┘
+      │      │      │      │      │
+      ▼      ▼      ▼      ▼      ▼
+   各自独立 System Prompt + Tool Set + Memory
+</code></pre></div></div><p><strong>意图识别（Router）</strong>：</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 方法一：LLM 分类（灵活但成本高）
+</span><span class="n">intent</span> <span class="o">=</span> <span class="n">llm</span><span class="p">.</span><span class="n">classify</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">categories</span><span class="o">=</span><span class="p">[</span><span class="s">"天气"</span><span class="p">,</span><span class="s">"出行"</span><span class="p">,</span><span class="s">"闲聊"</span><span class="p">,</span><span class="s">"攻略"</span><span class="p">])</span>
+
+<span class="c1"># 方法二：关键词 + 小模型（低成本高吞吐）
+</span><span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">kw</span> <span class="ow">in</span> <span class="n">query</span> <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="p">[</span><span class="s">"天气"</span><span class="p">,</span><span class="s">"气温"</span><span class="p">,</span><span class="s">"下雨"</span><span class="p">]):</span>
+ <span class="n">intent</span> <span class="o">=</span> <span class="s">"天气"</span>
+<span class="k">elif</span> <span class="nb">any</span><span class="p">(</span><span class="n">kw</span> <span class="ow">in</span> <span class="n">query</span> <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="p">[</span><span class="s">"机票"</span><span class="p">,</span><span class="s">"火车"</span><span class="p">,</span><span class="s">"酒店"</span><span class="p">]):</span>
+ <span class="n">intent</span> <span class="o">=</span> <span class="s">"出行"</span>
+</code></pre></div></div><p><strong>每个子 Agent 的独立配置</strong>：</p><table><thead><tr><th>Agent</th><th>System Prompt</th><th>工具集</th><th>典型流程</th></tr></thead><tbody><tr><td>天气</td><td>天气查询助手</td><td><code class="language-plaintext highlighter-rouge">get_weather</code>, <code class="language-plaintext highlighter-rouge">get_air_quality</code></td><td>提取地点→查天气→回复</td></tr><tr><td>出行</td><td>出行规划助手</td><td><code class="language-plaintext highlighter-rouge">search_flight</code>, <code class="language-plaintext highlighter-rouge">search_hotel</code>, <code class="language-plaintext highlighter-rouge">plan_route</code></td><td>多轮收集信息→搜索→方案对比</td></tr><tr><td>闲聊</td><td>友好聊天助手</td><td>无（纯对话）</td><td>直接生成回复</td></tr><tr><td>攻略</td><td>旅游顾问</td><td><code class="language-plaintext highlighter-rouge">search_attractions</code>, <code class="language-plaintext highlighter-rouge">search_restaurants</code>, <code class="language-plaintext highlighter-rouge">get_weather</code></td><td>多步信息搜集→整合→生成攻略</td></tr><tr><td>兜底</td><td>通用助手</td><td>全部工具</td><td>尝试理解→引导用户明确需求</td></tr></tbody></table><p><strong>话题切换与上下文管理</strong>：</p><ul><li>检测到意图变化时，自动切换 Agent</li><li>前一个 Agent 的关键信息（如用户当前所在城市）可传递给新 Agent</li><li>避免闲聊内容污染天气 Agent 的记忆</li></ul></blockquote><hr /><h3 id="q8-1950-记忆管理">Q8 [19:50] 记忆管理</h3><p><strong>面试官原话</strong>：</p><blockquote><p>“记忆指的是什么？”</p></blockquote><p><strong>候选人现场回答</strong>：用户对话历史 + 模型回答</p><p><strong>✅ 标准参考答案</strong>：</p><blockquote><p>记忆（Memory）在 Agent 系统中分为三个层次：</p><p><strong>1. 短期记忆（Short-term / Working Memory）</strong></p><ul><li><strong>内容</strong>：当前对话窗口内的所有消息（最近 N 轮）</li><li><strong>存储</strong>：直接存在 LLM 的 context window 中</li><li><strong>生命周期</strong>：当前 session</li><li><strong>问题</strong>：窗口有限（4K-128K tokens），长了就丢</li></ul><p><strong>2. 长期记忆（Long-term Memory）</strong></p><ul><li><strong>内容</strong>：跨 session 的重要信息——用户偏好、历史决策、知识积累</li><li><strong>存储</strong>：向量数据库（ChromaDB/Milvus + embedding）+ 结构化存储</li><li><strong>典型实现</strong>：<ul><li><strong>Mem0</strong>：自动提取用户偏好存入向量库，每次对话时检索相关记忆注入 context</li><li><strong>MemGPT</strong>：给 LLM 一个”虚拟内存”系统，自动在 context 和外部存储间 swap</li></ul></li><li><strong>检索策略</strong>：用当前 query 去向量库搜相关记忆 → 注入 system prompt</li></ul><p><strong>3. 工作记忆（Scratchpad）</strong></p><ul><li><strong>内容</strong>：当前任务进展中的中间状态——已完成的子任务、待处理的步骤、收集到的信息</li><li><strong>存储</strong>：结构化 JSON 或 Markdown，每次 LLM 调用时 append 到 system prompt</li><li><strong>生命周期</strong>：当前任务</li><li><strong>示例</strong>：订机票时，工作记忆记录 <code class="language-plaintext highlighter-rouge">{出发地:北京, 目的地:已查, 日期:6月30日, 航班:待确认}</code></li></ul><p><strong>记忆管理策略</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌──────────────────────────────────────────┐
+│              System Prompt                │
+│  ┌──────────┐ ┌──────────────────────┐   │
+│  │ 长期记忆  │ │     工作记忆(任务状态)  │   │
+│  │(向量检索) │ │     (结构化JSON)       │   │
+│  └──────────┘ └──────────────────────┘   │
+│  ┌──────────────────────────────────┐    │
+│  │        短期记忆(最近N轮对话)        │    │
+│  └──────────────────────────────────┘    │
+└──────────────────────────────────────────┘
+</code></pre></div></div><p><strong>面试亮点补充</strong>：</p><ul><li>可以提<strong>摘要式压缩</strong>：超过窗口时，用 LLM 对历史对话做摘要，保留关键信息丢掉废话</li><li>可以提<strong>分级记忆</strong>：重要信息（用户偏好）持久化，普通信息（闲聊）会话结束丢弃</li></ul></blockquote><hr /><h3 id="q9-2329-multi-agent-架构">Q9 [23:29] Multi-Agent 架构</h3><p><strong>面试官原话</strong>：</p><blockquote><p>“意图识别之后，有没有考虑 Multi-Agent？”</p></blockquote><p><strong>候选人现场回答</strong>：每个主题独立 Agent + 结果整合，承认是”不计成本”的方式</p><p><strong>✅ 标准参考答案</strong>：</p><blockquote><p><strong>Multi-Agent 的核心意义</strong>：</p><ul><li>单个 Agent 的能力有上限——system prompt 太长会互相干扰、工具太多选不准</li><li>Multi-Agent 让每个 Agent 专注一个领域，通过协作解决复杂问题</li></ul><p><strong>常见 Multi-Agent 架构模式</strong>：</p><p><strong>模式一：路由模式（Router-Based）</strong></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>         ┌──────────┐
+用户 ───▶│  Router   │───▶ Agent A(天气)
+         │ (分发器)  │───▶ Agent B(出行)
+         └──────────┘───▶ Agent C(闲聊)
+</code></pre></div></div><ul><li>最简单，适合独立任务</li><li>各 Agent 之间不通信</li></ul><p><strong>模式二：流水线模式（Pipeline）</strong></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Agent A ──▶ Agent B ──▶ Agent C ──▶ 输出
+(规划)     (检索)      (生成)
+</code></pre></div></div><ul><li>适合有明确步骤的任务</li><li>类似 MapReduce：先拆解 → 各 Agent 处理子任务 → 汇总</li></ul><p><strong>模式三：辩论/协作模式（Debate/Collaboration）</strong></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>         ┌──────────┐
+用户 ───▶│  Orchestrator │
+         └──┬───┬───┘
+      ┌─────┘   └─────┐
+      ▼               ▼
+  Agent A ───讨论─── Agent B
+      │               │
+      └──────┬────────┘
+             ▼
+         共识/综合输出
+</code></pre></div></div><ul><li>适合需要批判性思考的任务（代码审查、方案评估）</li><li>ChatDev、AutoGen 等框架用的就是这种模式</li></ul><p><strong>设计要点</strong>：</p><ul><li><strong>通信协议</strong>：Agent 之间用什么格式交换信息（自然语言 vs 结构化 JSON）</li><li><strong>任务分配</strong>：谁决定哪个 Agent 做什么（中心化 Orchestrator vs 去中心化协商）</li><li><strong>冲突解决</strong>：Agent A 和 B 意见不一致怎么办（投票、Orchestrator 仲裁、置信度加权）</li><li><strong>成本控制</strong>：Multi-Agent 会成倍增加 LLM 调用次数，需要加 early stop 和 budget 限制</li></ul><p><strong>实际落地的务实做法</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>第一阶段：单 Agent + 意图路由（覆盖 80% 场景）
+第二阶段：复杂意图引入 Multi-Agent（如"帮我规划北京三日游"需要天气+出行+攻略协作）
+第三阶段：Agent 间引入评价/反馈机制（Agent A 产出后 Agent B 审核）
+</code></pre></div></div></blockquote><hr /><h2 id="阶段三编程语言与计算机基础2505-2719">阶段三：编程语言与计算机基础（25:05-27:19）</h2><h3 id="q10-2505-编程语言">Q10 [25:05] 编程语言</h3><p><strong>面试官原话</strong>：</p><blockquote><p>“你比较熟悉哪个编程语言？Go 了解吗？”</p></blockquote><p><strong>✅ 标准参考答案</strong>：</p><blockquote><p>如实回答即可，但建议展现学习意愿：</p><ul><li>“Python 最熟悉，日常做 AI 开发和数据处理都用它”</li><li>“Go 有一定的了解，知道它的并发模型（goroutine + channel），语法简洁编译快。如果有机会用 Go 做后端开发，我有信心快速上手，因为语言之间的核心概念是相通的”</li></ul><p><strong>为什么字节问 Go</strong>：字节后端主力语言是 Go，Agent 服务的后端大概率也是 Go 写的。如果候选人只说 Python 不会 Go，可能会被减分。</p></blockquote><hr /><h3 id="q11-2535-java-并发模型">Q11 [25:35] Java 并发模型</h3><p><strong>面试官原话</strong>：</p><blockquote><p>“Java 里面的并发模型是啥样的？并发是怎么做的？”</p></blockquote><p><strong>✅ 标准参考答案</strong>：</p><blockquote><p>Java 并发模型基于 <strong>共享内存 + 线程</strong>：</p><p><strong>基础层——Thread 与 Runnable</strong>：</p><div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 方式一：继承 Thread</span>
+<span class="kd">class</span> <span class="nc">MyThread</span> <span class="kd">extends</span> <span class="nc">Thread</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span> <span class="cm">/* 并发执行的代码 */</span> <span class="o">}</span>
+<span class="o">}</span>
+<span class="k">new</span> <span class="nf">MyThread</span><span class="o">().</span><span class="na">start</span><span class="o">();</span>
+
+<span class="c1">// 方式二：实现 Runnable（推荐，更灵活）</span>
+<span class="k">new</span> <span class="nf">Thread</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="o">{</span> <span class="cm">/* 并发执行的代码 */</span> <span class="o">}).</span><span class="na">start</span><span class="o">();</span>
+</code></pre></div></div><p><strong>线程池——ThreadPoolExecutor</strong>（避免频繁创建/销毁线程）：</p><div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">ExecutorService</span> <span class="n">pool</span> <span class="o">=</span> <span class="nc">Executors</span><span class="o">.</span><span class="na">newFixedThreadPool</span><span class="o">(</span><span class="mi">10</span><span class="o">);</span>
+<span class="n">pool</span><span class="o">.</span><span class="na">submit</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="n">doWork</span><span class="o">());</span>
+</code></pre></div></div><p>核心参数：corePoolSize（核心线程数）、maximumPoolSize（最大线程数）、keepAliveTime（空闲线程存活时间）、workQueue（任务队列）</p><p><strong>同步机制</strong>：</p><ul><li><code class="language-plaintext highlighter-rouge">synchronized</code>：互斥锁，保证同一时刻只有一个线程执行临界区</li><li><code class="language-plaintext highlighter-rouge">ReentrantLock</code>：可重入锁，比 synchronized 更灵活（可定时、可中断、公平锁）</li><li><code class="language-plaintext highlighter-rouge">volatile</code>：保证变量可见性（不保证原子性）</li><li><code class="language-plaintext highlighter-rouge">AtomicInteger/CAS</code>：无锁并发，利用 CPU 的 CAS 指令实现原子操作</li></ul><p><strong>高级并发工具（JUC 包）</strong>： | 工具 | 用途 | |——|——| | <code class="language-plaintext highlighter-rouge">ConcurrentHashMap</code> | 线程安全的 HashMap，分段锁 + CAS | | <code class="language-plaintext highlighter-rouge">CountDownLatch</code> | 等待 N 个线程完成 | | <code class="language-plaintext highlighter-rouge">CyclicBarrier</code> | N 个线程互相等待到齐后一起执行 | | <code class="language-plaintext highlighter-rouge">Semaphore</code> | 控制同时访问资源的线程数 | | <code class="language-plaintext highlighter-rouge">CompletableFuture</code> | 异步编程，链式组合多个异步任务 |</p><p><strong>Java vs Python 的并发差异</strong>：</p><ul><li>Java：真多线程并行（JVM 线程映射到 OS 线程）</li><li>Python：GIL（全局解释器锁）限制同一时刻只有一个线程执行 Python 字节码，多线程适合 IO 密集型，CPU 密集用 multiprocessing</li></ul></blockquote><hr /><h3 id="q12-2557-网络分层">Q12 [25:57] 网络分层</h3><p><strong>面试官原话</strong>：</p><blockquote><p>“网络都分为哪些层？”</p></blockquote><p><strong>✅ 标准参考答案</strong>：</p><blockquote><p><strong>OSI 七层模型</strong>（理论模型）： | 层号 | 名称 | 功能 | 典型协议/设备 | |——|——|——|————-| | 7 | 应用层 | 为应用程序提供网络服务 | HTTP, DNS, SMTP, FTP | | 6 | 表示层 | 数据格式转换、加密解密 | SSL/TLS, JPEG, ASCII | | 5 | 会话层 | 建立/管理/终止会话 | RPC, NetBIOS | | 4 | 传输层 | 端到端可靠传输 | TCP, UDP | | 3 | 网络层 | 路由选择、逻辑寻址 | IP, ICMP, 路由器 | | 2 | 数据链路层 | 帧封装、物理寻址 | MAC, 交换机 | | 1 | 物理层 | 比特流传输 | 网线、光纤、集线器 |</p><p><strong>TCP/IP 四层模型</strong>（实际使用的简化版）：</p><table><thead><tr><th>层号</th><th>名称</th><th>对应 OSI</th><th>关键协议</th></tr></thead><tbody><tr><td>4</td><td>应用层</td><td>5+6+7</td><td>HTTP, DNS, SMTP</td></tr><tr><td>3</td><td>传输层</td><td>4</td><td>TCP, UDP</td></tr><tr><td>2</td><td>网络层</td><td>3</td><td>IP, ICMP, ARP</td></tr><tr><td>1</td><td>网络接口层</td><td>1+2</td><td>Ethernet, Wi-Fi</td></tr></tbody></table><p><strong>日常开发最关心的</strong>：</p><ul><li><strong>传输层</strong>：TCP vs UDP 的选择（可靠性 vs 速度）</li><li><strong>应用层</strong>：HTTP/HTTPS 协议细节（状态码、方法、Header、Cookie、CORS）</li><li><strong>网络层</strong>：IP 地址、子网掩码、路由</li></ul><p><strong>面试技巧</strong>：如果只记得一部分，就从<strong>日常接触最多的层</strong>说起——”我们做后端开发主要接触应用层（HTTP）和传输层（TCP），它们下面还有网络层（IP 路由）、数据链路层（MAC 地址）、物理层（硬件）”</p></blockquote><hr /><h3 id="q13-2619-mysql-索引数据结构">Q13 [26:19] MySQL 索引数据结构</h3><p><strong>面试官原话</strong>：</p><blockquote><p>“MySQL 的索引的数据结构是什么样的？”</p></blockquote><p><strong>⚠️ 常见误区</strong>：不能回答”红黑树”！MySQL InnoDB 默认索引用的是 <strong>B+ 树</strong>。</p><p><strong>✅ 标准参考答案</strong>：</p><blockquote><p><strong>MySQL InnoDB 索引 = B+ 树</strong></p><p><strong>B+ 树结构</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>                 [30 | 60]                    ← 非叶子节点：只存索引 key
+                /    |    \
+       [10|20]    [40|50]    [70|80|90]        ← 非叶子节点
+       /  |  \     /  |  \     /  |  |  \
+     [1] [10] [20] [30] [40] [50] [60][70][80][90]  ← 叶子节点：存数据(双向链表连接)
+      ↓   ↓    ↓    ↓    ↓    ↓    ↓  ↓  ↓  ↓
+    data data data data data data data............
+</code></pre></div></div><p><strong>B+ 树的关键特性</strong>：</p><ol><li><strong>所有数据存在叶子节点</strong>：非叶子节点只存 key 做索引，不存数据</li><li><strong>叶子节点形成有序双向链表</strong>：范围查询极快（沿着链表直接扫）</li><li><strong>多叉树</strong>：每个节点可以存很多 key（几百个），树高度低（3-4 层就能存千万级数据）</li></ol><p><strong>为什么不用红黑树/二叉树？</strong></p><ul><li>二叉树高度 = log₂(N)，千万数据 = 24 层 = 24 次磁盘 IO</li><li>B+ 树高度 = log_100(N)，千万数据 = 3-4 层 = 3-4 次磁盘 IO</li><li>数据库瓶颈在<strong>磁盘 IO</strong>，树越矮越快</li></ul><p><strong>为什么不用 B 树？</strong></p><ul><li>B 树的非叶子节点也存数据，节点能存的 key 更少 → 树更高</li><li>B 树不支持高效范围查询（需要中序遍历，不能沿着链表直接扫）</li></ul><p><strong>为什么不用 Hash 索引？</strong></p><ul><li>Hash 只支持等值查询，不支持范围查询（<code class="language-plaintext highlighter-rouge">&gt;</code>, <code class="language-plaintext highlighter-rouge">&lt;</code>, <code class="language-plaintext highlighter-rouge">BETWEEN</code>, <code class="language-plaintext highlighter-rouge">ORDER BY</code>）</li><li>InnoDB 也支持自适应 Hash 索引（AHI），但只是辅助加速</li></ul><p><strong>聚集索引 vs 二级索引</strong>：</p><ul><li><strong>聚集索引</strong>：索引的叶子节点存的是<strong>完整的行数据</strong>（主键索引），InnoDB 必须有主键</li><li><strong>二级索引</strong>：叶子节点存的是<strong>主键值</strong>，查到后需要<strong>回表</strong>（再去聚集索引查完整数据）</li><li><strong>覆盖索引</strong>：如果查询的列都在二级索引中，不需要回表，性能最优</li></ul><p><strong>记忆口诀</strong>：B+ 树 = 矮胖子（多叉）+ 数据全在叶子 + 叶子串成链表</p></blockquote><hr /><h2 id="阶段四ai-编程实践2719-3547">阶段四：AI 编程实践（27:19-35:47）</h2><h3 id="q14-2719-怎么用-ai-编程">Q14 [27:19] 怎么用 AI 编程</h3><p><strong>面试官追问 [30:28]</strong>：给 AI 定好框架让它填内容，效率会不会低？会不会限制 AI 思路？</p><p><strong>候选人现场回答</strong>（亮点）：</p><blockquote><p>“用 AI 最重要的是能不能真正完成需求和可不可控。你不知道 AI 在做什么其实很危险……任由 AI 发挥到最后 debug 错了，AI 改错之后越错越离谱，最后从头开始写。”</p></blockquote><p><strong>✅ 标准参考答案</strong>：</p><blockquote><p><strong>AI 编程的核心原则——可控 &gt; 自由</strong>：</p><p><strong>分层使用策略</strong>：</p><table><thead><tr><th>阶段</th><th>AI 角色</th><th>控制方式</th></tr></thead><tbody><tr><td>架构设计</td><td>辅助建议</td><td>人主导，AI 给方案对比</td></tr><tr><td>代码实现</td><td>主力执行</td><td>给定框架和约束，AI 填充</td></tr><tr><td>测试验证</td><td>自动生成</td><td>给用例让 AI 写测试</td></tr><tr><td>Debug</td><td>辅助排查</td><td>给错误信息，AI 分析原因</td></tr></tbody></table><p><strong>让 AI 听话的核心技巧</strong>：</p><ol><li><strong>先定骨架再填充</strong>：写接口定义 → AI 实现 → 写测试 → AI 修复</li><li><strong>给具体的输入输出例子</strong>：比文字描述高效 10 倍</li><li><strong>维护项目级的规则文件</strong>（<code class="language-plaintext highlighter-rouge">.cursorrules</code> / <code class="language-plaintext highlighter-rouge">CLAUDE.md</code>）：技术栈、编码规范、命名约定</li><li><strong>分而治之</strong>：每个 AI 对话只解决一个问题，不把所有功能塞进一次对话</li><li><strong>AI 写代码，人做 Code Review</strong>：人负责判断逻辑正确性，AI 擅长写不擅长判断自己写得好不好</li></ol></blockquote><hr /><h3 id="q15-3126-harness--ai-安全">Q15 [31:26] Harness / AI 安全</h3><p><strong>面试官原话</strong>：</p><blockquote><p>“Harnes 你有了解过吗？……除了测试用例的限制，你还能想到一些其他的限制方式吗？怎么能让 AI 按照你的预定计划来走？”</p></blockquote><p><strong>✅ 标准参考答案</strong>：</p><blockquote><p><strong>Harness 的概念</strong>：</p><ul><li>在 AI 编程场景下，Harness 是一种<strong>输出约束和安全沙盒机制</strong></li><li>确保 AI 生成的代码在可控范围内运行，不会产生不可预期的副作用</li></ul><p><strong>约束 AI 输出的多层策略</strong>：</p><p><strong>1. Prompt 层约束</strong>（最基础）：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"你只能输出 Python 代码，不要输出解释"
+"禁止使用 eval() 和 exec()"
+"输出必须是合法的 JSON，不要添加 Markdown 代码块"
+</code></pre></div></div><p><strong>2. Structured Output / JSON Schema</strong>（结构化约束）：</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># OpenAI Function Calling / JSON mode
+</span><span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">chat</span><span class="p">.</span><span class="n">completions</span><span class="p">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s">"gpt-4"</span><span class="p">,</span>
+    <span class="n">response_format</span><span class="o">=</span><span class="p">{</span><span class="s">"type"</span><span class="p">:</span> <span class="s">"json_object"</span><span class="p">},</span>  <span class="c1"># 强制 JSON
+</span>    <span class="n">messages</span><span class="o">=</span><span class="p">[...]</span>
+<span class="p">)</span>
+</code></pre></div></div><ul><li>本质是让模型输出符合预定义 schema 的数据，然后用代码严格校验</li></ul><p><strong>3. 沙盒执行</strong>（安全层）：</p><ul><li>Docker 容器隔离</li><li>限制网络访问、文件系统权限、CPU/内存上限</li><li>Codex/Replit 的做法：AI 代码在隔离沙箱中运行</li></ul><p><strong>4. Guardrails / 输出护栏</strong>（内容安全）：</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># NeMo Guardrails 示例
+</span><span class="n">define</span> <span class="n">user</span> <span class="n">ask</span> <span class="n">about</span> <span class="n">hacking</span>
+  <span class="s">"Sorry, I can't help with that."</span>
+
+<span class="n">define</span> <span class="n">bot</span> <span class="n">refuse</span> <span class="n">to</span> <span class="n">answer</span>
+  <span class="s">"I'm not able to answer that question."</span>
+</code></pre></div></div><p><strong>5. 测试驱动开发（TDD）</strong>：</p><ul><li>先写测试用例 → AI 生成代码 → 跑测试 → 不通过就迭代修复</li><li>测试用例就是最硬的约束</li></ul><p><strong>层层递进的防护架构</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>用户需求 → Prompt约束 → Schema校验 → 沙盒执行 → Guardrails过滤 → 测试验证 → 输出
+</code></pre></div></div></blockquote><hr /><h3 id="q16-3340-长对话-ai-遗忘问题">Q16 [33:40] 长对话 AI 遗忘问题</h3><p><strong>面试官原话</strong>：</p><blockquote><p>“会话特别长，AI 写着写着就忘了之前自己要做什么事，有没有遇到过？怎么解决？”</p></blockquote><p><strong>✅ 标准参考答案</strong>：</p><blockquote><p>这个问题的本质是<strong>上下文窗口有限 + LLM 注意力衰减</strong>：</p><p><strong>为什么会忘</strong>：</p><ol><li><strong>窗口限制</strong>：模型能”看到”的 token 有上限（如 128K），超了最早的消息就被截断</li><li><strong>Lost in the Middle</strong>：研究表明 LLM 对 prompt 中间位置的注意力最弱——你放在中间的信息最容易”被忽略”</li><li><strong>上下文污染</strong>：无关的历史信息挤占了关键信息的位置</li></ol><p><strong>解决策略（从简单到复杂）</strong>：</p><p><strong>策略一：摘要式压缩（Summary Compression）</strong></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>原始对话(10轮) → LLM 摘要 → "用户想要一个登录页面，用 React + TypeScript，已经实现了基本组件"
+</code></pre></div></div><ul><li>定期对历史对话做摘要，只保留关键决策和约束</li><li>摘要替代原始对话，节省 80%+ token</li></ul><p><strong>策略二：结构化关键信息提取</strong></p><div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 不在对话中存，而是单独维护一个结构化记录</span>
+<span class="na">task</span><span class="pi">:</span> <span class="s2">"</span><span class="s">实现用户登录页面"</span>
+<span class="na">tech_stack</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">React"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">TypeScript"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">Tailwind</span><span class="nv"> </span><span class="s">CSS"</span><span class="pi">]</span>
+<span class="na">decisions</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s2">"</span><span class="s">使用</span><span class="nv"> </span><span class="s">JWT</span><span class="nv"> </span><span class="s">认证"</span>
+  <span class="pi">-</span> <span class="s2">"</span><span class="s">登录表单包含邮箱和密码两个字段"</span>
+<span class="na">todo</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">✅ 创建 LoginForm 组件</span>
+  <span class="pi">-</span> <span class="s">✅ 添加表单验证</span>
+  <span class="pi">-</span> <span class="s">⏳ 对接后端 API</span>
+</code></pre></div></div><ul><li>每次对话开始前，把这个结构化记录注入 system prompt</li><li>关键信息永不丢失</li></ul><p><strong>策略三：滑动窗口 + 关键帧</strong></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[完整摘要] [第5轮关键帧] [第6轮关键帧] [最近3轮完整对话]
+</code></pre></div></div><ul><li>最近几轮保留完整</li><li>中间轮只保留”关键帧”（重要的决策点、代码片段）</li><li>最早的内容压缩为摘要</li></ul><p><strong>策略四：任务拆分</strong></p><ul><li>超长任务拆成多个子任务</li><li>每个子任务用独立 session（干净的上下文）</li><li>子任务之间通过结构化文档传递信息</li></ul><p><strong>策略五：长上下文模型 + RAG 混合</strong></p><ul><li>用长上下文模型（如 Gemini 1M token）作为基础</li><li>同时用 RAG 把关键历史信息检索出来强化注入</li><li>双重保障</li></ul></blockquote><hr /><h2 id="阶段五计算机基础继续3547-4019">阶段五：计算机基础继续（35:47-40:19）</h2><h3 id="q17-3638-tcp-vs-udp">Q17 [36:38] TCP vs UDP</h3><p><strong>面试官原话</strong>：</p><blockquote><p>“TCP 跟 UDP 有什么区别？”</p></blockquote><p><strong>✅ 标准参考答案</strong>：</p><blockquote><table><thead><tr><th>维度</th><th>TCP</th><th>UDP</th></tr></thead><tbody><tr><td>连接</td><td><strong>面向连接</strong>（三次握手建立，四次挥手释放）</td><td><strong>无连接</strong>，直接发送</td></tr><tr><td>可靠性</td><td><strong>可靠</strong>（确认+重传+序号+校验）</td><td><strong>不可靠</strong>，不保证送达</td></tr><tr><td>顺序</td><td><strong>有序</strong>（序号保证数据按序到达）</td><td><strong>无序</strong>，先发的不一定先到</td></tr><tr><td>速度</td><td>慢（握手+确认+流量控制开销大）</td><td>快（无连接建立，无确认等待）</td></tr><tr><td>流量控制</td><td>有（滑动窗口）</td><td>无</td></tr><tr><td>拥塞控制</td><td>有（慢启动、拥塞避免、快重传）</td><td>无</td></tr><tr><td>数据边界</td><td><strong>流式</strong>（字节流，无消息边界）</td><td><strong>数据报</strong>（保留消息边界）</td></tr><tr><td>头部大小</td><td>20-60 字节</td><td>固定 8 字节</td></tr><tr><td>典型应用</td><td>HTTP/HTTPS、SSH、FTP、邮件</td><td>DNS、视频直播、VoIP、在线游戏</td></tr></tbody></table><p><strong>核心记忆点</strong>：</p><ul><li>TCP 像<strong>打电话</strong>——先拨号（建立连接），确认对方在听，按顺序说话</li><li>UDP 像<strong>发短信</strong>——直接发出去，不管对方收没收到</li><li>TCP 的可靠性代价 = 头部大 + 握手延迟 + 确认开销</li><li>UDP 的”不靠谱”在实时场景反而是优势（视频通话丢几帧无所谓，重传反而卡顿）</li></ul></blockquote><hr /><h3 id="q18-3716-tcp-为什么三次握手">Q18 [37:16] TCP 为什么三次握手？</h3><p><strong>面试官原话</strong>：</p><blockquote><p>“TCP 为什么三次握手？两次不行？四次可以吗？”</p></blockquote><p><strong>✅ 标准参考答案</strong>：</p><blockquote><p><strong>三次握手的过程</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>客户端                          服务端
+  │                               │
+  │─────── SYN (seq=x) ──────────▶│  ① 客户端：我要连接
+  │                               │
+  │◀── SYN+ACK (seq=y, ack=x+1) ──│  ② 服务端：收到，我准备好了
+  │                               │
+  │─────── ACK (ack=y+1) ────────▶│  ③ 客户端：确认收到
+  │                               │
+  │     连接建立，开始传数据         │
+</code></pre></div></div><p><strong>为什么两次不行？</strong></p><p><strong>原因：防止已失效的连接请求报文突然传到服务端</strong></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>客户端                              服务端
+  │                                   │
+  │── SYN(seq=100) ──→ (网络延迟...)   │
+  │                                   │
+  │   ... 等了很久没收到 ACK ...        │
+  │                                   │
+  │── SYN(seq=200) ────────────────→  │  ← 客户端重发
+  │◀──   连接建立，正常通信    ──────→  │
+  │◀──   连接关闭              ──────→  │
+  │                                   │
+  │            此时 第一个 SYN(seq=100) 终于到达 ──→ │
+  │                                   │
+  │◀── SYN+ACK ──────────────────────│  ← 服务端以为新连接！
+  │                                   │
+  │  (客户端：我没请求连接啊，忽略)       │  服务端：傻等着数据...
+  │                                   │  资源浪费！
+</code></pre></div></div><ul><li>如果只有两次握手，服务端收到过期的 SYN 就会直接建立连接</li><li>三次握手中，客户端可以不发最后的 ACK，服务端就不会错误地建立连接</li></ul><p><strong>为什么四次可以但没必要？</strong></p><ul><li>第二次握手（SYN+ACK）已经完成了服务端的”响应确认”和”连接请求”两项功能</li><li>拆成四次握手 = SYN → ACK → SYN → ACK，多了 1 个 RTT，毫无必要</li><li>三次是<strong>理论最小值（保证双方确认收发能力）+ 工程最优值</strong></li></ul><p><strong>记忆口诀</strong>：</p><ul><li>第一次：客户端说”我要连”</li><li>第二次：服务端说”我收到了，我也要连”</li><li>第三次：客户端说”好的那开始吧”</li><li>二次握手不能防止历史连接，四次浪费一轮 RTT</li></ul></blockquote><hr /><h3 id="q19-3920-进程-vs-线程">Q19 [39:20] 进程 vs 线程</h3><p><strong>面试官原话</strong>：</p><blockquote><p>“进程跟线程有什么区别？”</p></blockquote><p><strong>✅ 标准参考答案</strong>：</p><blockquote><table><thead><tr><th>维度</th><th>进程（Process）</th><th>线程（Thread）</th></tr></thead><tbody><tr><td>定义</td><td><strong>资源分配</strong>的最小单位</td><td><strong>CPU 调度</strong>的最小单位</td></tr><tr><td>内存</td><td>独立地址空间，互不干扰</td><td>共享进程内存（堆、全局变量）</td></tr><tr><td>通信</td><td>IPC（管道、消息队列、共享内存）</td><td>直接读写共享变量</td></tr><tr><td>创建开销</td><td>大（复制父进程地址空间）</td><td>小（只需分配栈空间）</td></tr><tr><td>切换开销</td><td>大（切换页表、刷新 TLB）</td><td>小（同进程内切换只换寄存器和栈）</td></tr><tr><td>独立性</td><td>一个进程崩溃不影响其他进程</td><td>一个线程崩溃可能拖垮整个进程</td></tr><tr><td>并发性</td><td>多核真并行</td><td>多核真并行（C++/Java）/ Python 受 GIL 限制</td></tr></tbody></table><p><strong>经典比喻</strong>：</p><ul><li>进程 = 一栋<strong>独立房子</strong>（有自己的厨房、卫生间）</li><li>线程 = 房子里的<strong>不同房间</strong>（共享厨房，各有自己的书桌）</li></ul><p><strong>一个线程崩溃会影响进程吗？</strong></p><ul><li>C/C++：如果不做信号处理，segfault 等异常可能导致整个进程终止</li><li>Java：未捕获异常只影响出问题的线程，其他线程继续运行</li><li>Go：goroutine panic 没有 recover 会崩溃整个进程</li></ul><p><strong>还有协程（Coroutine）</strong>：</p><ul><li>比线程更轻量，用户态调度（不需要内核态切换）</li><li>Go 的 goroutine（几 KB 栈，几十万个轻松跑）</li><li>Python 的 asyncio（单线程事件循环，适合 IO 密集）</li></ul><table><thead><tr><th> </th><th>进程</th><th>线程</th><th>协程</th></tr></thead><tbody><tr><td>调度者</td><td>操作系统</td><td>操作系统</td><td>用户程序</td></tr><tr><td>切换成本</td><td>高</td><td>中</td><td>低</td></tr><tr><td>内存</td><td>独立</td><td>共享</td><td>共享</td></tr><tr><td>Go 对应</td><td>—</td><td>—</td><td>goroutine</td></tr></tbody></table></blockquote><hr /><h3 id="q20-4002-进程间通信ipc">Q20 [40:02] 进程间通信（IPC）</h3><p><strong>面试官原话</strong>：</p><blockquote><p>“进程之间的通信方式（是什么）？”</p></blockquote><p><strong>✅ 标准参考答案</strong>：</p><blockquote><p><strong>六大经典 IPC 方式</strong>：</p><table><thead><tr><th>方式</th><th>原理</th><th>特点</th><th>典型场景</th></tr></thead><tbody><tr><td><strong>管道（Pipe）</strong></td><td>内核缓冲区，一端写一端读</td><td>半双工、父子进程间</td><td><code class="language-plaintext highlighter-rouge">ls | grep txt</code></td></tr><tr><td><strong>命名管道（FIFO）</strong></td><td>有文件名的管道</td><td>无亲缘关系进程也可用</td><td>日志收集</td></tr><tr><td><strong>消息队列</strong></td><td>消息链表，按类型收发</td><td>异步、有边界</td><td>任务分发</td></tr><tr><td><strong>共享内存</strong></td><td>多个进程映射同一块物理内存</td><td><strong>最快</strong>，但需同步</td><td>大数据量传输</td></tr><tr><td><strong>信号量（Semaphore）</strong></td><td>计数器，控制访问资源数</td><td>主要用于同步</td><td>生产者-消费者</td></tr><tr><td><strong>Socket</strong></td><td>网络通信接口</td><td>跨机器、通用</td><td>所有网络通信</td></tr><tr><td><strong>信号（Signal）</strong></td><td>异步通知</td><td>简单但信息量少</td><td><code class="language-plaintext highlighter-rouge">kill -9</code>、<code class="language-plaintext highlighter-rouge">SIGTERM</code></td></tr></tbody></table><p><strong>速度排序</strong>：共享内存 &gt; 管道 ≈ 消息队列 &gt; Socket</p><p><strong>实际开发中最常见</strong>：</p><ul><li><strong>微服务之间</strong>：HTTP/gRPC（基于 Socket）</li><li><strong>同机器进程间大数据量</strong>：共享内存（如 Python multiprocessing.shared_memory）</li><li><strong>简单数据传递</strong>：管道或 Redis 作为中间件</li><li><strong>分布式系统</strong>：消息队列（Kafka/RabbitMQ）</li></ul></blockquote><hr /><h2 id="阶段六算法题三道高频题">阶段六：算法题（三道高频题）</h2><h3 id="q21-4019-子数组和为-k">Q21 [40:19] 子数组和为 K</h3><p><strong>题目</strong>：给定一个整数数组 <code class="language-plaintext highlighter-rouge">nums</code> 和一个整数 <code class="language-plaintext highlighter-rouge">k</code>，返回和为 <code class="language-plaintext highlighter-rouge">k</code> 的连续子数组的个数。</p><blockquote><p>LeetCode 560: Subarray Sum Equals K</p><p><a href="https://leetcode.cn/problems/subarray-sum-equals-k/description/">560. 和为 K 的子数组 - 力扣（LeetCode）</a></p></blockquote><p><strong>✅ 解法：前缀和 + 哈希表</strong></p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">subarraySum</span><span class="p">(</span><span class="n">nums</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="s">"""
+    时间 O(n)，空间 O(n)
+    核心：pref[j] - pref[i-1] = k → pref[i-1] = pref[j] - k
+    遍历到 j 时，看哈希表里有多少个 pref[j] - k
+    """</span>
+    <span class="n">prefix_sum</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">prefix_count</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>  <span class="c1"># 初始化 {0:1} 处理从开头开始的子数组
+</span>    
+    <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">:</span>
+        <span class="n">prefix_sum</span> <span class="o">+=</span> <span class="n">num</span>
+        <span class="k">if</span> <span class="n">prefix_sum</span> <span class="o">-</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">prefix_count</span><span class="p">:</span>
+            <span class="n">count</span> <span class="o">+=</span> <span class="n">prefix_count</span><span class="p">[</span><span class="n">prefix_sum</span> <span class="o">-</span> <span class="n">k</span><span class="p">]</span>
+        <span class="n">prefix_count</span><span class="p">[</span><span class="n">prefix_sum</span><span class="p">]</span> <span class="o">=</span> <span class="n">prefix_count</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">prefix_sum</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    
+    <span class="k">return</span> <span class="n">count</span>
+</code></pre></div></div><p><strong>推导过程</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pref[j] - pref[i-1] = k   →   pref[i-1] = pref[j] - k
+
+举例：nums = [1, 2, 3], k = 3
+i=0, num=1: pre=1, pre-k=-2(无), {0:1, 1:1}
+i=1, num=2: pre=3, pre-k=0(有1个!), count=1, {0:1, 1:1, 3:1}  → [1,2]
+i=2, num=3: pre=6, pre-k=3(有1个!), count=2, {0:1, 1:1, 3:1, 6:1}  → [3]
+答案: 2
+</code></pre></div></div><p><strong>同类变体</strong>：</p><table><thead><tr><th>变体</th><th>题目</th><th>差异</th></tr></thead><tbody><tr><td>是否存在</td><td>子数组和是否等于 K</td><td>Set 替代 Map（不计数）</td></tr><tr><td>最长子数组</td><td>和为 K 的最长子数组长度</td><td>Map 只存首次出现位置</td></tr><tr><td>取模版</td><td>和可被 K 整除的子数组</td><td><code class="language-plaintext highlighter-rouge">(pre % K + K) % K</code> 处理负数</td></tr></tbody></table><hr /><h3 id="q22-两数之和two-sum">Q22 两数之和（Two Sum）</h3><p><strong>题目</strong>：给定数组 <code class="language-plaintext highlighter-rouge">nums</code> 和目标值 <code class="language-plaintext highlighter-rouge">target</code>，找出和为 target 的两个数的下标。</p><blockquote><p>LeetCode 1，字节/阿里/腾讯高频</p><p><a href="https://leetcode.cn/problems/two-sum/description/?envType=study-plan-v2&amp;envId=top-100-liked">1. 两数之和 - 力扣（LeetCode）</a></p></blockquote><p><strong>✅ 解法：哈希表一次遍历</strong></p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">twoSum</span><span class="p">(</span><span class="n">nums</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">target</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="s">"""
+    时间 O(n)，空间 O(n)
+    核心：a + b = target → b = target - a
+    遍历时，对每个 a，看 target-a 是否在哈希表中
+    """</span>
+    <span class="n">seen</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># 数值 → 下标
+</span>    
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nums</span><span class="p">):</span>
+        <span class="n">complement</span> <span class="o">=</span> <span class="n">target</span> <span class="o">-</span> <span class="n">num</span>
+        <span class="k">if</span> <span class="n">complement</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">seen</span><span class="p">[</span><span class="n">complement</span><span class="p">],</span> <span class="n">i</span><span class="p">]</span>
+        <span class="n">seen</span><span class="p">[</span><span class="n">num</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
+    
+    <span class="k">return</span> <span class="p">[]</span>  <span class="c1"># 题目保证有解
+</span></code></pre></div></div><p><strong>推导过程</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nums = [2, 7, 11, 15], target = 9
+
+i=0, num=2: complement=7, 不在seen, seen={2:0}
+i=1, num=7: complement=2, 在seen! 返回 [0, 1]
+</code></pre></div></div><p><strong>面试追问</strong>：</p><table><thead><tr><th>追问</th><th>答案</th></tr></thead><tbody><tr><td>如果数组有序？</td><td>双指针，O(n) 时间 O(1) 空间</td></tr><tr><td>如果找三个数？</td><td>排序 + 固定一个 + 双指针 Two Sum，O(n²)</td></tr><tr><td>如果返回所有可能的对（不重复）？</td><td>排序 + 双指针 + 跳过重复元素</td></tr></tbody></table><p><strong>双指针版本（有序数组）</strong>：</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">twoSum_sorted</span><span class="p">(</span><span class="n">nums</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">target</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="s">"""时间 O(n)，空间 O(1)，前提：数组已排序"""</span>
+    <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="n">left</span> <span class="o">&lt;</span> <span class="n">right</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">left</span><span class="p">]</span> <span class="o">+</span> <span class="n">nums</span><span class="p">[</span><span class="n">right</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="n">target</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">s</span> <span class="o">&lt;</span> <span class="n">target</span><span class="p">:</span>
+            <span class="n">left</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">right</span> <span class="o">-=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="p">[]</span>
+</code></pre></div></div><hr /><h3 id="q23-二叉树的最近公共祖先lca">Q23 二叉树的最近公共祖先（LCA）</h3><p><strong>题目</strong>：给定二叉树和两个节点 p、q，找 p 和 q 的最近公共祖先。</p><blockquote><p>LeetCode 236，字节/阿里/腾讯必考题</p><p><a href="https://leetcode.cn/problems/lowest-common-ancestor-of-a-binary-tree/description/">236. 二叉树的最近公共祖先 - 力扣（LeetCode）</a></p></blockquote><p><strong>✅ 解法：递归后序遍历</strong></p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">TreeNode</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">left</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">right</span> <span class="o">=</span> <span class="bp">None</span>
+
+<span class="k">def</span> <span class="nf">lowestCommonAncestor</span><span class="p">(</span><span class="n">root</span><span class="p">:</span> <span class="n">TreeNode</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="n">TreeNode</span><span class="p">,</span> <span class="n">q</span><span class="p">:</span> <span class="n">TreeNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TreeNode</span><span class="p">:</span>
+    <span class="s">"""
+    时间 O(n)，空间 O(h)（递归栈）
+    核心：p 和 q 必在 LCA 的两侧（或其一就是 LCA）
+    后序遍历：左子树找 → 右子树找 → 判断当前节点
+    """</span>
+    <span class="c1"># Base case: 空节点 / 找到 p / 找到 q
+</span>    <span class="k">if</span> <span class="ow">not</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">root</span> <span class="o">==</span> <span class="n">p</span> <span class="ow">or</span> <span class="n">root</span> <span class="o">==</span> <span class="n">q</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">root</span>
+    
+    <span class="c1"># 递归搜索左右子树
+</span>    <span class="n">left</span> <span class="o">=</span> <span class="n">lowestCommonAncestor</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="n">left</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
+    <span class="n">right</span> <span class="o">=</span> <span class="n">lowestCommonAncestor</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="n">right</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
+    
+    <span class="c1"># 左右都有 → 当前节点就是 LCA
+</span>    <span class="k">if</span> <span class="n">left</span> <span class="ow">and</span> <span class="n">right</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">root</span>
+    
+    <span class="c1"># 只有一边有 → LCA 在那一边
+</span>    <span class="k">return</span> <span class="n">left</span> <span class="k">if</span> <span class="n">left</span> <span class="k">else</span> <span class="n">right</span>
+</code></pre></div></div><p><strong>递归过程图解</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>p = 5, q = 1
+
+        3           ← left=5, right=1, 左右都有 → 返回3 ✓
+       / \
+      5   1         ← 左子树返回5(找到p), 右子树返回1(找到q)
+     / \   \
+    6   2   8
+       / \
+      7   4
+
+另例：p = 5, q = 4
+        3           ← left=5, right=None, 只有左边 → 返回5
+       / \
+  --&gt; 5   1         ← left=None, right=4 → 返回4
+     / \
+    6   2   &lt;--
+       / \
+      7   4(q)
+</code></pre></div></div><p><strong>复杂度</strong>：</p><ul><li><strong>时间</strong>：O(n)，最坏遍历整棵树</li><li><strong>空间</strong>：O(h)，h 为树高。平衡树 O(log n)，退化成链表 O(n)</li></ul><p><strong>面试追问</strong>：</p><table><thead><tr><th>追问</th><th>答案</th></tr></thead><tbody><tr><td>如果是 BST？</td><td>利用大小关系：都比 root 小 → 去左子树；都大 → 去右子树；否则 root 是 LCA。O(h)</td></tr><tr><td>如果每个节点有父指针？</td><td>转换成两个链表求交点（p 向上走到根的路径与 q 的路径交叉点）</td></tr><tr><td>如果需要频繁查询多对 LCA？</td><td>Tarjan 离线算法 或 倍增法预处理，单次查询 O(1)</td></tr></tbody></table><p><strong>BST 版本（优化）</strong>：</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">lowestCommonAncestor_BST</span><span class="p">(</span><span class="n">root</span><span class="p">:</span> <span class="n">TreeNode</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="n">TreeNode</span><span class="p">,</span> <span class="n">q</span><span class="p">:</span> <span class="n">TreeNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TreeNode</span><span class="p">:</span>
+    <span class="s">"""只在 BST 有效，时间 O(h)"""</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="n">root</span>
+    <span class="k">while</span> <span class="n">cur</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">p</span><span class="p">.</span><span class="n">val</span> <span class="o">&lt;</span> <span class="n">cur</span><span class="p">.</span><span class="n">val</span> <span class="ow">and</span> <span class="n">q</span><span class="p">.</span><span class="n">val</span> <span class="o">&lt;</span> <span class="n">cur</span><span class="p">.</span><span class="n">val</span><span class="p">:</span>
+            <span class="n">cur</span> <span class="o">=</span> <span class="n">cur</span><span class="p">.</span><span class="n">left</span>    <span class="c1"># 都比 root 小 → 去左边
+</span>        <span class="k">elif</span> <span class="n">p</span><span class="p">.</span><span class="n">val</span> <span class="o">&gt;</span> <span class="n">cur</span><span class="p">.</span><span class="n">val</span> <span class="ow">and</span> <span class="n">q</span><span class="p">.</span><span class="n">val</span> <span class="o">&gt;</span> <span class="n">cur</span><span class="p">.</span><span class="n">val</span><span class="p">:</span>
+            <span class="n">cur</span> <span class="o">=</span> <span class="n">cur</span><span class="p">.</span><span class="n">right</span>   <span class="c1"># 都大 → 去右边
+</span>        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">cur</span>        <span class="c1"># 一个在左一个在右 → 当前就是 LCA
+</span></code></pre></div></div><hr /><h3 id="三道算法题小结">三道算法题小结</h3><table><thead><tr><th>题目</th><th>核心技巧</th><th>时间复杂度</th><th>关键词</th></tr></thead><tbody><tr><td>子数组和为 K</td><td>前缀和 + 哈希表计数</td><td>O(n)</td><td><code class="language-plaintext highlighter-rouge">pref[j] - pref[i-1]</code></td></tr><tr><td>两数之和</td><td>哈希表存访问历史</td><td>O(n)</td><td><code class="language-plaintext highlighter-rouge">target - num</code></td></tr><tr><td>LCA</td><td>递归后序遍历</td><td>O(n)</td><td>左右子树都有 → 当前节点</td></tr></tbody></table><hr /><h2 id="阶段七候选人反问5420-5948">阶段七：候选人反问（54:20-59:48）</h2><p><strong>候选人提了三个问题</strong>，面试官的回复要点：</p><ol><li>工程问题（frpc/SSH）→ 无法远程排查</li><li>岗位技能要求 → 传统后端基础 + AI 相关知识，社招重潜力</li><li>技术栈 → 互联网通用技术栈，AI 工具可辅助跨栈</li></ol><p>（此处不展开，反问环节主要看面试官回答的隐含信息）</p><hr /><h2 id="面试总评">面试总评</h2><h3 id="候选人优势">候选人优势</h3><ol><li><strong>RAG 实战扎实</strong>：混合检索、reranker、微调 trade-off 都踩过坑</li><li><strong>Agent/Function Calling 认知准确</strong>：能完整描述 tool use 流程</li><li><strong>AI 编程见解独到</strong>：”可控性 &gt; 自由度” 的认知超出大多数候选人</li><li><strong>工程务实</strong>：不盲目追新，会考虑成本和业务适配</li></ol><h3 id="关键失分点">关键失分点</h3><ol><li><strong>计算机基础</strong>：TCP 三次握手原因、MySQL 索引（B+ 树非红黑树）、网络分层——字节必问</li><li><strong>算法复杂度</strong>：思路对但 O(n log n) 说错为 O(n) → 扣分</li><li><strong>Java 并发</strong>：完全答不上来</li><li><strong>Go 语言</strong>：字节主力语言，只说”了解过”不够</li></ol><h3 id="如果重来一次建议重点补">如果重来一次，建议重点补</h3><ol><li><strong>网络</strong>：TCP 三次握手/四次挥手、TCP vs UDP、HTTP/1.1 vs HTTP/2 vs HTTP/3</li><li><strong>OS</strong>：进程/线程/协程区别、IPC 六种方式、死锁四个条件</li><li><strong>数据库</strong>：B+ 树原理、索引类型、事务隔离级别、MVCC</li><li><strong>Go</strong>：至少能写 goroutine + channel 的基本代码</li><li><strong>算法</strong>：前缀和 / 滑动窗口 / 单调栈 / BFS-DFS → 高频题型刷透</li></ol><hr /><h2 id="附录agent-面试知识图谱">附录：Agent 面试知识图谱</h2><p>基于本次面试总结的 Agent 方向完整知识体系：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Agent 面试知识体系
+├── RAG 基础
+│   ├── Chunking 策略（固定/语义/递归）
+│   ├── Embedding 模型选型（BGE / text2vec / OpenAI）
+│   ├── 向量数据库（FAISS / Milvus / ChromaDB）
+│   ├── 混合检索（Dense + Sparse + RRF 融合）
+│   ├── Reranker（BGE-reranker / Cohere）
+│   └── 评估指标（Hit Rate / MRR / NDCG）
+├── Agent 架构
+│   ├── ReAct 范式（Reasoning + Acting 循环）
+│   ├── Function Calling（Schema 设计 / 工具描述）
+│   ├── Plan-Execute（先规划再执行）
+│   ├── Tool Use（工具注册 / 调用 / 结果回传）
+│   └── 错误处理（重试 / 降级 / 人工介入）
+├── Multi-Agent
+│   ├── 协作模式（Router / Pipeline / Debate）
+│   ├── 通信协议（自然语言 vs 结构化）
+│   ├── 任务分配（中心化 vs 去中心化）
+│   └── 框架（AutoGen / CrewAI / LangGraph）
+├── 记忆管理
+│   ├── 短期记忆（对话窗口）
+│   ├── 长期记忆（向量库 + 检索）
+│   ├── 工作记忆（结构化状态）
+│   └── 方案（Mem0 / MemGPT / 自建）
+├── 上下文工程
+│   ├── 窗口管理（滑动 / 摘要 / 关键帧）
+│   ├── 信息密度优化
+│   ├── Lost-in-the-Middle 问题
+│   └── Prompt Caching
+├── AI Safety
+│   ├── Prompt Injection 防御
+│   ├── Guardrails / 输出过滤
+│   ├── Structured Output / JSON Schema
+│   └── 沙盒执行
+├── 评估体系
+│   ├── 自动评估（LLM-as-Judge）
+│   ├── 人工评估（满意度 / 完成率）
+│   └── 线上指标（延迟 / 成本 / 准确率）
+└── 工程落地
+    ├── 流式输出（SSE / WebSocket）
+    ├── 并发与限流
+    ├── 缓存策略
+    └── 可观测性（日志 / 追踪 / 监控）
+</code></pre></div></div><hr /><h2 id="附录二agent-核心技术详解--harness--skill--mcp--agent-loop">附录二：Agent 核心技术详解 — Harness / Skill / MCP / Agent Loop</h2><blockquote><p>面试中这四组概念经常被混着问。本节给出各自的原理、架构和适用场景，以及它们之间的关系。</p></blockquote><hr /><h3 id="一harness安全护栏工程">一、Harness（安全护栏工程）</h3><h4 id="是什么">是什么</h4><p>Harness 是给 AI Agent 输出加的<strong>多层安全栅栏</strong>。类比：自动驾驶的”安全冗余系统”——不是让车跑得更快，而是保证车<strong>不出事</strong>。</p><h4 id="核心原理">核心原理</h4><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>用户输入
+   │
+   ▼
+┌──────────────┐
+│  输入护栏      │  ← 过滤 Prompt Injection、恶意指令
+│ (Input Guard) │
+└──────┬───────┘
+       │ 安全
+       ▼
+┌──────────────┐
+│   LLM 推理    │
+└──────┬───────┘
+       │
+       ▼
+┌──────────────┐
+│  输出护栏      │  ← 校验 Schema、拦截敏感内容、限制操作范围
+│ (Output Guard)│
+└──────┬───────┘
+       │ 安全
+       ▼
+    对外输出
+</code></pre></div></div><h4 id="三层护栏体系">三层护栏体系</h4><table><thead><tr><th>层级</th><th>机制</th><th>示例</th></tr></thead><tbody><tr><td><strong>Schema 约束</strong></td><td>JSON Schema / Function Calling 强类型输出</td><td><code class="language-plaintext highlighter-rouge">response_format={"type":"json_object"}</code></td></tr><tr><td><strong>规则过滤</strong></td><td>关键词/正则黑名单、长度限制、格式校验</td><td>拦截含 <code class="language-plaintext highlighter-rouge">rm -rf</code> 的 shell 命令</td></tr><tr><td><strong>沙盒执行</strong></td><td>Docker 隔离、文件系统只读、网络白名单</td><td>Codex 的做法：AI 代码在隔离容器中运行</td></tr><tr><td><strong>人工审核</strong></td><td>高风险操作需人工确认</td><td>删除数据库记录前弹出确认框</td></tr></tbody></table><h4 id="guardrails-框架选型">Guardrails 框架选型</h4><table><thead><tr><th>框架</th><th>定位</th><th>特点</th></tr></thead><tbody><tr><td><strong>NeMo Guardrails</strong></td><td>对话安全</td><td>YAML 规则定义，支持对话流控制</td></tr><tr><td><strong>Guardrails-AI</strong></td><td>结构化校验</td><td>基于 Pydantic/XML 的校验管道</td></tr><tr><td><strong>LangChain Hub</strong></td><td>可插拔</td><td>社区贡献的安全规则库</td></tr><tr><td><strong>自建</strong></td><td>完全可控</td><td>正则 + 分类模型 + 人工审核流程</td></tr></tbody></table><h4 id="适用场景">适用场景</h4><ul><li><strong>必须用</strong>：Agent 可执行 shell 命令、操作数据库、发送 HTTP 请求</li><li><strong>推荐用</strong>：对外暴露的 ChatBot、客服 Agent</li><li><strong>可简化</strong>：内部工具、只读查询 Agent</li></ul><h4 id="面试话术">面试话术</h4><blockquote><p>“Harness 不是单一技术，而是一套多层防御体系。最外层是 Schema 约束——让 LLM 只能输出预定义格式；中间是规则引擎——用正则和关键词拦截危险操作；最内层是沙盒——即使前两层被绕过，代码也跑在隔离环境里。类似银行的金库，不是一道门而是很多道。”</p></blockquote><hr /><h3 id="二skill能力封装意图路由">二、Skill（能力封装/意图路由）</h3><h4 id="是什么-1">是什么</h4><p>Skill 是<strong>工具能力的上层抽象</strong>——把多个底层工具的调用逻辑封装成一个”技能包”，Agent 只需知道”我能做什么”而不用关心”每个工具怎么调”。</p><h4 id="核心原理-1">核心原理</h4><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>没有 Skill 的 Agent：
+  System Prompt 里塞 50 个 tool schema
+  → 上下文爆炸、选工具不准、token 浪费
+
+有 Skill 的 Agent：
+  System Prompt 里只有 5 个 Skill 描述
+  → Router 识别意图 → 加载对应 Skill 的 tool schema → 按需调用
+</code></pre></div></div><h4 id="skill-的三层结构">Skill 的三层结构</h4><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Skill "订机票"
+  ├── 意图描述: "帮助用户搜索和预订机票"
+  ├── 触发词: ["买机票", "订航班", "飞北京"]
+  ├── 工具链:
+  │   ├── search_flights(出发地, 目的地, 日期)
+  │   ├── compare_prices(航班列表)
+  │   └── book_ticket(航班ID, 乘客信息)
+  ├── 执行流程: 搜索 → 比价 → 用户确认 → 下单
+  └── 错误处理: 搜索无结果 → 建议改日期 / 无权限 → 引导联系人工客服
+</code></pre></div></div><h4 id="skill-vs-mcp-vs-function-calling">Skill vs MCP vs Function Calling</h4><table><thead><tr><th>维度</th><th>Function Calling</th><th>MCP</th><th>Skill</th></tr></thead><tbody><tr><td><strong>层次</strong></td><td>单次工具调用</td><td>工具注册协议</td><td>工具编排 + 路由</td></tr><tr><td><strong>粒度</strong></td><td>一个 API</td><td>一组 API 的标准化描述</td><td>一个业务能力（含多 API + 流程）</td></tr><tr><td><strong>谁管理工具选择</strong></td><td>LLM 从全部 tool schema 中选择</td><td>MCP Server 暴露全部工具</td><td>Skill Router 先筛选，LLM 只在子集中选</td></tr><tr><td><strong>可组合性</strong></td><td>无</td><td>低（工具描述统一但无编排）</td><td>高（Skill 可以嵌套调用其他 Skill）</td></tr><tr><td><strong>类比</strong></td><td>一个螺丝刀</td><td>一个工具箱（所有工具摊开）</td><td>一个”修水管”服务（带工具+流程+经验）</td></tr></tbody></table><h4 id="适用场景-1">适用场景</h4><table><thead><tr><th>场景</th><th>推荐方案</th></tr></thead><tbody><tr><td>3-5 个简单工具</td><td>直接用 Function Calling</td></tr><tr><td>10-30 个工具，多领域</td><td>MCP + Skill 路由</td></tr><tr><td>复杂业务流程（多步串联）</td><td>Skill 编排（如 LangGraph 实现）</td></tr><tr><td>对外发布给第三方调用</td><td>MCP（标准化协议）</td></tr></tbody></table><h4 id="面试话术-1">面试话术</h4><blockquote><p>“Skill 解决的核心问题是<strong>工具爆炸</strong>——当 Agent 有 50 个工具时，全部 function schema 塞进 context 既不经济也不准确。Skill 做两件事：一是意图路由——先判断用户想干什么，只加载对应领域的工具；二是流程编排——把多步工具调用封装成可复用的业务能力。MCP 解决工具的标准化描述问题，Skill 解决工具的智能调度问题，两者互补。”</p></blockquote><hr /><h3 id="三mcpmodel-context-protocol">三、MCP（Model Context Protocol）</h3><h4 id="是什么-2">是什么</h4><p>MCP 是 Anthropic 提出的 <strong>LLM 与外部工具/数据源之间的标准化通信协议</strong>。类比：USB 协议——不管什么设备（鼠标、键盘、U 盘），只要符合 USB 标准就能即插即用。</p><h4 id="核心架构">核心架构</h4><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌──────────────────────────────────────────────┐
+│                 MCP Host (IDE / App)          │
+│  ┌─────────────┐  ┌─────────────┐            │
+│  │  MCP Client │  │  MCP Client │  ...       │
+│  └──────┬──────┘  └──────┬──────┘            │
+└─────────┼───────────────┼────────────────────┘
+          │               │
+    JSON-RPC 2.0     JSON-RPC 2.0
+          │               │
+┌─────────▼───────────────▼────────────────────┐
+│               MCP Servers                     │
+│  ┌──────────┐ ┌──────────┐ ┌──────────────┐  │
+│  │Filesystem│ │ Database │ │   Web Search │  │
+│  │  Server  │ │  Server  │ │    Server    │  │
+│  └──────────┘ └──────────┘ └──────────────┘  │
+└──────────────────────────────────────────────┘
+</code></pre></div></div><h4 id="mcp-三大原语">MCP 三大原语</h4><table><thead><tr><th>原语</th><th>作用</th><th>示例</th></tr></thead><tbody><tr><td><strong>Resources</strong>（资源）</td><td>暴露数据（只读）</td><td>文件内容、数据库记录、API 文档</td></tr><tr><td><strong>Tools</strong>（工具）</td><td>暴露可执行操作（可写）</td><td>创建文件、发送邮件、执行 SQL</td></tr><tr><td><strong>Prompts</strong>（提示模板）</td><td>预定义的交互模板</td><td>“帮我分析这段代码”的 prompt 模板</td></tr></tbody></table><h4 id="mcp-的优劣">MCP 的优劣</h4><table><thead><tr><th>优势</th><th>劣势</th></tr></thead><tbody><tr><td>✅ 标准化——一套协议对接所有工具</td><td>❌ 工具多了 context 爆炸（所有 tool schema 都要发给 LLM）</td></tr><tr><td>✅ 生态——社区 MCP Server 越来越多</td><td>❌ 每个请求都走 JSON-RPC，延迟较高</td></tr><tr><td>✅ 安全——工具权限由 Server 管理</td><td>❌ 不支持工具编排——多个工具间的依赖关系需要应用层自己处理</td></tr><tr><td>✅ 多 Client 复用——一个 Server 多个 App 用</td><td>❌ 协议仍在快速迭代，不稳定</td></tr></tbody></table><h4 id="适用场景-2">适用场景</h4><table><thead><tr><th>场景</th><th>MCP 合适吗？</th></tr></thead><tbody><tr><td>IDE 集成（Cursor 连数据库查 schema）</td><td>✅ 标准场景</td></tr><tr><td>企业内部工具统一接入</td><td>✅ 减少重复开发</td></tr><tr><td>高频实时调用（每秒 100 次）</td><td>❌ JSON-RPC 开销大</td></tr><tr><td>复杂多步业务流程</td><td>❌ 需要上层编排</td></tr></tbody></table><hr /><h3 id="四agent-loop智能体执行循环">四、Agent Loop（智能体执行循环）</h3><blockquote><p>你说的 “loop engineering” 在业内最常指 <strong>Agent Loop / Agentic Loop</strong>——也就是 Agent 的<strong>思考-行动-观察-反思</strong>的循环执行模式。也叫 ReAct Loop、Agent Execution Loop。</p></blockquote><h4 id="核心问题">核心问题</h4><p>一个”聪明”的 Agent 和一次简单的 LLM 调用的本质区别是什么？</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>简单 LLM 调用： 用户输入 → LLM 推理 → 输出（一次就完）
+Agent Loop：    用户输入 → 思考 → 行动 → 观察结果 → 再思考 → 再行动 → ... → 最终输出
+</code></pre></div></div><p>Agent Loop 就是把这个”循环往复直到达成目标”的过程<strong>工程化</strong>。</p><h4 id="四种核心-loop-模式">四种核心 Loop 模式</h4><p><strong>模式 1：ReAct（Reasoning + Acting）—— 最基础</strong></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        ┌──────────────────────────────────┐
+        │          ReAct 循环               │
+        │                                  │
+        │  Thought: "我需要查天气"    ◄──┐  │
+        │     │                         │  │
+        │     ▼                         │  │
+        │  Action: call get_weather()   │  │
+        │     │                         │  │
+        │     ▼                         │  │
+        │  Observation: "北京 35°C"     │  │
+        │     │                         │  │
+        │     ▼                         │  │
+        │  Thought: "不够，还要查空气质量" ─┘  │
+        │     │                             │
+        │     ▼                             │
+        │  Action: call get_aqi()           │
+        │     │                             │
+        │     ▼                             │
+        │  Observation: "AQI 45 优"         │
+        │     │                             │
+        │     ▼                             │
+        │  Answer: "北京今天..."            │
+        └──────────────────────────────────┘
+</code></pre></div></div><p>实现要点：</p><ul><li>每一步都要把历史 <code class="language-plaintext highlighter-rouge">Thought-Action-Observation</code> 序列回传给 LLM</li><li>需要设置 <code class="language-plaintext highlighter-rouge">max_iterations</code> 防止死循环</li><li>需要定义”终止条件”（给出 Final Answer 或达到最大步数）</li></ul><p><strong>模式 2：Plan-and-Execute —— 先规划再执行</strong></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>用户: "帮我规划北京三日游"
+
+Step 1 — Plan:
+  LLM 生成计划:
+  1. 查北京三日天气
+  2. 搜热门景点
+  3. 搜特色餐厅
+  4. 按日期排列行程
+  5. 生成最终攻略
+
+Step 2 — Execute:
+  逐条执行计划，结果存入工作记忆
+  如果某步失败了 → 重试 / 跳过 / 修改后续计划
+
+Step 3 — Finalize:
+  整合所有结果 → 生成最终输出
+</code></pre></div></div><p>vs ReAct 的区别：Plan-and-Execute 先做<strong>全局规划</strong>再执行，适合步骤多但依赖关系清晰的任务。ReAct 是<strong>边想边做</strong>，适合不确定性高的任务。</p><p><strong>模式 3：Reflexion —— 带自我反思的循环</strong></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        尝试 → 失败 → 反思 → 改进 → 重试
+                       │
+                       ▼
+              "上次失败的原因是检索词太宽泛，
+               下次应该用更具体的 API 名称"
+</code></pre></div></div><p>Reflexion 在标准 Loop 基础上加了一个<strong>反思步骤</strong>：每次执行完成后，用 LLM 分析为什么成功/失败，把教训存入长期记忆，下次类似任务时自动规避。</p><p><strong>模式 4：Self-Refine —— 迭代自我优化</strong></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>初稿 → 自我审视 → 发现问题 → 修改 → 再审视 → ... → 满意输出
+</code></pre></div></div><p>适用场景：代码生成、文案撰写、翻译——凡是”可以迭代优化”的输出。</p><h4 id="loop-engineering-的工程要点">Loop Engineering 的工程要点</h4><table><thead><tr><th>要点</th><th>说明</th></tr></thead><tbody><tr><td><strong>步数限制</strong></td><td><code class="language-plaintext highlighter-rouge">max_iterations</code> 防止无限循环，超限后走降级策略</td></tr><tr><td><strong>终止判断</strong></td><td>LLM 输出 <code class="language-plaintext highlighter-rouge">FINISH</code> 标记 或 达到预设条件</td></tr><tr><td><strong>上下文压缩</strong></td><td>Loop 越长 context 越长，需要定期压缩历史 Observation</td></tr><tr><td><strong>并行执行</strong></td><td>相互独立的 Action 可以并行调用（如同时查天气和酒店）</td></tr><tr><td><strong>错误恢复</strong></td><td>Tool 调用失败 → 重试(N 次) → 降级 → 人工介入</td></tr><tr><td><strong>状态管理</strong></td><td>维护结构化的工作记忆（已完成/进行中/待处理）</td></tr><tr><td><strong>成本控制</strong></td><td>每次迭代 = 一次 LLM 调用，复杂任务可能有 10+ 次调用</td></tr></tbody></table><h4 id="面试话术-2">面试话术</h4><blockquote><p>“Agent Loop 本质上是把单次 LLM 推理升级为<strong>推理-行动-观察</strong>的闭环。最基础的是 ReAct 模式——每步思考需要什么信息、调用对应工具、观察结果、再决定下一步。复杂场景下可以叠加 Plan-and-Execute（先做全局规划）和 Reflexion（失败后自我反思改进）。工程上最需要注意的是步数限制和上下文管理——Loop 越长，context 越长，token 消耗和延迟都呈线性增长。”</p></blockquote><h4 id="️-重要更新从-react-到工程化-agent-loop2025-2026-演进">⚠️ 重要更新：从 ReAct 到工程化 Agent Loop（2025-2026 演进）</h4><blockquote><p>上面讲的 ReAct / Plan-Execute / Reflexion / Self-Refine 四种模式是 <strong>概念层</strong>（2022 论文），回答的是”Agent 怎么思考和行动”。但 2025-2026 年业内真正火的 “Agent Loop” 是 <strong>工程层</strong>——把这些模式做成生产级框架。两者不是同一个东西，面试时要区分清楚，别把 ReAct 当成最新概念讲。</p></blockquote><p><strong>演进时间线</strong>：</p><table><thead><tr><th>时间</th><th>事件</th><th>意义</th></tr></thead><tbody><tr><td>2022.10</td><td>ReAct 论文（Yao et al.）</td><td>理论起源：Thought-Action-Observation 循环</td></tr><tr><td>2024.12</td><td>Anthropic《Building Effective Agents》</td><td>明确区分 <strong>workflow vs agent</strong>，Agent 的本质就是 loop</td></tr><tr><td>2025 下半年</td><td>Claude Agent SDK（前身 Claude Code SDK）</td><td>把 Agent Loop <strong>工程化</strong>，提供 Turn / 上下文压缩 / Subagent</td></tr><tr><td>2025</td><td>OpenAI Agents SDK</td><td><code class="language-plaintext highlighter-rouge">Runner.run()</code> + Handoff + Guardrails</td></tr><tr><td>2025-2026</td><td>Google Cloud agentic AI 架构指南</td><td>同样指向 Agent Loop</td></tr></tbody></table><p><strong>核心转变</strong>：从”ReAct 是一种 prompting 技巧” → “Agent Loop 是一种工程架构”。ReAct 没有被淘汰，而是被<strong>装进了工程框架</strong>里，成为框架内部的一种行为模式。</p><p><strong>工程化 Agent Loop 的关键新概念</strong>（笔记原内容缺失的部分）：</p><table><thead><tr><th>新概念</th><th>说明</th><th>所属 SDK</th></tr></thead><tbody><tr><td><strong>Turn</strong></td><td>一次完整的”LLM 输出 → 工具执行 → 结果反馈”循环，多个 Turn 串联成整个 Agent 执行</td><td>Claude Agent SDK</td></tr><tr><td><strong>自动上下文压缩</strong></td><td>上下文接近窗口上限时，SDK 自动把旧消息压缩成摘要，保留近期关键信息</td><td>Claude Agent SDK</td></tr><tr><td><strong>Subagent</strong>（独立上下文）</td><td>子 Agent 拥有独立上下文窗口，只把最终结果返回主 Agent，不污染主上下文</td><td>Claude Agent SDK</td></tr><tr><td><strong>Handoff</strong>（上下文传递）</td><td>一个 Agent 把控制权连同上下文一起交给另一个 Agent，适合流水线协作</td><td>OpenAI Agents SDK</td></tr><tr><td><strong>Guardrails</strong></td><td>Loop 入口/出口的安全护栏，输入侧拦敏感信息，输出侧过滤不合规结果</td><td>OpenAI Agents SDK</td></tr><tr><td><strong>Hooks</strong></td><td>Loop 中的检查点（PreToolUse/PostToolUse 等），在应用进程运行不消耗 token</td><td>Claude Agent SDK</td></tr><tr><td><strong>max_turns + max_budget_usd</strong></td><td>双重成本控制，超限有明确 subtype（error_max_turns / error_max_budget_usd）</td><td>Claude Agent SDK</td></tr></tbody></table><p><strong>新老对比</strong>（面试关键）：</p><table><thead><tr><th>维度</th><th>笔记原内容（老，概念层）</th><th>2025-2026 Agent Loop（新，工程层）</th></tr></thead><tbody><tr><td><strong>本质</strong></td><td>Prompting 技巧（Thought-Action-Observation 文本交替）</td><td>工程架构（消息流 + 工具系统 + 上下文管理）</td></tr><tr><td><strong>抽象单位</strong></td><td>“Thought / Action / Observation” 三元组</td><td><strong>Turn</strong>（LLM 输出 + 工具执行 + 结果反馈）</td></tr><tr><td><strong>上下文管理</strong></td><td>只提”需要压缩历史”</td><td><strong>自动压缩</strong> + Subagent 独立上下文 + effort 级别</td></tr><tr><td><strong>多 Agent</strong></td><td>没讲</td><td><strong>Subagent</strong>（独立上下文）vs <strong>Handoff</strong>（上下文传递）两种路线</td></tr><tr><td><strong>安全</strong></td><td>归到 Harness 章节</td><td><strong>Guardrails</strong>（入/出口护栏）+ <strong>Hooks</strong>（Loop 内检查点）+ Permission Mode</td></tr><tr><td><strong>成本控制</strong></td><td>只说”每次迭代一次 LLM 调用”</td><td><strong>max_turns + max_budget_usd</strong> 双限制，超限有 subtype</td></tr><tr><td><strong>错误恢复</strong></td><td>“重试 N 次”</td><td>工具错误作为 UserMessage 反馈给 LLM 自行决策</td></tr><tr><td><strong>何时用</strong></td><td>没讲</td><td>Anthropic 明确：<strong>能预先定义步骤的用 workflow，不能的才用 Agent Loop</strong></td></tr></tbody></table><p><strong>Anthropic 的 workflow vs agent 判断标准</strong>（面试高频，必背）：</p><blockquote><p>“大多数场景下，简单的 workflow 比复杂的 agentic loop 更合适。Agent Loop 适用于那些<strong>无法预先定义完整执行路径</strong>的任务——需要根据中间结果动态调整策略的场景。对于可以明确步骤的流程（数据管道、固定审批流、模板化内容生成），使用确定性 workflow 更稳定、更可预测。”</p><p>一句话：<strong>workflow 是”你告诉系统怎么做”，Agent Loop 是”你告诉系统做什么，让它自己决定怎么做”。</strong></p></blockquote><p><strong>更新的面试话术</strong>（在原话术基础上加工程层）：</p><blockquote><p>“Agent Loop 的理论起源是 2022 年的 ReAct 论文，核心是 Thought-Action-Observation 循环。但 2025 年之后，Claude Agent SDK、OpenAI Agents SDK 把它工程化了——引入了 Turn 机制、自动上下文压缩、Subagent/Handoff 多 Agent 协作、Guardrails/Hooks 安全护栏、max_turns + max_budget_usd 成本控制。现在讲 Agent Loop 不应只停留在 ReAct 模式，还要讲工程化。另外 Anthropic 强调：能预先定义步骤的用 workflow，不能的才用 Agent Loop——这个判断标准比 loop 本身更重要。”</p></blockquote><hr /><h3 id="四者关系总结">四者关系总结</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>                    ┌──────────────────────────────┐
+                    │       Agent Loop               │
+                    │  (ReAct → Plan-Execute → ...)  │
+                    │  "Agent 怎么思考和行动"          │
+                    └──────────┬───────────────────┘
+                               │ 调用
+              ┌────────────────┼────────────────┐
+              ▼                ▼                ▼
+       ┌──────────┐    ┌──────────┐     ┌──────────┐
+       │  Skill   │    │   MCP    │     │ Harness  │
+       │ "能做什么"│    │ "怎么对接"│     │ "安全边界"│
+       └──────────┘    └──────────┘     └──────────┘
+        工具编排+路由    工具标准化协议    多层安全护栏
+</code></pre></div></div><ul><li><strong>Agent Loop</strong>：定义 Agent 的<strong>行为模式</strong>（怎么思考、怎么行动、怎么迭代）</li><li><strong>Skill</strong>：定义 Agent 的<strong>能力边界</strong>（能做什么，怎么做，用什么工具）</li><li><strong>MCP</strong>：定义 Agent 和工具之间的<strong>通信协议</strong>（怎么描述工具、怎么调用）</li><li><strong>Harness</strong>：定义 Agent 的<strong>安全边界</strong>（什么能做、什么不能做、出错了怎么办）</li></ul><hr /><blockquote><p>📅 生成时间：2026-06-28 🔧 转录引擎：OpenAI Whisper small，CPU FP32 📝 笔记类型：面试复盘 + 标准答案学习</p></blockquote></section><!-- Previous / Next navigation --><nav class="notes-pager"><div class="notes-pager-links"> <span></span> <span></span></div></nav></div></article><!-- Right Sidebar: Table of Contents (built by JS from DOM) --><aside class="notes-toc" id="notes-toc"><div class="notes-toc-inner"><h4 class="notes-toc-title">目录</h4><nav class="notes-toc-nav"><ul class="notes-toc-list" id="notes-toc-list"> <!-- Populated by notes-toc.js --></ul></nav></div></aside></div><script src="https://1571859588.github.io/assets/js/notes-toc.js"></script> <script> (function() { var q = new URLSearchParams(location.search).get('q'); if (!q || q.length < 2) return; var body = document.querySelector('.notes-body'); if (!body) return; // Walk text nodes, find and highlight matches var walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT, null, false); var textNodes = []; while (walker.nextNode()) { var p = walker.currentNode.parentNode; // Skip script, style, code blocks, and already-marked text if (p.tagName === 'SCRIPT' || p.tagName === 'STYLE' || p.tagName === 'MARK' || p.closest('pre') || p.closest('.notes-search-hit')) continue; textNodes.push(walker.currentNode); } var first = null; var re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'); textNodes.forEach(function(node) { var text = node.textContent; if (!re.test(text)) return; re.lastIndex = 0; // reset after test var frag = document.createDocumentFragment(); var lastIdx = 0; var match; while ((match = re.exec(text)) !== null) { if (match.index > lastIdx) { frag.appendChild(document.createTextNode(text.substring(lastIdx, match.index))); } var mark = document.createElement('mark'); mark.className = 'notes-search-mark'; mark.textContent = match[0]; frag.appendChild(mark); if (!first) first = mark; lastIdx = match.index + match[0].length; } if (lastIdx < text.length) { frag.appendChild(document.createTextNode(text.substring(lastIdx))); } node.parentNode.replaceChild(frag, node); }); if (first) { setTimeout(function() { first.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300); } })(); </script><div class="page__footer"><footer> <!-- start custom footer snippets --> <a href="/sitemap/">Sitemap</a> <!-- end custom footer snippets --><div class="page__footer-follow"><ul class="social-icons"><li><strong>Follow:</strong></li><li><a href="http://github.com/1571859588"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a></li><li><a href="https://1571859588.github.io/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li></ul></div><div class="page__footer-copyright"> &copy; 2026 Yuntao Nie, Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://github.com/academicpages/academicpages.github.io">AcademicPages</a>, a fork of <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.<br /> Site last updated 2026-07-06</div></footer></div><script src="https://1571859588.github.io/assets/js/main.min.js"></script> <script src="https://1571859588.github.io/assets/js/paper-details.js"></script> <!-- Fix kramdown stripping backslashes before _ in math spans. kramdown treats \_ as a markdown escape, converting $seq\_len$ to $seq_len$. MathJax then interprets _ as subscript instead of a literal underscore. This runs synchronously before MathJax (async) processes the page. --> <script> (function() { var content = document.querySelector('.page__content'); if (!content) return; var walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT, null, false); var nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode); nodes.forEach(function(node) { var text = node.textContent; var fixed = text.replace(/\$([^$\n]+?)\$/g, function(match, math) { // Inside $...$, add \ before _ followed by 2+ lowercase letters. // Safe: legitimate subscripts use single chars ($d_k$) or braces ($x_{ij}$). var fixedMath = math.replace(/_([a-z]{2,})/g, '\\_$1'); return fixedMath !== math ? '$' + fixedMath + '$' : match; }); if (fixed !== text) node.textContent = fixed; }); })(); </script> <script> var SERIES_INDEX = [ {t:"2026-06-15-字节", u:"/notes/2026-06-15-%E5%AD%97%E8%8A%82/"} ]; (function() { if (!SERIES_INDEX.length) return; var inp = document.getElementById('notes-sidebar-search-input'); var box = document.getElementById('notes-sidebar-search-results'); if (!inp || !box) return; function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; } function hl(t, q) { var o = '', L = 0, lo = t.toLowerCase(), ql = q.toLowerCase(), i; while ((i = lo.indexOf(ql, L)) !== -1) { o += esc(t.substring(L, i)) + '<mark class="notes-search-highlight">' + esc(t.substring(i, i + q.length)) + '</mark>'; L = i + q.length; } return o + esc(t.substring(L)); } inp.addEventListener('input', function() { var q = this.value.trim(); if (!q) { box.style.display = 'none'; box.innerHTML = ''; return; } var ql = q.toLowerCase(), hits = []; for (var i = 0; i < SERIES_INDEX.length; i++) { if (SERIES_INDEX[i].t.toLowerCase().indexOf(ql) !== -1) hits.push(SERIES_INDEX[i]); } if (!hits.length) { box.innerHTML = '<div class="notes-sidebar-search-empty">无匹配</div>'; } else { var h = ''; for (var j = 0; j < Math.min(hits.length, 15); j++) { h += '<a href="' + hits[j].u + '" class="notes-sidebar-search-hit" data-q="' + esc(q) + '">' + '<span class="notes-sidebar-search-hit-title">' + hl(hits[j].t, q) + '</span></a>'; } box.innerHTML = h; } box.style.display = 'block'; }); inp.addEventListener('keydown', function(e) { if (e.key === 'Escape') { box.style.display = 'none'; box.innerHTML = ''; this.blur(); } }); box.addEventListener('click', function(e) { var a = e.target.closest('.notes-sidebar-search-hit'); if (a && a.dataset.q) sessionStorage.setItem('notes-search-q', a.dataset.q); }); document.addEventListener('click', function(e) { if (!e.target.closest('#notes-sidebar-search')) { box.style.display = 'none'; box.innerHTML = ''; } }); })(); </script></body></html>

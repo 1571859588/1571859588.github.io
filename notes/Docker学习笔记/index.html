@@ -1,0 +1,293 @@
+<!doctype html><html lang="en" class="no-js"><head><meta charset="utf-8"> <!-- begin SEO --><title>Docker学习笔记 - Yuntao Nie</title><meta property="og:locale" content="en-US"><meta property="og:site_name" content="Yuntao Nie"><meta property="og:title" content="Docker学习笔记"><link rel="canonical" href="https://1571859588.github.io/notes/Docker%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><meta property="og:url" content="https://1571859588.github.io/notes/Docker%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><meta property="og:description" content="Docker 学习笔记：从一个 Python 项目搞懂 Docker"> <script type="application/ld+json"> { "@context" : "http://schema.org", "@type" : "Person", "name" : "Yuntao Nie", "url" : "https://1571859588.github.io", "sameAs" : null } </script> <!-- end SEO --><link href="https://1571859588.github.io/feed.xml" type="application/atom+xml" rel="alternate" title="Yuntao Nie Feed"> <!-- http://t.co/dKP3o1e --><meta name="HandheldFriendly" content="True"><meta name="MobileOptimized" content="320"><meta name="viewport" content="width=device-width, initial-scale=1.0"> <script> document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js '; </script> <!-- For all browsers --><link rel="stylesheet" href="https://1571859588.github.io/assets/css/main.css"><meta http-equiv="cleartype" content="on"> <!-- start custom head snippets --><link rel="apple-touch-icon" sizes="57x57" href="https://1571859588.github.io/images/apple-touch-icon-57x57.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="60x60" href="https://1571859588.github.io/images/apple-touch-icon-60x60.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="72x72" href="https://1571859588.github.io/images/apple-touch-icon-72x72.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="76x76" href="https://1571859588.github.io/images/apple-touch-icon-76x76.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="114x114" href="https://1571859588.github.io/images/apple-touch-icon-114x114.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="120x120" href="https://1571859588.github.io/images/apple-touch-icon-120x120.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="144x144" href="https://1571859588.github.io/images/apple-touch-icon-144x144.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="152x152" href="https://1571859588.github.io/images/apple-touch-icon-152x152.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="180x180" href="https://1571859588.github.io/images/apple-touch-icon-180x180.png?v=M44lzPylqQ"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-32x32.png?v=M44lzPylqQ" sizes="32x32"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/android-chrome-192x192.png?v=M44lzPylqQ" sizes="192x192"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-96x96.png?v=M44lzPylqQ" sizes="96x96"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-16x16.png?v=M44lzPylqQ" sizes="16x16"><link rel="manifest" href="https://1571859588.github.io/images/manifest.json?v=M44lzPylqQ"><link rel="mask-icon" href="https://1571859588.github.io/images/safari-pinned-tab.svg?v=M44lzPylqQ" color="#000000"><link rel="shortcut icon" href="/images/favicon.ico?v=M44lzPylqQ"><meta name="msapplication-TileColor" content="#000000"><meta name="msapplication-TileImage" content="https://1571859588.github.io/images/mstile-144x144.png?v=M44lzPylqQ"><meta name="msapplication-config" content="https://1571859588.github.io/images/browserconfig.xml?v=M44lzPylqQ"><meta name="theme-color" content="#ffffff"><link rel="stylesheet" href="https://1571859588.github.io/assets/css/academicons.css"/> <!-- MathJax for math rendering --> <script> MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['\\(', '\\)']] } }; </script> <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script> <!-- end custom head snippets --></head><body> <!--[if lt IE 9]><div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div><![endif]--><div class="masthead"><div class="masthead__inner-wrap"><div class="masthead__menu"><nav id="site-nav" class="greedy-nav"> <button><div class="navicon"></div></button><ul class="visible-links"><li class="masthead__menu-item masthead__menu-item--lg"><a href="https://1571859588.github.io/">Yuntao Nie</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/publications/">Publications</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/cv/">CV</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/notes/">Notes</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/year-archive/">Blog</a></li></ul><ul class="hidden-links hidden"></ul></nav></div></div></div><div id="main" role="main" class="notes-layout"> <!-- Left Sidebar: Series Chapter Navigation --><aside class="notes-sidebar" id="notes-sidebar"><div class="notes-sidebar-inner"><div class="notes-series-header"><h3 class="notes-series-title">devops</h3></div><div class="notes-sidebar-search" id="notes-sidebar-search"> <input type="text" class="notes-sidebar-search-input" id="notes-sidebar-search-input" placeholder="搜索本专题…" autocomplete="off"><div class="notes-sidebar-search-results" id="notes-sidebar-search-results" style="display:none"></div></div><nav class="notes-chapter-nav"><ul class="notes-chapter-list"><li class="notes-chapter-item active"> <a href="/notes/Docker%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="notes-chapter-link"> <span class="notes-chapter-num">1</span> <span class="notes-chapter-title">Docker学习笔记</span> </a></li><li class="notes-chapter-item "> <a href="/notes/Vite%E9%A1%B9%E7%9B%AE%E9%83%A8%E7%BD%B2%E5%88%B0Linux%E5%B9%B6%E9%80%9A%E8%BF%87frpc%E6%9A%B4%E9%9C%B2%E5%85%AC%E7%BD%91/" class="notes-chapter-link"> <span class="notes-chapter-num">2</span> <span class="notes-chapter-title">Vite项目部署到Linux并通过frpc暴露公网</span> </a></li><li class="notes-chapter-item "> <a href="/notes/frpc%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="notes-chapter-link"> <span class="notes-chapter-num">3</span> <span class="notes-chapter-title">frpc学习笔记</span> </a></li></ul></nav><div class="notes-sidebar-footer"> <a href="/notes/" class="notes-back-link">← 所有笔记系列</a></div></div></aside><!-- Mobile sidebar toggle --> <button class="notes-sidebar-toggle" id="notes-sidebar-toggle" aria-label="Toggle sidebar"> <span class="notes-sidebar-toggle-icon"></span> </button> <!-- Main Content --><article class="notes-content" itemscope itemtype="http://schema.org/CreativeWork"><meta itemprop="headline" content="Docker学习笔记"><div class="notes-content-inner"><header class="notes-header"><div class="notes-breadcrumb"> <a href="/notes/">Notes</a> <span class="notes-sep">›</span> <span>devops</span> <span class="notes-sep">›</span> <span>Docker学习笔记</span></div><h1 class="notes-page-title" itemprop="headline">Docker学习笔记</h1></header><section class="notes-body" itemprop="text"><h1 id="docker-学习笔记从一个-python-项目搞懂-docker">Docker 学习笔记：从一个 Python 项目搞懂 Docker</h1><blockquote><table><tbody><tr><td>更新时间：2026-06-28</td><td>适合人群：没用过 Docker、想快速上手的开发者</td></tr></tbody></table></blockquote><h2 id="一句话结论">一句话结论</h2><p>Docker 解决的核心问题是”在我机器上能跑，换一台就不行”。它把应用 + 所有依赖（Python 版本、库、系统工具）打包成一个”镜像”，任何人拿到这个镜像，一行命令就能跑起来，不需要自己装任何东西。</p><hr /><h2 id="第一章为什么需要-docker">第一章：为什么需要 Docker？</h2><h3 id="你可能遇到过的场景">你可能遇到过的场景</h3><p>你写了一个 Python 项目，用 FastAPI 做后端，依赖 PostgreSQL 数据库，还用到了 Redis 做缓存。本地调通了，很开心。然后：</p><ul><li>同事 clone 了你的代码，跑不起来——他的 Python 版本不对、缺了几个库、PostgreSQL 配置不一样。</li><li>你花了两小时帮他配环境，终于跑起来了。换一台服务器部署，又得重来一遍。</li><li>线上用的 Linux，你本地是 Windows，有些库行为不一样，部署上去有 bug。</li></ul><p><strong>传统方式</strong>：写一份 README，列出所有依赖、版本、安装步骤、环境变量……每次换机器都手动操作一遍，祈祷不出错。</p><p><strong>Docker 方式</strong>：写一个 Dockerfile 描述环境，构建一个镜像。不管在哪台机器上，只要有 Docker，一条命令就能运行，环境完全一致。</p><h3 id="一个类比">一个类比</h3><p>把 Docker 想象成”搬家时把整个房间打包进集装箱”。你不只是搬走了家具（代码），还搬走了墙纸、水电管线、甚至空气（Python 运行时、系统库、环境变量、配置文件）。到了新地方，打开集装箱，一切和原来一模一样。</p><hr /><h2 id="第二章三个核心概念只记这三个就够入门">第二章：三个核心概念（只记这三个就够入门）</h2><p><strong>镜像（Image）</strong>：一个打包好的”快照”，包含运行应用所需的一切。它是只读的，不会变。类比：安装光盘、App 的安装包。</p><p><strong>容器（Container）</strong>：镜像跑起来之后的”活体”。你可以在同一个镜像上启动多个容器（就像同一个安装包可以装出多个实例）。容器停止后，里面的改动不会写回镜像。类比：安装好的软件正在运行的那个进程。</p><p><strong>Dockerfile</strong>：一个文本文件，描述”怎么制作镜像”。你在里面写清楚：用什么基础系统、装什么依赖、复制什么代码、启动什么命令。类比：一份菜谱，照着做就能做出同一道菜。</p><p>它们的关系：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Dockerfile（菜谱）  →  docker build  →  镜像（做好的菜）  →  docker run  →  容器（端上桌在吃的菜）
+</code></pre></div></div><hr /><h2 id="第三章安装-docker">第三章：安装 Docker</h2><h3 id="windows-安装最常见">Windows 安装（最常见）</h3><ol><li>下载 Docker Desktop：https://www.docker.com/products/docker-desktop/</li><li>安装前确保你的电脑开启了 WSL2（Windows Subsystem for Linux）。在 PowerShell（管理员）里运行：</li></ol><div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">wsl</span><span class="w"> </span><span class="nt">--install</span><span class="w">
+</span></code></pre></div></div><ol><li>安装完成后重启，Docker Desktop 会自动启动。打开终端验证：</li></ol><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker <span class="nt">--version</span>
+<span class="c"># 应该输出类似：Docker version 24.0.7, build afdd6e0</span>
+
+docker run hello-world
+<span class="c"># 应该输出一段欢迎信息，说明安装成功</span>
+</code></pre></div></div><p><strong>常见问题</strong>：</p><ul><li>报错”WSL2 is not installed”→ 运行 <code class="language-plaintext highlighter-rouge">wsl --update</code> 然后重启。</li><li>报错”Hardware assisted virtualization is not enabled”→ 需要进 BIOS 开启 Intel VT-x 或 AMD-V（大部分电脑默认是开的）。</li><li>启动很慢 → Docker Desktop 第一次启动要拉取一些基础镜像，等几分钟就好。</li></ul><h3 id="linux-安装ubuntu-为例">Linux 安装（Ubuntu 为例）</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 添加 Docker 官方源（比系统自带的源更新）</span>
+<span class="nb">sudo </span>apt update
+<span class="nb">sudo </span>apt <span class="nb">install</span> <span class="nt">-y</span> ca-certificates curl gnupg
+<span class="nb">sudo install</span> <span class="nt">-m</span> 0755 <span class="nt">-d</span> /etc/apt/keyrings
+curl <span class="nt">-fsSL</span> https://download.docker.com/linux/ubuntu/gpg | <span class="nb">sudo </span>gpg <span class="nt">--dearmor</span> <span class="nt">-o</span> /etc/apt/keyrings/docker.gpg
+<span class="nb">echo</span> <span class="s2">"deb [arch=</span><span class="si">$(</span>dpkg <span class="nt">--print-architecture</span><span class="si">)</span><span class="s2"> signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu </span><span class="si">$(</span>lsb_release <span class="nt">-cs</span><span class="si">)</span><span class="s2"> stable"</span> | <span class="nb">sudo tee</span> /etc/apt/sources.list.d/docker.list <span class="o">&gt;</span> /dev/null
+
+<span class="c"># 安装</span>
+<span class="nb">sudo </span>apt update
+<span class="nb">sudo </span>apt <span class="nb">install</span> <span class="nt">-y</span> docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+<span class="c"># 验证</span>
+<span class="nb">sudo </span>docker <span class="nt">--version</span>
+<span class="nb">sudo </span>docker run hello-world
+</code></pre></div></div><h3 id="macos-安装">macOS 安装</h3><p>下载 Docker Desktop for Mac（区分 Intel 和 Apple Silicon 芯片），安装后打开就行，和 Windows 体验类似。</p><h3 id="关于-sudo-的问题linux-用户必看">关于 sudo 的问题（Linux 用户必看）</h3><p>在 Linux 上，Docker 默认需要 <code class="language-plaintext highlighter-rouge">sudo</code> 权限才能运行，因为 Docker 守护进程需要访问内核功能。每次敲 <code class="language-plaintext highlighter-rouge">sudo docker xxx</code> 很烦，可以把自己加到 <code class="language-plaintext highlighter-rouge">docker</code> 用户组：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 把当前用户加入 docker 组</span>
+<span class="nb">sudo </span>usermod <span class="nt">-aG</span> docker <span class="nv">$USER</span>
+
+<span class="c"># 必须重新登录（或重启）才生效！</span>
+<span class="c"># 验证：</span>
+newgrp docker   <span class="c"># 或者退出终端重新打开</span>
+docker ps       <span class="c"># 不再需要 sudo</span>
+</code></pre></div></div><p><strong>注意</strong>：加入 docker 组 ≈ 拥有 root 权限。因为用户可以通过 <code class="language-plaintext highlighter-rouge">docker run -v /:/host</code> 挂载宿主机整个文件系统，在容器内就能以 root 身份读写宿主机所有文件。所以只给你信任的人加 docker 组。</p><p><strong>Windows / macOS 上不需要 sudo</strong>，Docker Desktop 自动处理了权限问题。</p><hr /><h2 id="第四章实战把一个-python-项目装进-docker">第四章：实战——把一个 Python 项目装进 Docker</h2><h3 id="假设你的项目长这样">假设你的项目长这样</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>my-fastapi-app/
+├── app.py                # FastAPI 主程序
+├── requirements.txt      # Python 依赖
+├── config.yaml           # 配置文件
+└── data/                 # 一些数据文件
+    └── model.pkl
+</code></pre></div></div><p><code class="language-plaintext highlighter-rouge">requirements.txt</code> 内容：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fastapi==0.104.1
+uvicorn==0.24.0
+pydantic==2.5.0
+redis==5.0.1
+psycopg2-binary==2.9.9
+pyyaml==6.0.1
+</code></pre></div></div><p><code class="language-plaintext highlighter-rouge">app.py</code> 核心代码：</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">fastapi</span> <span class="kn">import</span> <span class="n">FastAPI</span>
+<span class="kn">import</span> <span class="nn">uvicorn</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">()</span>
+
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"/"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">hello</span><span class="p">():</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"Hello from Docker!"</span><span class="p">}</span>
+
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"/health"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">health</span><span class="p">():</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">"status"</span><span class="p">:</span> <span class="s">"ok"</span><span class="p">}</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="n">uvicorn</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s">"0.0.0.0"</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8000</span><span class="p">)</span>
+</code></pre></div></div><h3 id="第一步写-dockerfile">第一步：写 Dockerfile</h3><p>在项目根目录（<code class="language-plaintext highlighter-rouge">my-fastapi-app/</code> 下）创建一个文件叫 <code class="language-plaintext highlighter-rouge">Dockerfile</code>（没有后缀）：</p><div class="language-dockerfile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ============ 第1行：从哪个"地基"开始 ============</span>
+<span class="c"># python:3.11-slim 是一个官方精简镜像，只有 Python + 最小系统库，约 120MB</span>
+<span class="c"># 不要用 python:3.11（完整版约 900MB），也不要用 python:latest（版本不可控）</span>
+<span class="k">FROM</span><span class="s"> python:3.11-slim</span>
+
+<span class="c"># ============ 第2行：设置工作目录 ============</span>
+<span class="c"># 之后所有命令都在 /app 目录下执行，相当于 cd /app</span>
+<span class="k">WORKDIR</span><span class="s"> /app</span>
+
+<span class="c"># ============ 第3-4行：先复制依赖文件并安装 ============</span>
+<span class="c"># 为什么要单独 COPY requirements.txt？因为 Docker 有缓存机制：</span>
+<span class="c"># 如果 requirements.txt 没变，这一层会直接用缓存，不用重新 pip install，节省时间</span>
+<span class="k">COPY</span><span class="s"> requirements.txt .</span>
+<span class="k">RUN </span>pip <span class="nb">install</span> <span class="nt">--no-cache-dir</span> <span class="nt">-r</span> requirements.txt
+
+<span class="c"># ============ 第5行：复制项目代码 ============</span>
+<span class="c"># 把当前目录（.）的所有文件复制到容器的 /app 目录</span>
+<span class="k">COPY</span><span class="s"> . .</span>
+
+<span class="c"># ============ 第6行：声明端口（仅文档作用）============</span>
+<span class="c"># 告诉使用者"这个应用用 8000 端口"，但不会自动映射</span>
+<span class="c"># 实际映射靠 docker run -p</span>
+<span class="k">EXPOSE</span><span class="s"> 8000</span>
+
+<span class="c"># ============ 第7行：容器启动时执行什么命令 ============</span>
+<span class="k">CMD</span><span class="s"> ["python", "app.py"]</span>
+</code></pre></div></div><p><strong>为什么要一行一行写？</strong> Dockerfile 的每一行都会生成一个”层”（Layer），层是缓存单位。把不常变的内容（装依赖）放前面，常变的内容（复制代码）放后面，这样改代码重新构建时，装依赖那层会命中缓存，不用等 pip install。</p><h3 id="第二步创建-dockerignore">第二步：创建 .dockerignore</h3><p>在项目根目录创建 <code class="language-plaintext highlighter-rouge">.dockerignore</code>，作用类似 <code class="language-plaintext highlighter-rouge">.gitignore</code>，告诉 Docker 构建时不要把这些文件复制进镜像：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>__pycache__/
+*.pyc
+.git/
+.gitignore
+.env
+*.md
+.vscode/
+data/*.log
+</code></pre></div></div><p>不加这个文件的话，<code class="language-plaintext highlighter-rouge">.git/</code> 目录（可能几百 MB 的历史记录）也会被打包进去，镜像会很大而且构建很慢。</p><h3 id="第三步构建镜像">第三步：构建镜像</h3><p>打开终端，进入项目目录，运行：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># -t 是给镜像起个名字和版本标签</span>
+<span class="c"># 最后的 . 表示"当前目录"是构建上下文</span>
+docker build <span class="nt">-t</span> my-fastapi-app:v1.0 <span class="nb">.</span>
+</code></pre></div></div><p>你会看到类似输出：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[+] Building 45.3s (8/8) FINISHED
+ =&gt; [1/4] FROM docker.io/library/python:3.11-slim           12.1s
+ =&gt; [2/4] WORKDIR /app                                       0.1s
+ =&gt; [3/4] COPY requirements.txt .                            0.0s
+ =&gt; [4/4] RUN pip install --no-cache-dir -r requirements.txt 28.5s
+ =&gt; [5/4] COPY . .                                           0.2s
+ =&gt; exporting to image                                       0.5s
+ =&gt; =&gt; naming to docker.io/library/my-fastapi-app:v1.0
+</code></pre></div></div><p>第一次构建要下载基础镜像 + 安装依赖，比较慢。之后再构建（只要 requirements.txt 没变），装依赖那一步会秒过。</p><p>查看构建好的镜像：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker images
+<span class="c"># REPOSITORY          TAG       IMAGE ID       CREATED          SIZE</span>
+<span class="c"># my-fastapi-app      v1.0      abc123def456   30 seconds ago   285MB</span>
+</code></pre></div></div><h3 id="第四步运行容器">第四步：运行容器</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-d</span> <span class="se">\</span>
+  <span class="nt">--name</span> myapp <span class="se">\</span>
+  <span class="nt">-p</span> 8080:8000 <span class="se">\</span>
+  my-fastapi-app:v1.0
+</code></pre></div></div><p>逐个参数解释：</p><table><thead><tr><th>参数</th><th>含义</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">-d</code></td><td>后台运行（detached），不占用当前终端</td></tr><tr><td><code class="language-plaintext highlighter-rouge">--name myapp</code></td><td>给容器起个名字，方便后面用名字操作它</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-p 8080:8000</code></td><td>把宿主机的 8080 端口映射到容器内的 8000 端口</td></tr><tr><td><code class="language-plaintext highlighter-rouge">my-fastapi-app:v1.0</code></td><td>用哪个镜像启动</td></tr></tbody></table><p>现在在浏览器打开 <code class="language-plaintext highlighter-rouge">http://localhost:8080</code>，你应该看到：</p><div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Hello from Docker!"</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div><p><strong>恭喜，你的应用已经在 Docker 里跑起来了。</strong></p><h3 id="第五步常用操作">第五步：常用操作</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 查看正在运行的容器</span>
+docker ps
+<span class="c"># CONTAINER ID  IMAGE                 STATUS        PORTS                    NAMES</span>
+<span class="c"># abc123        my-fastapi-app:v1.0   Up 2 minutes  0.0.0.0:8080-&gt;8000/tcp   myapp</span>
+
+<span class="c"># 查看日志（应用里的 print 和日志都在这）</span>
+docker logs myapp
+docker logs <span class="nt">-f</span> myapp       <span class="c"># -f 持续跟踪，类似 tail -f</span>
+
+<span class="c"># 进入容器内部（像一个虚拟机一样进去看看）</span>
+docker <span class="nb">exec</span> <span class="nt">-it</span> myapp /bin/bash
+<span class="c"># 进去之后你可以：</span>
+<span class="c">#   ls -la          看看文件在哪</span>
+<span class="c">#   python --version 看看 Python 版本</span>
+<span class="c">#   pip list         看看装了什么包</span>
+<span class="c">#   cat config.yaml  看看配置文件</span>
+<span class="c">#   exit             退出容器</span>
+
+<span class="c"># 停止容器</span>
+docker stop myapp
+
+<span class="c"># 启动已经停止的容器</span>
+docker start myapp
+
+<span class="c"># 删除容器（必须先停止）</span>
+docker <span class="nb">rm </span>myapp
+
+<span class="c"># 删除镜像</span>
+docker rmi my-fastapi-app:v1.0
+</code></pre></div></div><hr /><h2 id="第五章实际项目中常见的进阶场景">第五章：实际项目中常见的进阶场景</h2><h3 id="场景一我的应用需要读本地文件--写日志">场景一：我的应用需要读本地文件 / 写日志</h3><p>如果应用在运行时需要读写文件（比如写入日志、读取配置文件），用”卷挂载”（Volume Mount）把宿主机的目录映射到容器内：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-d</span> <span class="nt">--name</span> myapp <span class="se">\</span>
+  <span class="nt">-p</span> 8080:8000 <span class="se">\</span>
+  <span class="nt">-v</span> ./logs:/app/logs <span class="se">\</span>
+  <span class="nt">-v</span> ./config.yaml:/app/config.yaml:ro <span class="se">\</span>
+  my-fastapi-app:v1.0
+</code></pre></div></div><table><thead><tr><th>挂载方式</th><th>含义</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">-v ./logs:/app/logs</code></td><td>宿主机的 <code class="language-plaintext highlighter-rouge">./logs</code> 目录 ↔ 容器内的 <code class="language-plaintext highlighter-rouge">/app/logs</code>，双向同步</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-v ./config.yaml:/app/config.yaml:ro</code></td><td>只读挂载（<code class="language-plaintext highlighter-rouge">:ro</code>），容器内不能改这个文件</td></tr></tbody></table><p>这样日志会写到你本地的 <code class="language-plaintext highlighter-rouge">logs/</code> 目录，容器删了日志还在。</p><h3 id="场景二我的应用需要连数据库docker-compose">场景二：我的应用需要连数据库（Docker Compose）</h3><p>真实项目通常不止一个服务。比如你的应用需要 PostgreSQL + Redis。手动一个个 <code class="language-plaintext highlighter-rouge">docker run</code> 太麻烦，用 Docker Compose 一个文件搞定：</p><p>在项目根目录创建 <code class="language-plaintext highlighter-rouge">docker-compose.yml</code>：</p><div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">services</span><span class="pi">:</span>
+  <span class="na">web</span><span class="pi">:</span>
+    <span class="na">build</span><span class="pi">:</span> <span class="s">.</span>                          <span class="c1"># 用当前目录的 Dockerfile 构建</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">8080:8000"</span>
+    <span class="na">environment</span><span class="pi">:</span>                      <span class="c1"># 通过环境变量传配置</span>
+      <span class="pi">-</span> <span class="s">DATABASE_URL=postgresql://myuser:mypass@db:5432/mydb</span>
+      <span class="pi">-</span> <span class="s">REDIS_URL=redis://cache:6379</span>
+    <span class="na">depends_on</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">db</span>
+      <span class="pi">-</span> <span class="s">cache</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">./logs:/app/logs</span>              <span class="c1"># 日志持久化</span>
+
+  <span class="na">db</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">postgres:15</span>                <span class="c1"># 直接用官方镜像</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">POSTGRES_USER=myuser</span>
+      <span class="pi">-</span> <span class="s">POSTGRES_PASSWORD=mypass</span>
+      <span class="pi">-</span> <span class="s">POSTGRES_DB=mydb</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">pgdata:/var/lib/postgresql/data</span>  <span class="c1"># 数据库数据持久化</span>
+
+  <span class="na">cache</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">redis:7-alpine</span>             <span class="c1"># Redis 用 alpine 版本更小</span>
+
+<span class="na">volumes</span><span class="pi">:</span>
+  <span class="na">pgdata</span><span class="pi">:</span>                             <span class="c1"># 声明一个由 Docker 管理的卷</span>
+</code></pre></div></div><p>然后一条命令启动所有服务：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 构建并启动所有服务</span>
+docker compose up <span class="nt">-d</span>
+
+<span class="c"># 查看状态</span>
+docker compose ps
+
+<span class="c"># 查看所有服务日志</span>
+docker compose logs <span class="nt">-f</span>
+
+<span class="c"># 只重新构建 web 服务（比如你改了代码）</span>
+docker compose up <span class="nt">-d</span> <span class="nt">--build</span> web
+
+<span class="c"># 停止并清理所有服务</span>
+docker compose down
+
+<span class="c"># 停止并清理（包括数据库数据）</span>
+docker compose down <span class="nt">-v</span>
+</code></pre></div></div><p><strong>一个关键点</strong>：在 Compose 里，服务之间用服务名互相访问。所以 web 容器访问数据库的地址不是 <code class="language-plaintext highlighter-rouge">localhost</code>，而是 <code class="language-plaintext highlighter-rouge">db</code>（服务名）。Docker Compose 会自动创建一个内部网络，所有服务都在这个网络里，互相可以通过名字解析。</p><h3 id="场景三开发时想改代码立即生效热更新">场景三：开发时想改代码立即生效（热更新）</h3><p>上面那种方式，每次改代码都要重新 build 镜像才能看到效果。开发时可以用卷挂载把代码目录直接映射进去：</p><div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">services</span><span class="pi">:</span>
+  <span class="na">web</span><span class="pi">:</span>
+    <span class="na">build</span><span class="pi">:</span> <span class="s">.</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">8080:8000"</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">.:/app</span>                        <span class="c1"># 把当前目录挂载到容器的 /app</span>
+    <span class="na">command</span><span class="pi">:</span> <span class="s">uvicorn app:app --host 0.0.0.0 --port 8000 --reload</span>
+</code></pre></div></div><p>这样你改本地代码，容器内会立即同步，配合 <code class="language-plaintext highlighter-rouge">--reload</code> 参数，uvicorn 会自动重启。不用反复 build。</p><p><strong>注意</strong>：这种方式只适合开发，不要用在生产环境。</p><hr /><h2 id="第六章把镜像给别人用">第六章：把镜像给别人用</h2><h3 id="方式一导出为文件最简单适合小团队内部分享">方式一：导出为文件（最简单，适合小团队内部分享）</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 你这边：把镜像保存成一个 .tar 文件</span>
+docker save <span class="nt">-o</span> my-fastapi-app-v1.0.tar my-fastapi-app:v1.0
+
+<span class="c"># 把 .tar 文件发给同事（微信、邮件、U盘都行）</span>
+
+<span class="c"># 同事那边：从 .tar 文件加载镜像</span>
+docker load <span class="nt">-i</span> my-fastapi-app-v1.0.tar
+
+<span class="c"># 然后直接运行</span>
+docker run <span class="nt">-d</span> <span class="nt">--name</span> myapp <span class="nt">-p</span> 8080:8000 my-fastapi-app:v1.0
+</code></pre></div></div><p>这种方式的好处是零门槛，不需要任何账号和网络。缺点是文件可能比较大（几百 MB），而且没有版本管理。</p><h3 id="方式二推送到镜像仓库推荐适合团队协作">方式二：推送到镜像仓库（推荐，适合团队协作）</h3><p>Docker Hub 是最常用的公共仓库，注册一个账号就能免费用。</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. 登录</span>
+docker login
+<span class="c"># 输入用户名和密码</span>
+
+<span class="c"># 2. 给镜像打标签（格式：用户名/镜像名:版本）</span>
+docker tag my-fastapi-app:v1.0 yourusername/my-fastapi-app:v1.0
+
+<span class="c"># 3. 推送</span>
+docker push yourusername/my-fastapi-app:v1.0
+
+<span class="c"># 同事那边：拉取并运行</span>
+docker pull yourusername/my-fastapi-app:v1.0
+docker run <span class="nt">-d</span> <span class="nt">--name</span> myapp <span class="nt">-p</span> 8080:8000 yourusername/my-fastapi-app:v1.0
+</code></pre></div></div><p>国内常用的镜像仓库还有阿里云容器镜像服务（个人免费）和腾讯云容器镜像服务。企业内通常自建 Harbor。</p><h3 id="方式三直接给-dockerfile--代码最透明">方式三：直接给 Dockerfile + 代码（最透明）</h3><p>把 Dockerfile 和 <code class="language-plaintext highlighter-rouge">.dockerignore</code> 提交到 Git 仓库里。同事 clone 代码后自己 build：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/you/my-fastapi-app.git
+<span class="nb">cd </span>my-fastapi-app
+docker build <span class="nt">-t</span> my-fastapi-app:v1.0 <span class="nb">.</span>
+docker run <span class="nt">-d</span> <span class="nt">--name</span> myapp <span class="nt">-p</span> 8080:8000 my-fastapi-app:v1.0
+</code></pre></div></div><p>或者如果项目有 <code class="language-plaintext highlighter-rouge">docker-compose.yml</code>，更简单：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/you/my-fastapi-app.git
+<span class="nb">cd </span>my-fastapi-app
+docker compose up <span class="nt">-d</span>
+<span class="c"># 搞定，直接访问 localhost:8080</span>
+</code></pre></div></div><p>这是最推荐的方式——代码和环境描述都在版本控制里，任何人、任何时候都能一键复现。</p><hr /><h2 id="第七章跨平台注意事项windows--linux">第七章：跨平台注意事项（Windows ↔ Linux）</h2><h3 id="路径问题">路径问题</h3><p>这是跨平台最容易踩的坑。</p><p>Windows 路径用反斜杠 <code class="language-plaintext highlighter-rouge">C:\Users\lenck\project</code>，Linux 用正斜杠 <code class="language-plaintext highlighter-rouge">/home/user/project</code>。在 Docker 命令中统一用正斜杠：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Windows 上（PowerShell 或 CMD 都可以）</span>
+docker run <span class="nt">-v</span> C:<span class="se">\U</span>sers<span class="se">\l</span>enck<span class="se">\p</span>roject<span class="se">\l</span>ogs:/app/logs myapp
+<span class="c"># 或者用正斜杠（推荐，兼容性更好）</span>
+docker run <span class="nt">-v</span> C:/Users/lenck/project/logs:/app/logs myapp
+
+<span class="c"># Linux 上</span>
+docker run <span class="nt">-v</span> /home/user/project/logs:/app/logs myapp
+</code></pre></div></div><p>如果你用 Docker Compose，卷挂载直接用相对路径就不用操心平台差异：</p><div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">volumes</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">./logs:/app/logs</span>    <span class="c1"># 相对路径，Windows 和 Linux 都能用</span>
+</code></pre></div></div><h3 id="换行符问题">换行符问题</h3><p>Windows 的换行符是 <code class="language-plaintext highlighter-rouge">\r\n</code>（CRLF），Linux 是 <code class="language-plaintext highlighter-rouge">\n</code>（LF）。如果你写的 shell 脚本（比如 <code class="language-plaintext highlighter-rouge">entrypoint.sh</code>）在 Windows 上用了 CRLF，放到 Linux 容器里会报错：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/bin/bash^M: bad interpreter: No such file or directory
+</code></pre></div></div><p><strong>解决办法</strong>：</p><ul><li>编辑器里设置换行符为 LF（VS Code 右下角可以切换）。</li><li>或者在 Dockerfile 里转换：<code class="language-plaintext highlighter-rouge">RUN sed -i 's/\r$//' entrypoint.sh</code></li></ul><h3 id="端口映射">端口映射</h3><p>端口映射在所有平台上行为一致。<code class="language-plaintext highlighter-rouge">-p 8080:8000</code> 在 Windows、Linux、macOS 上都是把宿主机 8080 映射到容器 8000，访问 <code class="language-plaintext highlighter-rouge">localhost:8080</code> 就行。</p><p><strong>注意</strong>：Windows 上如果 8080 端口被其他程序占用，会报端口冲突。换个端口就行：<code class="language-plaintext highlighter-rouge">-p 9090:8000</code>。</p><h3 id="文件权限">文件权限</h3><p>在 Linux 上，容器内创建的文件默认属主是 root，映射到宿主机后你的普通用户可能没有权限读写：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 在 Linux 上遇到权限问题</span>
+<span class="nb">ls</span> <span class="nt">-la</span> logs/
+<span class="c"># -rw-r--r-- 1 root root 1234 Jun 28 10:00 app.log  ← 属主是 root</span>
+
+<span class="c"># 解决办法：运行时指定用户</span>
+docker run <span class="nt">--user</span> <span class="si">$(</span><span class="nb">id</span> <span class="nt">-u</span><span class="si">)</span>:<span class="si">$(</span><span class="nb">id</span> <span class="nt">-g</span><span class="si">)</span> ... myapp
+
+<span class="c"># 或者在 Dockerfile 中创建非 root 用户</span>
+</code></pre></div></div><p><strong>Windows 和 macOS 上不存在这个问题</strong>，Docker Desktop 自动处理了文件权限映射。</p><hr /><h2 id="第八章常用命令速查表">第八章：常用命令速查表</h2><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ====== 镜像 ======</span>
+docker images                          <span class="c"># 查看本地所有镜像</span>
+docker build <span class="nt">-t</span> 名字:版本 <span class="nb">.</span>             <span class="c"># 构建镜像</span>
+docker rmi 镜像名:版本                   <span class="c"># 删除镜像</span>
+docker image prune <span class="nt">-f</span>                  <span class="c"># 清理无用的悬空镜像</span>
+docker <span class="nb">history </span>镜像名:版本              <span class="c"># 查看镜像每层做了什么</span>
+
+<span class="c"># ====== 容器 ======</span>
+docker ps                              <span class="c"># 查看运行中的容器</span>
+docker ps <span class="nt">-a</span>                           <span class="c"># 查看所有容器（包括已停止的）</span>
+docker run <span class="nt">-d</span> <span class="nt">--name</span> 名字 <span class="nt">-p</span> 端口 镜像  <span class="c"># 后台运行容器</span>
+docker stop 名字                        <span class="c"># 停止容器</span>
+docker start 名字                       <span class="c"># 启动已停止的容器</span>
+docker <span class="nb">rm </span>名字                          <span class="c"># 删除容器</span>
+docker logs <span class="nt">-f</span> 名字                     <span class="c"># 跟踪查看日志</span>
+docker <span class="nb">exec</span> <span class="nt">-it</span> 名字 /bin/bash          <span class="c"># 进入容器</span>
+docker <span class="nb">cp </span>名字:/容器路径 ./本地路径       <span class="c"># 从容器复制文件出来</span>
+docker inspect 名字                     <span class="c"># 查看容器详细信息</span>
+
+<span class="c"># ====== Compose ======</span>
+docker compose up <span class="nt">-d</span>                   <span class="c"># 启动所有服务</span>
+docker compose up <span class="nt">-d</span> <span class="nt">--build</span>           <span class="c"># 重新构建并启动</span>
+docker compose down                    <span class="c"># 停止并删除</span>
+docker compose down <span class="nt">-v</span>                 <span class="c"># 停止并删除（含数据卷）</span>
+docker compose logs <span class="nt">-f</span>                 <span class="c"># 查看所有服务日志</span>
+docker compose ps                      <span class="c"># 查看服务状态</span>
+
+<span class="c"># ====== 清理 ======</span>
+docker system prune                    <span class="c"># 清理停止的容器、无用网络和悬空镜像</span>
+docker system prune <span class="nt">-a</span>                 <span class="c"># 更激进：连没用的镜像也一起删</span>
+docker volume prune                    <span class="c"># 清理未使用的卷</span>
+</code></pre></div></div><hr /><h2 id="第九章权限与安全进阶但重要">第九章：权限与安全（进阶但重要）</h2><h3 id="容器内默认是-root这有什么风险">容器内默认是 root，这有什么风险？</h3><p>Docker 容器内默认以 root 身份运行进程。如果你的应用有漏洞，攻击者可能利用 root 权限做更多坏事。生产环境建议用非 root 用户：</p><div class="language-dockerfile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">FROM</span><span class="s"> python:3.11-slim</span>
+
+<span class="c"># 创建一个普通用户</span>
+<span class="k">RUN </span>adduser <span class="nt">--disabled-password</span> appuser
+
+<span class="k">WORKDIR</span><span class="s"> /app</span>
+<span class="k">COPY</span><span class="s"> requirements.txt .</span>
+<span class="k">RUN </span>pip <span class="nb">install</span> <span class="nt">--no-cache-dir</span> <span class="nt">-r</span> requirements.txt
+
+<span class="c"># 复制文件并把所有权给 appuser</span>
+<span class="k">COPY</span><span class="s"> --chown=appuser:appuser . .</span>
+
+<span class="c"># 之后所有命令都以 appuser 身份执行</span>
+<span class="k">USER</span><span class="s"> appuser</span>
+
+<span class="k">EXPOSE</span><span class="s"> 8000</span>
+<span class="k">CMD</span><span class="s"> ["python", "app.py"]</span>
+</code></pre></div></div><h3 id="linux-上的-docker-组安全考量">Linux 上的 docker 组安全考量</h3><p>前面说过，加入 docker 组 ≈ root 权限。如果你在一台多人共用的服务器上，不建议随便给人 docker 组权限。替代方案：</p><ul><li><strong>Rootless Docker</strong>：让每个用户以非 root 身份运行自己的 Docker daemon。安装方式：<code class="language-plaintext highlighter-rouge">dockerd-rootless-setuptool.sh install</code>。限制是不能绑定 1024 以下端口、不支持 privileged 模式。</li><li><strong>Podman</strong>：Red Hat 推出的 Docker 替代品，天生无 daemon、无 root，命令和 Docker 几乎一模一样。</li></ul><h3 id="dockerfile-安全清单">Dockerfile 安全清单</h3><table><thead><tr><th>做法</th><th>好 / 坏</th><th>原因</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">FROM python:3.11-slim</code></td><td>好</td><td>镜像小，攻击面小</td></tr><tr><td><code class="language-plaintext highlighter-rouge">FROM ubuntu:latest</code></td><td>坏</td><td>版本不可控，镜像大</td></tr><tr><td><code class="language-plaintext highlighter-rouge">USER appuser</code></td><td>好</td><td>非 root 运行</td></tr><tr><td>不加 <code class="language-plaintext highlighter-rouge">USER</code></td><td>坏</td><td>默认 root，有安全风险</td></tr><tr><td><code class="language-plaintext highlighter-rouge">.dockerignore</code> 排除 <code class="language-plaintext highlighter-rouge">.env</code></td><td>好</td><td>不会把密钥打包进镜像</td></tr><tr><td><code class="language-plaintext highlighter-rouge">COPY . .</code> 不加 <code class="language-plaintext highlighter-rouge">.dockerignore</code></td><td>坏</td><td>可能泄露 <code class="language-plaintext highlighter-rouge">.env</code>、<code class="language-plaintext highlighter-rouge">.git</code> 等敏感文件</td></tr><tr><td>固定版本号 <code class="language-plaintext highlighter-rouge">python:3.11</code></td><td>好</td><td>可复现</td></tr><tr><td><code class="language-plaintext highlighter-rouge">python:latest</code></td><td>坏</td><td>每次拉取可能不同版本</td></tr></tbody></table><hr /><h2 id="附录面试常见问题">附录：面试常见问题</h2><h3 id="docker-和虚拟机有什么区别">“Docker 和虚拟机有什么区别？”</h3><blockquote><p>虚拟机模拟完整的硬件和操作系统，每个 VM 有自己的内核，隔离强但笨重（GB 级内存、分钟级启动）。容器共享宿主机内核，用内核的 Namespace 做隔离、Cgroups 做限制，轻量很多（MB 级内存、秒级启动），但隔离性弱于 VM。简单说：VM 是每人一套房，容器是合租公寓——公寓更省空间，但隔音差一点。</p></blockquote><h3 id="docker-的网络模式有哪些">“Docker 的网络模式有哪些？”</h3><blockquote><p>最常用的四种：bridge（默认，容器有独立网络，通过虚拟网桥互相通信）、host（容器直接用宿主机网络，没隔离但性能好）、none（没网络）、container（和指定容器共享网络）。日常用 bridge + 自定义网络 + 服务名 DNS 就够了。</p></blockquote><h3 id="expose-和--p-有什么区别">“EXPOSE 和 -p 有什么区别？”</h3><blockquote><p><code class="language-plaintext highlighter-rouge">EXPOSE</code> 只是文档说明，”这个应用打算用 8000 端口”，不做任何实际映射。<code class="language-plaintext highlighter-rouge">-p 8080:8000</code> 才真正把宿主机端口映射到容器端口。写 <code class="language-plaintext highlighter-rouge">EXPOSE</code> 是个好习惯，但写不写不影响功能。</p></blockquote><h3 id="cmd-和-entrypoint-有什么区别">“CMD 和 ENTRYPOINT 有什么区别？”</h3><blockquote><p><code class="language-plaintext highlighter-rouge">CMD</code> 是默认命令，可以被 <code class="language-plaintext highlighter-rouge">docker run</code> 后面的参数覆盖。<code class="language-plaintext highlighter-rouge">ENTRYPOINT</code> 是固定入口，后面的参数会追加。最佳实践是 ENTRYPOINT 定义主命令，CMD 提供默认参数。</p></blockquote><h3 id="为什么镜像要分层">“为什么镜像要分层？”</h3><blockquote><p>层可以复用和缓存。10 个应用都用 <code class="language-plaintext highlighter-rouge">python:3.11-slim</code>，这层只下载和存储一次。构建时只要某层以上的指令没变，就直接用缓存，改个代码不用重新装依赖。</p></blockquote><hr /><h2 id="相关链接">相关链接</h2><ul><li>Docker 官方文档：https://docs.docker.com/</li><li>Dockerfile 最佳实践：https://docs.docker.com/develop/develop-images/dockerfile_best-practices/</li><li>Docker Hub（公共镜像仓库）：https://hub.docker.com/</li><li>Docker 安全实践：https://docs.docker.com/engine/security/</li></ul></section><!-- Previous / Next navigation --><nav class="notes-pager"><div class="notes-pager-links"> <span></span> <a href="/notes/Vite%E9%A1%B9%E7%9B%AE%E9%83%A8%E7%BD%B2%E5%88%B0Linux%E5%B9%B6%E9%80%9A%E8%BF%87frpc%E6%9A%B4%E9%9C%B2%E5%85%AC%E7%BD%91/" class="notes-pager-next"> <span class="notes-pager-label">下一章 →</span> <span class="notes-pager-title">Vite项目部署到Linux并通过frpc暴露公网</span> </a></div></nav></div></article><!-- Right Sidebar: Table of Contents (built by JS from DOM) --><aside class="notes-toc" id="notes-toc"><div class="notes-toc-inner"><h4 class="notes-toc-title">目录</h4><nav class="notes-toc-nav"><ul class="notes-toc-list" id="notes-toc-list"> <!-- Populated by notes-toc.js --></ul></nav></div></aside></div><script src="https://1571859588.github.io/assets/js/notes-toc.js"></script> <script> (function() { var q = new URLSearchParams(location.search).get('q'); if (!q || q.length < 2) return; var body = document.querySelector('.notes-body'); if (!body) return; // Walk text nodes, find and highlight matches var walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT, null, false); var textNodes = []; while (walker.nextNode()) { var p = walker.currentNode.parentNode; // Skip script, style, code blocks, and already-marked text if (p.tagName === 'SCRIPT' || p.tagName === 'STYLE' || p.tagName === 'MARK' || p.closest('pre') || p.closest('.notes-search-hit')) continue; textNodes.push(walker.currentNode); } var first = null; var re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'); textNodes.forEach(function(node) { var text = node.textContent; if (!re.test(text)) return; re.lastIndex = 0; // reset after test var frag = document.createDocumentFragment(); var lastIdx = 0; var match; while ((match = re.exec(text)) !== null) { if (match.index > lastIdx) { frag.appendChild(document.createTextNode(text.substring(lastIdx, match.index))); } var mark = document.createElement('mark'); mark.className = 'notes-search-mark'; mark.textContent = match[0]; frag.appendChild(mark); if (!first) first = mark; lastIdx = match.index + match[0].length; } if (lastIdx < text.length) { frag.appendChild(document.createTextNode(text.substring(lastIdx))); } node.parentNode.replaceChild(frag, node); }); if (first) { setTimeout(function() { first.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300); } })(); </script><div class="page__footer"><footer> <!-- start custom footer snippets --> <a href="/sitemap/">Sitemap</a> <!-- end custom footer snippets --><div class="page__footer-follow"><ul class="social-icons"><li><strong>Follow:</strong></li><li><a href="http://github.com/1571859588"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a></li><li><a href="https://1571859588.github.io/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li></ul></div><div class="page__footer-copyright"> &copy; 2026 Yuntao Nie, Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://github.com/academicpages/academicpages.github.io">AcademicPages</a>, a fork of <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.<br /> Site last updated 2026-07-06</div></footer></div><script src="https://1571859588.github.io/assets/js/main.min.js"></script> <script src="https://1571859588.github.io/assets/js/paper-details.js"></script> <!-- Fix kramdown stripping backslashes before _ in math spans. kramdown treats \_ as a markdown escape, converting $seq\_len$ to $seq_len$. MathJax then interprets _ as subscript instead of a literal underscore. This runs synchronously before MathJax (async) processes the page. --> <script> (function() { var content = document.querySelector('.page__content'); if (!content) return; var walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT, null, false); var nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode); nodes.forEach(function(node) { var text = node.textContent; var fixed = text.replace(/\$([^$\n]+?)\$/g, function(match, math) { // Inside $...$, add \ before _ followed by 2+ lowercase letters. // Safe: legitimate subscripts use single chars ($d_k$) or braces ($x_{ij}$). var fixedMath = math.replace(/_([a-z]{2,})/g, '\\_$1'); return fixedMath !== math ? '$' + fixedMath + '$' : match; }); if (fixed !== text) node.textContent = fixed; }); })(); </script> <script> var SERIES_INDEX = [ {t:"Docker学习笔记", u:"/notes/Docker%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"}, {t:"Vite项目部署到Linux并通过frpc暴露公网", u:"/notes/Vite%E9%A1%B9%E7%9B%AE%E9%83%A8%E7%BD%B2%E5%88%B0Linux%E5%B9%B6%E9%80%9A%E8%BF%87frpc%E6%9A%B4%E9%9C%B2%E5%85%AC%E7%BD%91/"}, {t:"frpc学习笔记", u:"/notes/frpc%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"} ]; (function() { if (!SERIES_INDEX.length) return; var inp = document.getElementById('notes-sidebar-search-input'); var box = document.getElementById('notes-sidebar-search-results'); if (!inp || !box) return; function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; } function hl(t, q) { var o = '', L = 0, lo = t.toLowerCase(), ql = q.toLowerCase(), i; while ((i = lo.indexOf(ql, L)) !== -1) { o += esc(t.substring(L, i)) + '<mark class="notes-search-highlight">' + esc(t.substring(i, i + q.length)) + '</mark>'; L = i + q.length; } return o + esc(t.substring(L)); } inp.addEventListener('input', function() { var q = this.value.trim(); if (!q) { box.style.display = 'none'; box.innerHTML = ''; return; } var ql = q.toLowerCase(), hits = []; for (var i = 0; i < SERIES_INDEX.length; i++) { if (SERIES_INDEX[i].t.toLowerCase().indexOf(ql) !== -1) hits.push(SERIES_INDEX[i]); } if (!hits.length) { box.innerHTML = '<div class="notes-sidebar-search-empty">无匹配</div>'; } else { var h = ''; for (var j = 0; j < Math.min(hits.length, 15); j++) { h += '<a href="' + hits[j].u + '" class="notes-sidebar-search-hit" data-q="' + esc(q) + '">' + '<span class="notes-sidebar-search-hit-title">' + hl(hits[j].t, q) + '</span></a>'; } box.innerHTML = h; } box.style.display = 'block'; }); inp.addEventListener('keydown', function(e) { if (e.key === 'Escape') { box.style.display = 'none'; box.innerHTML = ''; this.blur(); } }); box.addEventListener('click', function(e) { var a = e.target.closest('.notes-sidebar-search-hit'); if (a && a.dataset.q) sessionStorage.setItem('notes-search-q', a.dataset.q); }); document.addEventListener('click', function(e) { if (!e.target.closest('#notes-sidebar-search')) { box.style.display = 'none'; box.innerHTML = ''; } }); })(); </script></body></html>

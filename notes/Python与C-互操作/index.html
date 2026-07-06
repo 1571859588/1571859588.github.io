@@ -1,0 +1,1083 @@
+<!doctype html><html lang="en" class="no-js"><head><meta charset="utf-8"> <!-- begin SEO --><title>Python与C++互操作 - Yuntao Nie</title><meta property="og:locale" content="en-US"><meta property="og:site_name" content="Yuntao Nie"><meta property="og:title" content="Python与C++互操作"><link rel="canonical" href="https://1571859588.github.io/notes/Python%E4%B8%8EC-%E4%BA%92%E6%93%8D%E4%BD%9C/"><meta property="og:url" content="https://1571859588.github.io/notes/Python%E4%B8%8EC-%E4%BA%92%E6%93%8D%E4%BD%9C/"><meta property="og:description" content="Python 与 C++ 互操作"> <script type="application/ld+json"> { "@context" : "http://schema.org", "@type" : "Person", "name" : "Yuntao Nie", "url" : "https://1571859588.github.io", "sameAs" : null } </script> <!-- end SEO --><link href="https://1571859588.github.io/feed.xml" type="application/atom+xml" rel="alternate" title="Yuntao Nie Feed"> <!-- http://t.co/dKP3o1e --><meta name="HandheldFriendly" content="True"><meta name="MobileOptimized" content="320"><meta name="viewport" content="width=device-width, initial-scale=1.0"> <script> document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js '; </script> <!-- For all browsers --><link rel="stylesheet" href="https://1571859588.github.io/assets/css/main.css"><meta http-equiv="cleartype" content="on"> <!-- start custom head snippets --><link rel="apple-touch-icon" sizes="57x57" href="https://1571859588.github.io/images/apple-touch-icon-57x57.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="60x60" href="https://1571859588.github.io/images/apple-touch-icon-60x60.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="72x72" href="https://1571859588.github.io/images/apple-touch-icon-72x72.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="76x76" href="https://1571859588.github.io/images/apple-touch-icon-76x76.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="114x114" href="https://1571859588.github.io/images/apple-touch-icon-114x114.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="120x120" href="https://1571859588.github.io/images/apple-touch-icon-120x120.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="144x144" href="https://1571859588.github.io/images/apple-touch-icon-144x144.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="152x152" href="https://1571859588.github.io/images/apple-touch-icon-152x152.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="180x180" href="https://1571859588.github.io/images/apple-touch-icon-180x180.png?v=M44lzPylqQ"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-32x32.png?v=M44lzPylqQ" sizes="32x32"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/android-chrome-192x192.png?v=M44lzPylqQ" sizes="192x192"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-96x96.png?v=M44lzPylqQ" sizes="96x96"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-16x16.png?v=M44lzPylqQ" sizes="16x16"><link rel="manifest" href="https://1571859588.github.io/images/manifest.json?v=M44lzPylqQ"><link rel="mask-icon" href="https://1571859588.github.io/images/safari-pinned-tab.svg?v=M44lzPylqQ" color="#000000"><link rel="shortcut icon" href="/images/favicon.ico?v=M44lzPylqQ"><meta name="msapplication-TileColor" content="#000000"><meta name="msapplication-TileImage" content="https://1571859588.github.io/images/mstile-144x144.png?v=M44lzPylqQ"><meta name="msapplication-config" content="https://1571859588.github.io/images/browserconfig.xml?v=M44lzPylqQ"><meta name="theme-color" content="#ffffff"><link rel="stylesheet" href="https://1571859588.github.io/assets/css/academicons.css"/> <!-- MathJax for math rendering --> <script> MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['\\(', '\\)']] } }; </script> <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script> <!-- end custom head snippets --></head><body> <!--[if lt IE 9]><div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div><![endif]--><div class="masthead"><div class="masthead__inner-wrap"><div class="masthead__menu"><nav id="site-nav" class="greedy-nav"> <button><div class="navicon"></div></button><ul class="visible-links"><li class="masthead__menu-item masthead__menu-item--lg"><a href="https://1571859588.github.io/">Yuntao Nie</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/publications/">Publications</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/cv/">CV</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/notes/">Notes</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/year-archive/">Blog</a></li></ul><ul class="hidden-links hidden"></ul></nav></div></div></div><div id="main" role="main" class="notes-layout"> <!-- Left Sidebar: Series Chapter Navigation --><aside class="notes-sidebar" id="notes-sidebar"><div class="notes-sidebar-inner"><div class="notes-series-header"><h3 class="notes-series-title">cpp</h3></div><div class="notes-sidebar-search" id="notes-sidebar-search"> <input type="text" class="notes-sidebar-search-input" id="notes-sidebar-search-input" placeholder="搜索本专题…" autocomplete="off"><div class="notes-sidebar-search-results" id="notes-sidebar-search-results" style="display:none"></div></div><nav class="notes-chapter-nav"><ul class="notes-chapter-list"><li class="notes-chapter-item active"> <a href="/notes/Python%E4%B8%8EC-%E4%BA%92%E6%93%8D%E4%BD%9C/" class="notes-chapter-link"> <span class="notes-chapter-num">1</span> <span class="notes-chapter-title">Python与C++互操作</span> </a></li><li class="notes-chapter-item "> <a href="/notes/%E5%86%85%E5%AD%98%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%B8%8E%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" class="notes-chapter-link"> <span class="notes-chapter-num">2</span> <span class="notes-chapter-title">内存生命周期与资源管理</span> </a></li><li class="notes-chapter-item "> <a href="/notes/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%95%99%E7%A8%8B/" class="notes-chapter-link"> <span class="notes-chapter-num">3</span> <span class="notes-chapter-title">环境配置教程</span> </a></li><li class="notes-chapter-item "> <a href="/notes/%E7%BC%96%E8%AF%91%E9%93%BE%E6%8E%A5%E6%A8%A1%E6%9D%BF%E4%B8%8E%E6%9E%84%E5%BB%BA%E7%B3%BB%E7%BB%9F/" class="notes-chapter-link"> <span class="notes-chapter-num">4</span> <span class="notes-chapter-title">编译链接模板与构建系统</span> </a></li></ul></nav><div class="notes-sidebar-footer"> <a href="/notes/" class="notes-back-link">← 所有笔记系列</a></div></div></aside><!-- Mobile sidebar toggle --> <button class="notes-sidebar-toggle" id="notes-sidebar-toggle" aria-label="Toggle sidebar"> <span class="notes-sidebar-toggle-icon"></span> </button> <!-- Main Content --><article class="notes-content" itemscope itemtype="http://schema.org/CreativeWork"><meta itemprop="headline" content="Python与C++互操作"><div class="notes-content-inner"><header class="notes-header"><div class="notes-breadcrumb"> <a href="/notes/">Notes</a> <span class="notes-sep">›</span> <span>cpp</span> <span class="notes-sep">›</span> <span>Python与C++互操作</span></div><h1 class="notes-page-title" itemprop="headline">Python与C++互操作</h1></header><section class="notes-body" itemprop="text"><h1 id="python-与-c-互操作">Python 与 C++ 互操作</h1><blockquote><p>更新时间：2026-07-01 状态：学习笔记（从零开始，逐句拆解） 适用读者：有 Python 基础，刚接触 C++ 互操作的人 关联：<code class="language-plaintext highlighter-rouge">cpp/内存生命周期与资源管理.md</code>、<code class="language-plaintext highlighter-rouge">cpp/编译链接模板与构建系统.md</code></p></blockquote><hr /><h2 id="一句话结论">一句话结论</h2><p>Python 和 C++ 互操作的核心是<strong>跨语言边界</strong>——要么用 <code class="language-plaintext highlighter-rouge">ctypes</code> 调用 C 接口（简单但手动），要么用 <code class="language-plaintext highlighter-rouge">pybind11</code> 绑定 C++ 接口（自然但要编译扩展）。关键认知：<strong>跨语言不自动变快</strong>，理想接口是”传一个批次/缓冲区，而不是每个元素跨一次边界”。零拷贝不是”没条件”，而是双方对”地址+类型+形状+步长+设备+生命周期+可变性”七项契约达成一致。</p><hr /><h2 id="零为什么-python-要调-c">零、为什么 Python 要调 C++？</h2><p>先建立直觉——Python 慢在哪，C++ 快在哪：</p><table><thead><tr><th>场景</th><th>Python</th><th>C++</th></tr></thead><tbody><tr><td>for 循环 100 万次</td><td>~200ms</td><td>~2ms（快 100 倍）</td></tr><tr><td>调用系统 API（GPU 驱动）</td><td>不支持</td><td>原生支持</td></tr><tr><td>复用已有 C++ 库</td><td>不支持</td><td>原生支持</td></tr><tr><td>开发速度</td><td>快</td><td>慢</td></tr></tbody></table><p><strong>互操作的目的</strong>：取两者之长——用 Python 写逻辑（快开发），用 C++ 写热点（快执行）。</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Python（上层逻辑）
+  │
+  │  跨语言边界（调用）
+  ▼
+C++（底层性能）
+</code></pre></div></div><h3 id="四个常见目的">四个常见目的</h3><table><thead><tr><th>目的</th><th>例子</th></tr></thead><tbody><tr><td>复用已有 C/C++ 库</td><td>调用 OpenCV、FFmpeg</td></tr><tr><td>热点循环下沉到原生代码</td><td>把 Python for 循环改成 C++ 批处理</td></tr><tr><td>接入驱动/通信库/硬件接口</td><td>CUDA 驱动、串口通信</td></tr><tr><td>为 PyTorch 添加自定义算子</td><td><code class="language-plaintext highlighter-rouge">torch.utils.cpp_extension</code></td></tr></tbody></table><hr /><h2 id="一跨语言边界的成本">一、跨语言边界的成本</h2><h3 id="11-为什么跨语言不自动变快">1.1 为什么”跨语言不自动变快”</h3><p>一次跨语言调用要做的事情：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Python 侧
+  │
+  ▼ ① 参数检查：类型对不对？
+  │
+  ▼ ② 类型/布局转换：Python 对象 → C 数据结构
+  │
+  ▼ ③ 数据复制：可能要把 Python 内存复制到 C 缓冲区
+  │
+  ▼ ④ 释放 GIL：让其他 Python 线程能跑
+  │
+  ▼ ⑤ 调用 C/C++ 函数
+  │
+  ▼ ⑥ 异常翻译：C++ 异常 → Python 异常
+  │
+  ▼ ⑦ 结果转换：C 返回值 → Python 对象
+  │
+Python 侧
+</code></pre></div></div><p><strong>最坏情况</strong>：每个元素都跨一次边界</p><blockquote><p>这个例子需要先编译一个 <code class="language-plaintext highlighter-rouge">libscale.so</code> 动态库（见第二章 2.2）。新人可以先跳过代码，理解概念后再回来跑。</p></blockquote><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># ❌ 灾难：每个元素跨一次边界
+</span><span class="kn">import</span> <span class="nn">ctypes</span>
+<span class="n">lib</span> <span class="o">=</span> <span class="n">ctypes</span><span class="p">.</span><span class="n">CDLL</span><span class="p">(</span><span class="s">"./libscale.so"</span><span class="p">)</span>   <span class="c1"># 加载动态库（第二章会讲怎么编译它）
+</span>
+<span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)):</span>
+    <span class="n">lib</span><span class="p">.</span><span class="n">scale_one</span><span class="p">(</span><span class="n">ctypes</span><span class="p">.</span><span class="n">byref</span><span class="p">(</span><span class="n">ctypes</span><span class="p">.</span><span class="n">c_float</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">])),</span> <span class="mf">2.0</span><span class="p">)</span>
+    <span class="c1"># 每次调用都有：类型检查 + 转换 + GIL + ...
+</span>    <span class="c1"># 100 万元素 = 100 万次开销，比纯 Python 还慢！
+</span></code></pre></div></div><p><strong>正确做法</strong>：传一个批次/缓冲区</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># ✅ 正确：一次调用处理整个数组
+</span><span class="kn">import</span> <span class="nn">ctypes</span>
+<span class="kn">from</span> <span class="nn">array</span> <span class="kn">import</span> <span class="n">array</span>               <span class="c1"># Python 标准库的 array（不是 list！）
+</span>
+<span class="n">lib</span> <span class="o">=</span> <span class="n">ctypes</span><span class="p">.</span><span class="n">CDLL</span><span class="p">(</span><span class="s">"./libscale.so"</span><span class="p">)</span>
+<span class="n">values</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="s">"f"</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">])</span>  <span class="c1"># "f" 表示 float32，连续内存
+# 注意：array 和 list 的区别——array 是连续内存的数值数组，list 是指针数组
+</span>
+<span class="n">pointer</span> <span class="o">=</span> <span class="p">(</span><span class="n">ctypes</span><span class="p">.</span><span class="n">c_float</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)).</span><span class="n">from_buffer</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+<span class="c1"># 这行的意思：从 values 的底层内存创建一个 ctypes 指针，共享同一块内存（零拷贝）
+</span><span class="n">lib</span><span class="p">.</span><span class="n">scale</span><span class="p">(</span><span class="n">pointer</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">),</span> <span class="mf">2.0</span><span class="p">)</span>  <span class="c1"># 一次调用，内部循环
+</span></code></pre></div></div><h3 id="12-成本对比">1.2 成本对比</h3><table><thead><tr><th>调用方式</th><th>100 万元素</th><th>说明</th></tr></thead><tbody><tr><td>纯 Python for</td><td>~200ms</td><td>慢但无跨语言开销</td></tr><tr><td>每元素跨边界</td><td>~2000ms</td><td><strong>更慢</strong>！跨边界开销吞噬收益</td></tr><tr><td>一次批处理</td><td>~5ms</td><td>快 40 倍，跨边界开销摊薄</td></tr></tbody></table><blockquote><p><strong>核心原则</strong>：跨语言调用的粒度要大——传一个数组/缓冲区，而不是一个个元素。</p></blockquote><hr /><h2 id="二ctypes调用稳定的-c-abi">二、ctypes：调用稳定的 C ABI</h2><h3 id="21-什么是-ctypes">2.1 什么是 ctypes</h3><p><code class="language-plaintext highlighter-rouge">ctypes</code> 是 Python 标准库，可以直接调用 C 函数（注意是 <strong>C 接口</strong>，不是 C++ 接口）。</p><p><strong>为什么只能调 C 接口</strong>：C++ 的函数名会被 name mangling（名称修饰），<code class="language-plaintext highlighter-rouge">add(int,int)</code> 变成 <code class="language-plaintext highlighter-rouge">_Z3addii</code>，找不到。用 <code class="language-plaintext highlighter-rouge">extern "C"</code> 告诉编译器”按 C 方式导出，不要修饰”。</p><h3 id="22-完整示例">2.2 完整示例</h3><blockquote><p><strong>完整可复现项目</strong>——建一个文件夹 <code class="language-plaintext highlighter-rouge">ctypes_demo/</code>，放两个文件：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ctypes_demo/         ← 建一个新文件夹
+├── scale.cpp        ← C++ 代码（导出 C 接口）
+└── use_scale.py     ← Python 代码（调用 C++ 编译的库）
+</code></pre></div></div><p>下面所有命令都在 <code class="language-plaintext highlighter-rouge">ctypes_demo/</code> 文件夹里执行（先 <code class="language-plaintext highlighter-rouge">cd ctypes_demo</code>）。</p></blockquote><p><strong>第一步：写 C++ 代码，导出 C 接口</strong></p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// scale.cpp</span>
+<span class="cp">#include</span> <span class="cpf">&lt;cstddef&gt;</span><span class="c1">   // std::size_t</span><span class="cp">
+</span>
+<span class="c1">// extern "C" 告诉编译器：按 C 的方式导出，不要 name mangling</span>
+<span class="c1">// 为什么需要？C++ 会把函数名修饰成 _Z5scalePfif 这种乱码，</span>
+<span class="c1">// Python 的 ctypes 找不到。extern "C" 让函数名保持原样 "scale"。</span>
+<span class="k">extern</span> <span class="s">"C"</span> <span class="p">{</span>
+
+<span class="c1">// 缩放：把 data 数组的每个元素乘以 factor（原地修改）</span>
+<span class="kt">void</span> <span class="n">scale</span><span class="p">(</span><span class="kt">float</span><span class="o">*</span> <span class="n">data</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size</span><span class="p">,</span> <span class="kt">float</span> <span class="n">factor</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*=</span> <span class="n">factor</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// 求和：返回 data 数组所有元素的和</span>
+<span class="kt">float</span> <span class="n">sum</span><span class="p">(</span><span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">data</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">float</span> <span class="n">result</span> <span class="o">=</span> <span class="mf">0.0</span><span class="n">f</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">result</span> <span class="o">+=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">}</span>  <span class="c1">// extern "C" 结束</span>
+</code></pre></div></div><p><strong>第二步：编译成动态库</strong></p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Linux（在 ctypes_demo/ 目录下执行）</span>
+g++ <span class="nt">-O3</span> <span class="nt">-shared</span> <span class="nt">-fPIC</span> scale.cpp <span class="nt">-o</span> libscale.so
+<span class="c">#   逐字解释：</span>
+<span class="c">#   g++         调用 C++ 编译器</span>
+<span class="c">#   -O3         优化级别 3（最快，生产环境用）</span>
+<span class="c">#   -shared     生成动态库（.so）而不是可执行文件</span>
+<span class="c">#   -fPIC       位置无关代码（动态库必须，详见 cpp/编译链接模板与构建系统.md）</span>
+<span class="c">#   scale.cpp   输入源文件</span>
+<span class="c">#   -o libscale.so  输出文件名（Linux 动态库以 lib 开头、.so 结尾）</span>
+
+<span class="c"># macOS（用 .dylib 后缀）</span>
+<span class="c"># g++ -O3 -shared -fPIC scale.cpp -o libscale.dylib</span>
+
+<span class="c"># Windows（用 MSVC，用 .dll 后缀）</span>
+<span class="c"># cl /O2 /LD scale.cpp /Fe:scale.dll</span>
+</code></pre></div></div><p><strong>第三步：Python 侧调用</strong></p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># use_scale.py
+</span><span class="kn">import</span> <span class="nn">ctypes</span>
+<span class="kn">from</span> <span class="nn">array</span> <span class="kn">import</span> <span class="n">array</span>
+
+<span class="c1"># ① 加载动态库
+</span><span class="n">library</span> <span class="o">=</span> <span class="n">ctypes</span><span class="p">.</span><span class="n">CDLL</span><span class="p">(</span><span class="s">"./libscale.so"</span><span class="p">)</span>  <span class="c1"># Linux
+# library = ctypes.CDLL("./libscale.dylib")  # macOS
+# library = ctypes.CDLL("./scale.dll")       # Windows
+# CDLL = C Dynamic Link Library，加载动态库
+</span>
+<span class="c1"># ② 声明函数签名（重要！不声明会用默认类型，可能出错）
+# 告诉 ctypes：scale 函数的参数类型是 [float*, int, float]
+</span><span class="n">library</span><span class="p">.</span><span class="n">scale</span><span class="p">.</span><span class="n">argtypes</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">ctypes</span><span class="p">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">ctypes</span><span class="p">.</span><span class="n">c_float</span><span class="p">),</span>  <span class="c1"># 第 1 个参数：float* data（指向 float 的指针）
+</span>    <span class="n">ctypes</span><span class="p">.</span><span class="n">c_int</span><span class="p">,</span>                    <span class="c1"># 第 2 个参数：int size
+</span>    <span class="n">ctypes</span><span class="p">.</span><span class="n">c_float</span><span class="p">,</span>                  <span class="c1"># 第 3 个参数：float factor
+</span><span class="p">]</span>
+<span class="n">library</span><span class="p">.</span><span class="n">scale</span><span class="p">.</span><span class="n">restype</span> <span class="o">=</span> <span class="bp">None</span>  <span class="c1"># 返回类型：void（无返回值）
+</span>
+<span class="n">library</span><span class="p">.</span><span class="nb">sum</span><span class="p">.</span><span class="n">argtypes</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">ctypes</span><span class="p">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">ctypes</span><span class="p">.</span><span class="n">c_float</span><span class="p">),</span>  <span class="c1"># float* data
+</span>    <span class="n">ctypes</span><span class="p">.</span><span class="n">c_int</span><span class="p">,</span>                    <span class="c1"># int size
+</span><span class="p">]</span>
+<span class="n">library</span><span class="p">.</span><span class="nb">sum</span><span class="p">.</span><span class="n">restype</span> <span class="o">=</span> <span class="n">ctypes</span><span class="p">.</span><span class="n">c_float</span>  <span class="c1"># 返回类型：float
+</span>
+<span class="c1"># ③ 准备数据（必须是连续内存）
+</span><span class="n">values</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="s">"f"</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">])</span>
+<span class="c1"># array("f", ...) 创建一个 float32 数组，内存是连续的
+# 不能用 list！list 的元素分散在内存各处，不能直接传给 C
+</span>
+<span class="c1"># ④ 把 array 转成 ctypes 指针（零拷贝！共享同一块内存）
+</span><span class="n">pointer</span> <span class="o">=</span> <span class="p">(</span><span class="n">ctypes</span><span class="p">.</span><span class="n">c_float</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)).</span><span class="n">from_buffer</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+<span class="c1"># 逐字解释：
+#   ctypes.c_float * len(values)  创建一个"5 个 float 的数组"类型
+#   .from_buffer(values)          从 values 的内存创建，共享同一块内存
+#   pointer                       是一个指向 values 底层内存的指针
+</span>
+<span class="c1"># ⑤ 调用 C 函数
+</span><span class="n">library</span><span class="p">.</span><span class="n">scale</span><span class="p">(</span><span class="n">pointer</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">),</span> <span class="mf">2.0</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">values</span><span class="p">))</span>  <span class="c1"># [2.0, 4.0, 6.0, 8.0, 10.0]  ← 原地修改了 values
+</span>
+<span class="c1"># ⑥ 调用有返回值的函数
+</span><span class="n">total</span> <span class="o">=</span> <span class="n">library</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">pointer</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"sum = </span><span class="si">{</span><span class="n">total</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>  <span class="c1"># sum = 30.0
+</span></code></pre></div></div><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 运行（在 ctypes_demo/ 目录下）</span>
+python use_scale.py
+<span class="c"># 输出：</span>
+<span class="c"># [2.0, 4.0, 6.0, 8.0, 10.0]</span>
+<span class="c"># sum = 30.0</span>
+</code></pre></div></div><h3 id="23-ctypes-的类型映射">2.3 ctypes 的类型映射</h3><table><thead><tr><th>C 类型</th><th>ctypes 类型</th><th>Python 对应</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">int</code></td><td><code class="language-plaintext highlighter-rouge">ctypes.c_int</code></td><td>int</td></tr><tr><td><code class="language-plaintext highlighter-rouge">float</code></td><td><code class="language-plaintext highlighter-rouge">ctypes.c_float</code></td><td>float</td></tr><tr><td><code class="language-plaintext highlighter-rouge">double</code></td><td><code class="language-plaintext highlighter-rouge">ctypes.c_double</code></td><td>float</td></tr><tr><td><code class="language-plaintext highlighter-rouge">char*</code></td><td><code class="language-plaintext highlighter-rouge">ctypes.c_char_p</code></td><td>bytes</td></tr><tr><td><code class="language-plaintext highlighter-rouge">int*</code></td><td><code class="language-plaintext highlighter-rouge">ctypes.POINTER(ctypes.c_int)</code></td><td>—</td></tr><tr><td><code class="language-plaintext highlighter-rouge">void*</code></td><td><code class="language-plaintext highlighter-rouge">ctypes.c_void_p</code></td><td>—</td></tr><tr><td><code class="language-plaintext highlighter-rouge">struct</code></td><td><code class="language-plaintext highlighter-rouge">ctypes.Structure</code></td><td>自定义类</td></tr></tbody></table><h3 id="24-ctypes-的风险">2.4 ctypes 的风险</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># ❌ 危险：签名写错可能导致段错误，不是普通异常
+</span><span class="n">library</span><span class="p">.</span><span class="n">scale</span><span class="p">.</span><span class="n">argtypes</span> <span class="o">=</span> <span class="p">[</span><span class="n">ctypes</span><span class="p">.</span><span class="n">c_int</span><span class="p">,</span> <span class="n">ctypes</span><span class="p">.</span><span class="n">c_int</span><span class="p">,</span> <span class="n">ctypes</span><span class="p">.</span><span class="n">c_int</span><span class="p">]</span>
+<span class="c1"># 实际函数期望 float*，但传了 int → 程序崩溃（Segmentation Fault）
+</span>
+<span class="n">library</span><span class="p">.</span><span class="n">scale</span><span class="p">(</span><span class="mi">42</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># 把 42 当地址访问 → 崩溃
+</span></code></pre></div></div><blockquote><p><strong>ctypes 的特点</strong>：简单直接，标准库自带，但类型、长度和生命周期主要靠调用者保证。签名写错可能导致崩溃，而不只是普通 Python 异常。</p></blockquote><h3 id="25-用-numpy-数组配合-ctypes">2.5 用 NumPy 数组配合 ctypes</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">ctypes</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="n">library</span> <span class="o">=</span> <span class="n">ctypes</span><span class="p">.</span><span class="n">CDLL</span><span class="p">(</span><span class="s">"./libscale.so"</span><span class="p">)</span>
+<span class="n">library</span><span class="p">.</span><span class="n">scale</span><span class="p">.</span><span class="n">argtypes</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">ctypes</span><span class="p">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">ctypes</span><span class="p">.</span><span class="n">c_float</span><span class="p">),</span>
+    <span class="n">ctypes</span><span class="p">.</span><span class="n">c_int</span><span class="p">,</span>
+    <span class="n">ctypes</span><span class="p">.</span><span class="n">c_float</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="n">library</span><span class="p">.</span><span class="n">scale</span><span class="p">.</span><span class="n">restype</span> <span class="o">=</span> <span class="bp">None</span>
+
+<span class="c1"># NumPy 数组本身就是连续内存
+</span><span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">float32</span><span class="p">)</span>
+
+<span class="c1"># 获取数组的底层指针
+</span><span class="n">pointer</span> <span class="o">=</span> <span class="n">arr</span><span class="p">.</span><span class="n">ctypes</span><span class="p">.</span><span class="n">data_as</span><span class="p">(</span><span class="n">ctypes</span><span class="p">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">ctypes</span><span class="p">.</span><span class="n">c_float</span><span class="p">))</span>
+<span class="c1"># 逐字解释：
+#   arr.ctypes              NumPy 数组的 ctypes 接口（每个 ndarray 都有这个属性）
+#   .data_as(类型)          把数组底层内存地址转成指定的 ctypes 指针类型
+#   ctypes.POINTER(ctypes.c_float)  → "指向 float 的指针"类型（等价于 C 的 float*）
+#   整行：把 NumPy 数组的底层内存地址，转成 C 语言能用的 float* 指针
+#   这是零拷贝——pointer 和 arr 共享同一块内存
+</span>
+<span class="n">library</span><span class="p">.</span><span class="n">scale</span><span class="p">(</span><span class="n">pointer</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">arr</span><span class="p">),</span> <span class="mf">3.0</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>  <span class="c1"># [ 3.  6.  9. 12. 15.]  ← arr 被原地修改了
+</span></code></pre></div></div><hr /><h2 id="三pybind11自然地绑定-c-接口">三、pybind11：自然地绑定 C++ 接口</h2><h3 id="31-为什么用-pybind11">3.1 为什么用 pybind11</h3><table><thead><tr><th>维度</th><th>ctypes</th><th>pybind11</th></tr></thead><tbody><tr><td>调用什么</td><td>C 接口</td><td>C++ 接口</td></tr><tr><td>类型安全</td><td>手动声明，错了会崩</td><td>编译时检查</td></tr><tr><td>支持 C++ 类</td><td>❌</td><td>✅</td></tr><tr><td>支持异常</td><td>❌</td><td>✅ 自动转换</td></tr><tr><td>支持 NumPy</td><td>需手动</td><td><code class="language-plaintext highlighter-rouge">py::array_t</code> 原生支持</td></tr><tr><td>安装</td><td>标准库自带</td><td><code class="language-plaintext highlighter-rouge">pip install pybind11</code></td></tr></tbody></table><h3 id="31-pybind11-语法速查新人必看后面代码会用到">3.1 pybind11 语法速查（新人必看，后面代码会用到）</h3><blockquote><p>后面的代码里会出现很多 <code class="language-plaintext highlighter-rouge">py::xxx</code>、<code class="language-plaintext highlighter-rouge">PYBIND11_MODULE</code>、<code class="language-plaintext highlighter-rouge">static_cast</code> 等没见过的写法。先在这里统一解释，后面看到就不会懵。</p></blockquote><h4 id="namespace-py--pybind11--给命名空间起别名"><code class="language-plaintext highlighter-rouge">namespace py = pybind11;</code> —— 给命名空间起别名</h4><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">namespace</span> <span class="n">py</span> <span class="o">=</span> <span class="n">pybind11</span><span class="p">;</span>
+<span class="c1">// 意思：把 pybind11 这个命名空间取个别名叫 py</span>
+<span class="c1">// 之后写 py::array_t 就等价于 pybind11::array_t，少打字</span>
+<span class="c1">// 类比 Python：import pybind11 as py</span>
+</code></pre></div></div><h4 id="什么时候写-py-什么时候写纯-c">什么时候写 <code class="language-plaintext highlighter-rouge">py::</code> 什么时候写纯 C++</h4><table><thead><tr><th>情况</th><th>写法</th><th>说明</th></tr></thead><tbody><tr><td>用 pybind11 提供的类型</td><td><code class="language-plaintext highlighter-rouge">py::array_t&lt;float&gt;</code></td><td>pybind11 的 NumPy 数组包装类，加 <code class="language-plaintext highlighter-rouge">py::</code> 前缀</td></tr><tr><td>用 pybind11 提供的函数/宏</td><td><code class="language-plaintext highlighter-rouge">py::arg("x")</code></td><td>pybind11 的参数标记，加 <code class="language-plaintext highlighter-rouge">py::</code> 前缀</td></tr><tr><td>用 pybind11 的类绑定工具</td><td><code class="language-plaintext highlighter-rouge">py::class_&lt;Point&gt;(...)</code></td><td>pybind11 的类绑定模板，加 <code class="language-plaintext highlighter-rouge">py::</code> 前缀</td></tr><tr><td>纯 C++ 标准库</td><td><code class="language-plaintext highlighter-rouge">std::vector&lt;float&gt;</code></td><td>不加 <code class="language-plaintext highlighter-rouge">py::</code>，用 <code class="language-plaintext highlighter-rouge">std::</code></td></tr><tr><td>纯 C++ 基本类型</td><td><code class="language-plaintext highlighter-rouge">float</code>、<code class="language-plaintext highlighter-rouge">int</code>、<code class="language-plaintext highlighter-rouge">size_t</code></td><td>什么都不加</td></tr><tr><td>纯 C++ 函数</td><td><code class="language-plaintext highlighter-rouge">std::sqrt(x)</code></td><td>不加 <code class="language-plaintext highlighter-rouge">py::</code>，用 <code class="language-plaintext highlighter-rouge">std::</code></td></tr></tbody></table><blockquote><p><strong>记忆规则</strong>：<code class="language-plaintext highlighter-rouge">py::</code> 前缀 = “这是 pybind11 提供的东西，用来在 C++ 和 Python 之间搭桥”。纯 C++ 的东西该写什么就写什么，和 pybind11 无关。</p></blockquote><h4 id="pybind11_modulename-m--定义-python-模块的宏"><code class="language-plaintext highlighter-rouge">PYBIND11_MODULE(name, m)</code> —— 定义 Python 模块的宏</h4><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">PYBIND11_MODULE</span><span class="p">(</span><span class="n">vector_ops</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// 这里面写的代码在模块被 import 时执行</span>
+    <span class="c1">// 作用：告诉 Python "这个模块里有哪些函数/类"</span>
+<span class="p">}</span>
+</code></pre></div></div><table><thead><tr><th>参数</th><th>含义</th><th>例子</th></tr></thead><tbody><tr><td>第 1 个</td><td>模块名（Python 里 <code class="language-plaintext highlighter-rouge">import</code> 的名字，必须和 .so 文件名一致）</td><td><code class="language-plaintext highlighter-rouge">vector_ops</code></td></tr><tr><td>第 2 个</td><td>模块对象的变量名（随便起，通常写 <code class="language-plaintext highlighter-rouge">m</code> 或 <code class="language-plaintext highlighter-rouge">module</code>）</td><td><code class="language-plaintext highlighter-rouge">m</code></td></tr></tbody></table><blockquote><p><code class="language-plaintext highlighter-rouge">m</code> 是一个 pybind11 的模块对象，你往里面 <code class="language-plaintext highlighter-rouge">.def(...)</code> 添加函数、<code class="language-plaintext highlighter-rouge">.def_class(...)</code> 添加类。Python 里 <code class="language-plaintext highlighter-rouge">import vector_ops</code> 后，这些函数和类就能用了。</p></blockquote><h4 id="mdefname-func-args--往模块里添加函数"><code class="language-plaintext highlighter-rouge">m.def("name", &amp;func, args...)</code> —— 往模块里添加函数</h4><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">add</span><span class="p">(</span><span class="kt">int</span> <span class="n">lhs</span><span class="p">,</span> <span class="kt">int</span> <span class="n">rhs</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lhs</span> <span class="o">+</span> <span class="n">rhs</span><span class="p">;</span> <span class="p">}</span>  <span class="c1">// 纯 C++ 函数</span>
+
+<span class="n">PYBIND11_MODULE</span><span class="p">(</span><span class="n">vector_ops</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m</span><span class="p">.</span><span class="n">def</span><span class="p">(</span><span class="s">"add"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">add</span><span class="p">,</span> <span class="n">py</span><span class="o">::</span><span class="n">arg</span><span class="p">(</span><span class="s">"lhs"</span><span class="p">),</span> <span class="n">py</span><span class="o">::</span><span class="n">arg</span><span class="p">(</span><span class="s">"rhs"</span><span class="p">));</span>
+    <span class="c1">//   ↑          ↑      ↑</span>
+    <span class="c1">//   方法       C++函数  参数名标记（让 Python 支持关键字参数）</span>
+    <span class="c1">//   名字       的地址</span>
+<span class="p">}</span>
+</code></pre></div></div><table><thead><tr><th>参数位置</th><th>含义</th><th>类型</th></tr></thead><tbody><tr><td>第 1 个</td><td>Python 里的函数名</td><td>字符串 <code class="language-plaintext highlighter-rouge">"add"</code></td></tr><tr><td>第 2 个</td><td>C++ 函数的地址</td><td><code class="language-plaintext highlighter-rouge">&amp;add</code>（取地址符 <code class="language-plaintext highlighter-rouge">&amp;</code> 不能省）</td></tr><tr><td>第 3 个起</td><td>参数说明 / 文档字符串</td><td><code class="language-plaintext highlighter-rouge">py::arg("x")</code> 或 <code class="language-plaintext highlighter-rouge">"说明文字"</code></td></tr></tbody></table><blockquote><p><code class="language-plaintext highlighter-rouge">&amp;add</code> 里的 <code class="language-plaintext highlighter-rouge">&amp;</code> 是 C++ 的”取地址”操作符——拿到函数的内存地址，pybind11 据此知道要调用哪个 C++ 函数。</p></blockquote><h4 id="pyargname--标记参数名"><code class="language-plaintext highlighter-rouge">py::arg("name")</code> —— 标记参数名</h4><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">m</span><span class="p">.</span><span class="n">def</span><span class="p">(</span><span class="s">"add"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">add</span><span class="p">,</span> <span class="n">py</span><span class="o">::</span><span class="n">arg</span><span class="p">(</span><span class="s">"lhs"</span><span class="p">),</span> <span class="n">py</span><span class="o">::</span><span class="n">arg</span><span class="p">(</span><span class="s">"rhs"</span><span class="p">));</span>
+<span class="c1">// Python 里可以：vector_ops.add(1, 2)        ← 位置参数</span>
+<span class="c1">//          也可以：vector_ops.add(lhs=1, rhs=2)  ← 关键字参数</span>
+</code></pre></div></div><p>如果不写 <code class="language-plaintext highlighter-rouge">py::arg</code>，Python 侧只能用位置参数，不能用关键字参数。</p><h4 id="pyarray_tfloat--pybind11-的-numpy-数组类型"><code class="language-plaintext highlighter-rouge">py::array_t&lt;float&gt;</code> —— pybind11 的 NumPy 数组类型</h4><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">py</span><span class="o">::</span><span class="n">array_t</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">vector_square</span><span class="p">(</span><span class="n">py</span><span class="o">::</span><span class="n">array_t</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">input</span><span class="p">)</span> <span class="p">{</span>
+<span class="c1">//  ↑ 返回类型                ↑ 参数类型</span>
+</code></pre></div></div><table><thead><tr><th>写法</th><th>含义</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">py::array_t&lt;float&gt;</code></td><td>接收 NumPy 的 <strong>float32</strong> 数组</td></tr><tr><td><code class="language-plaintext highlighter-rouge">py::array_t&lt;double&gt;</code></td><td>接收 NumPy 的 <strong>float64</strong> 数组</td></tr><tr><td><code class="language-plaintext highlighter-rouge">py::array_t&lt;int&gt;</code></td><td>接收 NumPy 的 <strong>int32</strong> 数组</td></tr><tr><td><code class="language-plaintext highlighter-rouge">py::array</code></td><td>接收任意 dtype 的数组（要手动检查）</td></tr></tbody></table><blockquote><p><code class="language-plaintext highlighter-rouge">py::array_t&lt;float&gt;</code> 是模板类（类似 <code class="language-plaintext highlighter-rouge">std::vector&lt;float&gt;</code>），尖括号里指定元素类型。pybind11 自动检查传入的 NumPy 数组 dtype 是否匹配，不匹配会报 Python 的 <code class="language-plaintext highlighter-rouge">TypeError</code>。</p></blockquote><h4 id="request--获取数组的底层信息"><code class="language-plaintext highlighter-rouge">.request()</code> —— 获取数组的底层信息</h4><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="n">buf</span> <span class="o">=</span> <span class="n">input</span><span class="p">.</span><span class="n">request</span><span class="p">();</span>
+<span class="c1">// buf 包含：</span>
+<span class="c1">//   buf.ptr      → void*      数据的原始指针（要 cast 成 float* 才能用）</span>
+<span class="c1">//   buf.size     → size_t     元素总数</span>
+<span class="c1">//   buf.ndim     → int        维度数（1D=1, 2D=2）</span>
+<span class="c1">//   buf.shape    → ssize_t*   每维大小（shape[0]=行数, shape[1]=列数）</span>
+<span class="c1">//   buf.strides  → ssize_t*   每维步长（字节数）</span>
+</code></pre></div></div><blockquote><p><code class="language-plaintext highlighter-rouge">request()</code> 返回一个 <code class="language-plaintext highlighter-rouge">py::buffer_info</code> 对象，里面是 NumPy 数组的底层内存信息。拿到 <code class="language-plaintext highlighter-rouge">buf.ptr</code> 就能像普通 C++ 指针一样操作数据了。</p></blockquote><h4 id="static_casttexpr--c-的类型转换"><code class="language-plaintext highlighter-rouge">static_cast&lt;T&gt;(expr)</code> —— C++ 的类型转换</h4><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">float</span><span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">buf</span><span class="p">.</span><span class="n">ptr</span><span class="p">);</span>
+<span class="c1">//   ↑目标类型    ↑要转换的表达式</span>
+</code></pre></div></div><table><thead><tr><th>写法</th><th>含义</th><th>类比</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">static_cast&lt;float*&gt;(buf.ptr)</code></td><td>把 <code class="language-plaintext highlighter-rouge">void*</code> 转成 <code class="language-plaintext highlighter-rouge">float*</code></td><td>告诉编译器”这个指针指向的是 float”</td></tr><tr><td><code class="language-plaintext highlighter-rouge">static_cast&lt;char*&gt;(buf.ptr)</code></td><td>把 <code class="language-plaintext highlighter-rouge">void*</code> 转成 <code class="language-plaintext highlighter-rouge">char*</code></td><td>告诉编译器”按字节算地址”（stride 计算用）</td></tr></tbody></table><blockquote><p><code class="language-plaintext highlighter-rouge">buf.ptr</code> 的类型是 <code class="language-plaintext highlighter-rouge">void*</code>（无类型指针），C++ 不允许直接 <code class="language-plaintext highlighter-rouge">*buf.ptr</code> 因为不知道每个元素多大。<code class="language-plaintext highlighter-rouge">static_cast&lt;float*&gt;</code> 告诉编译器”这是指向 float 的指针”，之后 <code class="language-plaintext highlighter-rouge">ptr[0]</code>、<code class="language-plaintext highlighter-rouge">ptr[1]</code> 就能正常用了。</p><p><strong>为什么用 <code class="language-plaintext highlighter-rouge">static_cast</code> 而不是 C 风格的 <code class="language-plaintext highlighter-rouge">(float*)buf.ptr</code></strong>：<code class="language-plaintext highlighter-rouge">static_cast</code> 会在编译时检查类型是否合理（比如不能把 <code class="language-plaintext highlighter-rouge">int*</code> 转成 <code class="language-plaintext highlighter-rouge">float*</code>），更安全。C 风格的强制转换 <code class="language-plaintext highlighter-rouge">(float*)</code> 不做任何检查，容易出错。</p></blockquote><h4 id="pyclass_tm-name--绑定-c-类到-python"><code class="language-plaintext highlighter-rouge">py::class_&lt;T&gt;(m, "Name")</code> —— 绑定 C++ 类到 Python</h4><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">py</span><span class="o">::</span><span class="n">class_</span><span class="o">&lt;</span><span class="n">Point</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="s">"Point"</span><span class="p">)</span>
+<span class="c1">//  ↑模板参数  ↑模块 ↑Python里的类名</span>
+    <span class="p">.</span><span class="n">def</span><span class="p">(</span><span class="n">py</span><span class="o">::</span><span class="n">init</span><span class="o">&lt;</span><span class="kt">float</span><span class="p">,</span> <span class="kt">float</span><span class="o">&gt;</span><span class="p">())</span>     <span class="c1">// 绑定构造函数</span>
+    <span class="p">.</span><span class="n">def</span><span class="p">(</span><span class="s">"x"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">Point</span><span class="o">::</span><span class="n">x</span><span class="p">)</span>               <span class="c1">// 绑定方法</span>
+    <span class="p">.</span><span class="n">def</span><span class="p">(</span><span class="s">"__repr__"</span><span class="p">,</span> <span class="p">[](</span><span class="k">const</span> <span class="n">Point</span><span class="o">&amp;</span> <span class="n">p</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">});</span>  <span class="c1">// 绑定特殊方法</span>
+</code></pre></div></div><table><thead><tr><th><code class="language-plaintext highlighter-rouge">.def(...)</code> 调用</th><th>含义</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">py::init&lt;float, float&gt;()</code></td><td>绑定构造函数 <code class="language-plaintext highlighter-rouge">Point(float, float)</code></td></tr><tr><td><code class="language-plaintext highlighter-rouge">"x", &amp;Point::x</code></td><td>绑定方法，Python 里 <code class="language-plaintext highlighter-rouge">p.x()</code> 调用 C++ 的 <code class="language-plaintext highlighter-rouge">Point::x()</code></td></tr><tr><td><code class="language-plaintext highlighter-rouge">"__repr__", [](const Point&amp; p) { ... }</code></td><td>绑定 Python 的 <code class="language-plaintext highlighter-rouge">__repr__</code>（print 时显示），用 lambda</td></tr></tbody></table><blockquote><p><code class="language-plaintext highlighter-rouge">.def()</code> 可以链式调用（像 Python 的链式调用 <code class="language-plaintext highlighter-rouge">list.append(1).append(2)</code>），每个 <code class="language-plaintext highlighter-rouge">.def()</code> 绑定一个方法。</p></blockquote><h4 id="lambda-表达式-参数--函数体---匿名函数">Lambda 表达式 <code class="language-plaintext highlighter-rouge">[](参数) { 函数体 }</code> —— 匿名函数</h4><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">m</span><span class="p">.</span><span class="n">def</span><span class="p">(</span><span class="s">"__repr__"</span><span class="p">,</span> <span class="p">[](</span><span class="k">const</span> <span class="n">Point</span><span class="o">&amp;</span> <span class="n">p</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s">"&lt;Point x="</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">x</span><span class="p">())</span> <span class="o">+</span> <span class="s">"&gt;"</span><span class="p">;</span>
+<span class="p">});</span>
+<span class="c1">// 等价于先定义一个函数再绑定：</span>
+<span class="c1">// std::string repr_func(const Point&amp; p) { return "&lt;Point x=...&gt;"; }</span>
+<span class="c1">// m.def("__repr__", &amp;repr_func);</span>
+</code></pre></div></div><blockquote><p>Lambda 是 C++11 引入的”匿名函数”，类似 Python 的 <code class="language-plaintext highlighter-rouge">lambda</code>。在 pybind11 里常用来<strong>在绑定处直接写转换逻辑</strong>，不用单独定义函数。</p></blockquote><hr /><h3 id="32-完整示例绑定函数">3.2 完整示例：绑定函数</h3><blockquote><p><strong>完整可复现项目</strong>——建一个文件夹 <code class="language-plaintext highlighter-rouge">pybind_demo/</code>，放两个文件：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pybind_demo/         ← 建一个新文件夹
+├── vector_ops.cpp   ← C++ 代码（含 pybind11 绑定）
+└── test.py          ← Python 测试代码
+</code></pre></div></div><p>前置条件：<code class="language-plaintext highlighter-rouge">pip install pybind11</code>（在 venv 或 conda 环境里装） 下面所有命令都在 <code class="language-plaintext highlighter-rouge">pybind_demo/</code> 文件夹里执行。</p></blockquote><p><strong>第一步：写 C++ 代码</strong></p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// vector_ops.cpp</span>
+<span class="cp">#include</span> <span class="cpf">&lt;pybind11/pybind11.h&gt;</span><span class="c1">  // pybind11 的主头文件</span><span class="cp">
+</span>
+<span class="k">namespace</span> <span class="n">py</span> <span class="o">=</span> <span class="n">pybind11</span><span class="p">;</span>  <span class="c1">// 简写，之后用 py:: 代替 pybind11::</span>
+
+<span class="kt">int</span> <span class="nf">add</span><span class="p">(</span><span class="kt">int</span> <span class="n">lhs</span><span class="p">,</span> <span class="kt">int</span> <span class="n">rhs</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">lhs</span> <span class="o">+</span> <span class="n">rhs</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// PYBIND11_MODULE 定义 Python 模块</span>
+<span class="c1">// 第一个参数 vector_ops：模块名，必须和编译出来的 .so 名字一致</span>
+<span class="c1">//   编译出来的文件叫 vector_ops.cpython-3xx-xxx.so，Python 里 import vector_ops</span>
+<span class="c1">// 第二个参数 module：模块对象（Python 里的 import 名字），名字随意（通常写 m 或 module）</span>
+<span class="n">PYBIND11_MODULE</span><span class="p">(</span><span class="n">vector_ops</span><span class="p">,</span> <span class="n">module</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">module</span><span class="p">.</span><span class="n">doc</span><span class="p">()</span> <span class="o">=</span> <span class="s">"minimal vector ops extension"</span><span class="p">;</span>  <span class="c1">// 模块的 __doc__</span>
+
+    <span class="c1">// 绑定函数：Python 里可以 vector_ops.add(1, 2)</span>
+    <span class="n">module</span><span class="p">.</span><span class="n">def</span><span class="p">(</span><span class="s">"add"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">add</span><span class="p">,</span> <span class="n">py</span><span class="o">::</span><span class="n">arg</span><span class="p">(</span><span class="s">"lhs"</span><span class="p">),</span> <span class="n">py</span><span class="o">::</span><span class="n">arg</span><span class="p">(</span><span class="s">"rhs"</span><span class="p">));</span>
+    <span class="c1">//  module.def("函数名", &amp;C++函数指针, 参数说明...)</span>
+    <span class="c1">//  py::arg 让 Python 侧支持关键字参数：add(lhs=1, rhs=2)</span>
+<span class="p">}</span>
+</code></pre></div></div><p><strong>第二步：编译</strong></p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 方法一：直接用 g++（简单项目用这个）</span>
+g++ <span class="nt">-O3</span> <span class="nt">-shared</span> <span class="nt">-fPIC</span> <span class="se">\</span>
+    <span class="si">$(</span>python <span class="nt">-m</span> pybind11 <span class="nt">--includes</span><span class="si">)</span> <span class="se">\</span>
+    vector_ops.cpp <span class="se">\</span>
+    <span class="nt">-o</span> vector_ops<span class="si">$(</span>python3-config <span class="nt">--extension-suffix</span><span class="si">)</span>
+<span class="c"># 逐字解释：</span>
+<span class="c">#   -O3 -shared -fPIC     和 ctypes 章节一样：优化 + 动态库 + 位置无关</span>
+<span class="c">#   $(python -m pybind11 --includes)  命令替换：运行 python -m pybind11 --includes</span>
+<span class="c">#       输出类似 -I/usr/include/python3.11 -I.../pybind11/include</span>
+<span class="c">#       让 g++ 能找到 Python.h 和 pybind11 的头文件</span>
+<span class="c">#   vector_ops.cpp         源文件</span>
+<span class="c">#   -o vector_ops$(python3-config --extension-suffix)</span>
+<span class="c">#       $(python3-config --extension-suffix) 输出 .cpython-311-x86_64-linux-gnu.so</span>
+<span class="c">#       所以最终文件名是 vector_ops.cpython-311-x86_64-linux-gnu.so</span>
+<span class="c">#       这个名字让 Python 能正确识别为扩展模块</span>
+
+<span class="c"># 方法二：用 CMake（推荐，见第五章）</span>
+
+<span class="c"># 验证编译是否成功</span>
+<span class="nb">ls </span>vector_ops<span class="k">*</span>.so
+<span class="c"># 应该看到 vector_ops.cpython-3xx-xxx.so 文件</span>
+</code></pre></div></div><h4 id="用-uv-管理-python-时的编译命令uv-用户必看">用 uv 管理 Python 时的编译命令（uv 用户必看）</h4><blockquote><p>如果你用 <code class="language-plaintext highlighter-rouge">uv</code>（Astral 出的 Python 包管理器）启动 Python，上面命令里的 <code class="language-plaintext highlighter-rouge">python</code> 和 <code class="language-plaintext highlighter-rouge">python3-config</code> 都要换成 uv 版本，否则会报 <code class="language-plaintext highlighter-rouge">Command 'python3-config' not found</code>。</p></blockquote><p><strong>为什么标准命令会报错</strong>：</p><p><code class="language-plaintext highlighter-rouge">python3-config</code> 是 <code class="language-plaintext highlighter-rouge">python3-dev</code>（Debian/Ubuntu）或 <code class="language-plaintext highlighter-rouge">python3-devel</code>（Fedora）包提供的命令，不是 Python 本身自带的。uv 安装的 Python 是独立版本（不在系统包管理里），所以 <code class="language-plaintext highlighter-rouge">python3-config</code> 不在 PATH 里，报：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Command 'python3-config' not found, but can be installed with:
+sudo apt install python3-dev
+</code></pre></div></div><p><strong>解法一：全部用 <code class="language-plaintext highlighter-rouge">uv run</code> 前缀（推荐，不用装 python3-dev）</strong></p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># uv 版本：把 python 和 python3-config 都换成 uv run python 的等价命令</span>
+g++ <span class="nt">-O3</span> <span class="nt">-shared</span> <span class="nt">-fPIC</span> <span class="se">\</span>
+    <span class="si">$(</span>uv run python <span class="nt">-m</span> pybind11 <span class="nt">--includes</span><span class="si">)</span> <span class="se">\</span>
+    vector_ops.cpp <span class="se">\</span>
+    <span class="nt">-o</span> vector_ops<span class="si">$(</span>uv run python <span class="nt">-c</span> <span class="s2">"import sysconfig; print(sysconfig.get_config_var('EXT_SUFFIX'))"</span><span class="si">)</span>
+</code></pre></div></div><p><strong>逐段解释——原命令和 uv 版本的对照</strong>：</p><table><thead><tr><th>原命令</th><th>uv 版本</th><th>作用</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">python -m pybind11 --includes</code></td><td><code class="language-plaintext highlighter-rouge">uv run python -m pybind11 --includes</code></td><td>输出头文件路径（加 <code class="language-plaintext highlighter-rouge">uv run</code> 前缀）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">python3-config --extension-suffix</code></td><td><code class="language-plaintext highlighter-rouge">uv run python -c "import sysconfig; print(sysconfig.get_config_var('EXT_SUFFIX'))"</code></td><td>输出 <code class="language-plaintext highlighter-rouge">.cpython-3xx-xxx.so</code> 后缀</td></tr></tbody></table><blockquote><p><code class="language-plaintext highlighter-rouge">python3-config --extension-suffix</code> 本质就是查 <code class="language-plaintext highlighter-rouge">sysconfig</code> 的 <code class="language-plaintext highlighter-rouge">EXT_SUFFIX</code> 变量。uv 没有独立的 <code class="language-plaintext highlighter-rouge">python3-config</code> 命令，但可以直接用 Python 代码查到一样的值，结果完全等价。</p></blockquote><p><strong>解法二：装 python3-dev（如果系统也用 Python）</strong></p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 让 python3-config 可用（但注意：这是系统的 Python，不是 uv 的 Python）</span>
+<span class="nb">sudo </span>apt <span class="nb">install </span>python3-dev
+<span class="c"># 装完后原命令就能跑了，但要确认 python3-config 对应的 Python 版本</span>
+<span class="c"># 和你 uv 用的 Python 版本一致，否则 .so 后缀对不上</span>
+python3-config <span class="nt">--extension-suffix</span>   <span class="c"># 看输出版本对不对</span>
+</code></pre></div></div><blockquote><p>⚠️ 解法二的风险：<code class="language-plaintext highlighter-rouge">python3-config</code> 查的是<strong>系统 Python</strong> 的后缀（比如 3.10），但你 uv 用的可能是 3.12，后缀不一致会导致 <code class="language-plaintext highlighter-rouge">import</code> 失败（Python 找不到对应版本的 .so）。<strong>推荐用解法一</strong>，确保查的是同一个 Python。</p></blockquote><p><strong>解法三：用 CMake（一劳永逸，见第五章）</strong></p><p>CMake + pybind11 会自动找到正确的 Python 和头文件，不用手动写 <code class="language-plaintext highlighter-rouge">python3-config</code>。uv 用户也能用，只要 <code class="language-plaintext highlighter-rouge">uv run cmake</code> 时 <code class="language-plaintext highlighter-rouge">find_package(Python)</code> 能找到 uv 的 Python 即可。这是<strong>最推荐的方式</strong>，不用纠结各种命令替换。</p><blockquote><p><strong>速查</strong>：uv 环境下 <code class="language-plaintext highlighter-rouge">python3-config --extension-suffix</code> 的等价写法</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>uv run python <span class="nt">-c</span> <span class="s2">"import sysconfig; print(sysconfig.get_config_var('EXT_SUFFIX'))"</span>
+</code></pre></div></div><p>输出示例：<code class="language-plaintext highlighter-rouge">.cpython-313-x86_64-linux-gnu.so</code></p></blockquote><p><strong>第三步：Python 侧使用</strong></p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># test.py
+</span><span class="kn">import</span> <span class="nn">vector_ops</span>   <span class="c1"># 导入编译好的扩展（.so 文件要在当前目录或 PYTHONPATH 里）
+</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">vector_ops</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>  <span class="c1"># 3
+</span>
+<span class="c1"># 支持关键字参数（因为 C++ 里用了 py::arg）
+</span><span class="n">result</span> <span class="o">=</span> <span class="n">vector_ops</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">lhs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">rhs</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>  <span class="c1"># 30
+</span></code></pre></div></div><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 运行（在 pybind_demo/ 目录下）</span>
+python test.py
+<span class="c"># 输出：</span>
+<span class="c"># 3</span>
+<span class="c"># 30</span>
+</code></pre></div></div><h3 id="33-绑定-c-类">3.3 绑定 C++ 类</h3><blockquote><p>这个示例和 3.2 一样的项目结构，只是 C++ 代码更复杂（绑定一个类）。建一个文件夹 <code class="language-plaintext highlighter-rouge">pybind_class/</code>，放 <code class="language-plaintext highlighter-rouge">point.cpp</code> 和 <code class="language-plaintext highlighter-rouge">test.py</code>。</p></blockquote><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// point.cpp</span>
+<span class="cp">#include</span> <span class="cpf">&lt;pybind11/pybind11.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;cmath&gt;</span><span class="c1">   // std::sqrt</span><span class="cp">
+</span>
+<span class="k">namespace</span> <span class="n">py</span> <span class="o">=</span> <span class="n">pybind11</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Point</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="n">Point</span><span class="p">(</span><span class="kt">float</span> <span class="n">x</span><span class="p">,</span> <span class="kt">float</span> <span class="n">y</span><span class="p">)</span> <span class="o">:</span> <span class="n">x_</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">y_</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="p">{}</span>  <span class="c1">// 构造函数</span>
+
+    <span class="kt">float</span> <span class="n">x</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">x_</span><span class="p">;</span> <span class="p">}</span>   <span class="c1">// getter</span>
+    <span class="kt">float</span> <span class="n">y</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">y_</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="kt">float</span> <span class="n">distance_to</span><span class="p">(</span><span class="k">const</span> <span class="n">Point</span><span class="o">&amp;</span> <span class="n">other</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>  <span class="c1">// 计算两点距离</span>
+        <span class="kt">float</span> <span class="n">dx</span> <span class="o">=</span> <span class="n">x_</span> <span class="o">-</span> <span class="n">other</span><span class="p">.</span><span class="n">x_</span><span class="p">;</span>
+        <span class="kt">float</span> <span class="n">dy</span> <span class="o">=</span> <span class="n">y_</span> <span class="o">-</span> <span class="n">other</span><span class="p">.</span><span class="n">y_</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">dx</span> <span class="o">*</span> <span class="n">dx</span> <span class="o">+</span> <span class="n">dy</span> <span class="o">*</span> <span class="n">dy</span><span class="p">);</span>
+    <span class="p">}</span>
+
+<span class="nl">private:</span>
+    <span class="kt">float</span> <span class="n">x_</span><span class="p">,</span> <span class="n">y_</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="n">PYBIND11_MODULE</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span> <span class="p">{</span>        <span class="c1">// 模块名叫 point</span>
+    <span class="c1">// py::class_&lt;类名&gt;(模块, "Python里的类名")</span>
+    <span class="n">py</span><span class="o">::</span><span class="n">class_</span><span class="o">&lt;</span><span class="n">Point</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="s">"Point"</span><span class="p">)</span>
+        <span class="p">.</span><span class="n">def</span><span class="p">(</span><span class="n">py</span><span class="o">::</span><span class="n">init</span><span class="o">&lt;</span><span class="kt">float</span><span class="p">,</span> <span class="kt">float</span><span class="o">&gt;</span><span class="p">())</span>           <span class="c1">// 绑定构造函数 Point(x, y)</span>
+        <span class="p">.</span><span class="n">def</span><span class="p">(</span><span class="s">"x"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">Point</span><span class="o">::</span><span class="n">x</span><span class="p">)</span>                     <span class="c1">// 绑定方法 .x()</span>
+        <span class="p">.</span><span class="n">def</span><span class="p">(</span><span class="s">"y"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">Point</span><span class="o">::</span><span class="n">y</span><span class="p">)</span>
+        <span class="p">.</span><span class="n">def</span><span class="p">(</span><span class="s">"distance_to"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">Point</span><span class="o">::</span><span class="n">distance_to</span><span class="p">)</span>
+        <span class="p">.</span><span class="n">def</span><span class="p">(</span><span class="s">"__repr__"</span><span class="p">,</span> <span class="p">[](</span><span class="k">const</span> <span class="n">Point</span><span class="o">&amp;</span> <span class="n">p</span><span class="p">)</span> <span class="p">{</span>    <span class="c1">// 自定义 Python 的 repr（print 时显示）</span>
+            <span class="k">return</span> <span class="s">"&lt;Point x="</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">x</span><span class="p">())</span>
+                 <span class="o">+</span> <span class="s">", y="</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">y</span><span class="p">())</span> <span class="o">+</span> <span class="s">"&gt;"</span><span class="p">;</span>
+        <span class="p">});</span>
+    <span class="c1">// 注意：.def() 可以链式调用，每个 .def 绑定一个方法</span>
+<span class="p">}</span>
+</code></pre></div></div><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 编译（和 3.2 一样的命令，只是文件名和模块名变了）</span>
+g++ <span class="nt">-O3</span> <span class="nt">-shared</span> <span class="nt">-fPIC</span> <span class="se">\</span>
+    <span class="si">$(</span>python <span class="nt">-m</span> pybind11 <span class="nt">--includes</span><span class="si">)</span> <span class="se">\</span>
+    point.cpp <span class="se">\</span>
+    <span class="nt">-o</span> point<span class="si">$(</span>python3-config <span class="nt">--extension-suffix</span><span class="si">)</span>
+
+<span class="c"># uv 用户用这个版本（见 3.2 节的 uv 说明）：(需要先使用 uv init 以及 uv add pybind11 才能运行)</span>
+g++ <span class="nt">-O3</span> <span class="nt">-shared</span> <span class="nt">-fPIC</span> <span class="se">\</span>
+    <span class="si">$(</span>uv run python <span class="nt">-m</span> pybind11 <span class="nt">--includes</span><span class="si">)</span> <span class="se">\</span>
+    point.cpp <span class="se">\</span>
+    <span class="nt">-o</span> point<span class="si">$(</span>uv run python <span class="nt">-c</span> <span class="s2">"import sysconfig; print(sysconfig.get_config_var('EXT_SUFFIX'))"</span><span class="si">)</span>
+</code></pre></div></div><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># test.py
+</span><span class="kn">import</span> <span class="nn">point</span>
+
+<span class="n">p1</span> <span class="o">=</span> <span class="n">point</span><span class="p">.</span><span class="n">Point</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>        <span class="c1"># 构造函数
+</span><span class="n">p2</span> <span class="o">=</span> <span class="n">point</span><span class="p">.</span><span class="n">Point</span><span class="p">(</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">p1</span><span class="p">)</span>                          <span class="c1"># &lt;Point x=0.000000, y=0.000000&gt;
+</span><span class="k">print</span><span class="p">(</span><span class="n">p1</span><span class="p">.</span><span class="n">x</span><span class="p">(),</span> <span class="n">p1</span><span class="p">.</span><span class="n">y</span><span class="p">())</span>              <span class="c1"># 0.0 0.0
+</span><span class="k">print</span><span class="p">(</span><span class="n">p1</span><span class="p">.</span><span class="n">distance_to</span><span class="p">(</span><span class="n">p2</span><span class="p">))</span>          <span class="c1"># 5.0（勾股定理 3-4-5）
+</span></code></pre></div></div><p>然后使用<code class="language-plaintext highlighter-rouge">uv run python test.py</code> 即可，结果如下：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lenck@DESKTOP-1EV6QJM:~/ai-infra/cpp_projects/pybind_class<span class="nv">$ </span>uv run python test.py
+&lt;Point <span class="nv">x</span><span class="o">=</span>0.000000, <span class="nv">y</span><span class="o">=</span>0.000000&gt;
+0.0 0.0
+5.0
+</code></pre></div></div><h3 id="34-绑定-numpy-数组">3.4 绑定 NumPy 数组</h3><blockquote><p>建文件夹 <code class="language-plaintext highlighter-rouge">pybind_numpy/</code>，放 <code class="language-plaintext highlighter-rouge">vector_math.cpp</code> 和 <code class="language-plaintext highlighter-rouge">test.py</code>。这个示例展示 pybind11 怎么接收 NumPy 数组（比 ctypes 的指针方式更自然）。</p></blockquote><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// vector_math.cpp</span>
+<span class="cp">#include</span> <span class="cpf">&lt;pybind11/pybind11.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;pybind11/numpy.h&gt;</span><span class="c1">   // pybind11 的 NumPy 支持</span><span class="cp">
+#include</span> <span class="cpf">&lt;cmath&gt;</span><span class="cp">
+</span>
+<span class="k">namespace</span> <span class="n">py</span> <span class="o">=</span> <span class="n">pybind11</span><span class="p">;</span>
+
+<span class="c1">// py::array_t&lt;float&gt; 接收 NumPy float32 数组</span>
+<span class="c1">// 和 ctypes 不同，pybind11 自动处理类型检查和内存映射</span>
+<span class="n">py</span><span class="o">::</span><span class="n">array_t</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">vector_square</span><span class="p">(</span><span class="n">py</span><span class="o">::</span><span class="n">array_t</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">input</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// 获取数组信息（类似 ctypes 的指针，但更安全）</span>
+    <span class="k">auto</span> <span class="n">buf</span> <span class="o">=</span> <span class="n">input</span><span class="p">.</span><span class="n">request</span><span class="p">();</span>  <span class="c1">// 请求数组缓冲区，返回一个包含指针/shape/stride 的对象</span>
+
+    <span class="c1">// 检查是否是一维数组</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">buf</span><span class="p">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">"输入必须是一维数组"</span><span class="p">);</span>
+        <span class="c1">// pybind11 会自动把这个 C++ 异常转成 Python 的 RuntimeError</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 创建输出数组（同形状）</span>
+    <span class="k">auto</span> <span class="n">result</span> <span class="o">=</span> <span class="n">py</span><span class="o">::</span><span class="n">array_t</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">buf</span><span class="p">.</span><span class="n">size</span><span class="p">);</span>
+    <span class="k">auto</span> <span class="n">result_buf</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">request</span><span class="p">();</span>
+
+    <span class="c1">// 获取数据指针（从这里开始和普通 C++ 代码一样）</span>
+    <span class="kt">float</span><span class="o">*</span> <span class="n">in_ptr</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">buf</span><span class="p">.</span><span class="n">ptr</span><span class="p">);</span>
+    <span class="kt">float</span><span class="o">*</span> <span class="n">out_ptr</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">result_buf</span><span class="p">.</span><span class="n">ptr</span><span class="p">);</span>
+
+    <span class="c1">// 计算</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">buf</span><span class="p">.</span><span class="n">size</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">out_ptr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">in_ptr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">in_ptr</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">result</span><span class="p">;</span>  <span class="c1">// pybind11 自动把 C++ 的 array_t 转回 Python 的 NumPy 数组</span>
+<span class="p">}</span>
+
+<span class="c1">// 原地修改版本（零拷贝：直接改输入数组的内存，不创建新数组）</span>
+<span class="kt">void</span> <span class="n">vector_scale_inplace</span><span class="p">(</span><span class="n">py</span><span class="o">::</span><span class="n">array_t</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">arr</span><span class="p">,</span> <span class="kt">float</span> <span class="n">factor</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">buf</span> <span class="o">=</span> <span class="n">arr</span><span class="p">.</span><span class="n">request</span><span class="p">();</span>
+    <span class="kt">float</span><span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">buf</span><span class="p">.</span><span class="n">ptr</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">buf</span><span class="p">.</span><span class="n">size</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">ptr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*=</span> <span class="n">factor</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">PYBIND11_MODULE</span><span class="p">(</span><span class="n">vector_math</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m</span><span class="p">.</span><span class="n">def</span><span class="p">(</span><span class="s">"square"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">vector_square</span><span class="p">,</span> <span class="s">"对数组每个元素求平方"</span><span class="p">);</span>
+    <span class="n">m</span><span class="p">.</span><span class="n">def</span><span class="p">(</span><span class="s">"scale_inplace"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">vector_scale_inplace</span><span class="p">,</span>
+          <span class="n">py</span><span class="o">::</span><span class="n">arg</span><span class="p">(</span><span class="s">"arr"</span><span class="p">),</span> <span class="n">py</span><span class="o">::</span><span class="n">arg</span><span class="p">(</span><span class="s">"factor"</span><span class="p">));</span>
+<span class="p">}</span>
+</code></pre></div></div><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 编译（和前面一样的命令）</span>
+g++ <span class="nt">-O3</span> <span class="nt">-shared</span> <span class="nt">-fPIC</span> <span class="se">\</span>
+    <span class="si">$(</span>python <span class="nt">-m</span> pybind11 <span class="nt">--includes</span><span class="si">)</span> <span class="se">\</span>
+    vector_math.cpp <span class="se">\</span>
+    <span class="nt">-o</span> vector_math<span class="si">$(</span>python3-config <span class="nt">--extension-suffix</span><span class="si">)</span>
+
+<span class="c"># uv 用户用这个版本（见 3.2 节的 uv 说明）：</span>
+g++ <span class="nt">-O3</span> <span class="nt">-shared</span> <span class="nt">-fPIC</span> <span class="se">\</span>
+    <span class="si">$(</span>uv run python <span class="nt">-m</span> pybind11 <span class="nt">--includes</span><span class="si">)</span> <span class="se">\</span>
+    vector_math.cpp <span class="se">\</span>
+    <span class="nt">-o</span> vector_math<span class="si">$(</span>uv run python <span class="nt">-c</span> <span class="s2">"import sysconfig; print(sysconfig.get_config_var('EXT_SUFFIX'))"</span><span class="si">)</span>
+</code></pre></div></div><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># test.py
+</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">vector_math</span>
+
+<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">float32</span><span class="p">)</span>
+
+<span class="c1"># 返回新数组（不修改原数组）
+</span><span class="n">result</span> <span class="o">=</span> <span class="n">vector_math</span><span class="p">.</span><span class="n">square</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>  <span class="c1"># [ 1.  4.  9. 16.]
+</span>
+<span class="c1"># 原地修改（零拷贝，直接改 arr 的内存）
+</span><span class="n">vector_math</span><span class="p">.</span><span class="n">scale_inplace</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>  <span class="c1"># [2. 4. 6. 8.]  ← arr 被修改了
+</span></code></pre></div></div><h3 id="35-释放-gil让-c-计算时其他-python-线程能跑">3.5 释放 GIL（让 C++ 计算时其他 Python 线程能跑）</h3><blockquote><p><strong>先说 GIL 是什么</strong>：GIL（Global Interpreter Lock）是 Python 的全局锁——同一时刻只有一个线程能执行 Python 代码。调用 C++ 扩展时，默认也持有 GIL，导致其他 Python 线程被阻塞。如果 C++ 代码是纯计算（不碰 Python 对象），可以临时释放 GIL，让其他 Python 线程能同时跑。</p></blockquote><blockquote><p>这个示例建文件夹 <code class="language-plaintext highlighter-rouge">pybind_gil/</code>，放 <code class="language-plaintext highlighter-rouge">mylib.cpp</code>。</p></blockquote><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// mylib.cpp</span>
+<span class="cp">#include</span> <span class="cpf">&lt;pybind11/pybind11.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;cmath&gt;</span><span class="cp">
+</span>
+<span class="k">namespace</span> <span class="n">py</span> <span class="o">=</span> <span class="n">pybind11</span><span class="p">;</span>
+
+<span class="c1">// 这是不涉及 Python 的纯 C++ 计算</span>
+<span class="kt">void</span> <span class="nf">heavy_computation</span><span class="p">(</span><span class="kt">float</span><span class="o">*</span> <span class="n">data</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">PYBIND11_MODULE</span><span class="p">(</span><span class="n">mylib</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m</span><span class="p">.</span><span class="n">def</span><span class="p">(</span><span class="s">"compute"</span><span class="p">,</span> <span class="p">[](</span><span class="n">py</span><span class="o">::</span><span class="n">array_t</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">arr</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">auto</span> <span class="n">buf</span> <span class="o">=</span> <span class="n">arr</span><span class="p">.</span><span class="n">request</span><span class="p">();</span>
+        <span class="kt">float</span><span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">buf</span><span class="p">.</span><span class="n">ptr</span><span class="p">);</span>
+
+        <span class="c1">// py::gil_scoped_release 释放 GIL</span>
+        <span class="c1">// 期间不能调用任何 Python API！（不能碰 Python 对象）</span>
+        <span class="p">{</span>
+            <span class="n">py</span><span class="o">::</span><span class="n">gil_scoped_release</span> <span class="n">release</span><span class="p">;</span>   <span class="c1">// 进入：释放 GIL</span>
+            <span class="n">heavy_computation</span><span class="p">(</span><span class="n">ptr</span><span class="p">,</span> <span class="n">buf</span><span class="p">.</span><span class="n">size</span><span class="p">);</span> <span class="c1">// 这时其他 Python 线程能跑</span>
+        <span class="p">}</span>  <span class="c1">// 离开花括号，GIL 自动重新获取</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div></div><blockquote><p><strong>关键规则</strong>：<code class="language-plaintext highlighter-rouge">gil_scoped_release</code> 的大括号里<strong>只能操作纯 C/C++ 数据</strong>（裸指针、<code class="language-plaintext highlighter-rouge">std::vector</code> 等），不能碰任何 Python 对象（<code class="language-plaintext highlighter-rouge">py::list</code>、<code class="language-plaintext highlighter-rouge">py::str</code>、甚至 <code class="language-plaintext highlighter-rouge">py::print</code>）。因为 GIL 释放后，其他 Python 线程可能同时在改这些对象，碰了会崩溃。</p></blockquote><h3 id="36-绑定大型数组时的检查清单">3.6 绑定大型数组时的检查清单</h3><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">py</span><span class="o">::</span><span class="n">array_t</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">process</span><span class="p">(</span><span class="n">py</span><span class="o">::</span><span class="n">array_t</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">input</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">buf</span> <span class="o">=</span> <span class="n">input</span><span class="p">.</span><span class="n">request</span><span class="p">();</span>
+
+    <span class="c1">// ① dtype 是否匹配？（py::array_t&lt;float&gt; 已强制 float32）</span>
+    <span class="c1">// 如果想接受多种类型，用 py::array（不模板化）+ 手动检查</span>
+
+    <span class="c1">// ② shape 是否符合算法假设？</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">buf</span><span class="p">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">"需要二维数组"</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// ③ 数据是否连续？</span>
+    <span class="c1">// py::array_t 默认要求连续，但可以加 py::array::c_style</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">input</span><span class="p">.</span><span class="n">flags</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">py</span><span class="o">::</span><span class="n">array</span><span class="o">::</span><span class="n">c_style</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">"数组必须是 C 连续的"</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// ④ 内存位于 CPU 还是 GPU？</span>
+    <span class="c1">// py::array_t 只能处理 CPU 内存</span>
+    <span class="c1">// GPU 要用 torch::Tensor + CUDA 扩展</span>
+
+    <span class="c1">// ⑤ 谁拥有底层存储？</span>
+    <span class="c1">// 如果返回新数组（如 py::array_t&lt;float&gt;(...)），新数组拥有自己的内存 ✅</span>
+    <span class="c1">// 如果返回对输入的引用，要确保输入的生命周期</span>
+
+    <span class="c1">// ⑥ 计算期间是否应该释放 GIL？</span>
+    <span class="c1">// 纯 C++ 计算 → 释放 GIL（py::gil_scoped_release）</span>
+    <span class="c1">// 需要调 Python API → 不释放</span>
+
+    <span class="c1">// ⑦ 原生异常如何转换为 Python 异常？</span>
+    <span class="c1">// throw std::runtime_error("...") → 自动变成 Python RuntimeError</span>
+    <span class="c1">// throw std::invalid_argument("...") → 自动变成 Python ValueError</span>
+<span class="p">}</span>
+</code></pre></div></div><hr /><h2 id="四零拷贝不是没有条件">四、零拷贝不是”没有条件”</h2><h3 id="41-什么是零拷贝先用-python-类比">4.1 什么是零拷贝（先用 Python 类比）</h3><p><strong>先看”有拷贝”的场景</strong>（Python 里的例子）：</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 有拷贝：Python 把数据复制一份给 C++
+</span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">]</span>
+<span class="c1"># 调用 C++ 函数时，Python 把 data 的内容复制到一块新的 C++ 内存里
+# C++ 函数处理完后，结果再复制回 Python
+# 问题：大数据（比如 1GB 的数组）复制一次就要几十毫秒，白白浪费时间
+</span></code></pre></div></div><p><strong>零拷贝</strong>：Python 和 C++ 共享同一块底层内存，不复制数据。</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 零拷贝：Python 和 C++ 用同一块内存
+</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="c1"># arr 的底层是一块连续的 float32 内存
+# 把这块内存的地址传给 C++，C++ 直接在这块内存上读写
+# 不复制任何数据！
+</span></code></pre></div></div><p><strong>图解</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>有拷贝：                         零拷贝：
+Python 对象                      Python 对象（NumPy 数组）
+  │                                │
+  ▼ 复制数据（慢）                   ▼ 只传指针（快）
+C++ 缓冲区（新内存）              C++ 指针（指向同一块内存）
+（两块内存，内容一样）            （只有一块内存，双方共享）
+</code></pre></div></div><p><strong>什么时候零拷贝有价值</strong>：数据量大的时候（比如 1M 个 float 的数组，复制要几毫秒，零拷贝瞬间完成）。数据量小的时候（比如 3 个 float），复制开销可以忽略，零拷贝的复杂度反而不值得。</p><h3 id="42-零拷贝的七项契约">4.2 零拷贝的七项契约</h3><p>零拷贝要求双方对以下<strong>七项契约</strong>达成一致：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>地址 + 元素类型 + 形状 + 步长 + 设备 + 生命周期 + 可变性
+</code></pre></div></div><table><thead><tr><th>契约</th><th>不一致的后果</th></tr></thead><tbody><tr><td><strong>地址</strong></td><td>访问非法内存 → 崩溃</td></tr><tr><td><strong>元素类型</strong></td><td>float32 当 float64 读 → 数据错误</td></tr><tr><td><strong>形状</strong></td><td>(3,4) 当 (4,3) 读 → 数据错位</td></tr><tr><td><strong>步长</strong></td><td>转置数组当连续读 → 数据错误</td></tr><tr><td><strong>设备</strong></td><td>GPU 指针当 CPU 读 → 崩溃</td></tr><tr><td><strong>生命周期</strong></td><td>Python 释放了，C++ 还在用 → use-after-free</td></tr><tr><td><strong>可变性</strong></td><td>只读数据当可变写 → 数据损坏</td></tr></tbody></table><h3 id="43-步长stride陷阱">4.3 步长（stride）陷阱</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="c1"># 创建一个 2x3 数组
+</span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">float32</span><span class="p">)</span>
+
+<span class="c1"># 转置
+</span><span class="n">b</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">T</span>  <span class="c1"># b 是 3x2，但不连续！
+</span>
+<span class="k">print</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="c1"># [[1. 4.]
+#  [2. 5.]
+#  [3. 6.]]
+</span>
+<span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">flags</span><span class="p">[</span><span class="s">'C_CONTIGUOUS'</span><span class="p">])</span>  <span class="c1"># True ← 连续！
+</span><span class="k">print</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">flags</span><span class="p">[</span><span class="s">'C_CONTIGUOUS'</span><span class="p">])</span>  <span class="c1"># False ← 不连续！
+</span>
+<span class="c1"># 如果 C++ 假设连续，按 C 顺序读 b 的底层内存：
+# 实际内存：[1,2,3,4,5,6]       ← 这是 a 的内存布局，b 只是 a 的"视角"
+# C++ 读成：[[1,2],[3,4],[5,6]]  ← 错了！
+# 应该是：  [[1,4],[2,5],[3,6]]  ← b 看到的形状是 3x2
+</span></code></pre></div></div><p><strong>逐行解释这段在说什么</strong>：</p><ol><li><code class="language-plaintext highlighter-rouge">a = np.array([[1,2,3],[4,5,6]])</code> 创建 2 行 3 列数组，内存里存的是 <code class="language-plaintext highlighter-rouge">[1,2,3,4,5,6]</code>（按行存储）</li><li><code class="language-plaintext highlighter-rouge">b = a.T</code> 转置成 3 行 2 列，但<strong>没有复制数据</strong>——b 和 a 共享同一块内存 <code class="language-plaintext highlighter-rouge">[1,2,3,4,5,6]</code></li><li>b 的形状是 <code class="language-plaintext highlighter-rouge">(3,2)</code>，但底层内存还是 a 的 <code class="language-plaintext highlighter-rouge">[1,2,3,4,5,6]</code></li><li>如果 C++ 代码假设”3x2 = 前 6 个数按行排列”，会读成 <code class="language-plaintext highlighter-rouge">[[1,2],[3,4],[5,6]]</code></li><li>但 b 的实际语义是”a 的转置”，应该是 <code class="language-plaintext highlighter-rouge">[[1,4],[2,5],[3,6]]</code></li><li><strong>问题根源</strong>：b 的数据不是按 C 顺序（行优先）排列的，它用了 stride 来表达”怎么从底层内存取出正确的数据”</li></ol><blockquote><p><strong>stride 是什么</strong>：NumPy 数组除了 shape（每维大小）还有 strides（每维的步长，单位是字节）。它告诉 NumPy”要取第 i 行第 j 列的元素，在底层内存里偏移多少字节”。连续数组的 stride 就是”一行多少字节”，不连续数组（如转置）的 stride 不同。</p></blockquote><p><strong>解决方法</strong>：</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 方法一：强制连续化（会复制）
+</span><span class="n">b_contiguous</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+
+<span class="c1"># 方法二：在 C++ 侧用 strides 信息
+</span></code></pre></div></div><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// C++ 侧正确处理 strides</span>
+<span class="n">py</span><span class="o">::</span><span class="n">array_t</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">process_with_strides</span><span class="p">(</span><span class="n">py</span><span class="o">::</span><span class="n">array_t</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">input</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">buf</span> <span class="o">=</span> <span class="n">input</span><span class="p">.</span><span class="n">request</span><span class="p">();</span>
+
+    <span class="c1">// buf.shape[i]  → 第 i 维大小</span>
+    <span class="c1">// buf.strides[i] → 第 i 维步长（字节）</span>
+
+    <span class="c1">// 用 strides 访问元素</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">ssize_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">buf</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">ssize_t</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">buf</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// 注意：strides 是字节数，要除以 sizeof(float)</span>
+            <span class="kt">float</span><span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">*&gt;</span><span class="p">(</span>
+                <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">buf</span><span class="p">.</span><span class="n">ptr</span><span class="p">)</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">buf</span><span class="p">.</span><span class="n">strides</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">j</span> <span class="o">*</span> <span class="n">buf</span><span class="p">.</span><span class="n">strides</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="p">);</span>
+            <span class="o">*</span><span class="n">ptr</span> <span class="o">*=</span> <span class="mf">2.0</span><span class="n">f</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">input</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div><p><strong>逐行解释这个 <code class="language-plaintext highlighter-rouge">static_cast</code> 嵌套怎么读</strong>：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">float</span><span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">*&gt;</span><span class="p">(</span>
+    <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">buf</span><span class="p">.</span><span class="n">ptr</span><span class="p">)</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">buf</span><span class="p">.</span><span class="n">strides</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">j</span> <span class="o">*</span> <span class="n">buf</span><span class="p">.</span><span class="n">strides</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="p">);</span>
+</code></pre></div></div><p>从内到外拆：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>① buf.ptr                         类型是 void*（无类型指针，指向数组开头）
+② static_cast&lt;char*&gt;(buf.ptr)     转成 char*（字节指针）
+                                   为什么用 char*？因为 strides 是字节数，
+                                   char* + n 就是"往后移 n 个字节"
+③ ... + i * buf.strides[0]        第 i 行偏移 strides[0] 字节
+④ ... + j * buf.strides[1]        再偏移 strides[1] 字节（第 j 列）
+⑤ static_cast&lt;float*&gt;(...)        把算好的字节地址转回 float*（按 float 读写）
+</code></pre></div></div><blockquote><p><strong>为什么不能直接 <code class="language-plaintext highlighter-rouge">float* + offset</code></strong>：<code class="language-plaintext highlighter-rouge">float* + 1</code> 是”往后移一个 float（4 字节）”，但 strides 给的是字节数。所以要先转成 <code class="language-plaintext highlighter-rouge">char*</code>（字节指针）按字节计算偏移，再转回 <code class="language-plaintext highlighter-rouge">float*</code>。这是 C++ 里处理 stride 的标准套路。</p></blockquote><h3 id="44-生命周期陷阱">4.4 生命周期陷阱</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">ctypes</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="n">lib</span> <span class="o">=</span> <span class="n">ctypes</span><span class="p">.</span><span class="n">CDLL</span><span class="p">(</span><span class="s">"./libscale.so"</span><span class="p">)</span>
+
+<span class="c1"># ❌ 危险：临时数组的指针可能在 C++ 使用前被回收
+</span><span class="k">def</span> <span class="nf">bad_example</span><span class="p">():</span>
+    <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">ptr</span> <span class="o">=</span> <span class="n">arr</span><span class="p">.</span><span class="n">ctypes</span><span class="p">.</span><span class="n">data_as</span><span class="p">(</span><span class="n">ctypes</span><span class="p">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">ctypes</span><span class="p">.</span><span class="n">c_float</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">ptr</span>  <span class="c1"># arr 离开作用域可能被回收，ptr 悬空！
+</span>
+<span class="n">ptr</span> <span class="o">=</span> <span class="n">bad_example</span><span class="p">()</span>
+<span class="n">lib</span><span class="p">.</span><span class="n">scale</span><span class="p">(</span><span class="n">ptr</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>  <span class="c1"># 可能 use-after-free！
+</span>
+<span class="c1"># ✅ 正确：保持数组引用
+</span><span class="k">def</span> <span class="nf">good_example</span><span class="p">():</span>
+    <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">ptr</span> <span class="o">=</span> <span class="n">arr</span><span class="p">.</span><span class="n">ctypes</span><span class="p">.</span><span class="n">data_as</span><span class="p">(</span><span class="n">ctypes</span><span class="p">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">ctypes</span><span class="p">.</span><span class="n">c_float</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">arr</span><span class="p">,</span> <span class="n">ptr</span>  <span class="c1"># 返回数组本身，保持引用
+</span>
+<span class="n">arr</span><span class="p">,</span> <span class="n">ptr</span> <span class="o">=</span> <span class="n">good_example</span><span class="p">()</span>
+<span class="n">lib</span><span class="p">.</span><span class="n">scale</span><span class="p">(</span><span class="n">ptr</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>  <span class="c1"># 安全，arr 还活着
+</span><span class="k">print</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>  <span class="c1"># [2. 4. 6.]
+</span></code></pre></div></div><h3 id="45-核心原则">4.5 核心原则</h3><blockquote><p><strong>把数据布局和所有权当作接口的一部分，而不是实现细节。</strong></p></blockquote><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// ❌ 坏接口：隐藏了布局假设</span>
+<span class="kt">void</span> <span class="nf">process</span><span class="p">(</span><span class="kt">float</span><span class="o">*</span> <span class="n">data</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size</span><span class="p">);</span>  <span class="c1">// 调用者不知道要不要连续</span>
+
+<span class="c1">// ✅ 好接口：明确要求</span>
+<span class="kt">void</span> <span class="nf">process</span><span class="p">(</span><span class="n">py</span><span class="o">::</span><span class="n">array_t</span><span class="o">&lt;</span><span class="kt">float</span><span class="p">,</span> <span class="n">py</span><span class="o">::</span><span class="n">array</span><span class="o">::</span><span class="n">c_style</span><span class="o">&gt;</span> <span class="n">data</span><span class="p">);</span>
+<span class="c1">// 明确要求 C 连续，调用者必须保证</span>
+</code></pre></div></div><p><strong>为什么 <code class="language-plaintext highlighter-rouge">py::array_t&lt;float, py::array::c_style&gt;</code> 有两个尖括号参数</strong>：</p><p><code class="language-plaintext highlighter-rouge">py::array_t</code> 是一个模板类，可以接受两个模板参数：</p><table><thead><tr><th>写法</th><th>含义</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">py::array_t&lt;float&gt;</code></td><td>只指定元素类型是 float，不强制要求连续</td></tr><tr><td><code class="language-plaintext highlighter-rouge">py::array_t&lt;float, py::array::c_style&gt;</code></td><td>元素是 float，<strong>且必须 C 连续</strong>（行优先）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">py::array_t&lt;float, py::array::f_style&gt;</code></td><td>元素是 float，且必须 Fortran 连续（列优先）</td></tr></tbody></table><blockquote><p><code class="language-plaintext highlighter-rouge">py::array::c_style</code> 是一个编译期标记，传进来的 NumPy 数组如果不是 C 连续的，pybind11 会自动复制一份连续的版本。这样 C++ 代码里就不用检查 stride 了，可以放心按行优先顺序访问。</p><p>类比 Python：相当于 <code class="language-plaintext highlighter-rouge">np.ascontiguousarray(arr)</code> 但在 C++ 侧自动完成。</p></blockquote><hr /><h2 id="五cmake-构建扩展推荐">五、CMake 构建扩展（推荐）</h2><blockquote><p>手动用 g++ 编译（3.2 的方法二）在项目大了以后很麻烦。CMake 能自动找到 pybind11、管理编译参数，是正式项目的推荐方式。</p></blockquote><h3 id="51-用-cmake-编译-pybind11-扩展">5.1 用 CMake 编译 pybind11 扩展</h3><blockquote><p><strong>完整可复现项目</strong>——建一个文件夹 <code class="language-plaintext highlighter-rouge">cmake_pybind/</code>，放两个文件：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cmake_pybind/          ← 建一个新文件夹
+├── CMakeLists.txt     ← CMake 构建配置
+└── vector_ops.cpp     ← C++ 代码（用 3.2 的那个）
+</code></pre></div></div><p>前置：<code class="language-plaintext highlighter-rouge">pip install pybind11</code>，并且系统装了 cmake（<code class="language-plaintext highlighter-rouge">cpp/环境配置教程.md</code> 有安装方法）。 下面所有命令在 <code class="language-plaintext highlighter-rouge">cmake_pybind/</code> 目录下执行。</p><p><strong>uv 用户注意</strong>：CMake 默认找系统 Python，可能找不到 uv 装的 pybind11。看本节末尾的”uv 环境配置”补充。</p></blockquote><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// vector_ops.cpp（和 3.2 一样的代码）</span>
+<span class="cp">#include</span> <span class="cpf">&lt;pybind11/pybind11.h&gt;</span><span class="cp">
+</span><span class="k">namespace</span> <span class="n">py</span> <span class="o">=</span> <span class="n">pybind11</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">add</span><span class="p">(</span><span class="kt">int</span> <span class="n">lhs</span><span class="p">,</span> <span class="kt">int</span> <span class="n">rhs</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lhs</span> <span class="o">+</span> <span class="n">rhs</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="n">PYBIND11_MODULE</span><span class="p">(</span><span class="n">vector_ops</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m</span><span class="p">.</span><span class="n">def</span><span class="p">(</span><span class="s">"add"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">add</span><span class="p">,</span> <span class="n">py</span><span class="o">::</span><span class="n">arg</span><span class="p">(</span><span class="s">"lhs"</span><span class="p">),</span> <span class="n">py</span><span class="o">::</span><span class="n">arg</span><span class="p">(</span><span class="s">"rhs"</span><span class="p">));</span>
+<span class="p">}</span>
+</code></pre></div></div><div class="language-cmake highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># CMakeLists.txt</span>
+<span class="nb">cmake_minimum_required</span><span class="p">(</span>VERSION 3.20<span class="p">)</span>
+<span class="nb">project</span><span class="p">(</span>vector_ops LANGUAGES CXX<span class="p">)</span>
+
+<span class="c1"># 找 pybind11（它会自动找到 Python 和头文件）</span>
+<span class="nb">find_package</span><span class="p">(</span>pybind11 REQUIRED<span class="p">)</span>
+
+<span class="c1"># 创建 Python 扩展模块</span>
+<span class="c1"># pybind11_add_module 是 pybind11 提供的宏，专门用来编译 Python 扩展</span>
+<span class="c1"># 第一个参数：模块名（要和 PYBIND11_MODULE 宏的第一个参数一致）</span>
+<span class="c1"># 第二个参数：源文件</span>
+<span class="nf">pybind11_add_module</span><span class="p">(</span>vector_ops vector_ops.cpp<span class="p">)</span>
+
+<span class="c1"># 启用优化和警告</span>
+<span class="nb">target_compile_options</span><span class="p">(</span>vector_ops PRIVATE -O3 -Wall -Wextra<span class="p">)</span>
+</code></pre></div></div><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 编译（在 cmake_pybind/ 目录下）</span>
+cmake <span class="nt">-S</span> <span class="nb">.</span> <span class="nt">-B</span> build <span class="nt">-DCMAKE_BUILD_TYPE</span><span class="o">=</span>Release
+<span class="c">#   -S .            源码目录是当前目录</span>
+<span class="c">#   -B build        构建目录是 build/（自动创建）</span>
+<span class="c">#   -DCMAKE_BUILD_TYPE=Release  Release 模式（启用优化）</span>
+
+cmake <span class="nt">--build</span> build <span class="nt">--parallel</span>
+<span class="c">#   --build build   在 build/ 里构建</span>
+<span class="c">#   --parallel      并行编译</span>
+
+<span class="c"># 产物在 build/ 目录下</span>
+<span class="nb">ls </span>build/vector_ops<span class="k">*</span>.so
+<span class="c"># build/vector_ops.cpython-3xx-xxx.so</span>
+
+<span class="c"># 测试（进 build 目录让 Python 能找到 .so）</span>
+<span class="nb">cd </span>build <span class="o">&amp;&amp;</span> python <span class="nt">-c</span> <span class="s2">"import vector_ops; print(vector_ops.add(1,2))"</span>
+<span class="c"># 输出：3</span>
+<span class="nb">cd</span> ..  <span class="c"># 回到 cmake_pybind/</span>
+</code></pre></div></div><h4 id="uv-环境cmake-编译-pybind11-完整解决方案实测有效">uv 环境：CMake 编译 pybind11 完整解决方案（实测有效）</h4><blockquote><p>uv 环境下 CMake + pybind11 会遇到<strong>两个连环问题</strong>，必须一起解决。之前只解决了第一个，所以还是会报第二个错。</p></blockquote><p><strong>问题链路（两个连环坑）</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>问题 1：find_package(pybind11) 找不到
+         → 解法：-Dpybind11_DIR=$(uv run python -m pybind11 --cmakedir)
+         → ✅ 解决了
+
+问题 2（解决 1 之后才暴露）：
+         Imported target "pybind11::module" includes non-existent path
+         "/usr/include/python3.12"
+         → 原因：pybind11 的旧版 Python 查找逻辑（FindPythonLibsNew）
+           找到了系统 Python 3.12，但系统没装 python3-dev 头文件
+           而且你 uv 用的是 Python 3.13，版本对不上
+         → 解法：改 CMakeLists.txt，强制用新版 Python 查找逻辑
+</code></pre></div></div><p><strong>根本原因</strong>：pybind11 内部默认用旧的 <code class="language-plaintext highlighter-rouge">FindPythonLibsNew</code> 查找 Python，它找到系统 Python 3.12 而不是 uv 的 Python 3.13，然后去找 <code class="language-plaintext highlighter-rouge">/usr/include/python3.12</code>（不存在）。<code class="language-plaintext highlighter-rouge">-DPython_EXECUTABLE</code> 对这个旧逻辑<strong>无效</strong>（CMake 会提示”Manually-specified variables were not used”）。</p><p><strong>正确解法：改 CMakeLists.txt + cmake 命令（一起改才能解决）</strong></p><p>把 CMakeLists.txt 改成这个版本（标准版保留在上方，uv 版在下方注释）：</p><div class="language-cmake highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># CMakeLists.txt（uv 环境正确版本）</span>
+<span class="nb">cmake_minimum_required</span><span class="p">(</span>VERSION 3.20<span class="p">)</span>
+<span class="nb">project</span><span class="p">(</span>vector_ops LANGUAGES CXX<span class="p">)</span>
+
+<span class="c1"># ========== 关键改动：先找 Python，再让 pybind11 复用 ==========</span>
+<span class="c1"># 第 1 步：用 CMake 现代的 find_package(Python) 找到 uv 的 Python</span>
+<span class="c1">#   Development.Module = 只需要头文件（编译扩展用），不需要 libpython</span>
+<span class="nb">find_package</span><span class="p">(</span>Python COMPONENTS Interpreter Development.Module REQUIRED<span class="p">)</span>
+
+<span class="c1"># 第 2 步：告诉 pybind11"用上面找到的 Python，别自己再找一次系统的"</span>
+<span class="nb">set</span><span class="p">(</span>PYBIND11_FINDPYTHON ON<span class="p">)</span>
+
+<span class="c1"># 第 3 步：找 pybind11（这时它会复用第 1 步找到的 Python）</span>
+<span class="nb">find_package</span><span class="p">(</span>pybind11 REQUIRED<span class="p">)</span>
+
+<span class="nf">pybind11_add_module</span><span class="p">(</span>vector_ops vector_ops.cpp<span class="p">)</span>
+<span class="nb">target_compile_options</span><span class="p">(</span>vector_ops PRIVATE -O3 -Wall -Wextra<span class="p">)</span>
+</code></pre></div></div><p>然后编译命令<strong>必须同时传两个参数</strong>：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 先删掉旧的 build 目录（CMake 会缓存旧的配置，不删可能还是报错）</span>
+<span class="nb">rm</span> <span class="nt">-rf</span> build
+
+<span class="c"># 编译</span>
+cmake <span class="nt">-S</span> <span class="nb">.</span> <span class="nt">-B</span> build <span class="se">\</span>
+    <span class="nt">-DCMAKE_BUILD_TYPE</span><span class="o">=</span>Release <span class="se">\</span>
+    <span class="nt">-DPython_EXECUTABLE</span><span class="o">=</span><span class="si">$(</span>uv run python <span class="nt">-c</span> <span class="s2">"import sys; print(sys.executable)"</span><span class="si">)</span> <span class="se">\</span>
+    <span class="nt">-Dpybind11_DIR</span><span class="o">=</span><span class="si">$(</span>uv run python <span class="nt">-m</span> pybind11 <span class="nt">--cmakedir</span><span class="si">)</span>
+
+cmake <span class="nt">--build</span> build <span class="nt">--parallel</span>
+
+<span class="c"># 测试</span>
+<span class="nb">cd </span>build <span class="o">&amp;&amp;</span> uv run python <span class="nt">-c</span> <span class="s2">"import vector_ops; print(vector_ops.add(1,2))"</span>
+<span class="c"># 输出：3</span>
+<span class="nb">cd</span> ..
+</code></pre></div></div><p><strong>逐行解释为什么这样改</strong>：</p><table><thead><tr><th>改动</th><th>作用</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">find_package(Python COMPONENTS Interpreter Development.Module REQUIRED)</code></td><td>用 CMake 现代方式找 Python，通过 <code class="language-plaintext highlighter-rouge">-DPython_EXECUTABLE=...</code> 指定 uv 的 Python 3.13</td></tr><tr><td><code class="language-plaintext highlighter-rouge">set(PYBIND11_FINDPYTHON ON)</code></td><td>告诉 pybind11 用现代 <code class="language-plaintext highlighter-rouge">find_package(Python)</code> 而不是旧的 <code class="language-plaintext highlighter-rouge">FindPythonLibsNew</code>，这样它会复用第 1 步的结果</td></tr><tr><td><code class="language-plaintext highlighter-rouge">find_package(pybind11 REQUIRED)</code></td><td>现在找到的 pybind11 会正确关联 uv 的 Python 3.13，不再去找系统的 3.12</td></tr><tr><td><code class="language-plaintext highlighter-rouge">rm -rf build</code></td><td><strong>必须删</strong>！CMake 会缓存上次的配置结果，不删的话旧配置还在，改了 CMakeLists.txt 也不生效</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-DPython_EXECUTABLE=$(uv run python -c "...")</code></td><td>告诉第 1 步的 <code class="language-plaintext highlighter-rouge">find_package(Python)</code> 用 uv 的 Python</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-Dpybind11_DIR=$(uv run python -m pybind11 --cmakedir)</code></td><td>告诉第 3 步的 <code class="language-plaintext highlighter-rouge">find_package(pybind11)</code> 去哪找 pybind11 的 CMake 配置</td></tr></tbody></table><blockquote><p><strong>关键</strong>：<code class="language-plaintext highlighter-rouge">find_package(Python)</code> 必须在 <code class="language-plaintext highlighter-rouge">find_package(pybind11)</code> <strong>之前</strong>调用。pybind11 看到已经有 <code class="language-plaintext highlighter-rouge">Python::Python</code> target 就会复用，不会再自己找系统的。</p></blockquote><p><strong>为什么之前的三个解法不够</strong>：</p><table><thead><tr><th>之前的解法</th><th>为什么不够</th></tr></thead><tbody><tr><td>只传 <code class="language-plaintext highlighter-rouge">-Dpybind11_DIR=...</code></td><td>解决了”找不到 pybind11”，但 pybind11 还是去找系统 Python 3.12</td></tr><tr><td>只传 <code class="language-plaintext highlighter-rouge">-DPython_EXECUTABLE=...</code></td><td>旧版 <code class="language-plaintext highlighter-rouge">FindPythonLibsNew</code> 忽略这个变量（CMake 提示”not used”）</td></tr><tr><td>CMakeLists.txt 里写死 <code class="language-plaintext highlighter-rouge">pybind11_DIR</code></td><td>同上，只是换了传参方式，没解决 Python 版本问题</td></tr></tbody></table><blockquote><p><strong>速查命令</strong>（uv 环境下编译 pybind11 扩展的两条命令）：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. 查 pybind11 的 CMake 目录</span>
+uv run python <span class="nt">-m</span> pybind11 <span class="nt">--cmakedir</span>
+
+<span class="c"># 2. 查 uv 的 Python 可执行文件路径</span>
+uv run python <span class="nt">-c</span> <span class="s2">"import sys; print(sys.executable)"</span>
+</code></pre></div></div></blockquote><h3 id="52-用-setuppy-安装更规范">5.2 用 setup.py 安装（更规范）</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># setup.py
+</span><span class="kn">from</span> <span class="nn">setuptools</span> <span class="kn">import</span> <span class="n">setup</span>
+<span class="kn">from</span> <span class="nn">pybind11.setup_helpers</span> <span class="kn">import</span> <span class="n">Pybind11Extension</span>
+
+<span class="n">ext_modules</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Pybind11Extension</span><span class="p">(</span>
+        <span class="s">"vector_ops"</span><span class="p">,</span>
+        <span class="n">sources</span><span class="o">=</span><span class="p">[</span><span class="s">"vector_ops.cpp"</span><span class="p">],</span>
+        <span class="n">extra_compile_args</span><span class="o">=</span><span class="p">[</span><span class="s">"-O3"</span><span class="p">],</span>
+    <span class="p">),</span>
+<span class="p">]</span>
+
+<span class="n">setup</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s">"vector_ops"</span><span class="p">,</span>
+    <span class="n">version</span><span class="o">=</span><span class="s">"0.1.0"</span><span class="p">,</span>
+    <span class="n">ext_modules</span><span class="o">=</span><span class="n">ext_modules</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div></div><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip <span class="nb">install</span> <span class="nb">.</span>  <span class="c"># 编译并安装</span>
+<span class="c"># 然后在任何地方都能 import vector_ops</span>
+</code></pre></div></div><h4 id="uv-环境setuppy-安装怎么装">uv 环境：setup.py 安装怎么装</h4><blockquote><p>uv 默认不安装独立的 <code class="language-plaintext highlighter-rouge">pip</code> 命令（<code class="language-plaintext highlighter-rouge">uv run pip</code> 会报 <code class="language-plaintext highlighter-rouge">Failed to spawn: pip</code>），而且 <code class="language-plaintext highlighter-rouge">uv run python pip</code> 语法也错了。正确写法如下：</p></blockquote><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 方法一：用 uv 自带的 pip 接口（推荐，最简单）</span>
+uv pip <span class="nb">install</span> <span class="nb">.</span>
+<span class="c"># uv pip 是 uv 内置的 pip 兼容命令，不需要环境里真的装了 pip</span>
+<span class="c"># 它会读取当前目录的 setup.py，编译并安装扩展</span>
+
+<span class="c"># 方法二：通过 python -m pip 调用（需要环境里有 pip）</span>
+uv run python <span class="nt">-m</span> pip <span class="nb">install</span> <span class="nb">.</span>
+<span class="c"># python -m pip = "用当前 Python 对应的 pip"，比直接 pip 更安全</span>
+<span class="c"># 但 uv 默认环境可能没有 pip，需要先装：</span>
+<span class="c">#   uv pip install pip   # 先装 pip，再 uv run python -m pip install .</span>
+</code></pre></div></div><p><strong>为什么你之前的命令报错</strong>：</p><table><thead><tr><th>你试的命令</th><th>报错</th><th>原因</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">uv run pip install .</code></td><td><code class="language-plaintext highlighter-rouge">Failed to spawn: pip</code></td><td>uv 环境里没有独立的 <code class="language-plaintext highlighter-rouge">pip</code> 可执行文件</td></tr><tr><td><code class="language-plaintext highlighter-rouge">uv run python pip install .</code></td><td><code class="language-plaintext highlighter-rouge">can't open file 'pip'</code></td><td>语法错了：<code class="language-plaintext highlighter-rouge">python</code> 后面要么跟脚本文件名（<code class="language-plaintext highlighter-rouge">python script.py</code>），要么跟 <code class="language-plaintext highlighter-rouge">-m</code> 模块名（<code class="language-plaintext highlighter-rouge">python -m pip</code>）。直接写 <code class="language-plaintext highlighter-rouge">python pip</code> 它把 <code class="language-plaintext highlighter-rouge">pip</code> 当成脚本文件去找了</td></tr></tbody></table><blockquote><p><strong>记忆规则</strong>：uv 环境下调用 pip 有两种正确方式：</p><ul><li><code class="language-plaintext highlighter-rouge">uv pip install xxx</code> —— uv 内置的 pip（推荐，不用装 pip）</li><li><code class="language-plaintext highlighter-rouge">uv run python -m pip install xxx</code> —— 通过 Python 调用（需要先装 pip）</li></ul><p><strong>绝对不要</strong>写 <code class="language-plaintext highlighter-rouge">uv run pip</code> 或 <code class="language-plaintext highlighter-rouge">uv run python pip</code>。</p></blockquote><p><strong>安装后验证</strong>：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 安装完后，在任何目录都能 import（因为装到了 venv 的 site-packages）</span>
+uv run python <span class="nt">-c</span> <span class="s2">"import vector_ops; print(vector_ops.add(1, 2))"</span>
+<span class="c"># 输出：3</span>
+
+<span class="c"># 看装在哪</span>
+uv run python <span class="nt">-c</span> <span class="s2">"import vector_ops; print(vector_ops.__file__)"</span>
+<span class="c"># 输出类似：.venv/lib/python3.13/site-packages/vector_ops.cpython-313-xxx.so</span>
+</code></pre></div></div><h4 id="uv-环境setuppy-安装的连环坑build-isolation-问题">uv 环境：setup.py 安装的连环坑（build isolation 问题）</h4><blockquote><p><strong>报错现象</strong>：<code class="language-plaintext highlighter-rouge">uv pip install .</code> 报 <code class="language-plaintext highlighter-rouge">ModuleNotFoundError: No module named 'pybind11'</code></p><p><strong>原因</strong>：uv 默认用 <strong>build isolation（构建隔离）</strong>——它在一个干净的临时环境里跑 setup.py，这个临时环境只有 setup.py 里声明的依赖。你的 setup.py 里 <code class="language-plaintext highlighter-rouge">from pybind11.setup_helpers import Pybind11Extension</code> 需要 pybind11，但 uv 的构建隔离环境里没装它，所以报 <code class="language-plaintext highlighter-rouge">No module named 'pybind11'</code>。</p></blockquote><p><strong>解法一：加 pyproject.toml 声明构建依赖（推荐，最规范）</strong></p><p>在项目根目录创建 <code class="language-plaintext highlighter-rouge">pyproject.toml</code>（和 setup.py 放一起）：</p><div class="language-toml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># pyproject.toml</span>
+<span class="nn">[build-system]</span>
+<span class="py">requires</span> <span class="p">=</span> <span class="p">[</span><span class="s">"setuptools"</span><span class="p">,</span> <span class="s">"pybind11"</span><span class="p">]</span>
+<span class="py">build-backend</span> <span class="p">=</span> <span class="s">"setuptools.build_meta"</span>
+</code></pre></div></div><p><strong>逐行解释</strong>：</p><ul><li><code class="language-plaintext highlighter-rouge">requires</code> = 构建这个包时需要的依赖（构建隔离环境里会装这些）</li><li><code class="language-plaintext highlighter-rouge">build-backend</code> = 用哪个构建后端（setuptools 是最通用的）</li></ul><p>这样 uv 在构建隔离环境里会自动装 setuptools + pybind11，setup.py 就能 <code class="language-plaintext highlighter-rouge">import pybind11</code> 了。</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 加了 pyproject.toml 后重新安装</span>
+uv pip <span class="nb">install</span> <span class="nb">.</span>
+<span class="c"># 现在能正常编译安装了 ✅</span>
+</code></pre></div></div><p><strong>解法二：禁用构建隔离（快速，但需要环境里有 pybind11）</strong></p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 先确保环境里有 pybind11</span>
+uv pip <span class="nb">install </span>pybind11
+
+<span class="c"># 禁用构建隔离，直接用当前环境的依赖来构建</span>
+uv pip <span class="nb">install</span> <span class="nb">.</span> <span class="nt">--no-build-isolation</span>
+<span class="c">#   --no-build-isolation  不创建隔离环境，用当前 venv 里已装的包</span>
+<span class="c"># 前提：当前 venv 里必须装了 setuptools 和 pybind11</span>
+</code></pre></div></div><p><strong>解法三：在 pyproject.toml 里用 uv 的扩展语法（uv 专有）</strong></p><div class="language-toml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># pyproject.toml</span>
+<span class="nn">[build-system]</span>
+<span class="py">requires</span> <span class="p">=</span> <span class="p">[</span><span class="s">"setuptools"</span><span class="p">,</span> <span class="s">"pybind11"</span><span class="p">]</span>
+<span class="py">build-backend</span> <span class="p">=</span> <span class="s">"setuptools.build_meta"</span>
+
+<span class="c"># uv 专有：为特定包额外加构建依赖</span>
+<span class="nn">[tool.uv.extra-build-dependencies]</span>
+<span class="py">cmake-pybind</span> <span class="p">=</span> <span class="nn">["pybind11"]</span>
+</code></pre></div></div><blockquote><p><strong>推荐用解法一</strong>：加一个 3 行的 pyproject.toml 最省事，任何 PEP 517 兼容的工具（uv、pip、build）都能正确构建。</p></blockquote><p><strong>为什么 <code class="language-plaintext highlighter-rouge">uv run python -m pip install .</code> 也不行</strong>：</p><p>报 <code class="language-plaintext highlighter-rouge">No module named pip</code>——因为 uv 环境默认连 pip 都没装。即使装了 pip，也会遇到和 <code class="language-plaintext highlighter-rouge">uv pip install .</code> 一样的构建隔离问题（pybind11 不在隔离环境里）。所以核心解法还是加 <code class="language-plaintext highlighter-rouge">pyproject.toml</code> 声明构建依赖。</p><p><strong>完整的 uv 环境 setup.py 安装流程</strong>（从零开始）：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. 确保项目结构（setup.py + pyproject.toml + 源文件都在）</span>
+<span class="nb">ls</span>
+<span class="c"># CMakeLists.txt  pyproject.toml  setup.py  vector_ops.cpp</span>
+
+<span class="c"># 2. 用 uv 安装</span>
+uv pip <span class="nb">install</span> <span class="nb">.</span>
+<span class="c"># uv 会：创建隔离环境 → 装 setuptools + pybind11（pyproject.toml 声明的）</span>
+<span class="c">#      → 跑 setup.py 编译 → 安装到 venv</span>
+
+<span class="c"># 3. 验证</span>
+uv run python <span class="nt">-c</span> <span class="s2">"import vector_ops; print(vector_ops.add(1, 2))"</span>
+<span class="c"># 输出：3 ✅</span>
+</code></pre></div></div><hr /><h2 id="六方法选择决策树">六、方法选择决策树</h2><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>你要从 Python 调用 C/C++
+│
+├─ 调用已有的 C 库（稳定 ABI）→ ctypes
+│   ├─ 简单函数，少量调用
+│   └─ 不想编译扩展
+│
+├─ 绑定 C++ 类/复杂接口 → pybind11
+│   ├─ 需要 C++ 类、异常、STL 支持
+│   ├─ 需要 NumPy 数组互操作
+│   └─ 愿意写 CMake/setup.py
+│
+├─ PyTorch 自定义算子 → torch.utils.cpp_extension
+│   ├─ 需要 autograd 支持
+│   └─ 需要 GPU (CUDA) 支持
+│
+└─ 极致性能 + 复杂类型 → nanobind（pybind11 的现代替代）
+    ├─ 更快的编译速度
+    └─ 更小的二进制体积
+</code></pre></div></div><hr /><h2 id="七完整实战从零写一个向量运算库">七、完整实战：从零写一个向量运算库</h2><blockquote><p>这是把前面学的 ctypes、pybind11、CMake、零拷贝、释放 GIL 综合起来做一个完整项目。 <strong>新人建议</strong>：先把第二~五章的简单示例跑通，再来做这个综合项目。</p></blockquote><h3 id="71-项目结构">7.1 项目结构</h3><blockquote><p>建一个文件夹 <code class="language-plaintext highlighter-rouge">myvec/</code>，按下面结构创建子目录和文件：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>myvec/                           ← 项目根目录
+├── CMakeLists.txt               ← CMake 构建配置
+├── include/
+│   └── myvec.h                  ← 库的头文件（声明）
+├── src/
+│   └── myvec.cpp                ← 库的实现（定义）
+├── bindings/
+│   └── myvec_bindings.cpp       ← pybind11 绑定（让 Python 能调）
+└── test.py                      ← Python 测试代码
+</code></pre></div></div></blockquote><p><strong>这个项目分三层</strong>（理解这个结构对后面学 CUDA 项目很有帮助）：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─────────────────────────────────┐
+│  Python 层（test.py）            │  ← 用户调用 myvec.dot(a, b)
+├─────────────────────────────────┤
+│  绑定层（myvec_bindings.cpp）     │  ← pybind11 桥接 Python 和 C++
+│  把 NumPy 数组转成 C++ 指针       │
+├─────────────────────────────────┤
+│  C++ 库（myvec.h + myvec.cpp）    │  ← 纯 C++ 实现，不知道 Python 存在
+└─────────────────────────────────┘
+</code></pre></div></div><p><strong>为什么要分三层</strong>：C++ 库可以被其他 C++ 项目复用（不用通过 Python）；绑定层只负责 Python ↔ C++ 的桥接；实现和接口分离是 C++ 的好习惯（见 <code class="language-plaintext highlighter-rouge">cpp/编译链接模板与构建系统.md</code> 的头文件/源文件分离）。</p><h3 id="72-完整代码">7.2 完整代码</h3><p><strong>第一层：C++ 库的头文件（声明）</strong></p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// include/myvec.h</span>
+<span class="cp">#pragma once
+#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;cstddef&gt;</span><span class="c1">   // std::size_t</span><span class="cp">
+</span>
+<span class="k">namespace</span> <span class="n">myvec</span> <span class="p">{</span>    <span class="c1">// 命名空间，防止和其他库的函数重名</span>
+
+<span class="c1">// 点积：a·b = a[0]*b[0] + a[1]*b[1] + ...</span>
+<span class="kt">float</span> <span class="n">dot</span><span class="p">(</span><span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">b</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">n</span><span class="p">);</span>
+
+<span class="c1">// 向量加法：返回 [a[0]+b[0], a[1]+b[1], ...]</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">add</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;&amp;</span> <span class="n">a</span><span class="p">,</span>
+                       <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;&amp;</span> <span class="n">b</span><span class="p">);</span>
+
+<span class="c1">// 原地缩放：data 的每个元素乘以 factor（直接改 data，不返回新数组）</span>
+<span class="kt">void</span> <span class="n">scale_inplace</span><span class="p">(</span><span class="kt">float</span><span class="o">*</span> <span class="n">data</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">n</span><span class="p">,</span> <span class="kt">float</span> <span class="n">factor</span><span class="p">);</span>
+
+<span class="c1">// L2 范数：sqrt(data[0]² + data[1]² + ...)</span>
+<span class="kt">float</span> <span class="n">norm</span><span class="p">(</span><span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">data</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">n</span><span class="p">);</span>
+
+<span class="p">}</span>  <span class="c1">// namespace myvec</span>
+</code></pre></div></div><p><strong>第一层：C++ 库的实现（定义）</strong></p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// src/myvec.cpp</span>
+<span class="cp">#include</span> <span class="cpf">"myvec.h"</span><span class="cp">
+#include</span> <span class="cpf">&lt;cmath&gt;</span><span class="c1">   // std::sqrt</span><span class="cp">
+</span>
+<span class="k">namespace</span> <span class="n">myvec</span> <span class="p">{</span>
+
+<span class="kt">float</span> <span class="n">dot</span><span class="p">(</span><span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">b</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">float</span> <span class="n">result</span> <span class="o">=</span> <span class="mf">0.0</span><span class="n">f</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">result</span> <span class="o">+=</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">add</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;&amp;</span> <span class="n">a</span><span class="p">,</span>
+                       <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">result</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">scale_inplace</span><span class="p">(</span><span class="kt">float</span><span class="o">*</span> <span class="n">data</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">n</span><span class="p">,</span> <span class="kt">float</span> <span class="n">factor</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*=</span> <span class="n">factor</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">float</span> <span class="n">norm</span><span class="p">(</span><span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">data</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">float</span> <span class="n">sum</span> <span class="o">=</span> <span class="mf">0.0</span><span class="n">f</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">sum</span> <span class="o">+=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sum</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="p">}</span>  <span class="c1">// namespace myvec</span>
+</code></pre></div></div><p><strong>第二层：pybind11 绑定（桥接 Python 和 C++）</strong></p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// bindings/myvec_bindings.cpp</span>
+<span class="cp">#include</span> <span class="cpf">&lt;pybind11/pybind11.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;pybind11/numpy.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;pybind11/stl.h&gt;</span><span class="c1">  // 自动转换 std::vector ↔ Python list</span><span class="cp">
+#include</span> <span class="cpf">"myvec.h"</span><span class="c1">         // 引入 C++ 库的头文件</span><span class="cp">
+</span>
+<span class="k">namespace</span> <span class="n">py</span> <span class="o">=</span> <span class="n">pybind11</span><span class="p">;</span>
+
+<span class="n">PYBIND11_MODULE</span><span class="p">(</span><span class="n">myvec</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m</span><span class="p">.</span><span class="n">doc</span><span class="p">()</span> <span class="o">=</span> <span class="s">"vector operations in C++"</span><span class="p">;</span>
+
+    <span class="c1">// 绑定 dot：接收两个 NumPy 数组，返回 float</span>
+    <span class="n">m</span><span class="p">.</span><span class="n">def</span><span class="p">(</span><span class="s">"dot"</span><span class="p">,</span> <span class="p">[](</span><span class="n">py</span><span class="o">::</span><span class="n">array_t</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">,</span> <span class="n">py</span><span class="o">::</span><span class="n">array_t</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">auto</span> <span class="n">buf_a</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">request</span><span class="p">();</span>   <span class="c1">// 获取数组 a 的底层信息（指针、大小等）</span>
+        <span class="k">auto</span> <span class="n">buf_b</span> <span class="o">=</span> <span class="n">b</span><span class="p">.</span><span class="n">request</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">buf_a</span><span class="p">.</span><span class="n">size</span> <span class="o">!=</span> <span class="n">buf_b</span><span class="p">.</span><span class="n">size</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">"数组长度不一致"</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kt">float</span><span class="o">*</span> <span class="n">pa</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">buf_a</span><span class="p">.</span><span class="n">ptr</span><span class="p">);</span>  <span class="c1">// 拿到原始指针</span>
+        <span class="kt">float</span><span class="o">*</span> <span class="n">pb</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">buf_b</span><span class="p">.</span><span class="n">ptr</span><span class="p">);</span>
+
+        <span class="kt">float</span> <span class="n">result</span><span class="p">;</span>
+        <span class="p">{</span>
+            <span class="n">py</span><span class="o">::</span><span class="n">gil_scoped_release</span> <span class="n">release</span><span class="p">;</span>  <span class="c1">// 释放 GIL（纯 C++ 计算，不碰 Python）</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">myvec</span><span class="o">::</span><span class="n">dot</span><span class="p">(</span><span class="n">pa</span><span class="p">,</span> <span class="n">pb</span><span class="p">,</span> <span class="n">buf_a</span><span class="p">.</span><span class="n">size</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+    <span class="p">},</span> <span class="n">py</span><span class="o">::</span><span class="n">arg</span><span class="p">(</span><span class="s">"a"</span><span class="p">),</span> <span class="n">py</span><span class="o">::</span><span class="n">arg</span><span class="p">(</span><span class="s">"b"</span><span class="p">));</span>
+
+    <span class="c1">// 绑定 add：接收两个 NumPy 数组，返回新数组</span>
+    <span class="n">m</span><span class="p">.</span><span class="n">def</span><span class="p">(</span><span class="s">"add"</span><span class="p">,</span> <span class="p">[](</span><span class="n">py</span><span class="o">::</span><span class="n">array_t</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">,</span> <span class="n">py</span><span class="o">::</span><span class="n">array_t</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">auto</span> <span class="n">buf_a</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">request</span><span class="p">();</span>
+        <span class="k">auto</span> <span class="n">buf_b</span> <span class="o">=</span> <span class="n">b</span><span class="p">.</span><span class="n">request</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">buf_a</span><span class="p">.</span><span class="n">size</span> <span class="o">!=</span> <span class="n">buf_b</span><span class="p">.</span><span class="n">size</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">"数组长度不一致"</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="c1">// 把 NumPy 数据复制到 std::vector（因为 C++ 库的 add 接收 vector）</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">va</span><span class="p">(</span><span class="n">buf_a</span><span class="p">.</span><span class="n">size</span><span class="p">);</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">vb</span><span class="p">(</span><span class="n">buf_b</span><span class="p">.</span><span class="n">size</span><span class="p">);</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">copy</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">buf_a</span><span class="p">.</span><span class="n">ptr</span><span class="p">),</span>
+                  <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">buf_a</span><span class="p">.</span><span class="n">ptr</span><span class="p">)</span> <span class="o">+</span> <span class="n">buf_a</span><span class="p">.</span><span class="n">size</span><span class="p">,</span> <span class="n">va</span><span class="p">.</span><span class="n">begin</span><span class="p">());</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">copy</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">buf_b</span><span class="p">.</span><span class="n">ptr</span><span class="p">),</span>
+                  <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">buf_b</span><span class="p">.</span><span class="n">ptr</span><span class="p">)</span> <span class="o">+</span> <span class="n">buf_b</span><span class="p">.</span><span class="n">size</span><span class="p">,</span> <span class="n">vb</span><span class="p">.</span><span class="n">begin</span><span class="p">());</span>
+
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">result</span><span class="p">;</span>
+        <span class="p">{</span>
+            <span class="n">py</span><span class="o">::</span><span class="n">gil_scoped_release</span> <span class="n">release</span><span class="p">;</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">myvec</span><span class="o">::</span><span class="n">add</span><span class="p">(</span><span class="n">va</span><span class="p">,</span> <span class="n">vb</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="c1">// 转回 NumPy 数组返回给 Python</span>
+        <span class="k">return</span> <span class="n">py</span><span class="o">::</span><span class="n">array_t</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">result</span><span class="p">.</span><span class="n">data</span><span class="p">());</span>
+    <span class="p">});</span>
+
+    <span class="c1">// 绑定 scale_inplace：原地修改（零拷贝）</span>
+    <span class="n">m</span><span class="p">.</span><span class="n">def</span><span class="p">(</span><span class="s">"scale_inplace"</span><span class="p">,</span> <span class="p">[](</span><span class="n">py</span><span class="o">::</span><span class="n">array_t</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">arr</span><span class="p">,</span> <span class="kt">float</span> <span class="n">factor</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">auto</span> <span class="n">buf</span> <span class="o">=</span> <span class="n">arr</span><span class="p">.</span><span class="n">request</span><span class="p">();</span>
+        <span class="kt">float</span><span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">buf</span><span class="p">.</span><span class="n">ptr</span><span class="p">);</span>
+        <span class="p">{</span>
+            <span class="n">py</span><span class="o">::</span><span class="n">gil_scoped_release</span> <span class="n">release</span><span class="p">;</span>
+            <span class="n">myvec</span><span class="o">::</span><span class="n">scale_inplace</span><span class="p">(</span><span class="n">ptr</span><span class="p">,</span> <span class="n">buf</span><span class="p">.</span><span class="n">size</span><span class="p">,</span> <span class="n">factor</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">},</span> <span class="n">py</span><span class="o">::</span><span class="n">arg</span><span class="p">(</span><span class="s">"arr"</span><span class="p">),</span> <span class="n">py</span><span class="o">::</span><span class="n">arg</span><span class="p">(</span><span class="s">"factor"</span><span class="p">));</span>
+
+    <span class="c1">// 绑定 norm</span>
+    <span class="n">m</span><span class="p">.</span><span class="n">def</span><span class="p">(</span><span class="s">"norm"</span><span class="p">,</span> <span class="p">[](</span><span class="n">py</span><span class="o">::</span><span class="n">array_t</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">arr</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">auto</span> <span class="n">buf</span> <span class="o">=</span> <span class="n">arr</span><span class="p">.</span><span class="n">request</span><span class="p">();</span>
+        <span class="kt">float</span><span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">buf</span><span class="p">.</span><span class="n">ptr</span><span class="p">);</span>
+        <span class="kt">float</span> <span class="n">result</span><span class="p">;</span>
+        <span class="p">{</span>
+            <span class="n">py</span><span class="o">::</span><span class="n">gil_scoped_release</span> <span class="n">release</span><span class="p">;</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">myvec</span><span class="o">::</span><span class="n">norm</span><span class="p">(</span><span class="n">ptr</span><span class="p">,</span> <span class="n">buf</span><span class="p">.</span><span class="n">size</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div></div><p><strong>构建配置</strong></p><div class="language-cmake highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># CMakeLists.txt</span>
+<span class="nb">cmake_minimum_required</span><span class="p">(</span>VERSION 3.20<span class="p">)</span>
+<span class="nb">project</span><span class="p">(</span>myvec LANGUAGES CXX<span class="p">)</span>
+
+<span class="nb">set</span><span class="p">(</span>CMAKE_CXX_STANDARD 20<span class="p">)</span>
+
+<span class="c1"># 第一层：编译 C++ 库（纯 C++，不知道 Python 存在）</span>
+<span class="nb">add_library</span><span class="p">(</span>myvec_lib STATIC src/myvec.cpp<span class="p">)</span>
+<span class="c1">#   STATIC  静态库（.a 文件），编译时复制进扩展</span>
+<span class="nb">target_include_directories</span><span class="p">(</span>myvec_lib PUBLIC include<span class="p">)</span>
+<span class="c1">#   PUBLIC  绑定层也能用 include/myvec.h</span>
+
+<span class="c1"># 第二层：编译 pybind11 扩展</span>
+<span class="nb">find_package</span><span class="p">(</span>pybind11 REQUIRED<span class="p">)</span>
+<span class="nf">pybind11_add_module</span><span class="p">(</span>myvec bindings/myvec_bindings.cpp<span class="p">)</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span>myvec PRIVATE myvec_lib<span class="p">)</span>
+<span class="c1">#   链接第一层的库，让绑定层能调用 myvec::dot 等函数</span>
+<span class="nb">target_compile_options</span><span class="p">(</span>myvec PRIVATE -O3 -Wall -Wextra<span class="p">)</span>
+</code></pre></div></div><p><strong>第三层：Python 测试</strong></p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># test.py
+</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">myvec</span>   <span class="c1"># 导入编译好的扩展
+</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">float32</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">"dot:"</span><span class="p">,</span> <span class="n">myvec</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span>          <span class="c1"># 1*4 + 2*5 + 3*6 = 32.0
+</span><span class="k">print</span><span class="p">(</span><span class="s">"norm(a):"</span><span class="p">,</span> <span class="n">myvec</span><span class="p">.</span><span class="n">norm</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>        <span class="c1"># sqrt(1+4+9) = 3.7416575
+</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">myvec</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"add:"</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>                         <span class="c1"># [5. 7. 9.]
+</span>
+<span class="n">myvec</span><span class="p">.</span><span class="n">scale_inplace</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"scaled a:"</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>                    <span class="c1"># [2. 4. 6.]  ← a 被原地修改
+</span></code></pre></div></div><h3 id="73-编译和运行">7.3 编译和运行</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 在 myvec/ 目录下执行</span>
+
+<span class="c"># 第一步：编译</span>
+cmake <span class="nt">-S</span> <span class="nb">.</span> <span class="nt">-B</span> build <span class="nt">-DCMAKE_BUILD_TYPE</span><span class="o">=</span>Release
+cmake <span class="nt">--build</span> build <span class="nt">--parallel</span>
+<span class="c"># 产物：build/myvec.cpython-3xx-xxx.so</span>
+
+<span class="c"># 第二步：运行测试</span>
+<span class="c"># 方法一：进 build 目录跑（.so 在那里）</span>
+<span class="nb">cd </span>build <span class="o">&amp;&amp;</span> python ../test.py <span class="o">&amp;&amp;</span> <span class="nb">cd</span> ..
+<span class="c">#   ../test.py  因为 test.py 在上一级目录（myvec/）</span>
+
+<span class="c"># 方法二：设 PYTHONPATH 让 Python 能找到 .so</span>
+<span class="nb">export </span><span class="nv">PYTHONPATH</span><span class="o">=</span>build:<span class="nv">$PYTHONPATH</span>
+python test.py
+
+<span class="c"># 输出：</span>
+<span class="c"># dot: 32.0</span>
+<span class="c"># norm(a): 3.7416575</span>
+<span class="c"># add: [5. 7. 9.]</span>
+<span class="c"># scaled a: [2. 4. 6.]</span>
+</code></pre></div></div><h4 id="uv方法一cmake">uv方法一：CMake</h4><p>需要改CMakeLists.txt：</p><div class="language-cmake highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># CMakeLists.txt（uv 环境正确版本）</span>
+<span class="nb">cmake_minimum_required</span><span class="p">(</span>VERSION 3.20<span class="p">)</span>
+<span class="nb">project</span><span class="p">(</span>myvec LANGUAGES CXX<span class="p">)</span>
+
+<span class="nb">set</span><span class="p">(</span>CMAKE_CXX_STANDARD 20<span class="p">)</span>
+
+<span class="nb">add_library</span><span class="p">(</span>myvec_lib STATIC src/myvec.cpp<span class="p">)</span>
+<span class="nb">target_include_directories</span><span class="p">(</span>myvec_lib PUBLIC include<span class="p">)</span>
+
+<span class="c1"># ========== 关键改动：先找 Python，再让 pybind11 复用 ==========</span>
+<span class="c1"># 第 1 步：用 CMake 现代的 find_package(Python) 找到 uv 的 Python</span>
+<span class="c1">#   Development.Module = 只需要头文件（编译扩展用），不需要 libpython</span>
+<span class="nb">find_package</span><span class="p">(</span>Python COMPONENTS Interpreter Development.Module REQUIRED<span class="p">)</span>
+
+<span class="c1"># 第 2 步：告诉 pybind11"用上面找到的 Python，别自己再找一次系统的"</span>
+<span class="nb">set</span><span class="p">(</span>PYBIND11_FINDPYTHON ON<span class="p">)</span>
+
+<span class="c1"># 第 3 步：找 pybind11（这时它会复用第 1 步找到的 Python）</span>
+<span class="nb">find_package</span><span class="p">(</span>pybind11 REQUIRED<span class="p">)</span>
+
+<span class="nf">pybind11_add_module</span><span class="p">(</span>myvec bindings/myvec_bindings.cpp<span class="p">)</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span>myvec PRIVATE myvec_lib<span class="p">)</span>
+<span class="nb">target_compile_options</span><span class="p">(</span>vector_ops PRIVATE -O3 -Wall -Wextra<span class="p">)</span>
+</code></pre></div></div><p>编译运行：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 先删掉旧的 build 目录（CMake 会缓存旧的配置，不删可能还是报错）</span>
+<span class="nb">rm</span> <span class="nt">-rf</span> build
+
+<span class="c"># 编译</span>
+cmake <span class="nt">-S</span> <span class="nb">.</span> <span class="nt">-B</span> build <span class="se">\</span>
+    <span class="nt">-DCMAKE_BUILD_TYPE</span><span class="o">=</span>Release <span class="se">\</span>
+    <span class="nt">-DPython_EXECUTABLE</span><span class="o">=</span><span class="si">$(</span>uv run python <span class="nt">-c</span> <span class="s2">"import sys; print(sys.executable)"</span><span class="si">)</span> <span class="se">\</span>
+    <span class="nt">-Dpybind11_DIR</span><span class="o">=</span><span class="si">$(</span>uv run python <span class="nt">-m</span> pybind11 <span class="nt">--cmakedir</span><span class="si">)</span>
+
+cmake <span class="nt">--build</span> build <span class="nt">--parallel</span>
+<span class="c"># 产物：build/myvec.cpython-3xx-xxx.so</span>
+
+<span class="c"># 第二步：运行测试</span>
+<span class="c"># 方法一：进 build 目录跑（.so 在那里）</span>
+<span class="nb">cd </span>build <span class="o">&amp;&amp;</span> uv run python ../test.py <span class="o">&amp;&amp;</span> <span class="nb">cd</span> ..
+<span class="c">#   ../test.py  因为 test.py 在上一级目录（myvec/）</span>
+
+<span class="c"># 方法二：设 PYTHONPATH 让 Python 能找到 .so</span>
+<span class="nb">export </span><span class="nv">PYTHONPATH</span><span class="o">=</span>build:<span class="nv">$PYTHONPATH</span>
+uv run python test.py
+
+<span class="c"># 输出：</span>
+<span class="c"># dot: 32.0</span>
+<span class="c"># norm(a): 3.7416575</span>
+<span class="c"># add: [5. 7. 9.]</span>
+<span class="c"># scaled a: [2. 4. 6.]</span>
+</code></pre></div></div><h4 id="uv方法二setuppy">uv方法二：setup.py</h4><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># setup.py
+</span><span class="kn">from</span> <span class="nn">setuptools</span> <span class="kn">import</span> <span class="n">setup</span>
+<span class="kn">from</span> <span class="nn">pybind11.setup_helpers</span> <span class="kn">import</span> <span class="n">Pybind11Extension</span>
+
+<span class="n">ext_modules</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Pybind11Extension</span><span class="p">(</span>
+        <span class="s">"myvec"</span><span class="p">,</span>
+        <span class="n">sources</span><span class="o">=</span><span class="p">[</span><span class="s">"bindings/myvec_bindings.cpp"</span><span class="p">],</span>
+        <span class="n">extra_compile_args</span><span class="o">=</span><span class="p">[</span><span class="s">"-O3"</span><span class="p">],</span>
+    <span class="p">),</span>
+<span class="p">]</span>
+
+<span class="n">setup</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s">"myvec"</span><span class="p">,</span>
+    <span class="n">version</span><span class="o">=</span><span class="s">"0.1.0"</span><span class="p">,</span>
+    <span class="n">ext_modules</span><span class="o">=</span><span class="n">ext_modules</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div></div><div class="language-toml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># pyproject.toml</span>
+<span class="nn">[build-system]</span>
+<span class="py">requires</span> <span class="p">=</span> <span class="p">[</span><span class="s">"setuptools"</span><span class="p">,</span> <span class="s">"pybind11"</span><span class="p">]</span>
+<span class="py">build-backend</span> <span class="p">=</span> <span class="s">"setuptools.build_meta"</span>
+</code></pre></div></div><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 加了 pyproject.toml 后重新安装</span>
+uv pip <span class="nb">install</span> <span class="nb">.</span>
+<span class="c"># 现在能正常编译安装了 ✅</span>
+
+uv run python test.py
+</code></pre></div></div><p><strong>如果 <code class="language-plaintext highlighter-rouge">uv pip install .</code> 成功但 <code class="language-plaintext highlighter-rouge">uv run python test.py</code> 报 <code class="language-plaintext highlighter-rouge">ModuleNotFoundError: No module named 'myvec'</code></strong>：</p><blockquote><p>这是 setup.py 版本的<strong>第三个连环坑</strong>：setup.py 只编译了绑定层，漏了 C++ 库的实现，导致链接失败，.so 没生成，Python 自然找不到模块。</p></blockquote><p><strong>根因</strong>：setup.py 的 <code class="language-plaintext highlighter-rouge">Pybind11Extension</code> 只列了 <code class="language-plaintext highlighter-rouge">sources=["bindings/myvec_bindings.cpp"]</code>，但这个文件需要：</p><ol><li><code class="language-plaintext highlighter-rouge">#include "myvec.h"</code> —— 头文件在 <code class="language-plaintext highlighter-rouge">include/</code> 目录，但没告诉编译器去那找（缺 <code class="language-plaintext highlighter-rouge">include_dirs</code>）</li><li>调用 <code class="language-plaintext highlighter-rouge">myvec::dot</code> 等 —— 实现在 <code class="language-plaintext highlighter-rouge">src/myvec.cpp</code>，但没加到 sources 里，链接器找不到定义</li></ol><p>CMake 版用 <code class="language-plaintext highlighter-rouge">target_link_libraries(myvec PRIVATE myvec_lib)</code> 解决了这个，但 setup.py 没有等价的配置。</p><p><strong>修复后的 setup.py（必须改这两处）</strong>：</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># setup.py（修复版）
+</span><span class="kn">from</span> <span class="nn">setuptools</span> <span class="kn">import</span> <span class="n">setup</span>
+<span class="kn">from</span> <span class="nn">pybind11.setup_helpers</span> <span class="kn">import</span> <span class="n">Pybind11Extension</span>
+
+<span class="n">ext_modules</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Pybind11Extension</span><span class="p">(</span>
+        <span class="s">"myvec"</span><span class="p">,</span>
+        <span class="n">sources</span><span class="o">=</span><span class="p">[</span>
+            <span class="s">"bindings/myvec_bindings.cpp"</span><span class="p">,</span>   <span class="c1"># 绑定层
+</span>            <span class="s">"src/myvec.cpp"</span><span class="p">,</span>                  <span class="c1"># ← 关键！C++ 库的实现也要一起编译
+</span>        <span class="p">],</span>
+        <span class="n">include_dirs</span><span class="o">=</span><span class="p">[</span><span class="s">"include"</span><span class="p">],</span>             <span class="c1"># ← 关键！告诉编译器去 include/ 找头文件
+</span>        <span class="n">extra_compile_args</span><span class="o">=</span><span class="p">[</span><span class="s">"-O3"</span><span class="p">],</span>
+    <span class="p">),</span>
+<span class="p">]</span>
+
+<span class="n">setup</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s">"myvec"</span><span class="p">,</span>
+    <span class="n">version</span><span class="o">=</span><span class="s">"0.1.0"</span><span class="p">,</span>
+    <span class="n">ext_modules</span><span class="o">=</span><span class="n">ext_modules</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div></div><p><strong>两处改动对比</strong>：</p><table><thead><tr><th>原来的</th><th>修复后</th><th>为什么</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">sources=["bindings/myvec_bindings.cpp"]</code></td><td><code class="language-plaintext highlighter-rouge">sources=["bindings/myvec_bindings.cpp", "src/myvec.cpp"]</code></td><td>绑定层调用了 <code class="language-plaintext highlighter-rouge">myvec::dot</code> 等函数，但定义在 <code class="language-plaintext highlighter-rouge">src/myvec.cpp</code>，不一起编译就链接不过去</td></tr><tr><td>（没有 include_dirs）</td><td><code class="language-plaintext highlighter-rouge">include_dirs=["include"]</code></td><td><code class="language-plaintext highlighter-rouge">myvec_bindings.cpp</code> 里 <code class="language-plaintext highlighter-rouge">#include "myvec.h"</code> 在 <code class="language-plaintext highlighter-rouge">include/</code> 目录，不告诉编译器去那找就报 <code class="language-plaintext highlighter-rouge">fatal error: myvec.h: No such file</code></td></tr></tbody></table><p><strong>完整修复流程</strong>：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. 确认文件都在</span>
+<span class="nb">ls</span>
+<span class="c"># CMakeLists.txt  include/  src/  bindings/  test.py  setup.py  pyproject.toml</span>
+
+<span class="c"># 2. 改 setup.py（加上 src/myvec.cpp 和 include_dirs，见上面修复版）</span>
+
+<span class="c"># 3. 重新安装（先卸载旧的）</span>
+uv pip uninstall myvec
+uv pip <span class="nb">install</span> <span class="nb">.</span>
+
+<span class="c"># 4. 这次看 uv pip install 的输出有没有 "myvec.cpython-3xx-xxx.so"</span>
+<span class="c"># 如果看到类似 "building 'myvec' extension" + 编译输出，说明在编译 .so</span>
+
+<span class="c"># 5. 验证安装</span>
+uv run python <span class="nt">-c</span> <span class="s2">"import myvec; print(myvec.__file__)"</span>
+<span class="c"># 应该输出：.venv/lib/python3.13/site-packages/myvec.cpython-313-xxx.so</span>
+
+<span class="c"># 6. 跑测试</span>
+uv run python test.py
+<span class="c"># 输出：</span>
+<span class="c"># dot: 32.0</span>
+<span class="c"># norm(a): 3.7416575</span>
+<span class="c"># add: [5. 7. 9.]</span>
+<span class="c"># scaled a: [2. 4. 6.]</span>
+</code></pre></div></div><blockquote><p><strong>怎么判断 <code class="language-plaintext highlighter-rouge">uv pip install .</code> 到底有没有真正编译成功</strong>：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 看安装后有没有 .so 文件</span>
+uv run python <span class="nt">-c</span> <span class="s2">"import myvec; print(myvec.__file__)"</span>
+<span class="c"># 如果报 ModuleNotFoundError → 没装上（编译失败了但 setuptools 没报错）</span>
+<span class="c"># 如果输出路径 → 装上了</span>
+</code></pre></div></div><p>setuptools 有个坑：即使 C++ 编译失败，它也可能”成功”安装 Python 包（只是没有 .so）。所以 <code class="language-plaintext highlighter-rouge">uv pip install .</code> 不报错 ≠ 编译成功。<strong>一定要用 <code class="language-plaintext highlighter-rouge">import</code> 验证</strong>。</p></blockquote><blockquote><p><strong>setup.py vs CMake 对比（为什么 CMake 版没这个问题）</strong>：</p><table><thead><tr><th>维度</th><th>CMake 版</th><th>setup.py 版</th></tr></thead><tbody><tr><td>C++ 库的实现</td><td><code class="language-plaintext highlighter-rouge">add_library(myvec_lib STATIC src/myvec.cpp)</code> 单独编译成静态库</td><td>要手动加到 <code class="language-plaintext highlighter-rouge">sources</code> 列表里</td></tr><tr><td>头文件路径</td><td><code class="language-plaintext highlighter-rouge">target_include_directories(myvec_lib PUBLIC include)</code></td><td>要手动写 <code class="language-plaintext highlighter-rouge">include_dirs=["include"]</code></td></tr><tr><td>绑定层链接库</td><td><code class="language-plaintext highlighter-rouge">target_link_libraries(myvec PRIVATE myvec_lib)</code></td><td>不需要（因为直接把源文件编译进来了）</td></tr></tbody></table><p>CMake 的 target 依赖管理更清晰，setup.py 要手动把所有源文件和路径都写进去。</p></blockquote><hr /><h2 id="八概念速查表">八、概念速查表</h2><table><thead><tr><th>概念</th><th>一句话记忆</th></tr></thead><tbody><tr><td>跨语言边界</td><td>Python ↔ C++ 的调用，有参数转换/复制/GIL 开销</td></tr><tr><td>批处理原则</td><td>传一个数组，不要每个元素跨一次边界</td></tr><tr><td><code class="language-plaintext highlighter-rouge">extern "C"</code></td><td>让 C++ 函数按 C 方式导出，避免 name mangling</td></tr><tr><td>ctypes</td><td>Python 标准库，调用 C 接口，手动声明签名</td></tr><tr><td>pybind11</td><td>绑定 C++ 接口到 Python，支持类/异常/NumPy</td></tr><tr><td><code class="language-plaintext highlighter-rouge">py::array_t&lt;T&gt;</code></td><td>pybind11 的 NumPy 数组类型</td></tr><tr><td>GIL</td><td>Python 全局锁，C++ 计算时可 <code class="language-plaintext highlighter-rouge">gil_scoped_release</code> 释放</td></tr><tr><td>零拷贝</td><td>共享同一块内存，不复制数据</td></tr><tr><td>七项契约</td><td>地址+类型+形状+步长+设备+生命周期+可变性</td></tr><tr><td>stride 陷阱</td><td>转置数组不连续，按连续读会出错</td></tr><tr><td><code class="language-plaintext highlighter-rouge">np.ascontiguousarray</code></td><td>强制数组变成连续（可能复制）</td></tr><tr><td>CMake + pybind11</td><td><code class="language-plaintext highlighter-rouge">pybind11_add_module</code> 创建扩展</td></tr><tr><td>setup.py</td><td><code class="language-plaintext highlighter-rouge">Pybind11Extension</code> 规范化安装</td></tr></tbody></table><hr /><h2 id="九常见错误与排查">九、常见错误与排查</h2><table><thead><tr><th>错误</th><th>原因</th><th>解决</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">ImportError: undefined symbol</code></td><td>ABI 不匹配 / 漏链接库</td><td>检查编译器版本、链接</td></tr><tr><td><code class="language-plaintext highlighter-rouge">Segmentation Fault</code></td><td>ctypes 签名写错 / 悬空指针</td><td>用 ASan 排查</td></tr><tr><td>数据错误但不崩溃</td><td>stride 不匹配 / dtype 不匹配</td><td>检查 <code class="language-plaintext highlighter-rouge">flags['C_CONTIGUOUS']</code></td></tr><tr><td><code class="language-plaintext highlighter-rouge">fatal error: pybind11/pybind11.h</code></td><td>没装 pybind11</td><td><code class="language-plaintext highlighter-rouge">pip install pybind11</code></td></tr><tr><td>编译慢</td><td>pybind11 模板展开多</td><td>用 ccache / 预编译头</td></tr></tbody></table><hr /><h2 id="十关联笔记">十、关联笔记</h2><ul><li><code class="language-plaintext highlighter-rouge">cpp/内存生命周期与资源管理.md</code>（RAII、所有权——零拷贝时的生命周期问题）</li><li><code class="language-plaintext highlighter-rouge">cpp/编译链接模板与构建系统.md</code>（动态库编译、ABI、CMake 基础）</li><li><code class="language-plaintext highlighter-rouge">python/Python进阶笔记3_并发与性能分析.md</code>（GIL 的本质）</li><li><code class="language-plaintext highlighter-rouge">pytorch/PyTorch常见操作速查.md</code>（PyTorch 自定义算子扩展）</li></ul></section><!-- Previous / Next navigation --><nav class="notes-pager"><div class="notes-pager-links"> <span></span> <a href="/notes/%E5%86%85%E5%AD%98%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%B8%8E%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" class="notes-pager-next"> <span class="notes-pager-label">下一章 →</span> <span class="notes-pager-title">内存生命周期与资源管理</span> </a></div></nav></div></article><!-- Right Sidebar: Table of Contents (built by JS from DOM) --><aside class="notes-toc" id="notes-toc"><div class="notes-toc-inner"><h4 class="notes-toc-title">目录</h4><nav class="notes-toc-nav"><ul class="notes-toc-list" id="notes-toc-list"> <!-- Populated by notes-toc.js --></ul></nav></div></aside></div><script src="https://1571859588.github.io/assets/js/notes-toc.js"></script> <script> (function() { var q = new URLSearchParams(location.search).get('q'); if (!q || q.length < 2) return; var body = document.querySelector('.notes-body'); if (!body) return; // Walk text nodes, find and highlight matches var walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT, null, false); var textNodes = []; while (walker.nextNode()) { var p = walker.currentNode.parentNode; // Skip script, style, code blocks, and already-marked text if (p.tagName === 'SCRIPT' || p.tagName === 'STYLE' || p.tagName === 'MARK' || p.closest('pre') || p.closest('.notes-search-hit')) continue; textNodes.push(walker.currentNode); } var first = null; var re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'); textNodes.forEach(function(node) { var text = node.textContent; if (!re.test(text)) return; re.lastIndex = 0; // reset after test var frag = document.createDocumentFragment(); var lastIdx = 0; var match; while ((match = re.exec(text)) !== null) { if (match.index > lastIdx) { frag.appendChild(document.createTextNode(text.substring(lastIdx, match.index))); } var mark = document.createElement('mark'); mark.className = 'notes-search-mark'; mark.textContent = match[0]; frag.appendChild(mark); if (!first) first = mark; lastIdx = match.index + match[0].length; } if (lastIdx < text.length) { frag.appendChild(document.createTextNode(text.substring(lastIdx))); } node.parentNode.replaceChild(frag, node); }); if (first) { setTimeout(function() { first.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300); } })(); </script><div class="page__footer"><footer> <!-- start custom footer snippets --> <a href="/sitemap/">Sitemap</a> <!-- end custom footer snippets --><div class="page__footer-follow"><ul class="social-icons"><li><strong>Follow:</strong></li><li><a href="http://github.com/1571859588"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a></li><li><a href="https://1571859588.github.io/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li></ul></div><div class="page__footer-copyright"> &copy; 2026 Yuntao Nie, Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://github.com/academicpages/academicpages.github.io">AcademicPages</a>, a fork of <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.<br /> Site last updated 2026-07-06</div></footer></div><script src="https://1571859588.github.io/assets/js/main.min.js"></script> <script src="https://1571859588.github.io/assets/js/paper-details.js"></script> <!-- Fix kramdown stripping backslashes before _ in math spans. kramdown treats \_ as a markdown escape, converting $seq\_len$ to $seq_len$. MathJax then interprets _ as subscript instead of a literal underscore. This runs synchronously before MathJax (async) processes the page. --> <script> (function() { var content = document.querySelector('.page__content'); if (!content) return; var walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT, null, false); var nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode); nodes.forEach(function(node) { var text = node.textContent; var fixed = text.replace(/\$([^$\n]+?)\$/g, function(match, math) { // Inside $...$, add \ before _ followed by 2+ lowercase letters. // Safe: legitimate subscripts use single chars ($d_k$) or braces ($x_{ij}$). var fixedMath = math.replace(/_([a-z]{2,})/g, '\\_$1'); return fixedMath !== math ? '$' + fixedMath + '$' : match; }); if (fixed !== text) node.textContent = fixed; }); })(); </script> <script> var SERIES_INDEX = [ {t:"Python与C++互操作", u:"/notes/Python%E4%B8%8EC-%E4%BA%92%E6%93%8D%E4%BD%9C/"}, {t:"内存生命周期与资源管理", u:"/notes/%E5%86%85%E5%AD%98%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%B8%8E%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/"}, {t:"环境配置教程", u:"/notes/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%95%99%E7%A8%8B/"}, {t:"编译链接模板与构建系统", u:"/notes/%E7%BC%96%E8%AF%91%E9%93%BE%E6%8E%A5%E6%A8%A1%E6%9D%BF%E4%B8%8E%E6%9E%84%E5%BB%BA%E7%B3%BB%E7%BB%9F/"} ]; (function() { if (!SERIES_INDEX.length) return; var inp = document.getElementById('notes-sidebar-search-input'); var box = document.getElementById('notes-sidebar-search-results'); if (!inp || !box) return; function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; } function hl(t, q) { var o = '', L = 0, lo = t.toLowerCase(), ql = q.toLowerCase(), i; while ((i = lo.indexOf(ql, L)) !== -1) { o += esc(t.substring(L, i)) + '<mark class="notes-search-highlight">' + esc(t.substring(i, i + q.length)) + '</mark>'; L = i + q.length; } return o + esc(t.substring(L)); } inp.addEventListener('input', function() { var q = this.value.trim(); if (!q) { box.style.display = 'none'; box.innerHTML = ''; return; } var ql = q.toLowerCase(), hits = []; for (var i = 0; i < SERIES_INDEX.length; i++) { if (SERIES_INDEX[i].t.toLowerCase().indexOf(ql) !== -1) hits.push(SERIES_INDEX[i]); } if (!hits.length) { box.innerHTML = '<div class="notes-sidebar-search-empty">无匹配</div>'; } else { var h = ''; for (var j = 0; j < Math.min(hits.length, 15); j++) { h += '<a href="' + hits[j].u + '" class="notes-sidebar-search-hit" data-q="' + esc(q) + '">' + '<span class="notes-sidebar-search-hit-title">' + hl(hits[j].t, q) + '</span></a>'; } box.innerHTML = h; } box.style.display = 'block'; }); inp.addEventListener('keydown', function(e) { if (e.key === 'Escape') { box.style.display = 'none'; box.innerHTML = ''; this.blur(); } }); box.addEventListener('click', function(e) { var a = e.target.closest('.notes-sidebar-search-hit'); if (a && a.dataset.q) sessionStorage.setItem('notes-search-q', a.dataset.q); }); document.addEventListener('click', function(e) { if (!e.target.closest('#notes-sidebar-search')) { box.style.display = 'none'; box.innerHTML = ''; } }); })(); </script></body></html>

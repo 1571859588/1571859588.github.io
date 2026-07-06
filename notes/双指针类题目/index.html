@@ -1,0 +1,208 @@
+<!doctype html><html lang="en" class="no-js"><head><meta charset="utf-8"> <!-- begin SEO --><title>双指针类题目 - Yuntao Nie</title><meta property="og:locale" content="en-US"><meta property="og:site_name" content="Yuntao Nie"><meta property="og:title" content="双指针类题目"><link rel="canonical" href="https://1571859588.github.io/notes/%E5%8F%8C%E6%8C%87%E9%92%88%E7%B1%BB%E9%A2%98%E7%9B%AE/"><meta property="og:url" content="https://1571859588.github.io/notes/%E5%8F%8C%E6%8C%87%E9%92%88%E7%B1%BB%E9%A2%98%E7%9B%AE/"><meta property="og:description" content="LeetCode Hot 100 双指针类题目"> <script type="application/ld+json"> { "@context" : "http://schema.org", "@type" : "Person", "name" : "Yuntao Nie", "url" : "https://1571859588.github.io", "sameAs" : null } </script> <!-- end SEO --><link href="https://1571859588.github.io/feed.xml" type="application/atom+xml" rel="alternate" title="Yuntao Nie Feed"> <!-- http://t.co/dKP3o1e --><meta name="HandheldFriendly" content="True"><meta name="MobileOptimized" content="320"><meta name="viewport" content="width=device-width, initial-scale=1.0"> <script> document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js '; </script> <!-- For all browsers --><link rel="stylesheet" href="https://1571859588.github.io/assets/css/main.css"><meta http-equiv="cleartype" content="on"> <!-- start custom head snippets --><link rel="apple-touch-icon" sizes="57x57" href="https://1571859588.github.io/images/apple-touch-icon-57x57.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="60x60" href="https://1571859588.github.io/images/apple-touch-icon-60x60.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="72x72" href="https://1571859588.github.io/images/apple-touch-icon-72x72.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="76x76" href="https://1571859588.github.io/images/apple-touch-icon-76x76.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="114x114" href="https://1571859588.github.io/images/apple-touch-icon-114x114.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="120x120" href="https://1571859588.github.io/images/apple-touch-icon-120x120.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="144x144" href="https://1571859588.github.io/images/apple-touch-icon-144x144.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="152x152" href="https://1571859588.github.io/images/apple-touch-icon-152x152.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="180x180" href="https://1571859588.github.io/images/apple-touch-icon-180x180.png?v=M44lzPylqQ"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-32x32.png?v=M44lzPylqQ" sizes="32x32"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/android-chrome-192x192.png?v=M44lzPylqQ" sizes="192x192"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-96x96.png?v=M44lzPylqQ" sizes="96x96"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-16x16.png?v=M44lzPylqQ" sizes="16x16"><link rel="manifest" href="https://1571859588.github.io/images/manifest.json?v=M44lzPylqQ"><link rel="mask-icon" href="https://1571859588.github.io/images/safari-pinned-tab.svg?v=M44lzPylqQ" color="#000000"><link rel="shortcut icon" href="/images/favicon.ico?v=M44lzPylqQ"><meta name="msapplication-TileColor" content="#000000"><meta name="msapplication-TileImage" content="https://1571859588.github.io/images/mstile-144x144.png?v=M44lzPylqQ"><meta name="msapplication-config" content="https://1571859588.github.io/images/browserconfig.xml?v=M44lzPylqQ"><meta name="theme-color" content="#ffffff"><link rel="stylesheet" href="https://1571859588.github.io/assets/css/academicons.css"/> <!-- MathJax for math rendering --> <script> MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['\\(', '\\)']] } }; </script> <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script> <!-- end custom head snippets --></head><body> <!--[if lt IE 9]><div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div><![endif]--><div class="masthead"><div class="masthead__inner-wrap"><div class="masthead__menu"><nav id="site-nav" class="greedy-nav"> <button><div class="navicon"></div></button><ul class="visible-links"><li class="masthead__menu-item masthead__menu-item--lg"><a href="https://1571859588.github.io/">Yuntao Nie</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/publications/">Publications</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/cv/">CV</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/notes/">Notes</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/year-archive/">Blog</a></li></ul><ul class="hidden-links hidden"></ul></nav></div></div></div><div id="main" role="main" class="notes-layout"> <!-- Left Sidebar: Series Chapter Navigation --><aside class="notes-sidebar" id="notes-sidebar"><div class="notes-sidebar-inner"><div class="notes-series-header"><h3 class="notes-series-title">leetcode</h3></div><div class="notes-sidebar-search" id="notes-sidebar-search"> <input type="text" class="notes-sidebar-search-input" id="notes-sidebar-search-input" placeholder="搜索本专题…" autocomplete="off"><div class="notes-sidebar-search-results" id="notes-sidebar-search-results" style="display:none"></div></div><nav class="notes-chapter-nav"><ul class="notes-chapter-list"><li class="notes-chapter-item active"> <a href="/notes/%E5%8F%8C%E6%8C%87%E9%92%88%E7%B1%BB%E9%A2%98%E7%9B%AE/" class="notes-chapter-link"> <span class="notes-chapter-num">1</span> <span class="notes-chapter-title">双指针类题目</span> </a></li><li class="notes-chapter-item "> <a href="/notes/%E5%93%88%E5%B8%8C%E7%B1%BB%E9%A2%98%E7%9B%AE/" class="notes-chapter-link"> <span class="notes-chapter-num">2</span> <span class="notes-chapter-title">哈希类题目</span> </a></li><li class="notes-chapter-item "> <a href="/notes/%E5%AD%90%E4%B8%B2%E7%B1%BB%E9%A2%98%E7%9B%AE/" class="notes-chapter-link"> <span class="notes-chapter-num">3</span> <span class="notes-chapter-title">子串类题目</span> </a></li><li class="notes-chapter-item "> <a href="/notes/%E6%99%AE%E9%80%9A%E6%95%B0%E7%BB%84%E7%B1%BB%E9%A2%98%E7%9B%AE/" class="notes-chapter-link"> <span class="notes-chapter-num">4</span> <span class="notes-chapter-title">普通数组类题目</span> </a></li><li class="notes-chapter-item "> <a href="/notes/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%B1%BB%E9%A2%98%E7%9B%AE/" class="notes-chapter-link"> <span class="notes-chapter-num">5</span> <span class="notes-chapter-title">滑动窗口类题目</span> </a></li><li class="notes-chapter-item "> <a href="/notes/%E7%9F%A9%E9%98%B5%E7%B1%BB%E9%A2%98%E7%9B%AE/" class="notes-chapter-link"> <span class="notes-chapter-num">6</span> <span class="notes-chapter-title">矩阵类题目</span> </a></li><li class="notes-chapter-item "> <a href="/notes/%E9%93%BE%E8%A1%A8%E7%B1%BB%E9%A2%98%E7%9B%AE/" class="notes-chapter-link"> <span class="notes-chapter-num">7</span> <span class="notes-chapter-title">链表类题目</span> </a></li><li class="notes-chapter-item "> <a href="/notes/%E9%93%BE%E8%A1%A8%E7%B1%BB%E9%A2%98%E7%9B%AE-%E8%BF%9B%E9%98%B6/" class="notes-chapter-link"> <span class="notes-chapter-num">8</span> <span class="notes-chapter-title">链表类题目_进阶</span> </a></li></ul></nav><div class="notes-sidebar-footer"> <a href="/notes/" class="notes-back-link">← 所有笔记系列</a></div></div></aside><!-- Mobile sidebar toggle --> <button class="notes-sidebar-toggle" id="notes-sidebar-toggle" aria-label="Toggle sidebar"> <span class="notes-sidebar-toggle-icon"></span> </button> <!-- Main Content --><article class="notes-content" itemscope itemtype="http://schema.org/CreativeWork"><meta itemprop="headline" content="双指针类题目"><div class="notes-content-inner"><header class="notes-header"><div class="notes-breadcrumb"> <a href="/notes/">Notes</a> <span class="notes-sep">›</span> <span>leetcode</span> <span class="notes-sep">›</span> <span>双指针类题目</span></div><h1 class="notes-page-title" itemprop="headline">双指针类题目</h1></header><section class="notes-body" itemprop="text"><h1 id="leetcode-hot-100-双指针类题目">LeetCode Hot 100 双指针类题目</h1><blockquote><p>更新时间：2026-06-30 来源：LeetCode Hot 100 双指针专题 状态：刷题笔记，含完整代码 + 推导 + 面试追问</p></blockquote><hr /><h2 id="一句话总结">一句话总结</h2><p>双指针的核心：<strong>两个指针协同移动，把 O(n²) 的暴力搜索优化到 O(n)</strong>。常见模式：快慢指针（原地操作）、左右相向指针（有序数组/容器问题）。关键认知：<strong>指针怎么动取决于”移动后结果变大还是变小”</strong>。</p><hr /><h2 id="题目索引">题目索引</h2><table><thead><tr><th>题号</th><th>题目</th><th>难度</th><th>核心技巧</th></tr></thead><tbody><tr><td>283</td><td>移动零</td><td>简单</td><td>快慢指针原地操作</td></tr><tr><td>11</td><td>盛最多水的容器</td><td>中等</td><td>左右相向指针</td></tr><tr><td>15</td><td>三数之和</td><td>中等</td><td>排序 + 固定一个 + 双指针</td></tr><tr><td>42</td><td>接雨水</td><td>困难</td><td>双指针（或动态规划/单调栈）</td></tr></tbody></table><hr /><h2 id="q1-283-移动零快慢指针">Q1: 283. 移动零（快慢指针）</h2><p><strong>题目</strong>：将数组中所有 0 移到末尾，保持非零元素相对顺序。<strong>必须原地操作</strong>。</p><blockquote><p><a href="https://leetcode.cn/problems/move-zeroes/?envType=study-plan-v2&amp;envId=top-100-liked">283. 移动零 - 力扣</a></p></blockquote><p><strong>示例</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>输入: nums = [0,1,0,3,12]
+输出: [1,3,12,0,0]
+</code></pre></div></div><h3 id="解法">解法</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">moveZeroes</span><span class="p">(</span><span class="n">nums</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="s">"""
+    时间 O(n)，空间 O(1)
+    核心：快慢指针，慢指针指向下一个非零元素应放的位置
+    """</span>
+    <span class="n">slow</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># 慢指针：下一个非零元素应该放的位置
+</span>
+    <span class="c1"># 快指针遍历整个数组
+</span>    <span class="k">for</span> <span class="n">fast</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nums</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">nums</span><span class="p">[</span><span class="n">fast</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># 交换快慢指针位置的元素
+</span>            <span class="n">nums</span><span class="p">[</span><span class="n">slow</span><span class="p">],</span> <span class="n">nums</span><span class="p">[</span><span class="n">fast</span><span class="p">]</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">fast</span><span class="p">],</span> <span class="n">nums</span><span class="p">[</span><span class="n">slow</span><span class="p">]</span>
+            <span class="n">slow</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="c1"># slow 之后的位置自动是 0（因为被交换过去了）
+</span></code></pre></div></div><h3 id="推导过程">推导过程</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nums = [0, 1, 0, 3, 12]
+slow=0, fast=0: nums[0]=0, 跳过
+slow=0, fast=1: nums[1]=1≠0, 交换 nums[0]和nums[1] → [1,0,0,3,12], slow=1
+slow=1, fast=2: nums[2]=0, 跳过
+slow=1, fast=3: nums[3]=3≠0, 交换 nums[1]和nums[3] → [1,3,0,0,12], slow=2
+slow=2, fast=4: nums[4]=12≠0, 交换 nums[2]和nums[4] → [1,3,12,0,0], slow=3
+
+结果: [1, 3, 12, 0, 0] ✓
+</code></pre></div></div><h3 id="为什么能保持相对顺序">为什么能保持相对顺序</h3><p>慢指针始终指向”下一个非零元素该放的位置”，快指针按原顺序遍历。非零元素被按原顺序交换到前面，相对顺序不变。</p><hr /><h2 id="q2-11-盛最多水的容器左右相向指针">Q2: 11. 盛最多水的容器（左右相向指针）</h2><p><strong>题目</strong>：n 条垂线，找出两条线与 x 轴构成的容器能盛最多水。</p><blockquote><p><a href="https://leetcode.cn/problems/container-with-most-water/?envType=study-plan-v2&amp;envId=top-100-liked">11. 盛最多水的容器 - 力扣</a></p></blockquote><p><strong>示例</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>输入：[1,8,6,2,5,4,8,3,7]
+输出：49
+</code></pre></div></div><h3 id="解法-1">解法</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">maxArea</span><span class="p">(</span><span class="n">height</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="s">"""
+    时间 O(n)，空间 O(1)
+    核心：面积 = min(左高, 右高) * 宽度
+    移动较矮的一侧（移动较高的不可能让面积变大）
+    """</span>
+    <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">height</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">max_area</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">while</span> <span class="n">left</span> <span class="o">&lt;</span> <span class="n">right</span><span class="p">:</span>
+        <span class="c1"># 面积 = 短板高度 × 宽度
+</span>        <span class="n">h</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">height</span><span class="p">[</span><span class="n">left</span><span class="p">],</span> <span class="n">height</span><span class="p">[</span><span class="n">right</span><span class="p">])</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">right</span> <span class="o">-</span> <span class="n">left</span>
+        <span class="n">area</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="n">w</span>
+        <span class="n">max_area</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_area</span><span class="p">,</span> <span class="n">area</span><span class="p">)</span>
+
+        <span class="c1"># 移动较矮的一侧
+</span>        <span class="k">if</span> <span class="n">height</span><span class="p">[</span><span class="n">left</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">height</span><span class="p">[</span><span class="n">right</span><span class="p">]:</span>
+            <span class="n">left</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">right</span> <span class="o">-=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">max_area</span>
+</code></pre></div></div><h3 id="推导过程-1">推导过程</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>height = [1, 8, 6, 2, 5, 4, 8, 3, 7]
+         0  1  2  3  4  5  6  7  8
+
+left=0, right=8: h=min(1,7)=1, w=8, area=8,  1&lt;7 → left++
+left=1, right=8: h=min(8,7)=7, w=7, area=49, 8&gt;7 → right--
+left=1, right=7: h=min(8,3)=3, w=6, area=18, 8&gt;3 → right--
+left=1, right=6: h=min(8,8)=8, w=5, area=40, 8=8 → right--
+...继续直到 left &gt;= right
+
+max_area = 49
+</code></pre></div></div><h3 id="为什么移动较矮的一侧">为什么移动较矮的一侧</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>面积 = min(左高, 右高) × 宽度
+
+如果移动较高的那一侧：
+  宽度变小了（-1）
+  高度 = min(新高, 较矮的) ≤ 原来的较矮高度
+  → 面积必然变小或不变，不可能更大
+
+如果移动较矮的那一侧：
+  宽度变小了（-1）
+  但高度可能变大（如果新位置更高）
+  → 有机会让面积变大
+</code></pre></div></div><p>所以移动较矮的一侧才有机会找到更大面积。</p><hr /><h2 id="q3-15-三数之和排序--固定一个--双指针">Q3: 15. 三数之和（排序 + 固定一个 + 双指针）</h2><p><strong>题目</strong>：找出数组中所有和为 0 的三元组，不重复。</p><blockquote><p><a href="https://leetcode.cn/problems/3sum/description/?envType=study-plan-v2&amp;envId=top-100-liked">15. 三数之和 - 力扣</a></p></blockquote><p><strong>示例</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>输入：nums = [-1,0,1,2,-1,-4]
+输出：[[-1,-1,2],[-1,0,1]]
+</code></pre></div></div><h3 id="解法-2">解法</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">threeSum</span><span class="p">(</span><span class="n">nums</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+    <span class="s">"""
+    时间 O(n²)，空间 O(1)（不含排序的空间）
+    核心：排序 + 固定第一个数 + 双指针找另外两个数
+    """</span>
+    <span class="n">nums</span><span class="p">.</span><span class="n">sort</span><span class="p">()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="c1"># 剪枝：最小的三个数都 &gt; 0，后面不可能了
+</span>        <span class="k">if</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="c1"># 跳过重复的第一个数
+</span>        <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]:</span>
+            <span class="k">continue</span>
+
+        <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="o">-</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>  <span class="c1"># 两数之和的目标
+</span>
+        <span class="k">while</span> <span class="n">left</span> <span class="o">&lt;</span> <span class="n">right</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">left</span><span class="p">]</span> <span class="o">+</span> <span class="n">nums</span><span class="p">[</span><span class="n">right</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="n">target</span><span class="p">:</span>
+                <span class="n">result</span><span class="p">.</span><span class="n">append</span><span class="p">([</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">nums</span><span class="p">[</span><span class="n">left</span><span class="p">],</span> <span class="n">nums</span><span class="p">[</span><span class="n">right</span><span class="p">]])</span>
+                <span class="c1"># 跳过重复的 left 和 right
+</span>                <span class="k">while</span> <span class="n">left</span> <span class="o">&lt;</span> <span class="n">right</span> <span class="ow">and</span> <span class="n">nums</span><span class="p">[</span><span class="n">left</span><span class="p">]</span> <span class="o">==</span> <span class="n">nums</span><span class="p">[</span><span class="n">left</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]:</span>
+                    <span class="n">left</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">while</span> <span class="n">left</span> <span class="o">&lt;</span> <span class="n">right</span> <span class="ow">and</span> <span class="n">nums</span><span class="p">[</span><span class="n">right</span><span class="p">]</span> <span class="o">==</span> <span class="n">nums</span><span class="p">[</span><span class="n">right</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]:</span>
+                    <span class="n">right</span> <span class="o">-=</span> <span class="mi">1</span>
+                <span class="n">left</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">right</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">s</span> <span class="o">&lt;</span> <span class="n">target</span><span class="p">:</span>
+                <span class="n">left</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">right</span> <span class="o">-=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div></div><h3 id="推导过程-2">推导过程</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nums = [-1, 0, 1, 2, -1, -4]
+排序后: [-4, -1, -1, 0, 1, 2]
+
+i=0, nums[i]=-4, target=4:
+  left=1(-1), right=5(2): -1+2=1 &lt; 4 → left++
+  left=2(-1), right=5(2): -1+2=1 &lt; 4 → left++
+  left=3(0), right=5(2): 0+2=2 &lt; 4 → left++
+  left=4(1), right=5(2): 1+2=3 &lt; 4 → left++
+  left=5, left=right 退出
+
+i=1, nums[i]=-1, target=1:
+  left=2(-1), right=5(2): -1+2=1 == 1 → 找到 [-1,-1,2]
+  跳重复后 left=3, right=4
+  left=3(0), right=4(1): 0+1=1 == 1 → 找到 [-1,0,1]
+  left=4, right=3 退出
+
+i=2, nums[i]=-1, 和 i=1 重复 → 跳过
+
+i=3, nums[i]=0 &gt; 0 → break
+
+结果: [[-1,-1,2], [-1,0,1]] ✓
+</code></pre></div></div><h3 id="去重的关键">去重的关键</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 第一个数去重：跳过相同的 nums[i]
+</span><span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]:</span>
+    <span class="k">continue</span>
+
+<span class="c1"># left/right 去重：找到一组后跳过相同的
+</span><span class="k">while</span> <span class="n">left</span> <span class="o">&lt;</span> <span class="n">right</span> <span class="ow">and</span> <span class="n">nums</span><span class="p">[</span><span class="n">left</span><span class="p">]</span> <span class="o">==</span> <span class="n">nums</span><span class="p">[</span><span class="n">left</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]:</span>
+    <span class="n">left</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="k">while</span> <span class="n">left</span> <span class="o">&lt;</span> <span class="n">right</span> <span class="ow">and</span> <span class="n">nums</span><span class="p">[</span><span class="n">right</span><span class="p">]</span> <span class="o">==</span> <span class="n">nums</span><span class="p">[</span><span class="n">right</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]:</span>
+    <span class="n">right</span> <span class="o">-=</span> <span class="mi">1</span>
+</code></pre></div></div><h3 id="和两数之和的关系">和两数之和的关系</h3><p>三数之和 = 固定一个数 + 两数之和（双指针版）。排序后用双指针找两数之和，O(n²) 总复杂度。</p><hr /><h2 id="q4-42-接雨水双指针">Q4: 42. 接雨水（双指针）</h2><p><strong>题目</strong>：给定 n 个非负整数表示柱子高度，计算能接多少雨水。</p><blockquote><p><a href="https://leetcode.cn/problems/trapping-rain-water/?envType=study-plan-v2&amp;envId=top-100-liked">42. 接雨水 - 力扣</a></p></blockquote><p><strong>示例</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>输入：height = [0,1,0,2,1,0,1,3,2,1,2,1]
+输出：6
+</code></pre></div></div><h3 id="解法双指针">解法（双指针）</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">trap</span><span class="p">(</span><span class="n">height</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="s">"""
+    时间 O(n)，空间 O(1)
+    核心：每个位置能接的雨水 = min(左边最高, 右边最高) - 当前高度
+    双指针从两端向中间，维护左侧最大值和右侧最大值
+    """</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">height</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+
+    <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">height</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">left_max</span> <span class="o">=</span> <span class="n">height</span><span class="p">[</span><span class="n">left</span><span class="p">]</span>    <span class="c1"># 左侧最高
+</span>    <span class="n">right_max</span> <span class="o">=</span> <span class="n">height</span><span class="p">[</span><span class="n">right</span><span class="p">]</span>  <span class="c1"># 右侧最高
+</span>    <span class="n">water</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">while</span> <span class="n">left</span> <span class="o">&lt;</span> <span class="n">right</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">left_max</span> <span class="o">&lt;</span> <span class="n">right_max</span><span class="p">:</span>
+            <span class="c1"># 左侧较矮，处理左边
+</span>            <span class="n">left</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">left_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">left_max</span><span class="p">,</span> <span class="n">height</span><span class="p">[</span><span class="n">left</span><span class="p">])</span>
+            <span class="c1"># 当前位置能接的雨水 = left_max - height[left]（≥0）
+</span>            <span class="n">water</span> <span class="o">+=</span> <span class="n">left_max</span> <span class="o">-</span> <span class="n">height</span><span class="p">[</span><span class="n">left</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># 右侧较矮，处理右边
+</span>            <span class="n">right</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="n">right_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">right_max</span><span class="p">,</span> <span class="n">height</span><span class="p">[</span><span class="n">right</span><span class="p">])</span>
+            <span class="n">water</span> <span class="o">+=</span> <span class="n">right_max</span> <span class="o">-</span> <span class="n">height</span><span class="p">[</span><span class="n">right</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">water</span>
+</code></pre></div></div><h3 id="推导过程-3">推导过程</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>height = [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]
+         0  1  2  3  4  5  6  7  8  9  10 11
+
+核心原理：位置 i 能接的雨水 = min(左max, 右max) - height[i]
+
+双指针法：
+  left_max 记录 left 左边的最高柱子
+  right_max 记录 right 右边的最高柱子
+  哪边的 max 小就处理哪边（因为那边的水位由这个小的 max 决定）
+
+left=0, right=11: left_max=0, right_max=1, 0&lt;1 → 处理左
+  left=1: left_max=max(0,1)=1, water += 1-1=0
+left=1, right=11: left_max=1, right_max=1, 1&gt;=1 → 处理右
+  right=10: right_max=max(1,2)=2, water += 2-2=0
+left=1, right=10: left_max=1, right_max=2, 1&lt;2 → 处理左
+  left=2: left_max=max(1,0)=1, water += 1-0=1  ← 位置2接了1单位水
+left=2, right=10: left_max=1, right_max=2, 1&lt;2 → 处理左
+  left=3: left_max=max(1,2)=2, water += 2-2=0
+...
+
+最终 water = 6
+</code></pre></div></div><h3 id="为什么双指针可行">为什么双指针可行</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>关键认知：如果 left_max &lt; right_max，那么 left 位置的水量由 left_max 决定
+（因为右边一定有一个比 left_max 更高的柱子挡着，水位不会超过 left_max）
+
+所以哪边的 max 小，就处理哪边，这样只需要维护两个变量，不需要数组。
+</code></pre></div></div><h3 id="其他解法对比">其他解法对比</h3><table><thead><tr><th>解法</th><th>时间</th><th>空间</th><th>思路</th></tr></thead><tbody><tr><td>双指针</td><td>O(n)</td><td>O(1)</td><td>维护左右 max，哪边小处理哪边</td></tr><tr><td>动态规划</td><td>O(n)</td><td>O(n)</td><td>预计算每个位置的左 max 和右 max</td></tr><tr><td>单调栈</td><td>O(n)</td><td>O(n)</td><td>按层接水，栈维护递减高度</td></tr></tbody></table><p>双指针是最优解：空间 O(1)。</p><hr /><h2 id="q5-两数之和有序数组双指针版">Q5: 两数之和（有序数组，双指针版）</h2><p><strong>题目</strong>：给定<strong>有序</strong>数组 <code class="language-plaintext highlighter-rouge">nums</code> 和目标值 <code class="language-plaintext highlighter-rouge">target</code>，找出和为 target 的两个数的下标。</p><blockquote><p><a href="https://leetcode.cn/problems/two-sum/description/?envType=study-plan-v2&amp;envId=top-100-liked">1. 两数之和 - 力扣</a></p></blockquote><h3 id="解法双指针仅适用于有序数组">解法（双指针，仅适用于有序数组）</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">twoSum_sorted</span><span class="p">(</span><span class="n">nums</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">target</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="s">"""时间 O(n)，空间 O(1)，前提：数组已排序"""</span>
+    <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="n">left</span> <span class="o">&lt;</span> <span class="n">right</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">left</span><span class="p">]</span> <span class="o">+</span> <span class="n">nums</span><span class="p">[</span><span class="n">right</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="n">target</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">s</span> <span class="o">&lt;</span> <span class="n">target</span><span class="p">:</span>
+            <span class="n">left</span> <span class="o">+=</span> <span class="mi">1</span>   <span class="c1"># 和太小，左指针右移增大
+</span>        <span class="k">else</span><span class="p">:</span>
+            <span class="n">right</span> <span class="o">-=</span> <span class="mi">1</span>  <span class="c1"># 和太大，右指针左移减小
+</span>    <span class="k">return</span> <span class="p">[]</span>
+</code></pre></div></div><h3 id="对比哈希表版">对比哈希表版</h3><table><thead><tr><th> </th><th>哈希表版</th><th>双指针版</th></tr></thead><tbody><tr><td>是否要有序</td><td>不需要</td><td><strong>需要排序</strong></td></tr><tr><td>时间</td><td>O(n)</td><td>O(n)（排序 O(n log n)）</td></tr><tr><td>空间</td><td>O(n)</td><td>O(1)</td></tr><tr><td>返回原下标</td><td>✅ 直接存</td><td>❌ 排序后下标变了</td></tr><tr><td>适合场景</td><td>无序数组</td><td>有序数组</td></tr></tbody></table><hr /><h2 id="双指针类题目通用思路">双指针类题目通用思路</h2><table><thead><tr><th>模式</th><th>典型题目</th><th>指针移动规则</th></tr></thead><tbody><tr><td>快慢指针</td><td>移动零</td><td>快指针遍历，慢指针记录位置</td></tr><tr><td>左右相向</td><td>盛水容器/接雨水</td><td>移动较矮的一侧</td></tr><tr><td>排序+双指针</td><td>三数之和</td><td>固定一个 + 双指针找另外两个</td></tr><tr><td>有序双指针</td><td>两数之和（有序）</td><td>和小移左，和大移右</td></tr></tbody></table><p><strong>核心认知</strong>：</p><ul><li>双指针的本质是<strong>利用单调性减少搜索空间</strong></li><li>移动哪个指针取决于”移动后结果变大还是变小”</li><li>排序 + 双指针是处理”多数之和”问题的标准套路</li></ul><hr /><h2 id="关联笔记">关联笔记</h2><ul><li>本目录 <code class="language-plaintext highlighter-rouge">哈希类题目.md</code></li><li><code class="language-plaintext highlighter-rouge">面试经历/agent开发/2026-06-15-字节.md</code>（字节面试算法题）</li><li><code class="language-plaintext highlighter-rouge">ai-infra/算法刷题在线练习平台.md</code></li></ul></section><!-- Previous / Next navigation --><nav class="notes-pager"><div class="notes-pager-links"> <span></span> <a href="/notes/%E5%93%88%E5%B8%8C%E7%B1%BB%E9%A2%98%E7%9B%AE/" class="notes-pager-next"> <span class="notes-pager-label">下一章 →</span> <span class="notes-pager-title">哈希类题目</span> </a></div></nav></div></article><!-- Right Sidebar: Table of Contents (built by JS from DOM) --><aside class="notes-toc" id="notes-toc"><div class="notes-toc-inner"><h4 class="notes-toc-title">目录</h4><nav class="notes-toc-nav"><ul class="notes-toc-list" id="notes-toc-list"> <!-- Populated by notes-toc.js --></ul></nav></div></aside></div><script src="https://1571859588.github.io/assets/js/notes-toc.js"></script> <script> (function() { var q = new URLSearchParams(location.search).get('q'); if (!q || q.length < 2) return; var body = document.querySelector('.notes-body'); if (!body) return; // Walk text nodes, find and highlight matches var walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT, null, false); var textNodes = []; while (walker.nextNode()) { var p = walker.currentNode.parentNode; // Skip script, style, code blocks, and already-marked text if (p.tagName === 'SCRIPT' || p.tagName === 'STYLE' || p.tagName === 'MARK' || p.closest('pre') || p.closest('.notes-search-hit')) continue; textNodes.push(walker.currentNode); } var first = null; var re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'); textNodes.forEach(function(node) { var text = node.textContent; if (!re.test(text)) return; re.lastIndex = 0; // reset after test var frag = document.createDocumentFragment(); var lastIdx = 0; var match; while ((match = re.exec(text)) !== null) { if (match.index > lastIdx) { frag.appendChild(document.createTextNode(text.substring(lastIdx, match.index))); } var mark = document.createElement('mark'); mark.className = 'notes-search-mark'; mark.textContent = match[0]; frag.appendChild(mark); if (!first) first = mark; lastIdx = match.index + match[0].length; } if (lastIdx < text.length) { frag.appendChild(document.createTextNode(text.substring(lastIdx))); } node.parentNode.replaceChild(frag, node); }); if (first) { setTimeout(function() { first.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300); } })(); </script><div class="page__footer"><footer> <!-- start custom footer snippets --> <a href="/sitemap/">Sitemap</a> <!-- end custom footer snippets --><div class="page__footer-follow"><ul class="social-icons"><li><strong>Follow:</strong></li><li><a href="http://github.com/1571859588"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a></li><li><a href="https://1571859588.github.io/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li></ul></div><div class="page__footer-copyright"> &copy; 2026 Yuntao Nie, Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://github.com/academicpages/academicpages.github.io">AcademicPages</a>, a fork of <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.<br /> Site last updated 2026-07-06</div></footer></div><script src="https://1571859588.github.io/assets/js/main.min.js"></script> <script src="https://1571859588.github.io/assets/js/paper-details.js"></script> <!-- Fix kramdown stripping backslashes before _ in math spans. kramdown treats \_ as a markdown escape, converting $seq\_len$ to $seq_len$. MathJax then interprets _ as subscript instead of a literal underscore. This runs synchronously before MathJax (async) processes the page. --> <script> (function() { var content = document.querySelector('.page__content'); if (!content) return; var walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT, null, false); var nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode); nodes.forEach(function(node) { var text = node.textContent; var fixed = text.replace(/\$([^$\n]+?)\$/g, function(match, math) { // Inside $...$, add \ before _ followed by 2+ lowercase letters. // Safe: legitimate subscripts use single chars ($d_k$) or braces ($x_{ij}$). var fixedMath = math.replace(/_([a-z]{2,})/g, '\\_$1'); return fixedMath !== math ? '$' + fixedMath + '$' : match; }); if (fixed !== text) node.textContent = fixed; }); })(); </script> <script> var SERIES_INDEX = [ {t:"双指针类题目", u:"/notes/%E5%8F%8C%E6%8C%87%E9%92%88%E7%B1%BB%E9%A2%98%E7%9B%AE/"}, {t:"哈希类题目", u:"/notes/%E5%93%88%E5%B8%8C%E7%B1%BB%E9%A2%98%E7%9B%AE/"}, {t:"子串类题目", u:"/notes/%E5%AD%90%E4%B8%B2%E7%B1%BB%E9%A2%98%E7%9B%AE/"}, {t:"普通数组类题目", u:"/notes/%E6%99%AE%E9%80%9A%E6%95%B0%E7%BB%84%E7%B1%BB%E9%A2%98%E7%9B%AE/"}, {t:"滑动窗口类题目", u:"/notes/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%B1%BB%E9%A2%98%E7%9B%AE/"}, {t:"矩阵类题目", u:"/notes/%E7%9F%A9%E9%98%B5%E7%B1%BB%E9%A2%98%E7%9B%AE/"}, {t:"链表类题目", u:"/notes/%E9%93%BE%E8%A1%A8%E7%B1%BB%E9%A2%98%E7%9B%AE/"}, {t:"链表类题目_进阶", u:"/notes/%E9%93%BE%E8%A1%A8%E7%B1%BB%E9%A2%98%E7%9B%AE-%E8%BF%9B%E9%98%B6/"} ]; (function() { if (!SERIES_INDEX.length) return; var inp = document.getElementById('notes-sidebar-search-input'); var box = document.getElementById('notes-sidebar-search-results'); if (!inp || !box) return; function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; } function hl(t, q) { var o = '', L = 0, lo = t.toLowerCase(), ql = q.toLowerCase(), i; while ((i = lo.indexOf(ql, L)) !== -1) { o += esc(t.substring(L, i)) + '<mark class="notes-search-highlight">' + esc(t.substring(i, i + q.length)) + '</mark>'; L = i + q.length; } return o + esc(t.substring(L)); } inp.addEventListener('input', function() { var q = this.value.trim(); if (!q) { box.style.display = 'none'; box.innerHTML = ''; return; } var ql = q.toLowerCase(), hits = []; for (var i = 0; i < SERIES_INDEX.length; i++) { if (SERIES_INDEX[i].t.toLowerCase().indexOf(ql) !== -1) hits.push(SERIES_INDEX[i]); } if (!hits.length) { box.innerHTML = '<div class="notes-sidebar-search-empty">无匹配</div>'; } else { var h = ''; for (var j = 0; j < Math.min(hits.length, 15); j++) { h += '<a href="' + hits[j].u + '" class="notes-sidebar-search-hit" data-q="' + esc(q) + '">' + '<span class="notes-sidebar-search-hit-title">' + hl(hits[j].t, q) + '</span></a>'; } box.innerHTML = h; } box.style.display = 'block'; }); inp.addEventListener('keydown', function(e) { if (e.key === 'Escape') { box.style.display = 'none'; box.innerHTML = ''; this.blur(); } }); box.addEventListener('click', function(e) { var a = e.target.closest('.notes-sidebar-search-hit'); if (a && a.dataset.q) sessionStorage.setItem('notes-search-q', a.dataset.q); }); document.addEventListener('click', function(e) { if (!e.target.closest('#notes-sidebar-search')) { box.style.display = 'none'; box.innerHTML = ''; } }); })(); </script></body></html>

@@ -1,0 +1,2579 @@
+<!doctype html><html lang="en" class="no-js"><head><meta charset="utf-8"> <!-- begin SEO --><title>Linux开发基本功_新人入门版 - Yuntao Nie</title><meta property="og:locale" content="en-US"><meta property="og:site_name" content="Yuntao Nie"><meta property="og:title" content="Linux开发基本功_新人入门版"><link rel="canonical" href="https://1571859588.github.io/notes/Linux%E5%BC%80%E5%8F%91%E5%9F%BA%E6%9C%AC%E5%8A%9F-%E6%96%B0%E4%BA%BA%E5%85%A5%E9%97%A8%E7%89%88/"><meta property="og:url" content="https://1571859588.github.io/notes/Linux%E5%BC%80%E5%8F%91%E5%9F%BA%E6%9C%AC%E5%8A%9F-%E6%96%B0%E4%BA%BA%E5%85%A5%E9%97%A8%E7%89%88/"><meta property="og:description" content="Linux 开发基本功（新人入门版）"> <script type="application/ld+json"> { "@context" : "http://schema.org", "@type" : "Person", "name" : "Yuntao Nie", "url" : "https://1571859588.github.io", "sameAs" : null } </script> <!-- end SEO --><link href="https://1571859588.github.io/feed.xml" type="application/atom+xml" rel="alternate" title="Yuntao Nie Feed"> <!-- http://t.co/dKP3o1e --><meta name="HandheldFriendly" content="True"><meta name="MobileOptimized" content="320"><meta name="viewport" content="width=device-width, initial-scale=1.0"> <script> document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js '; </script> <!-- For all browsers --><link rel="stylesheet" href="https://1571859588.github.io/assets/css/main.css"><meta http-equiv="cleartype" content="on"> <!-- start custom head snippets --><link rel="apple-touch-icon" sizes="57x57" href="https://1571859588.github.io/images/apple-touch-icon-57x57.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="60x60" href="https://1571859588.github.io/images/apple-touch-icon-60x60.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="72x72" href="https://1571859588.github.io/images/apple-touch-icon-72x72.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="76x76" href="https://1571859588.github.io/images/apple-touch-icon-76x76.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="114x114" href="https://1571859588.github.io/images/apple-touch-icon-114x114.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="120x120" href="https://1571859588.github.io/images/apple-touch-icon-120x120.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="144x144" href="https://1571859588.github.io/images/apple-touch-icon-144x144.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="152x152" href="https://1571859588.github.io/images/apple-touch-icon-152x152.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="180x180" href="https://1571859588.github.io/images/apple-touch-icon-180x180.png?v=M44lzPylqQ"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-32x32.png?v=M44lzPylqQ" sizes="32x32"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/android-chrome-192x192.png?v=M44lzPylqQ" sizes="192x192"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-96x96.png?v=M44lzPylqQ" sizes="96x96"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-16x16.png?v=M44lzPylqQ" sizes="16x16"><link rel="manifest" href="https://1571859588.github.io/images/manifest.json?v=M44lzPylqQ"><link rel="mask-icon" href="https://1571859588.github.io/images/safari-pinned-tab.svg?v=M44lzPylqQ" color="#000000"><link rel="shortcut icon" href="/images/favicon.ico?v=M44lzPylqQ"><meta name="msapplication-TileColor" content="#000000"><meta name="msapplication-TileImage" content="https://1571859588.github.io/images/mstile-144x144.png?v=M44lzPylqQ"><meta name="msapplication-config" content="https://1571859588.github.io/images/browserconfig.xml?v=M44lzPylqQ"><meta name="theme-color" content="#ffffff"><link rel="stylesheet" href="https://1571859588.github.io/assets/css/academicons.css"/> <!-- MathJax for math rendering --> <script> MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['\\(', '\\)']] } }; </script> <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script> <!-- end custom head snippets --></head><body> <!--[if lt IE 9]><div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div><![endif]--><div class="masthead"><div class="masthead__inner-wrap"><div class="masthead__menu"><nav id="site-nav" class="greedy-nav"> <button><div class="navicon"></div></button><ul class="visible-links">
+<li class="masthead__menu-item masthead__menu-item--lg"><a href="https://1571859588.github.io/">Yuntao Nie</a></li>
+<li class="masthead__menu-item"><a href="https://1571859588.github.io/publications/">Publications</a></li>
+<li class="masthead__menu-item"><a href="https://1571859588.github.io/cv/">CV</a></li>
+<li class="masthead__menu-item"><a href="https://1571859588.github.io/notes/">Notes</a></li>
+<li class="masthead__menu-item"><a href="https://1571859588.github.io/year-archive/">Blog</a></li>
+</ul>
+<ul class="hidden-links hidden"></ul></nav></div></div></div><div id="main" role="main" class="notes-layout"> <!-- Left Sidebar: Series Chapter Navigation --><aside class="notes-sidebar" id="notes-sidebar"><div class="notes-sidebar-inner">
+<div class="notes-series-header"><h3 class="notes-series-title">linux</h3></div>
+<div class="notes-sidebar-search" id="notes-sidebar-search"> <input type="text" class="notes-sidebar-search-input" id="notes-sidebar-search-input" placeholder="搜索本专题…" autocomplete="off"><div class="notes-sidebar-search-results" id="notes-sidebar-search-results" style="display:none"></div>
+</div>
+<nav class="notes-chapter-nav"><ul class="notes-chapter-list">
+<li class="notes-chapter-item "> <a href="/notes/Linux%E5%8A%A8%E6%80%81%E5%BA%93%E8%B0%83%E8%AF%95-Demo%E5%AE%9E%E8%B7%B5/" class="notes-chapter-link"> <span class="notes-chapter-num">1</span> <span class="notes-chapter-title">Linux动态库调试_Demo实践</span> </a>
+</li>
+<li class="notes-chapter-item "> <a href="/notes/Linux%E5%8E%9F%E7%94%9F%E7%A8%8B%E5%BA%8F%E8%B0%83%E8%AF%95-Demo%E5%AE%9E%E8%B7%B5/" class="notes-chapter-link"> <span class="notes-chapter-num">2</span> <span class="notes-chapter-title">Linux原生程序调试_Demo实践</span> </a>
+</li>
+<li class="notes-chapter-item active"> <a href="/notes/Linux%E5%BC%80%E5%8F%91%E5%9F%BA%E6%9C%AC%E5%8A%9F-%E6%96%B0%E4%BA%BA%E5%85%A5%E9%97%A8%E7%89%88/" class="notes-chapter-link"> <span class="notes-chapter-num">3</span> <span class="notes-chapter-title">Linux开发基本功_新人入门版</span> </a>
+</li>
+</ul></nav><div class="notes-sidebar-footer"> <a href="/notes/" class="notes-back-link">← 所有笔记系列</a>
+</div>
+</div></aside><!-- Mobile sidebar toggle --> <button class="notes-sidebar-toggle" id="notes-sidebar-toggle" aria-label="Toggle sidebar"> <span class="notes-sidebar-toggle-icon"></span> </button> <!-- Main Content --><article class="notes-content" itemscope itemtype="http://schema.org/CreativeWork"><meta itemprop="headline" content="Linux开发基本功_新人入门版">
+<div class="notes-content-inner">
+<header class="notes-header"><div class="notes-breadcrumb"> <a href="/notes/">Notes</a> <span class="notes-sep">›</span> <span>linux</span> <span class="notes-sep">›</span> <span>Linux开发基本功_新人入门版</span>
+</div>
+<h1 class="notes-page-title" itemprop="headline">Linux开发基本功_新人入门版</h1></header><section class="notes-body" itemprop="text"><h1 id="linux-开发基本功新人入门版">Linux 开发基本功（新人入门版）</h1>
+<blockquote><p>来源：AI Infra 前置基础 → 第 7 章 Linux 开发基本功 目标：从零开始，用完整示例讲清楚每个命令”能干什么、怎么用、为什么这么用” 更新时间：2026-07-01</p></blockquote>
+<hr>
+<h2 id="一句话结论">一句话结论</h2>
+<p>Linux 开发的核心不是背命令，而是建立<strong>“问题 → 命令 → 输出 → 判断”</strong>的诊断习惯。先看输出再行动，不要盲目重装。</p>
+<hr>
+<h2 id="一文件与目录操作">一、文件与目录操作</h2>
+<h3 id="11-最基本的导航命令">1.1 最基本的导航命令</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ========== 1. 我在哪？==========</span>
+<span class="nb">pwd</span>
+<span class="c"># 输出：/home/lxy/projects/train</span>
+<span class="c"># pwd = Print Working Directory，打印当前所在目录的绝对路径</span>
+
+<span class="c"># ========== 2. 这个目录里有什么？==========</span>
+<span class="nb">ls</span>
+<span class="c"># 只列出文件名</span>
+
+<span class="nb">ls</span> <span class="nt">-l</span>
+<span class="c"># -l = long format，显示详细信息：</span>
+<span class="c"># -rw-r--r--  1 lxy staff  1234 Jun 28 14:00 config.yaml</span>
+<span class="c"># │└──┘└──┘ │  │   │      │    │            │</span>
+<span class="c"># │ 权限  │  │   │      │    │          文件名</span>
+<span class="c"># │      所有者 所属组  │    │         修改时间</span>
+<span class="c"># 类型              大小  修改时间</span>
+
+<span class="nb">ls</span> <span class="nt">-la</span>
+<span class="c"># -a = all，包括隐藏文件（以 . 开头的文件）</span>
+<span class="c"># 常见隐藏文件：.bashrc、.gitignore、.env</span>
+
+<span class="nb">ls</span> <span class="nt">-lah</span>
+<span class="c"># -h = human-readable，文件大小用 KB/MB/GB 显示</span>
+<span class="c"># 不加 -h：12345678（字节），加了 -h：12M</span>
+
+<span class="nb">ls</span> <span class="nt">-lah</span> /tmp/
+<span class="c"># 也可以指定目录：查看 /tmp/ 下有什么</span>
+
+<span class="c"># ========== 3. 切换目录 ==========</span>
+<span class="nb">cd</span> /home/lxy/projects    <span class="c"># 切到绝对路径</span>
+<span class="nb">cd</span> ..                    <span class="c"># 切到上一级目录</span>
+<span class="nb">cd</span> ~                     <span class="c"># 切到用户主目录（~ = /home/lxy）</span>
+<span class="nb">cd</span> -                     <span class="c"># 切回上一次所在的目录</span>
+<span class="nb">cd </span>projects/train        <span class="c"># 相对路径：从当前目录进入 projects/train</span>
+
+<span class="c"># ========== 4. 创建目录 ==========</span>
+<span class="nb">mkdir </span>logs               <span class="c"># 创建一个目录</span>
+<span class="nb">mkdir</span> <span class="nt">-p</span> runs/exp01/logs  <span class="c"># -p = parents，递归创建多层目录</span>
+<span class="c"># 如果 runs/ 不存在，先创建 runs/，再创建 runs/exp01/，再创建 runs/exp01/logs/</span>
+<span class="c"># 不加 -p 且父目录不存在会报错</span>
+
+<span class="c"># ========== 5. 复制文件/目录 ==========</span>
+<span class="nb">cp </span>config.yaml config_backup.yaml     <span class="c"># 复制文件</span>
+<span class="nb">cp</span> <span class="nt">-a</span> configs/ configs_backup/        <span class="c"># -a = archive，递归复制目录并保留属性</span>
+<span class="c"># 不加 -a 或 -r 复制目录会报错</span>
+
+<span class="c"># ========== 6. 移动/重命名 ==========</span>
+<span class="nb">mv </span>old_name.yaml new_name.yaml        <span class="c"># 重命名</span>
+<span class="nb">mv </span>config.yaml configs/               <span class="c"># 移动到另一个目录</span>
+
+<span class="c"># ========== 7. 删除 ==========</span>
+<span class="nb">rm </span>config.yaml                        <span class="c"># 删除文件（不可恢复！）</span>
+<span class="nb">rm</span> <span class="nt">-i</span> config.yaml                     <span class="c"># -i = interactive，删除前确认</span>
+<span class="nb">rm</span> <span class="nt">-r</span> logs/                           <span class="c"># -r = recursive，删除目录及其内容</span>
+<span class="c"># ⚠️ rm -rf / 是最危险的命令之一，绝对不要执行！</span>
+</code></pre></div></div>
+<h3 id="12-查找文件">1.2 查找文件</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ========== find：按条件查找文件 ==========</span>
+find <span class="nb">.</span> <span class="nt">-name</span> <span class="s2">"*.py"</span>                    <span class="c"># 在当前目录下找所有 .py 文件</span>
+find /home/lxy <span class="nt">-name</span> <span class="s2">"train*.py"</span>       <span class="c"># 在指定目录下查找</span>
+find <span class="nb">.</span> <span class="nt">-name</span> <span class="s2">"*.log"</span> <span class="nt">-type</span> f           <span class="c"># 只找普通文件（不包括目录）</span>
+find <span class="nb">.</span> <span class="nt">-name</span> <span class="s2">"__pycache__"</span> <span class="nt">-type</span> d     <span class="c"># 只找目录</span>
+find <span class="nb">.</span> <span class="nt">-name</span> <span class="s2">"*.py"</span> <span class="nt">-mtime</span> <span class="nt">-1</span>          <span class="c"># 最近 1 天内修改过的 .py 文件</span>
+find <span class="nb">.</span> <span class="nt">-name</span> <span class="s2">"*.py"</span> <span class="nt">-size</span> +1M          <span class="c"># 大于 1MB 的 .py 文件</span>
+
+<span class="c"># ========== rg (ripgrep)：在文件内容中搜索 ==========</span>
+<span class="c"># rg 比 grep 快得多，默认递归搜索</span>
+rg <span class="s2">"CUDA error"</span> logs/                  <span class="c"># 在 logs/ 目录搜索包含 "CUDA error" 的行</span>
+rg <span class="s2">"loss="</span> train.log                   <span class="c"># 在单个文件中搜索</span>
+rg <span class="nt">-i</span> <span class="s2">"error"</span> logs/                    <span class="c"># -i 忽略大小写</span>
+rg <span class="s2">"import torch"</span> <span class="nt">--type</span> py            <span class="c"># 只搜索 .py 文件</span>
+rg <span class="s2">"def train"</span> <span class="nt">-n</span> src/                 <span class="c"># -n 显示行号</span>
+rg <span class="s2">"TODO|FIXME"</span> src/                   <span class="c"># 搜索多个关键词（正则表达式）</span>
+
+<span class="c"># ========== 实际场景：找到出错的训练日志 ==========</span>
+<span class="c"># 场景：训练崩了，想找到哪个日志文件有错误信息</span>
+rg <span class="nt">-l</span> <span class="s2">"CUDA error|out of memory|RuntimeError"</span> runs/
+<span class="c"># -l = files with matches，只显示文件名，不显示匹配内容</span>
+<span class="c"># 找到文件后再用 rg 看具体内容</span>
+rg <span class="s2">"CUDA error"</span> runs/exp01/train.log <span class="nt">-C</span> 3
+<span class="c"># -C 3 = context，显示匹配行的前后各 3 行</span>
+</code></pre></div></div>
+<h3 id="13-文本流与管道">1.3 文本流与管道</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ========== 标准输入/输出/错误 ==========</span>
+<span class="c"># 每个进程有三个标准流：</span>
+<span class="c">#   stdin  (标准输入，文件描述符 0)  → 默认来自键盘</span>
+<span class="c">#   stdout (标准输出，文件描述符 1)  → 默认输出到屏幕</span>
+<span class="c">#   stderr (标准错误，文件描述符 2)  → 默认输出到屏幕</span>
+
+<span class="c"># ========== 重定向 ==========</span>
+python train.py <span class="o">&gt;</span> train.log
+<span class="c"># &gt; 把 stdout 写入 train.log（覆盖已有内容）</span>
+
+python train.py <span class="o">&gt;&gt;</span> train.log
+<span class="c"># &gt;&gt; 追加到 train.log 末尾</span>
+
+python train.py <span class="o">&gt;</span> train.log 2&gt; train.err
+<span class="c"># stdout → train.log, stderr → train.err（分别重定向）</span>
+
+python train.py <span class="o">&gt;</span> train.all.log 2&gt;&amp;1
+<span class="c"># 2&gt;&amp;1 = 把 stderr 重定向到 stdout 所指的地方</span>
+<span class="c"># 即 stdout 和 stderr 都写入 train.all.log</span>
+
+python train.py 2&gt;/dev/null
+<span class="c"># /dev/null = "黑洞"，把 stderr 丢弃（不想看到错误信息时用）</span>
+
+<span class="c"># ========== 管道：把前一个命令的输出作为后一个命令的输入 ==========</span>
+<span class="nb">cat </span>train.log | <span class="nb">grep</span> <span class="s2">"loss="</span>          <span class="c"># cat 输出文件内容，grep 过滤含 "loss=" 的行</span>
+rg <span class="s2">"loss="</span> train.log | <span class="nb">tail</span> <span class="nt">-n</span> 20     <span class="c"># 显示最后 20 行含 "loss=" 的行</span>
+rg <span class="s2">"loss="</span> train.log | <span class="nb">head</span> <span class="nt">-n</span> 10     <span class="c"># 显示前 10 行</span>
+
+<span class="c"># 管道的工作原理：</span>
+<span class="c"># cat train.log 的 stdout → 管道 → grep "loss=" 的 stdin</span>
+<span class="c"># 两个命令同时运行，grep 实时处理 cat 的输出</span>
+
+<span class="c"># ========== 常用组合 ==========</span>
+<span class="c"># 统计训练日志中有多少行包含 "epoch"</span>
+rg <span class="s2">"epoch"</span> train.log | <span class="nb">wc</span> <span class="nt">-l</span>          <span class="c"># wc -l = 统计行数</span>
+
+<span class="c"># 找出 loss 最小的几行（假设格式 "epoch=5, loss=0.123"）</span>
+rg <span class="s2">"loss="</span> train.log | <span class="nb">sort</span> <span class="nt">-t</span><span class="o">=</span> <span class="nt">-k3</span> <span class="nt">-n</span> | <span class="nb">head</span> <span class="nt">-5</span>
+<span class="c"># sort -t= : 用 = 作为分隔符</span>
+<span class="c"># -k3      : 按第 3 个字段排序（loss 的值）</span>
+<span class="c"># -n       : 按数值排序（不是字典序）</span>
+
+<span class="c"># 查看训练进度（实时跟踪日志）</span>
+<span class="nb">tail</span> <span class="nt">-f</span> train.log                     <span class="c"># -f = follow，持续输出新追加的内容</span>
+<span class="c"># 按 Ctrl+C 退出</span>
+
+<span class="c"># ========== 工程实践：什么时候该写成脚本 ==========</span>
+<span class="c"># 管道适合"一次性、临时"的数据处理：</span>
+rg <span class="s2">"loss="</span> train.log | <span class="nb">sort</span> <span class="nt">-t</span><span class="o">=</span> <span class="nt">-k3</span> <span class="nt">-n</span> | <span class="nb">head</span> <span class="nt">-5</span>     <span class="c"># 临时看看，OK</span>
+
+<span class="c"># 但只要满足下面任一条，就别再拼管道了，写成 .sh 脚本并 git 纳管：</span>
+<span class="c"># 1. 同一段命令你会跑第二次以上（比如每次训练后都要统计）</span>
+<span class="c"># 2. 超过 3 段管道，或者用了 awk/sed 这种容易写错的工具</span>
+<span class="c"># 3. 涉及条件分支、循环、错误处理</span>
+<span class="c"># 4. 别人也要用（同事、未来的你）</span>
+<span class="c">#</span>
+<span class="c"># 脚本化好处：可复现、可 diff、可 review、出问题能 git blame</span>
+<span class="c"># 管道拼得再巧，下次自己都忘了当时怎么拼的</span>
+
+<span class="c"># 把上面那段"找 loss 最小的 5 行"固化成脚本：</span>
+<span class="nb">cat</span> <span class="o">&gt;</span> best_loss.sh <span class="o">&lt;&lt;</span> <span class="sh">'</span><span class="no">EOF</span><span class="sh">'
+#!/usr/bin/env bash
+set -euo pipefail
+LOG="</span><span class="k">${</span><span class="nv">1</span>:?用法:<span class="p"> ./best_loss.sh &lt;train.log&gt;</span><span class="k">}</span><span class="sh">"
+rg "loss=" "</span><span class="nv">$LOG</span><span class="sh">" | sort -t= -k3 -n | head -5
+</span><span class="no">EOF
+</span><span class="nb">chmod</span> +x best_loss.sh
+./best_loss.sh train.log
+<span class="c"># 之后任何人一行命令就能复现，还能 git 跟踪改动</span>
+
+<span class="c"># ========== 这段脚本里很多新写法，逐行拆解 ==========</span>
+
+<span class="c"># ① cat &gt; best_loss.sh &lt;&lt; 'EOF'  ...  EOF   —— 叫 "heredoc"（Here Document）</span>
+<span class="c">#    作用：把两个 EOF 之间的所有内容原样写入 best_loss.sh 文件</span>
+<span class="c">#    cat &gt; best_loss.sh : 把内容重定向写入 best_loss.sh（&gt; 覆盖，&gt;&gt; 追加）</span>
+<span class="c">#    &lt;&lt; 'EOF'           : 开始一个 heredoc，遇到单独一行 EOF 就结束</span>
+<span class="c">#    'EOF' 加单引号     : 里面的 $ 变量不会被展开，原样写入文件</span>
+<span class="c">#                         （如果写成 &lt;&lt; EOF 不加引号，$LOG 会被当时 Shell 展开）</span>
+<span class="c">#    EOF 只是一个约定标记，写成 &lt;&lt; 'END' ... END 也行，只要首尾一致</span>
+
+<span class="c"># ② #!/usr/bin/env bash   —— 这叫 "shebang"（详见 2.4 节详细解释）</span>
+<span class="c">#    告诉系统：执行这个文件时，用 env 找到的 bash 来运行</span>
+<span class="c">#    没有这行，./best_loss.sh 可能会用 sh（功能更弱的 Shell），set -euo pipefail 可能报错</span>
+
+<span class="c"># ③ set -euo pipefail     —— 脚本安全三件套（2.4 节有详细解释）</span>
+<span class="c">#    -e         任何命令失败就立即退出</span>
+<span class="c">#    -u         用未定义变量报错</span>
+<span class="c">#    -o pipefail 管道中任一命令失败，整条管道算失败</span>
+
+<span class="c"># ④ LOG="${1:?用法: ./best_loss.sh &lt;train.log&gt;}"   —— 这就是"接收 train.log"的地方！</span>
+<span class="c">#    $1         脚本的第一个参数。运行 ./best_loss.sh train.log 时，$1 就是 "train.log"</span>
+<span class="c">#    ${1:?...}  参数扩展语法：如果 $1 为空（没传参数），就打印 ? 后面的提示并退出</span>
+<span class="c">#               这样能防止用户忘记传参数，比直接用 $1 友好</span>
+<span class="c">#    整行含义：把第一个参数赋值给变量 LOG；如果没传，提示用法并退出</span>
+<span class="c">#</span>
+<span class="c">#    所以 "为什么传入 train.log 在哪里有接收" 的答案是：</span>
+<span class="c">#    命令行传入的 train.log → 被 $1 接住 → 赋值给 LOG → 后面用 "$LOG" 引用</span>
+
+<span class="c"># ⑤ rg "loss=" "$LOG"     —— 用双引号包住 $LOG，防止文件名带空格时出错（见 2.1 节）</span>
+
+<span class="c"># ⑥ chmod +x best_loss.sh —— 给脚本加可执行权限（见 3.2 节）</span>
+<span class="c">#    没有这一步，./best_loss.sh 会报 "Permission denied"</span>
+<span class="c">#    也可以用 chmod 755 best_loss.sh</span>
+
+<span class="c"># ⑦ ./best_loss.sh train.log  —— ./ 表示"当前目录下"，必须加</span>
+<span class="c">#    如果只写 best_loss.sh，Shell 只会在 PATH 里找，不会找当前目录</span>
+<span class="c">#</span>
+<span class="c">#    完整执行流程：</span>
+<span class="c">#    ./best_loss.sh train.log</span>
+<span class="c">#       ↓</span>
+<span class="c">#    系统读到第一行 #!/usr/bin/env bash → 用 bash 解释执行</span>
+<span class="c">#       ↓</span>
+<span class="c">#    bash 执行 set -euo pipefail</span>
+<span class="c">#       ↓</span>
+<span class="c">#    bash 执行 LOG="${1:?...}" → $1 接住 "train.log" → LOG=train.log</span>
+<span class="c">#       ↓</span>
+<span class="c">#    bash 执行 rg "loss=" "train.log" | sort ... | head -5</span>
+<span class="c">#       ↓</span>
+<span class="c">#    输出 loss 最小的 5 行</span>
+
+<span class="c"># ========== 参数扩展语法速查（${...} 家族） ==========</span>
+<span class="c"># ${1:-默认值}     参数为空时用默认值（2.4 节的 DATA_DIR="${1:-./data}" 用的就是这个）</span>
+<span class="c"># ${1:?提示}       参数为空时报错并退出（本脚本用的）</span>
+<span class="c"># ${1:+替代值}     参数非空时用替代值</span>
+<span class="c"># ${var:-默认值}   变量为空时用默认值</span>
+<span class="c"># ${var:=默认值}   变量为空时赋默认值并使用</span>
+<span class="c"># ${var%后缀}      去掉最短后缀  ${var%%后缀} 去掉最长后缀</span>
+<span class="c"># ${var#前缀}      去掉最短前缀  ${var##前缀} 去掉最长前缀</span>
+<span class="c"># 记不住没关系，遇到 ${1:?...} 和 ${1:-...} 知道是"参数检查/默认值"即可</span>
+
+<span class="c"># ========== ${var:-默认值} 和 ${var:=默认值} 的区别（新手高频疑问）==========</span>
+<span class="c"># 两者"取值结果"一样：变量为空时都用默认值</span>
+<span class="c"># 区别在于"是否把默认值【写回】变量"：</span>
+<span class="c">#</span>
+<span class="c"># ${var:-默认值}   只【用】默认值，不改 var 本身</span>
+<span class="c">#   var=""                # var 是空</span>
+<span class="c">#   echo ${var:-hello}    # 输出 hello（用了默认值）</span>
+<span class="c">#   echo $var             # 输出空（var 还是空，没被改）</span>
+<span class="c">#</span>
+<span class="c"># ${var:=默认值}   用默认值，并且【把默认值赋给 var】</span>
+<span class="c">#   var=""                # var 是空</span>
+<span class="c">#   echo ${var:=hello}    # 输出 hello（用了默认值）</span>
+<span class="c">#   echo $var             # 输出 hello（var 被改成 hello 了！）</span>
+<span class="c">#</span>
+<span class="c"># 什么时候用 := ？</span>
+<span class="c">#   后面还要多次用这个变量，不想每次都写 ${var:-默认值}，就一次性赋上：</span>
+<span class="c">#   : ${CONFIG:=${1:-./default.yaml}}   # 一行搞定：CONFIG 为空就用 $1，$1 也空就用 ./default.yaml</span>
+<span class="c">#   （开头的 : 是空命令，配合 := 实现"只为赋值，不输出"）</span>
+<span class="c">#</span>
+<span class="c"># 速记：</span>
+<span class="c">#   :-   只借不还（用一下默认值，变量不变）</span>
+<span class="c">#   :=   借了就还（用默认值，还顺手把变量改了）</span>
+
+<span class="c"># ========== 前缀/后缀删除的用途和用法（新手高频疑问）==========</span>
+<span class="c"># ${var%后缀}  和 ${var#前缀} 是"字符串裁剪"工具，处理文件名/路径时极常用</span>
+<span class="c"># 记忆窍门：</span>
+<span class="c">#   # 在键盘 $ 右边（前）→ 删【前缀】</span>
+<span class="c">#   % 在 # 右边（后）   → 删【后缀】</span>
+<span class="c">#   一个符号 = 删最短   两个符号 = 删最长</span>
+
+<span class="c"># 示例 1：去掉文件扩展名</span>
+<span class="nv">file</span><span class="o">=</span><span class="s2">"model_v1.pth"</span>
+<span class="nb">echo</span> <span class="k">${</span><span class="nv">file</span><span class="p">%.pth</span><span class="k">}</span>          <span class="c"># 输出 model_v1（删后缀 .pth，最短匹配）</span>
+<span class="nb">echo</span> <span class="k">${</span><span class="nv">file</span><span class="p">%.*</span><span class="k">}</span>            <span class="c"># 输出 model_v1（%.* 删最后一个点和后面的，最短）</span>
+<span class="nb">echo</span> <span class="k">${</span><span class="nv">file</span><span class="p">%%.*</span><span class="k">}</span>           <span class="c"># 输出 model_v1（%%.* 删第一个点和后面的，最长 → 这里结果一样）</span>
+
+<span class="c"># 示例 2：区别最短 vs 最长（文件名带多个点时才看得出区别）</span>
+<span class="nv">file</span><span class="o">=</span><span class="s2">"train.2024.06.28.log"</span>
+<span class="nb">echo</span> <span class="k">${</span><span class="nv">file</span><span class="p">%.*</span><span class="k">}</span>            <span class="c"># 输出 train.2024.06.28（删最后的 .log，最短后缀）</span>
+<span class="nb">echo</span> <span class="k">${</span><span class="nv">file</span><span class="p">%%.*</span><span class="k">}</span>           <span class="c"># 输出 train（删第一个点之后的所有，最长后缀）</span>
+
+<span class="c"># 示例 3：去掉路径前缀，只留文件名</span>
+<span class="nv">path</span><span class="o">=</span><span class="s2">"/data/exp/run.sh"</span>
+<span class="nb">echo</span> <span class="k">${</span><span class="nv">path</span><span class="p">##*/</span><span class="k">}</span>           <span class="c"># 输出 run.sh（##*/ 删最后一个 / 前的所有，最长前缀）</span>
+<span class="nb">echo</span> <span class="k">${</span><span class="nv">path</span><span class="p">#*/</span><span class="k">}</span>            <span class="c"># 输出 data/exp/run.sh（#*/ 删第一个 / 前(空)的所有，最短前缀 → 几乎没删）</span>
+
+<span class="c"># 示例 4：去掉文件名，只留目录</span>
+<span class="nv">path</span><span class="o">=</span><span class="s2">"/data/exp/run.sh"</span>
+<span class="nb">echo</span> <span class="k">${</span><span class="nv">path</span><span class="p">%/*</span><span class="k">}</span>            <span class="c"># 输出 /data/exp（删最后的 /run.sh，最短后缀）</span>
+<span class="nb">dirname</span> <span class="s2">"</span><span class="nv">$path</span><span class="s2">"</span>            <span class="c"># 等价写法，输出 /data/exp</span>
+
+<span class="c"># 示例 5：批量改文件名（实际场景）</span>
+<span class="k">for </span>f <span class="k">in</span> <span class="k">*</span>.txt<span class="p">;</span> <span class="k">do
+    </span><span class="nb">mv</span> <span class="s2">"</span><span class="nv">$f</span><span class="s2">"</span> <span class="s2">"</span><span class="k">${</span><span class="nv">f</span><span class="p">%.txt</span><span class="k">}</span><span class="s2">.md"</span>   <span class="c"># 把所有 .txt 改成 .md</span>
+<span class="k">done</span>
+
+<span class="c"># 速记表：</span>
+<span class="c">#   ${var#pattern}   删最短前缀   ${var##pattern}  删最长前缀</span>
+<span class="c">#   ${var%pattern}    删最短后缀   ${var%%pattern}  删最长后缀</span>
+<span class="c">#   pattern 支持 * 通配（* 表示"任意字符"），不是正则</span>
+
+<span class="c"># ========== 多个传入参数怎么写？==========</span>
+<span class="c"># 脚本可以有多个参数，按位置引用：$1 $2 $3 ... ${10} ${11}</span>
+<span class="c"># 注意：第 10 个及以后必须用花括号 ${10}，否则 $10 会被当成 $1 后面跟 0</span>
+<span class="c">#</span>
+<span class="c"># 示例脚本 demo_args.sh：</span>
+<span class="c">#   #!/usr/bin/env bash</span>
+<span class="c">#   set -euo pipefail</span>
+<span class="c">#   DATA_DIR="${1:?用法: $0 &lt;data_dir&gt; &lt;epochs&gt; &lt;batch_size&gt;}"</span>
+<span class="c">#   EPOCHS="${2:-10}"          # 第 2 个参数，默认 10</span>
+<span class="c">#   BATCH="${3:-32}"           # 第 3 个参数，默认 32</span>
+<span class="c">#   echo "data=$DATA_DIR epochs=$EPOCHS batch=$BATCH"</span>
+<span class="c">#</span>
+<span class="c"># 运行方式：</span>
+<span class="c">#   ./demo_args.sh /data 50 64    → data=/data epochs=50 batch=64</span>
+<span class="c">#   ./demo_args.sh /data          → data=/data epochs=10 batch=32（后两个用默认）</span>
+<span class="c">#   ./demo_args.sh                → 报错退出（$1 必填，没传就退出）</span>
+<span class="c">#</span>
+<span class="c"># 其他参数相关变量：</span>
+<span class="c">#   $0       脚本名本身（如 ./demo_args.sh）</span>
+<span class="c">#   $#       参数个数</span>
+<span class="c">#   $@       所有参数（每个独立，循环用 for x in "$@"）</span>
+<span class="c">#   $*       所有参数（拼成一个字符串）</span>
+<span class="c">#   shift    把 $2 变成 $1，$3 变成 $2...（处理可选参数时常用）</span>
+<span class="c">#</span>
+<span class="c"># 处理"带名字的可选参数"（如 --epochs 50 --batch 64）用 while + case：</span>
+<span class="c">#   while [ $# -gt 0 ]; do</span>
+<span class="c">#       case "$1" in</span>
+<span class="c">#           --epochs) EPOCHS="$2"; shift 2;;</span>
+<span class="c">#           --batch)  BATCH="$2";  shift 2;;</span>
+<span class="c">#           *) DATA_DIR="$1"; shift;;</span>
+<span class="c">#       esac</span>
+<span class="c">#   done</span>
+<span class="c">#</span>
+<span class="c"># ========== shift 是什么？shift 2 和 shift 有什么区别？（新手高频疑问）==========</span>
+<span class="c"># shift 命令：把所有参数【向左移位】，丢弃最左边的若干个</span>
+<span class="c">#   shift   等同 shift 1，丢弃 1 个：$1 没了，原 $2 变成新 $1，原 $3 变成新 $2...</span>
+<span class="c">#   shift 2 丢弃 2 个：原 $1、$2 都没了，原 $3 变成新 $1，原 $4 变成新 $2...</span>
+<span class="c">#   shift N 丢弃 N 个：依此类推</span>
+<span class="c"># 同时 $#（参数个数）也相应减少（shift 后 $# - 1，shift 2 后 $# - 2）</span>
+<span class="c">#</span>
+<span class="c"># 为什么要 shift？</span>
+<span class="c">#   处理带名参数时，case 只能看 $1（当前第一个）。</span>
+<span class="c">#   匹配到 --epochs 后，要把 "--epochs" 和它的值 "50" 一起吃掉，</span>
+<span class="c">#   否则下一轮循环 $1 还是 --epochs → 死循环。</span>
+<span class="c">#</span>
+<span class="c"># 逐步演示（假设运行 ./script.sh --epochs 50 --batch 64 /data）：</span>
+<span class="c">#</span>
+<span class="c"># 初始状态：</span>
+<span class="c">#   $1=--epochs  $2=50  $3=--batch  $4=64  $5=/data   $#=5</span>
+<span class="c">#</span>
+<span class="c"># 第 1 轮循环：case 匹配 $1=--epochs</span>
+<span class="c">#   EPOCHS="$2"     → EPOCHS=50（取了 $2 的值）</span>
+<span class="c">#   shift 2         → 丢弃 $1、$2，剩下的左移</span>
+<span class="c">#   移位后：</span>
+<span class="c">#   $1=--batch  $2=64  $3=/data   $#=3</span>
+<span class="c">#</span>
+<span class="c"># 第 2 轮循环：case 匹配 $1=--batch</span>
+<span class="c">#   BATCH="$2"      → BATCH=64</span>
+<span class="c">#   shift 2         → 再丢两个</span>
+<span class="c">#   移位后：</span>
+<span class="c">#   $1=/data   $#=1</span>
+<span class="c">#</span>
+<span class="c"># 第 3 轮循环：case 匹配 *)（通配，剩下的都是位置参数）</span>
+<span class="c">#   DATA_DIR="$1"   → DATA_DIR=/data</span>
+<span class="c">#   shift           → 只丢 1 个（因为位置参数只占一个位置）</span>
+<span class="c">#   移位后：</span>
+<span class="c">#   $#=0</span>
+<span class="c">#</span>
+<span class="c"># 第 4 轮循环：while [ $# -gt 0 ] 不成立（$#=0），退出循环</span>
+<span class="c">#</span>
+<span class="c"># 最终：EPOCHS=50  BATCH=64  DATA_DIR=/data</span>
+<span class="c">#</span>
+<span class="c"># ========== shift 2 vs shift 一句话区分 ==========</span>
+<span class="c">#   shift 2  → 一次吃掉【两个】参数（参数名 + 参数值，成对出现的）</span>
+<span class="c">#              用于 --epochs 50 这种"键值对"参数</span>
+<span class="c">#   shift    → 一次吃掉【一个】参数（单独的位置参数）</span>
+<span class="c">#              用于 *) 分支的裸参数（如 /data 这种不带 --xxx 的）</span>
+<span class="c">#</span>
+<span class="c"># ========== 不用 shift 会怎样？（反面教材）==========</span>
+<span class="c"># 如果上面写成：</span>
+<span class="c">#   --epochs) EPOCHS="$2";;     # ← 漏了 shift 2</span>
+<span class="c">#   --batch)  BATCH="$2";;      # ← 漏了 shift 2</span>
+<span class="c">#   *) DATA_DIR="$1"; shift;;</span>
+<span class="c"># 运行 ./script.sh --epochs 50 --batch 64 /data：</span>
+<span class="c">#   第 1 轮：$1=--epochs，EPOCHS=50，没 shift → $1 还是 --epochs</span>
+<span class="c">#   第 2 轮：$1=--epochs（又匹配！）→ 死循环</span>
+<span class="c"># 所以带值参数必须 shift 2，把"键+值"一起吃掉</span>
+<span class="c">#</span>
+<span class="c"># ========== shift 的其他用途 ==========</span>
+<span class="c"># 1. 跳过脚本名：脚本里想"丢掉 $0 后的所有参数从头处理"</span>
+<span class="c">#    shift   # 但通常不需要，$1 本来就从第一个参数开始（不含 $0）</span>
+<span class="c">#</span>
+<span class="c"># 2. 只处理前 N 个参数，剩下的原样保留：</span>
+<span class="c">#    shift 3   # 丢前 3 个，第 4 个变成新的 $1</span>
+<span class="c">#</span>
+<span class="c"># 3. 遍历所有参数（替代 for x in "$@"）：</span>
+<span class="c">#    while [ $# -gt 0 ]; do</span>
+<span class="c">#        echo "处理: $1"</span>
+<span class="c">#        shift</span>
+<span class="c">#    done</span>
+<span class="c">#    这种写法在"某些参数要吃两个、某些吃一个"的混合场景比 for 更灵活</span>
+<span class="c">#</span>
+<span class="c"># ========== 完整可运行示例 ==========</span>
+<span class="c"># 存成 args_demo.sh，chmod +x 后跑：</span>
+<span class="c">#   #!/usr/bin/env bash</span>
+<span class="c">#   set -euo pipefail</span>
+<span class="c">#   EPOCHS=10; BATCH=32; DATA_DIR=""</span>
+<span class="c">#   while [ $# -gt 0 ]; do</span>
+<span class="c">#       case "$1" in</span>
+<span class="c">#           --epochs) EPOCHS="$2"; shift 2;;</span>
+<span class="c">#           --batch)  BATCH="$2";  shift 2;;</span>
+<span class="c">#           -h|--help) echo "用法: $0 [--epochs N] [--batch N] &lt;data_dir&gt;"; exit 0;;</span>
+<span class="c">#           *) DATA_DIR="$1"; shift;;</span>
+<span class="c">#       esac</span>
+<span class="c">#   done</span>
+<span class="c">#   [ -z "$DATA_DIR" ] &amp;&amp; { echo "错误：缺少 data_dir"; exit 1; }</span>
+<span class="c">#   echo "data=$DATA_DIR epochs=$EPOCHS batch=$BATCH"</span>
+<span class="c">#</span>
+<span class="c"># 测试：</span>
+<span class="c">#   ./args_demo.sh /data                       → data=/data epochs=10 batch=32</span>
+<span class="c">#   ./args_demo.sh --epochs 50 /data            → data=/data epochs=50 batch=32</span>
+<span class="c">#   ./args_demo.sh --epochs 50 --batch 64 /data → data=/data epochs=50 batch=64</span>
+<span class="c">#   ./args_demo.sh --batch 64 --epochs 50 /data → 顺序无关，结果一样</span>
+<span class="c">#   ./args_demo.sh                              → 报错"缺少 data_dir"</span>
+</code></pre></div></div>
+<hr>
+<h2 id="二shell-变量引号与退出码">二、Shell 变量、引号与退出码</h2>
+<h3 id="21-变量与引号">2.1 变量与引号</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ========== 变量赋值（注意：等号两边不能有空格！） ==========</span>
+<span class="nv">name</span><span class="o">=</span><span class="s2">"experiment 01"</span>    <span class="c"># ✅ 正确</span>
+name <span class="o">=</span> <span class="s2">"experiment 01"</span>  <span class="c"># ❌ 错误！Shell 会把 name 当命令执行</span>
+
+<span class="c"># ========== 使用变量 ==========</span>
+<span class="nb">echo</span> <span class="nv">$name</span>              <span class="c"># 输出：experiment 01</span>
+<span class="nb">echo</span> <span class="s2">"</span><span class="nv">$name</span><span class="s2">"</span>            <span class="c"># 输出：experiment 01（双引号保留变量展开）</span>
+<span class="nb">echo</span> <span class="s1">'$name'</span>            <span class="c"># 输出：$name（单引号不展开变量！）</span>
+
+<span class="c"># ========== 单引号 vs 双引号 ==========</span>
+<span class="nv">name</span><span class="o">=</span><span class="s2">"world"</span>
+
+<span class="c"># 双引号：变量会被展开，但特殊字符大部分保持原义</span>
+<span class="nb">echo</span> <span class="s2">"Hello, </span><span class="nv">$name</span><span class="s2">"</span>     <span class="c"># 输出：Hello, world</span>
+<span class="nb">echo</span> <span class="s2">"Hello, </span><span class="se">\$</span><span class="s2">name"</span>    <span class="c"># 输出：Hello, $name（\ 转义 $）</span>
+
+<span class="c"># 单引号：所有内容都是字面量，不展开任何东西</span>
+<span class="nb">echo</span> <span class="s1">'Hello, $name'</span>     <span class="c"># 输出：Hello, $name</span>
+
+<span class="c"># ========== 不加引号的危险：单词分割 ==========</span>
+<span class="nv">name</span><span class="o">=</span><span class="s2">"experiment 01"</span>
+<span class="nb">echo</span> <span class="nv">$name</span>              <span class="c"># 输出：experiment 01（看起来没问题）</span>
+<span class="nb">ls</span> <span class="nv">$name</span>                <span class="c"># ❌ 实际执行了 ls experiment 01</span>
+<span class="c">#   Shell 把 "experiment 01" 拆成两个词：experiment 和 01</span>
+<span class="c">#   等价于 ls experiment 01 → 找两个文件/目录</span>
+
+<span class="nb">ls</span> <span class="s2">"</span><span class="nv">$name</span><span class="s2">"</span>              <span class="c"># ✅ 正确：双引号保持为一个参数</span>
+<span class="c">#   等价于 ls "experiment 01" → 找一个文件/目录</span>
+
+<span class="c"># ========== 最佳实践 ==========</span>
+<span class="c"># 几乎总是用双引号包裹变量："$variable"</span>
+<span class="c"># 只有在需要通配符展开时才不加引号：*.py</span>
+</code></pre></div></div>
+<h3 id="22-命令替换">2.2 命令替换</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ========== 把命令的输出赋值给变量 ==========</span>
+<span class="nv">current_date</span><span class="o">=</span><span class="si">$(</span><span class="nb">date</span> +%Y%m%d<span class="si">)</span>        <span class="c"># $() 语法（推荐）</span>
+<span class="nb">echo</span> <span class="nv">$current_date</span>                   <span class="c"># 输出：20260701</span>
+
+<span class="c"># 旧语法（反引号，不推荐，不方便嵌套）</span>
+<span class="nv">current_date</span><span class="o">=</span><span class="sb">`</span><span class="nb">date</span> +%Y%m%d<span class="sb">`</span>
+
+<span class="c"># 实际场景：用日期创建目录名</span>
+<span class="nb">mkdir</span> <span class="nt">-p</span> runs/exp_<span class="si">$(</span><span class="nb">date</span> +%Y%m%d_%H%M%S<span class="si">)</span>
+<span class="c"># 创建：runs/exp_20260701_143000/</span>
+
+<span class="c"># ========== 获取命令输出并处理 ==========</span>
+<span class="nv">gpu_count</span><span class="o">=</span><span class="si">$(</span>nvidia-smi <span class="nt">-L</span> | <span class="nb">wc</span> <span class="nt">-l</span><span class="si">)</span>   <span class="c"># 统计 GPU 数量</span>
+<span class="nb">echo</span> <span class="s2">"检测到 </span><span class="nv">$gpu_count</span><span class="s2"> 个 GPU"</span>
+</code></pre></div></div>
+<h3 id="23-退出码">2.3 退出码</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ========== 每个命令执行后都有一个退出码 ==========</span>
+<span class="c"># 0 = 成功</span>
+<span class="c"># 非 0 = 失败（不同数字代表不同错误类型）</span>
+
+python train.py
+<span class="nb">echo</span> <span class="nv">$?</span>
+<span class="c"># 输出 0：训练成功</span>
+<span class="c"># 输出 1：一般错误</span>
+<span class="c"># 输出 2：语法错误或误用</span>
+<span class="c"># 输出 137：被 SIGKILL（通常是 OOM Killer 杀掉）</span>
+
+<span class="c"># ========== 保存退出码 ==========</span>
+python check_data.py
+<span class="nv">status</span><span class="o">=</span><span class="nv">$?</span>
+<span class="k">if</span> <span class="o">[</span> <span class="nv">$status</span> <span class="nt">-eq</span> 0 <span class="o">]</span><span class="p">;</span> <span class="k">then
+    </span><span class="nb">echo</span> <span class="s2">"数据检查通过"</span>
+<span class="k">else
+    </span><span class="nb">echo</span> <span class="s2">"数据检查失败，退出码: </span><span class="nv">$status</span><span class="s2">"</span>
+<span class="k">fi</span>
+
+<span class="c"># ========== 常见退出码 ==========</span>
+<span class="c"># 0     成功</span>
+<span class="c"># 1     一般错误（Python 异常、逻辑错误）</span>
+<span class="c"># 2     Shell 语法错误</span>
+<span class="c"># 126   命令不可执行（没有执行权限）</span>
+<span class="c"># 127   命令未找到</span>
+<span class="c"># 128+N 被信号 N 杀死（如 137 = 128+9 = SIGKILL）</span>
+<span class="c"># 130   被 Ctrl+C 中断（128+2 = SIGINT）</span>
+</code></pre></div></div>
+<h3 id="24-健壮的-bash-脚本开头">2.4 健壮的 Bash 脚本开头</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/env bash</span>
+<span class="c"># shebang 行：告诉系统用 bash 执行这个脚本</span>
+<span class="c">#</span>
+<span class="c"># ========== shebang 是什么？详细解释 ==========</span>
+<span class="c"># shebang（#!）是脚本第一行的特殊标记，格式：#!&lt;解释器路径&gt;</span>
+<span class="c"># 作用：当用 ./script.sh 执行脚本时，系统内核读到这一行，</span>
+<span class="c">#       就知道要用哪个解释器来运行这个文件</span>
+<span class="c">#</span>
+<span class="c"># 两种常见写法：</span>
+<span class="c">#   #!/usr/bin/env bash   ← 推荐：让 env 在 PATH 里自动找 bash</span>
+<span class="c">#   #!/bin/bash           ← 写死路径：如果 bash 装在别处（如 /usr/local/bin/bash）会失效</span>
+<span class="c">#</span>
+<span class="c"># 为什么推荐 #!/usr/bin/env bash 而不是 #!/bin/bash？</span>
+<span class="c">#   - 跨平台：macOS 的 bash 在 /bin/bash，但某些 Linux/容器可能在 /usr/bin/bash</span>
+<span class="c">#   - 用 env 会自动在 PATH 里搜索，更通用</span>
+<span class="c">#</span>
+<span class="c"># 其他常见 shebang：</span>
+<span class="c">#   #!/usr/bin/env python3      → Python 脚本（这样就能 ./train.py 直接运行）</span>
+<span class="c">#   #!/usr/bin/env sh           → POSIX shell 脚本</span>
+<span class="c">#   #!/usr/bin/env node         → Node.js 脚本</span>
+<span class="c">#</span>
+<span class="c"># 注意：</span>
+<span class="c">#   1. shebang 必须是文件第一行（前面不能有空行、空格），否则无效</span>
+<span class="c">#   2. 3.2 节里 "./train.py  # 需要 shebang 行 #!/usr/bin/env python3"</span>
+<span class="c">#      的意思就是：想用 ./train.py 直接运行，必须满足两件事：</span>
+<span class="c">#      ① 文件第一行有 #!/usr/bin/env python3</span>
+<span class="c">#      ② 文件有可执行权限（chmod +x train.py）</span>
+<span class="c">#      这样系统才知道"这个文件用 python3 来跑"</span>
+
+<span class="c"># ========== 用 uv 环境时 shebang 怎么写？（新手高频疑问）==========</span>
+<span class="c"># uv 是现代 Python 包管理器（替代 pip/venv/conda），它有自己的虚拟环境。</span>
+<span class="c"># shebang 的关键是"让系统找到正确的 python 解释器"，所以取决于你怎么用 uv：</span>
+<span class="c">#</span>
+<span class="c"># 情况 A：用 uv 建了虚拟环境（uv venv），想用这个环境的 python</span>
+<span class="c">#   方式 1（推荐，跨平台通用）：</span>
+<span class="c">#     #!/usr/bin/env python3</span>
+<span class="c">#     然后运行前先激活环境：source .venv/bin/activate &amp;&amp; ./train.py</span>
+<span class="c">#     激活后 PATH 里 .venv/bin 在最前，env python3 会找到 .venv/bin/python3</span>
+<span class="c">#</span>
+<span class="c">#   方式 2（写死路径，只在本机有效，换机器就失效）：</span>
+<span class="c">#     #!/path/to/project/.venv/bin/python3</span>
+<span class="c">#     直接指向虚拟环境的 python，不用激活就能 ./train.py</span>
+<span class="c">#     缺点：路径写死，git clone 到别处或换目录就失效</span>
+<span class="c">#</span>
+<span class="c"># 情况 B：用 uv run（uv 的推荐用法，不用手动激活）</span>
+<span class="c">#   这时候【不要用 shebang 直接运行】，而是：</span>
+<span class="c">#     uv run train.py</span>
+<span class="c">#   uv run 会自动用项目的 .venv 解释器，不需要 shebang 也不用 chmod +x</span>
+<span class="c">#   shebang 方式和 uv run 是两种思路，二选一即可</span>
+<span class="c">#</span>
+<span class="c"># 情况 C：用 uv 管理的独立脚本（PEP 723 内联依赖，uv 0.4+ 支持）</span>
+<span class="c">#   脚本第一行用普通 shebang，然后用注释声明依赖：</span>
+<span class="c">#     #!/usr/bin/env -S uv run --script</span>
+<span class="c">#     # /// script</span>
+<span class="c">#     # dependencies = ["requests", "rich"]</span>
+<span class="c">#     # ///</span>
+<span class="c">#     import requests, rich</span>
+<span class="c">#     ...</span>
+<span class="c">#   -S 选项让 env 支持多参数（env 默认只接受一个参数，加 -S 才能传 "uv run --script"）</span>
+<span class="c">#   这样 ./script.py 能直接跑，uv 会自动创建临时环境装依赖</span>
+<span class="c">#   适合"分发单文件脚本给别人用"的场景</span>
+<span class="c">#</span>
+<span class="c"># 速记：</span>
+<span class="c">#   - 老办法（激活环境）：shebang 写 #!/usr/bin/env python3，运行前 source .venv/bin/activate</span>
+<span class="c">#   - uv 推荐：不写 shebang，直接 uv run train.py（最省心）</span>
+<span class="c">#   - 单文件分发：shebang 写 #!/usr/bin/env -S uv run --script + 内联依赖注释</span>
+<span class="c">#</span>
+<span class="c"># 怎么确认"./train.py 用的是哪个 python"？</span>
+<span class="c">#   在脚本里加一行：import sys; print(sys.executable)</span>
+<span class="c">#   或运行前用 which python3 看看 PATH 找到的是不是 .venv 里的那个</span>
+
+<span class="nb">set</span> <span class="nt">-euo</span> pipefail
+<span class="c"># 这三个选项让脚本更安全：</span>
+<span class="c">#</span>
+<span class="c"># set -e: 任何命令失败（退出码非 0）就立即退出脚本</span>
+<span class="c">#   不加：命令失败后继续执行下一行（危险！）</span>
+<span class="c">#   加了：命令失败就停，不会带着错误继续往下跑</span>
+<span class="c">#</span>
+<span class="c"># set -u: 使用未定义的变量时报错</span>
+<span class="c">#   不加：$UNDEFINED_VAR 会变成空字符串</span>
+<span class="c">#   加了：直接报错 "UNDEFINED_VAR: unbound variable"</span>
+<span class="c">#</span>
+<span class="c"># set -o pipefail: 管道中任一命令失败，整个管道的退出码为失败</span>
+<span class="c">#   不加：cmd1 | cmd2 | cmd3，即使 cmd1 失了，只要 cmd3 成功就返回 0</span>
+<span class="c">#   加了：cmd1 失败 → 整个管道返回失败</span>
+
+<span class="c"># 完整示例脚本</span>
+<span class="c">#!/usr/bin/env bash</span>
+<span class="nb">set</span> <span class="nt">-euo</span> pipefail
+
+<span class="nv">DATA_DIR</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">1</span><span class="k">:-</span><span class="p">./data</span><span class="k">}</span><span class="s2">"</span>    <span class="c"># 第一个参数，默认 ./data</span>
+<span class="c"># 这里的 ${1:-./data} 是"参数默认值"语法（和 1.3 节的 ${1:?...} 是同一家族）：</span>
+<span class="c">#   $1            脚本第一个参数</span>
+<span class="c">#   ${1:-./data}  如果 $1 为空（没传），就用 ./data 作为默认值</span>
+<span class="c">#   ${1:?提示}    如果 $1 为空，报错退出（1.3 节 best_loss.sh 用的）</span>
+<span class="c"># 区别：</span>
+<span class="c">#   ${1:-默认值}  → 没传就用默认值，继续执行（"温和"）</span>
+<span class="c">#   ${1:?提示}    → 没传就直接退出报错（"严格"，必填参数用它）</span>
+<span class="c"># 实际效果：</span>
+<span class="c">#   ./train.sh /data/mydata   → DATA_DIR=/data/mydata</span>
+<span class="c">#   ./train.sh                → DATA_DIR=./data（用了默认值）</span>
+<span class="nv">OUTPUT_DIR</span><span class="o">=</span><span class="s2">"runs/</span><span class="si">$(</span><span class="nb">date</span> +%Y%m%d<span class="si">)</span><span class="s2">"</span>
+
+<span class="nb">echo</span> <span class="s2">"数据目录: </span><span class="nv">$DATA_DIR</span><span class="s2">"</span>
+<span class="nb">echo</span> <span class="s2">"输出目录: </span><span class="nv">$OUTPUT_DIR</span><span class="s2">"</span>
+
+<span class="c"># 检查数据目录是否存在</span>
+<span class="k">if</span> <span class="o">[</span> <span class="o">!</span> <span class="nt">-d</span> <span class="s2">"</span><span class="nv">$DATA_DIR</span><span class="s2">"</span> <span class="o">]</span><span class="p">;</span> <span class="k">then
+    </span><span class="nb">echo</span> <span class="s2">"错误：数据目录 </span><span class="nv">$DATA_DIR</span><span class="s2"> 不存在"</span> <span class="o">&gt;</span>&amp;2
+    <span class="nb">exit </span>1
+<span class="k">fi
+
+</span><span class="nb">mkdir</span> <span class="nt">-p</span> <span class="s2">"</span><span class="nv">$OUTPUT_DIR</span><span class="s2">"</span>
+python train.py <span class="nt">--data</span> <span class="s2">"</span><span class="nv">$DATA_DIR</span><span class="s2">"</span> <span class="nt">--output</span> <span class="s2">"</span><span class="nv">$OUTPUT_DIR</span><span class="s2">"</span>
+
+<span class="nb">echo</span> <span class="s2">"训练完成，结果保存在 </span><span class="nv">$OUTPUT_DIR</span><span class="s2">"</span>
+</code></pre></div></div>
+<hr>
+<h2 id="三权限模型">三、权限模型</h2>
+<h3 id="31-理解-ls--l-的权限部分">3.1 理解 ls -l 的权限部分</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">ls</span> <span class="nt">-l</span> train.py
+<span class="c"># 输出：-rwxr-x---  1 lxy staff  1234 Jun 28 14:00 train.py</span>
+<span class="c">#       └┘└─┘└─┘</span>
+<span class="c">#       │  │   │</span>
+<span class="c">#       │  │   └── other（其他人）的权限：r-- = 只读</span>
+<span class="c">#       │  └────── group（所属组）的权限：r-x = 读和执行</span>
+<span class="c">#       └────────── owner（所有者）的权限：rwx = 读、写、执行</span>
+<span class="c">#</span>
+<span class="c"># 第一个字符表示类型：</span>
+<span class="c">#   - = 普通文件</span>
+<span class="c">#   d = 目录</span>
+<span class="c">#   l = 符号链接（软链接）</span>
+
+<span class="c"># ========== rwx 的含义 ==========</span>
+<span class="c"># 对文件：         r = 可读取内容    w = 可修改内容    x = 可执行</span>
+<span class="c"># 对目录：         r = 可列出目录内容 w = 可在目录中创建/删除文件  x = 可进入目录（cd）</span>
+<span class="c">#</span>
+<span class="c"># 注意：目录的 x 权限很特殊，没有 x 就不能 cd 进去，也不能访问里面的文件</span>
+</code></pre></div></div>
+<h3 id="32-修改权限">3.2 修改权限</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ========== chmod：修改权限 ==========</span>
+<span class="c"># 方法一：符号法</span>
+<span class="nb">chmod </span>u+x train.py          <span class="c"># u=user, +x=增加执行权限</span>
+<span class="nb">chmod </span>g-w config.yaml       <span class="c"># g=group, -w=去掉写权限</span>
+<span class="nb">chmod </span><span class="nv">o</span><span class="o">=</span>r config.yaml       <span class="c"># o=other, =r=设为只读</span>
+<span class="nb">chmod </span>u+x,g+x train.py      <span class="c"># 同时给 user 和 group 加执行权限</span>
+<span class="nb">chmod </span>a+x train.py          <span class="c"># a=all，给所有人加执行权限</span>
+
+<span class="c"># 方法二：数字法（更常用）</span>
+<span class="c"># r=4, w=2, x=1，加起来就是权限值</span>
+<span class="c"># 7 = rwx (4+2+1)</span>
+<span class="c"># 6 = rw- (4+2)</span>
+<span class="c"># 5 = r-x (4+1)</span>
+<span class="c"># 4 = r-- (4)</span>
+<span class="c"># 0 = --- (0)</span>
+
+<span class="nb">chmod </span>755 train.py          <span class="c"># rwxr-xr-x：所有者可读写执行，其他人可读和执行</span>
+<span class="nb">chmod </span>644 config.yaml       <span class="c"># rw-r--r--：所有者可读写，其他人只读</span>
+<span class="nb">chmod </span>600 secret.key        <span class="c"># rw-------：只有所有者可读写（用于密钥文件）</span>
+<span class="nb">chmod </span>700 ~/.ssh            <span class="c"># rwx------：只有自己能进入 .ssh 目录</span>
+
+<span class="c"># ========== 实际场景 ==========</span>
+<span class="c"># 脚本写好了想直接运行（不用 python xxx.py）</span>
+<span class="nb">chmod</span> +x train.py           <span class="c"># 加执行权限</span>
+./train.py                  <span class="c"># 直接运行（需要 shebang 行 #!/usr/bin/env python3）</span>
+<span class="c"># ↑ "shebang 是什么意思？为什么直接运行需要它？" —— 详见 2.4 节详细解释</span>
+<span class="c"># 一句话：shebang 是脚本第一行的 #!标记，告诉系统用什么解释器运行这个文件</span>
+<span class="c"># 没有它，./train.py 系统不知道该用 python 还是 bash 来跑 → 报 exec format error</span>
+<span class="c"># 加了 #!/usr/bin/env python3 → 系统会用 env 找到的 python3 来执行</span>
+<span class="c"># 注意：直接运行(./xxx)还必须有执行权限（chmod +x），两个条件缺一不可</span>
+
+<span class="c"># 配置文件不想被别人看到</span>
+<span class="nb">chmod </span>600 .env              <span class="c"># 只有自己能读写</span>
+
+<span class="c"># ⚠️ 不要习惯性 chmod 777！</span>
+<span class="c"># 777 = 所有人都能读写执行，是安全漏洞</span>
+<span class="c"># 先用 ls -l 看清楚当前权限，再针对性修改</span>
+</code></pre></div></div>
+<h3 id="33-修改所有者">3.3 修改所有者</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ========== chown：修改文件所有者 ==========</span>
+<span class="nb">sudo chown </span>lxy:staff train.py    <span class="c"># 所有者:lxy, 所属组:staff</span>
+<span class="nb">sudo chown </span>lxy train.py          <span class="c"># 只改所有者</span>
+<span class="nb">sudo chown</span> :staff train.py       <span class="c"># 只改所属组</span>
+
+<span class="c"># 实际场景：从 root 拷贝文件后改回自己的</span>
+<span class="nb">sudo cp</span> /root/data.zip ./
+<span class="nb">sudo chown </span>lxy:lxy data.zip
+</code></pre></div></div>
+<h3 id="331-查看用户和组新手补充">3.3.1 查看用户和组（新手补充）</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ========== 我是谁？==========</span>
+<span class="nb">whoami</span>                       <span class="c"># 输出当前用户名，如 lxy</span>
+<span class="nb">id</span>                           <span class="c"># 输出 uid/gid/groups（3.4 节详细解释这些数字）</span>
+
+<span class="c"># ========== 看系统里有哪些用户 ==========</span>
+<span class="nb">cat</span> /etc/passwd | <span class="nb">head</span> <span class="nt">-5</span>
+<span class="c"># root:x:0:0:root:/root:/bin/bash</span>
+<span class="c"># daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin</span>
+<span class="c"># lxy:x:1000:1000:lxy,,,:/home/lxy:/bin/bash</span>
+<span class="c">#  字段含义（用 : 分隔，共 7 段）：</span>
+<span class="c">#  ① 用户名  ② 密码占位(x 表示密码在 /etc/shadow)</span>
+<span class="c">#  ③ uid     ④ gid(主组)  ⑤ 备注</span>
+<span class="c">#  ⑥ 家目录   ⑦ 登录后用的 shell(/usr/sbin/nologin 表示禁止登录)</span>
+
+<span class="c"># 更推荐：用 getent 查单个用户（不用翻整个文件）</span>
+getent passwd lxy            <span class="c"># 只看 lxy 这一行</span>
+
+<span class="c"># ========== 看系统里有哪些组 ==========</span>
+<span class="nb">cat</span> /etc/group | <span class="nb">head</span> <span class="nt">-5</span>
+<span class="c"># root:x:0:</span>
+<span class="c"># sudo:x:27:lxy              ← sudo 组里有 lxy</span>
+<span class="c"># docker:x:999:lxy           ← docker 组里有 lxy</span>
+<span class="c">#  字段：① 组名 ② 密码占位 ③ gid  ④ 组成员(逗号分隔)</span>
+
+getent group docker          <span class="c"># 只看 docker 组</span>
+
+<span class="c"># ========== 某个用户在哪些组里？==========</span>
+<span class="nb">groups </span>lxy                   <span class="c"># 输出：lxy sudo docker</span>
+<span class="nb">groups</span>                       <span class="c"># 不加参数 = 当前用户</span>
+</code></pre></div></div>
+<h3 id="332-添加用户和组新手补充">3.3.2 添加用户和组（新手补充）</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ========== 创建新用户 ==========</span>
+<span class="c"># 场景：来了个新同事 alice，要在 GPU 服务器上跑实验</span>
+<span class="nb">sudo </span>useradd <span class="nt">-m</span> <span class="nt">-s</span> /bin/bash alice
+<span class="c">#   -m         创建家目录 /home/alice</span>
+<span class="c">#   -s /bin/bash  登录后用 bash</span>
+<span class="c"># 注意：useradd 创建后默认没密码、账号是锁定的，必须设密码才能登录</span>
+<span class="nb">sudo </span>passwd alice            <span class="c"># 交互式输入两次密码</span>
+
+<span class="c"># 更友好的 adduser（Debian/Ubuntu 有，会交互式问密码、家目录等）</span>
+<span class="nb">sudo </span>adduser alice
+
+<span class="c"># ========== 创建新组 ==========</span>
+<span class="nb">sudo </span>groupadd mlteam         <span class="c"># 创建一个叫 mlteam 的组</span>
+
+<span class="c"># ========== 把用户加到组里 ==========</span>
+<span class="nb">sudo </span>usermod <span class="nt">-aG</span> mlteam alice
+<span class="c">#   -a   append，追加（不加 -a 会把用户从其他组移除！）</span>
+<span class="c">#   -G   指定附加组（不是主组）</span>
+<span class="c"># 注意：加组后，alice 需要【重新登录】才生效（当前会话还是旧组）</span>
+
+<span class="c"># 一次性加多个组</span>
+<span class="nb">sudo </span>usermod <span class="nt">-aG</span> mlteam,docker,sudo bob
+
+<span class="c"># ========== 这条命令逐词拆解（新手高频疑问）==========</span>
+<span class="c"># sudo      以 root 权限执行（usermod 会改 /etc/group，只有 root 能改）</span>
+<span class="c"># usermod   修改用户属性的命令</span>
+<span class="c"># -aG       两个参数合写：</span>
+<span class="c">#             -a   append，追加到组（不加 -a 会把用户从其他附加组移除！）</span>
+<span class="c">#             -G   指定【附加组】（区别于 -g 主组，一个人只能有一个主组）</span>
+<span class="c"># mlteam,docker,sudo   要加入的组列表，用逗号分隔（不能有空格）</span>
+<span class="c"># bob       要操作的用户名 —— 即"把 bob 加进这三个组"</span>
+<span class="c">#</span>
+<span class="c"># 为什么需要 sudo？</span>
+<span class="c">#   /etc/group 文件只有 root 能写。普通用户执行 usermod 会报：</span>
+<span class="c">#   "usermod: Permission denied. usermod: cannot lock /etc/passwd"</span>
+<span class="c">#   所以必须 sudo 提权。</span>
+<span class="c">#</span>
+<span class="c"># bob 是谁？</span>
+<span class="c">#   就是要被操作的目标用户名。换成 alice 就是操作 alice。</span>
+<span class="c">#   这条命令的"动作发出者"是你（你用 sudo 提权），</span>
+<span class="c">#   "动作承受者"是 bob（bob 被加进组里）。</span>
+<span class="c">#</span>
+<span class="c"># 常见误区：</span>
+<span class="c">#   ❌ 以为 "sudo bob" 是一个整体 → 不是，sudo 和 bob 是两个独立单词</span>
+<span class="c">#   ❌ 以为这是"切到 bob 用户操作" → 不是，切用户用 su - bob</span>
+<span class="c">#   ✅ 正确理解：我(root权限) 执行 usermod，把 bob 加到这三个组</span>
+<span class="c">#</span>
+<span class="c"># 验证加组是否成功：</span>
+<span class="nb">groups </span>bob                  <span class="c"># 看 bob 在哪些组（需要 bob 重新登录才生效）</span>
+getent group docker         <span class="c"># 看 docker 组里有没有 bob</span>
+
+<span class="c"># ========== 删除用户/组 ==========</span>
+<span class="nb">sudo </span>userdel <span class="nt">-r</span> alice        <span class="c"># -r 连带删除家目录</span>
+<span class="nb">sudo </span>groupdel mlteam
+
+<span class="c"># ========== 完整流程：给新人 alice 开账号并让她能跑实验 ==========</span>
+<span class="nb">sudo </span>useradd <span class="nt">-m</span> <span class="nt">-s</span> /bin/bash alice <span class="o">&amp;&amp;</span> <span class="nb">sudo </span>passwd alice
+<span class="nb">sudo </span>usermod <span class="nt">-aG</span> mlteam alice          <span class="c"># 加入团队共享组</span>
+<span class="nb">sudo </span>usermod <span class="nt">-aG</span> docker alice          <span class="c"># 能用 docker</span>
+<span class="c"># 如果需要她能用 sudo</span>
+<span class="nb">sudo </span>usermod <span class="nt">-aG</span> <span class="nb">sudo </span>alice
+<span class="c"># 然后告诉她用 ssh alice@服务器IP 登录</span>
+<span class="c"># 她的家目录 /home/alice 默认权限 755，别人能看不能改</span>
+</code></pre></div></div>
+<h3 id="333-共享目录设置mntpublic-场景新手补充">3.3.3 共享目录设置：/mnt/public 场景（新手补充）</h3>
+<blockquote><p>需求：在一台多人共享的 GPU 服务器上，建一个 <code class="language-plaintext highlighter-rouge">/mnt/public</code> 目录，让所有用户都能： ① 进去访问；② 在里面新建自己的文件/文件夹；③ 读别人放进去的内容； 但 <strong>不能修改或删除别人放的东西</strong>。</p></blockquote>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ========== 方案：共享组 + SGID + sticky bit ==========</span>
+
+<span class="c"># 第 1 步：创建一个共享组，把所有需要用的用户加进去</span>
+<span class="nb">sudo </span>groupadd shared
+<span class="nb">sudo </span>usermod <span class="nt">-aG</span> shared alice
+<span class="nb">sudo </span>usermod <span class="nt">-aG</span> shared bob
+<span class="c"># 提醒：加组后用户要重新登录才生效</span>
+
+<span class="c"># 第 2 步：创建共享目录，把所有者设为共享组</span>
+<span class="nb">sudo mkdir</span> <span class="nt">-p</span> /mnt/public
+<span class="nb">sudo chown</span> :shared /mnt/public      <span class="c"># 所属组 = shared（所有者保持 root）</span>
+
+<span class="c"># 第 3 步：设置权限 2775</span>
+<span class="nb">sudo chmod </span>2775 /mnt/public
+<span class="c">#   2 = SGID（Set Group ID）位，作用见下方解释</span>
+<span class="c">#   775 = rwxrwxr-x：所有者 rwx、组(shared 成员) rwx、其他人 r-x</span>
+<span class="c"># 含义：shared 组成员能读写执行，其他人只能读和进入（不能写）</span>
+
+<span class="c"># 第 4 步（如果要让"非 shared 组的所有用户"也能在里面建文件）：</span>
+<span class="nb">sudo chmod </span>2777 /mnt/public         <span class="c"># 改成 rwxrwsrwx</span>
+<span class="c"># 这样所有人都能建文件，但要配合 sticky bit 才安全，见第 5 步</span>
+
+<span class="c"># 第 5 步：加 sticky bit，防止删别人的文件</span>
+<span class="nb">sudo chmod</span> +t /mnt/public           <span class="c"># 或写完整：sudo chmod 3777 /mnt/public</span>
+<span class="c">#   t = sticky bit，作用：在加了 sticky 的目录里，</span>
+<span class="c">#        只有文件所有者（和 root）能删除/重命名自己的文件，</span>
+<span class="c">#        别人即使对目录有写权限，也不能删你的文件</span>
+<span class="c"># /tmp 就是典型例子：chmod 1777，大家都能建文件，但只能删自己的</span>
+
+<span class="c"># ========== 这三个特殊位是什么？==========</span>
+<span class="c"># 1. SGID（数字 2，作用于目录）：目录里新建的文件/子目录，会自动继承父目录的"组"</span>
+<span class="c">#    不加 SGID：alice 建的文件所属组是 alice 的主组，bob 看不到（如果组权限没给）</span>
+<span class="c">#    加了 SGID：alice 建的文件所属组自动变成 shared，shared 组成员都能按组权限访问</span>
+<span class="c">#</span>
+<span class="c"># 2. sticky bit（数字 1，或 +t，作用于目录）：限制删除权限</span>
+<span class="c">#    不加：对目录有 w 权限的人能删目录里任何文件（包括别人的）</span>
+<span class="c">#    加了：只能删自己的文件（即使对目录有 w）</span>
+<span class="c">#</span>
+<span class="c"># 3. SUID（数字 4，作用于可执行文件）：执行时临时获得文件所有者权限</span>
+<span class="c">#    典型例子：/usr/bin/passwd 是 SUID root，普通用户能用它改自己的密码</span>
+<span class="c">#    共享目录场景用不到，知道有这回事即可</span>
+
+<span class="c"># ========== 权限数字怎么看（4 位时）==========</span>
+<span class="c"># chmod 2775 = SGID(2) + rwx(7) rwx(7) r-x(5)</span>
+<span class="c"># chmod 1777 = sticky(1) + rwx(7) rwx(7) rwx(7)</span>
+<span class="c"># chmod 4755 = SUID(4) + rwx(7) r-x(5) r-x(5)</span>
+<span class="c"># 第 1 位是特殊位（4=SUID, 2=SGID, 1=sticky，可叠加如 6=4+2）</span>
+<span class="c"># 后 3 位是普通的 owner/group/other</span>
+
+<span class="c"># ========== 验证设置 ==========</span>
+<span class="nb">ls</span> <span class="nt">-ld</span> /mnt/public
+<span class="c"># drwxrwsrwt  2 root shared 4096 ... /mnt/public</span>
+<span class="c">#  │└┘└─┘└─┘</span>
+<span class="c">#  │ │  │  └── other: rwt（t 表示 sticky 生效）</span>
+<span class="c">#  │ │  └───── group: rws（s 表示 SGID 生效，代替了 x）</span>
+<span class="c">#  │ └──────── owner: rwx</span>
+<span class="c">#  └────────── d 是目录</span>
+
+<span class="c"># ========== 实际效果验证 ==========</span>
+<span class="c"># alice 登录后：</span>
+<span class="nb">cd</span> /mnt/public
+<span class="nb">mkdir </span>alice_data            <span class="c"># ✅ 能建</span>
+<span class="nb">echo </span>hello <span class="o">&gt;</span> alice_data/note.txt
+<span class="c"># bob 登录后：</span>
+<span class="nb">cat</span> /mnt/public/alice_data/note.txt   <span class="c"># ✅ 能读</span>
+<span class="nb">echo </span>x <span class="o">&gt;&gt;</span> /mnt/public/alice_data/note.txt   <span class="c"># ❌ 改不了（文件是 alice 的，bob 没有 w）</span>
+<span class="nb">rm</span> /mnt/public/alice_data/note.txt    <span class="c"># ❌ 删不了（sticky bit 保护，只有 alice/root 能删）</span>
+
+<span class="c"># ========== 怎么在终端切换用户来验证？（新手高频疑问）==========</span>
+<span class="c"># 用 su 命令。但 "su 用户" 和 "su - 用户" 有重要区别：</span>
+<span class="c">#</span>
+<span class="c"># su alice         切到 alice，但【不切换环境】（non-login shell）</span>
+<span class="c">#   - 保留当前用户的环境变量（HOME、PATH 还是你的）</span>
+<span class="c">#   - 不执行 alice 的 .bash_profile / .bashrc</span>
+<span class="c">#   - cwd（当前目录）还是你原来的目录</span>
+<span class="c">#   - 适合"临时用 alice 身份跑一两条命令"</span>
+<span class="c">#</span>
+<span class="c"># su - alice       切到 alice，【完整切换环境】（login shell）</span>
+<span class="c">#   - HOME 变成 /home/alice，cd 到那</span>
+<span class="c">#   - PATH 重置成 alice 的（会执行 .bash_profile / .profile）</span>
+<span class="c">#   - 就像 alice 真的 SSH 登录一样</span>
+<span class="c">#   - 适合"我要完整模拟 alice 的使用场景"</span>
+<span class="c">#</span>
+<span class="c"># 区别演示：</span>
+<span class="c">#   你(lxy) 在 /mnt/public 目录，执行 su alice（不带 -）：</span>
+<span class="c">#     whoami       → alice（身份切了）</span>
+<span class="c">#     pwd          → /mnt/public（目录没变，环境没切）</span>
+<span class="c">#     echo $HOME   → /home/lxy（HOME 还是你的！）</span>
+<span class="c">#   执行 su - alice（带 -）：</span>
+<span class="c">#     whoami       → alice</span>
+<span class="c">#     pwd          → /home/alice（切到 alice 家目录）</span>
+<span class="c">#     echo $HOME   → /home/alice（HOME 也切了）</span>
+<span class="c">#</span>
+<span class="c"># 推荐：验证权限场景用 su - alice（环境干净，结果才准确）</span>
+<span class="c">#       因为 su alice 不切环境，alice 的组可能没"刷新"，权限验证会不准</span>
+<span class="c">#</span>
+<span class="c"># 验证完切回来：</span>
+<span class="nb">exit</span>                         <span class="c"># 退出 alice 身份，回到原来的 lxy</span>
+<span class="c">#</span>
+<span class="c"># 补充：加组后为什么要"重新登录"才生效？</span>
+<span class="c">#   groups 是登录时从 /etc/group 读进来的，存在当前 shell 进程里。</span>
+<span class="c">#   你 usermod -aG docker alice 后，alice 当前已开的终端里 groups 还是旧的。</span>
+<span class="c">#   必须 exit 后重新 su - alice（或重新 SSH 登录），新 shell 才会读到新组。</span>
+<span class="c">#   验证：su - alice 后执行 id，看 groups 里有没有 docker</span>
+<span class="c">#</span>
+<span class="c"># 其他切用户方式：</span>
+<span class="nb">sudo</span> <span class="nt">-u</span> alice <span class="nb">whoami</span>        <span class="c"># 不进交互式 shell，只以 alice 身份跑一条命令</span>
+<span class="nb">sudo</span> <span class="nt">-iu</span> alice              <span class="c"># = sudo su - alice（以 root 权限切到 alice，需要 sudo 权限）</span>
+
+<span class="c"># ========== 进阶：如果想让"组内成员能互相改但不能删"怎么办 ==========</span>
+<span class="c"># 上面的 sticky bit 只防删除，不防修改。要精确控制"能读不能改别人的"：</span>
+<span class="c"># 方案：让用户建文件时默认权限不带组写权限</span>
+<span class="c"># 编辑 /etc/profile 或 ~/.bashrc 设置 umask：</span>
+<span class="nb">umask </span>022                   <span class="c"># 新建文件 644（rw-r--r--），目录 755</span>
+<span class="c"># 这样 alice 建的 note.txt 默认是 644，组内成员只能读不能改</span>
+<span class="c"># 如果某些文件确实要共享编辑，alice 手动 chmod g+w 即可</span>
+
+<span class="c"># ========== umask 022 到底是什么意思？（新手高频疑问）==========</span>
+<span class="c"># umask = "user mask"，新建文件/目录时的"权限掩码"</span>
+<span class="c"># 它是一个【反向】计算：新建权限 = 默认最大权限 - umask</span>
+<span class="c">#</span>
+<span class="c"># 新建文件的默认最大权限是 666（rw-rw-rw-，文件默认不给执行位）</span>
+<span class="c"># 新建目录的默认最大权限是 777（rwxrwxrwx，目录需要执行位才能进入）</span>
+<span class="c">#</span>
+<span class="c"># umask 022 的计算（用减法，按位算）：</span>
+<span class="c">#   文件：666 - 022 = 644  →  rw-r--r--（所有者读写，其他人只读）</span>
+<span class="c">#   目录：777 - 022 = 755  →  rwxr-xr-x（所有者全权，其他人读+进入）</span>
+<span class="c">#</span>
+<span class="c"># 常见 umask 值对照：</span>
+<span class="c">#   umask 022 → 文件 644，目录 755（Linux 默认，最常用）</span>
+<span class="c">#   umask 077 → 文件 600，目录 700（最严格，只有自己能访问）</span>
+<span class="c">#   umask 002 → 文件 664，目录 775（组可写，团队协作用）</span>
+<span class="c">#   umask 000 → 文件 666，目录 777（完全开放，不安全，别用）</span>
+<span class="c">#</span>
+<span class="c"># 注意：umask 是"屏蔽位"，不是直接赋值</span>
+<span class="c">#   严格说不是减法，是"按位取反再相与"：new_perm = max_perm &amp; ~umask</span>
+<span class="c">#   但对 022/077/002 这些常见值，用减法算结果一样，新手先用减法理解</span>
+<span class="c">#</span>
+<span class="c"># 想看当前 umask：</span>
+<span class="nb">umask</span>                       <span class="c"># 输出 022（或 0022）</span>
+<span class="nb">umask</span> <span class="nt">-S</span>                    <span class="c"># -S 符号形式输出 u=rwx,g=rx,o=rx</span>
+<span class="c">#</span>
+<span class="c"># 临时改（只对当前终端生效）：</span>
+<span class="nb">umask </span>022                   <span class="c"># 改成 022</span>
+<span class="c"># 永久改：写进配置文件（见下方说明）</span>
+
+<span class="c"># ========== /etc/profile 里没看到 umask，应该写在哪？（新手高频疑问）==========</span>
+<span class="c"># 你贴的 /etc/profile 内容里确实没有 umask 设置——这很正常！</span>
+<span class="c"># 因为 /etc/profile 主要做两件事：设 PS1（提示符）+ source /etc/profile.d/*.sh</span>
+<span class="c"># umask 通常由【其他文件】设置，不同发行版位置不同：</span>
+<span class="c">#</span>
+<span class="c"># Ubuntu/Debian 系统：</span>
+<span class="c">#   /etc/profile 里不设 umask</span>
+<span class="c">#   实际由 /etc/bash.bashrc 或 PAM 模块设置默认值 022</span>
+<span class="c">#</span>
+<span class="c"># CentOS/RHEL 系统：</span>
+<span class="c">#   /etc/profile 末尾或 /etc/profile.d/ 里有 umask 设置</span>
+<span class="c">#   /etc/bashrc 里也有</span>
+<span class="c">#</span>
+<span class="c"># 你想自定义 umask，推荐写在这几个地方（按生效范围）：</span>
+<span class="c">#</span>
+<span class="c"># ① 只给自己用 → 写进 ~/.bashrc（最推荐，不影响别人）：</span>
+<span class="c">#    echo "umask 022" &gt;&gt; ~/.bashrc</span>
+<span class="c">#    生效范围：你自己的所有交互式 shell</span>
+<span class="c">#</span>
+<span class="c"># ② 给某个项目的所有用户用 → 写进项目脚本开头：</span>
+<span class="c">#    #!/usr/bin/env bash</span>
+<span class="c">#    umask 022    # 脚本开头设一下</span>
+<span class="c">#    ...</span>
+<span class="c">#    生效范围：这个脚本创建的文件</span>
+<span class="c">#</span>
+<span class="c"># ③ 给全系统所有用户用 → 写进 /etc/profile.d/（比直接改 /etc/profile 规范）：</span>
+<span class="c">#    echo "umask 022" | sudo tee /etc/profile.d/umask.sh</span>
+<span class="c">#    sudo chmod 644 /etc/profile.d/umask.sh</span>
+<span class="c">#    生效范围：所有登录用户（/etc/profile 会自动 source /etc/profile.d/*.sh）</span>
+<span class="c">#</span>
+<span class="c"># ④ 给特定用户（如 alice）用 → 写进 /home/alice/.bashrc</span>
+<span class="c">#</span>
+<span class="c"># 验证是否生效：重新登录后执行 umask，看输出是不是你要的值</span>
+
+<span class="c"># ========== 想让 /mnt/public 下别人"只读"（不能改、不能删、不能加文件）怎么设？==========</span>
+<span class="c"># 上面的 SGID+sticky 方案是"能建文件、能读别人的、不能改删别人的"</span>
+<span class="c"># 如果你想要更严格："别人连文件都【不能新建】，只能读"——</span>
+<span class="c"># 即：每个用户建的目录，别人只能 ls 和 cat，不能在里面写任何东西</span>
+<span class="c">#</span>
+<span class="c"># 这要分两层控制：</span>
+<span class="c">#</span>
+<span class="c"># 第 1 层：/mnt/public 本身还是要让大家能进去建子目录（777 或 2775）</span>
+<span class="c">#   不然大家连自己的目录都建不了</span>
+<span class="c">#</span>
+<span class="c"># 第 2 层：每个用户建的【子目录】，设成 755（别人只读，不能写）</span>
+<span class="c">#   mkdir alice_data</span>
+<span class="c">#   chmod 755 alice_data       # 别人能 cd 进来、能 ls/cat，不能 mkdir/touch</span>
+<span class="c">#</span>
+<span class="c"># 这样效果：</span>
+<span class="c">#   bob 能 cd /mnt/public/alice_data，能 ls，能 cat note.txt  ✅</span>
+<span class="c">#   bob 不能在 alice_data 里 mkdir new_dir                    ❌（目录 755，组/其他无 w）</span>
+<span class="c">#   bob 不能在 alice_data 里 touch new_file                   ❌</span>
+<span class="c">#   bob 不能改 note.txt                                        ❌（文件 644）</span>
+<span class="c">#   bob 不能删 note.txt                                        ❌（需要目录 w，没有）</span>
+<span class="c">#</span>
+<span class="c"># 配合 umask 让新建文件默认就是 644、目录 755：</span>
+<span class="c">#   alice 在 ~/.bashrc 设 umask 022</span>
+<span class="c">#   之后 alice 建的文件/目录就自动是 644/755，不用每次手动 chmod</span>
+<span class="c">#</span>
+<span class="c"># 如果想更彻底——"别人连 ls 都不能 ls，只知道有这个目录"：</span>
+<span class="c">#   chmod 711 alice_data       # 别人能 cd（有 x），不能 ls（无 r），能 cat 已知文件名</span>
+<span class="c">#   这样 bob 不知道 alice_data 里有什么文件，但如果有确切的文件名能 cat</span>
+<span class="c">#</span>
+<span class="c"># 权限对照表（目录权限的 r/w/x 含义和文件不同！）：</span>
+<span class="c"># ┌──────┬─────────────────┬──────────────────────────────────┐</span>
+<span class="c"># │ 权限 │ 目录上的含义     │ 文件上的含义                      │</span>
+<span class="c"># ├──────┼─────────────────┼──────────────────────────────────┤</span>
+<span class="c"># │ r    │ 能 ls 列出内容   │ 能 cat/读内容                     │</span>
+<span class="c"># │ w    │ 能新建/删除里面文件│ 能改文件内容                    │</span>
+<span class="c"># │ x    │ 能 cd 进入       │ 能执行（运行）                    │</span>
+<span class="c"># └──────┴─────────────────┴──────────────────────────────────┘</span>
+<span class="c"># 关键：能不能"删/建目录里的文件"看的是【目录】的 w，不是文件本身！</span>
+<span class="c">#   所以 sticky bit 加在目录上才能防止"删别人的文件"</span>
+</code></pre></div></div>
+<h3 id="34-权限问题的排查思路别一上来就-chmod-777">3.4 权限问题的排查思路（别一上来就 chmod 777）</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ========== 经典场景：报错 "Permission denied"，怎么排查 ==========</span>
+<span class="c"># 错误反应：chmod 777 搞定 → 留下安全漏洞，而且没找到根因</span>
+<span class="c"># 正确反应：按顺序问 4 个问题</span>
+
+<span class="c"># 问题 1：这个文件/目录的权限和所有者是什么？</span>
+<span class="nb">ls</span> <span class="nt">-l</span> /data/train.log
+<span class="c"># -rw------- 1 root root ... /data/train.log</span>
+<span class="c"># → 所有者是 root，且只有 root 能读写，你当然没权限</span>
+
+<span class="c"># 问题 2：我是谁？我在哪些组里？</span>
+<span class="nb">id</span>
+<span class="c"># uid=1000(lxy) gid=1000(lxy) groups=1000(lxy),27(sudo),999(docker)</span>
+<span class="c"># → 确认当前身份，看是否在文件所属组里</span>
+
+<span class="c"># ========== 这些数字和名字分别是什么？逐段拆解 ==========</span>
+<span class="c"># uid=1000(lxy)              → 用户 ID = 1000，用户名 = lxy</span>
+<span class="c">#   uid 是系统给每个用户的唯一数字编号：</span>
+<span class="c">#     0        = root（超级管理员）</span>
+<span class="c">#     1~999    = 系统账号（daemon、www-data、sshd 等服务账号）</span>
+<span class="c">#     1000+    = 普通用户（你用 useradd 创建的用户一般从 1000 开始）</span>
+<span class="c">#   系统实际认的是数字 uid，用户名只是给人看的（存在 /etc/passwd 里）</span>
+
+<span class="c"># gid=1000(lxy)              → 主组 ID = 1000，组名 = lxy</span>
+<span class="c">#   每个用户必须有一个"主组"（primary group），通常和用户名同名（叫"用户私有组"）</span>
+<span class="c">#   你新建文件时，默认所属组就是你的主组</span>
+<span class="c">#   gid 也是数字，含义同 uid</span>
+
+<span class="c"># groups=1000(lxy),27(sudo),999(docker)</span>
+<span class="c">#   → 你所在的"所有组"列表（主组 + 附加组），用逗号分隔</span>
+<span class="c">#     1000(lxy)   = 你的主组</span>
+<span class="c">#     27(sudo)    = sudo 组，组成员可以用 sudo 提权</span>
+<span class="c">#     999(docker) = docker 组，组成员能免 sudo 使用 docker 命令</span>
+<span class="c">#</span>
+<span class="c"># 为什么 docker 要单独建组？</span>
+<span class="c">#   docker 守护进程默认只有 root 能直接访问，每次 docker 都要 sudo 很烦</span>
+<span class="c">#   把用户加进 docker 组，就能直接 docker run ...（不用 sudo）</span>
+<span class="c">#   ⚠️ 但 docker 组等同 root 权限（能挂载宿主文件系统），慎用</span>
+
+<span class="c"># ========== uid / gid / groups 三者区别一句话记忆 ==========</span>
+<span class="c">#   uid  = "你是谁"（唯一身份）</span>
+<span class="c">#   gid  = "你新建文件默认归哪个组"（主组，只有一个）</span>
+<span class="c">#   groups = "你还在哪些组里"（影响你能不能访问组所属的文件，可多个）</span>
+
+<span class="c"># ========== 权限判断时怎么用这些信息 ==========</span>
+<span class="c"># 看 ls -l 的输出，对照自己的 id：</span>
+<span class="c">#   文件所有者是你(uid)   → 用 owner 那段权限</span>
+<span class="c">#   否则，文件所属组在你 groups 里 → 用 group 那段权限</span>
+<span class="c">#   都不是                → 用 other 那段权限</span>
+<span class="c"># 这就是为什么 id 输出要对照 ls -l 看——判断自己落在哪个权限段</span>
+
+<span class="c"># 问题 3：我要访问的路径，每一级目录我有没有 x（穿越）权限？</span>
+<span class="c"># 这是新手最容易忽略的：即使你有文件本身的 r 权限，</span>
+<span class="c"># 但父目录没 x，照样访问不了</span>
+namei <span class="nt">-l</span> /data/train.log
+<span class="c"># 逐级打印路径上每个分量的权限：</span>
+<span class="c"># drwxr-xr-x root root /</span>
+<span class="c"># drwxr-xr-x root root /data</span>
+<span class="c"># -rw------- root root /data/train.log</span>
+<span class="c"># → 这里 /data 有 x（其他人能穿越），但文件本身 other 无任何权限</span>
+
+<span class="c"># 问题 4：根因找到后，用最小权限修复，而不是 777</span>
+<span class="c"># 场景 A：文件应该属于你 → 改所有者</span>
+<span class="nb">sudo chown </span>lxy:lxy /data/train.log
+<span class="c"># 场景 B：同组要用 → 给组加权限</span>
+<span class="nb">sudo chmod </span>g+r /data/train.log
+<span class="c"># 场景 C：确实要给所有人读 → 644 足矣，绝不用 777</span>
+<span class="nb">sudo chmod </span>644 /data/train.log
+
+<span class="c"># ========== 为什么 chmod 777 是坏习惯 ==========</span>
+<span class="c"># 1. 安全漏洞：任何用户（包括被攻破的账号）都能读写执行</span>
+<span class="c"># 2. 掩盖问题：你没搞清楚为什么没权限，下次还会踩坑</span>
+<span class="c"># 3. 污染 Git：提交进去后，CI/部署环境继承错误权限</span>
+<span class="c"># 4. 影响协作：同事 clone 下来权限是 777，无法用权限区分角色</span>
+<span class="c">#</span>
+<span class="c"># 记忆口诀：权限问题三步走 —— ls -l 看自己、id 看身份、namei 看路径</span>
+</code></pre></div></div>
+<hr>
+<h2 id="四进程作业与信号">四、进程、作业与信号</h2>
+<h3 id="41-查看进程">4.1 查看进程</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ========== ps：查看进程快照 ==========</span>
+ps <span class="nt">-ef</span> | <span class="nb">grep </span>train.py
+<span class="c"># -e = 所有进程</span>
+<span class="c"># -f = full format，显示详细信息</span>
+<span class="c"># 输出：</span>
+<span class="c"># UID  PID  PPID  C  STIME  TTY  TIME  CMD</span>
+<span class="c"># lxy  1234  1    0  14:00  ?    00:05 python train.py</span>
+<span class="c">#         │    │                    │</span>
+<span class="c">#       进程ID 父进程ID              命令</span>
+
+ps aux | <span class="nb">grep </span>python
+<span class="c"># aux 是另一种常用格式（BSD 风格）</span>
+<span class="c"># a = 所有用户的进程</span>
+<span class="c"># u = 显示用户</span>
+<span class="c"># x = 包括没有终端的进程（后台进程）</span>
+
+<span class="c"># ========== pgrep：按名字找进程 ==========</span>
+pgrep <span class="nt">-af</span> train.py
+<span class="c"># -a = 显示完整命令行</span>
+<span class="c"># -f = 匹配完整命令行（不只是进程名）</span>
+<span class="c"># 输出：1234 python train.py --lr 0.001</span>
+
+<span class="c"># ========== top / htop：实时查看 ==========</span>
+top
+<span class="c"># 实时显示系统资源使用情况</span>
+<span class="c"># 按 q 退出</span>
+<span class="c"># 按 P 按 CPU 排序</span>
+<span class="c"># 按 M 按内存排序</span>
+<span class="c"># </span>
+<span class="c"># 关键指标：</span>
+<span class="c"># load average: 1.5, 1.2, 0.8</span>
+<span class="c">#              ↑     ↑     ↑</span>
+<span class="c">#           1分钟  5分钟  15分钟的平均负载</span>
+<span class="c">#           （单核 CPU 上 &gt;1.0 表示过载）</span>
+
+<span class="c"># htop 是 top 的增强版（需要安装）</span>
+<span class="c"># 更友好的界面，支持鼠标操作，可以树状显示进程</span>
+</code></pre></div></div>
+<h3 id="42-后台运行">4.2 后台运行</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ========== &amp;：后台运行 ==========</span>
+python train.py &amp;
+<span class="c"># [1] 12345</span>
+<span class="c">#  [1] = 作业号</span>
+<span class="c">#  12345 = 进程 PID</span>
+<span class="c"># 终端关闭后进程会被杀掉！</span>
+
+<span class="c"># ========== nohup：不挂断地运行 ==========</span>
+<span class="nb">nohup </span>python train.py <span class="o">&gt;</span> train.log 2&gt;&amp;1 &amp;
+<span class="c"># nohup = no hangup，忽略 SIGHUP 信号</span>
+<span class="c"># 终端关闭后进程继续运行</span>
+<span class="c"># 默认输出到 nohup.out，这里重定向到 train.log</span>
+
+<span class="c"># ========== jobs：查看当前终端的后台作业 ==========</span>
+<span class="nb">jobs</span>
+<span class="c"># [1]+  Running    python train.py &amp;</span>
+
+<span class="nb">fg</span> %1                        <span class="c"># 把作业 1 拉回前台</span>
+<span class="nb">bg</span> %1                        <span class="c"># 让作业 1 在后台继续运行（Ctrl+Z 暂停后用）</span>
+
+<span class="c"># ========== "Ctrl+Z 暂停后用"是什么意思？完整演示 ==========</span>
+<span class="c"># Ctrl+Z 不是"结束"程序，而是"暂停"（挂起，Suspend）程序：</span>
+<span class="c">#   程序还在内存里，但不再运行（状态变成 Stopped），</span>
+<span class="c">#   你可以随时把它拉回前台继续，或放后台继续</span>
+<span class="c">#</span>
+<span class="c"># 典型场景：你在前台跑 python train.py，突然想敲别的命令，</span>
+<span class="c">#           但又不想终止训练</span>
+<span class="c">#</span>
+<span class="c"># 操作流程：</span>
+python train.py              <span class="c"># 前台运行训练</span>
+<span class="c"># （训练在跑，终端被占用，没法输别的命令）</span>
+<span class="c"># 按 Ctrl+Z                  # 屏幕显示：</span>
+<span class="c"># [1]+  Stopped                 python train.py</span>
+<span class="c">#   ↑ 程序被"暂停"了（Stopped），没死，终端回到你手里</span>
+
+<span class="nb">ls</span>                           <span class="c"># 现在可以敲别的命令了</span>
+nvidia-smi                   <span class="c"># 看看显卡</span>
+
+<span class="nb">fg</span> %1                        <span class="c"># 把作业 1 拉回前台继续（训练恢复，终端又被占用）</span>
+<span class="c">#   注意：fg 是 "foreground"，把作业调回前台</span>
+<span class="c">#   %1 是作业号（jobs 命令看到的 [1]）</span>
+
+<span class="c"># 另一个场景：你希望它"暂停后不回前台，而是在后台继续跑"</span>
+<span class="c"># 按 Ctrl+Z 暂停后：</span>
+<span class="nb">bg</span> %1                        <span class="c"># 让作业 1 在后台继续运行（状态从 Stopped → Running）</span>
+<span class="c">#   bg = "background"，作业在后台跑，终端还能用</span>
+<span class="c">#   但它的输出还是会打到当前终端（建议配合重定向 &gt; log）</span>
+
+<span class="c"># 一句话区分：</span>
+<span class="c">#   fg %1  → 拉到前台（终端被它占用，看它的输出）</span>
+<span class="c">#   bg %1  → 放后台跑（终端能用，但它的输出还会冒出来）</span>
+<span class="c">#   Ctrl+Z → 只是暂停，不跑也不退出，等你 fg 或 bg</span>
+
+<span class="c"># ========== bg %1 之后怎么知道它的 PID？（新手高频疑问）==========</span>
+<span class="c"># bg %1 启动后台后，Shell 会打印一行告诉你 PID：</span>
+<span class="nb">bg</span> %1
+<span class="c"># 输出：[1]+  python train.py &amp;</span>
+<span class="c">#           ↑ 这一行的 &amp; 表示它在后台，但默认不显示 PID</span>
+<span class="c">#</span>
+<span class="c"># 方法 1：bg 后立即用 $! 拿到"最近一个后台进程的 PID"</span>
+<span class="nb">bg</span> %1
+<span class="nb">echo</span> <span class="nv">$!</span>                     <span class="c"># 输出 PID，如 12345</span>
+<span class="c">#   $! 是 Shell 内置变量，永远存"最后一个放到后台的进程 PID"</span>
+<span class="c">#   可以记下来：PID=$!，之后用 ps -p $PID 查状态</span>
+
+<span class="c"># 方法 2：用 jobs -l 直接看作业号 + PID</span>
+<span class="nb">jobs</span> <span class="nt">-l</span>
+<span class="c"># 输出：[1]+  12345 Running    python train.py &amp;</span>
+<span class="c">#            ↑ 这个 12345 就是 PID（-l = list with PID）</span>
+<span class="c">#   Running = 还在跑；Done = 跑完了；Stopped = 暂停中</span>
+
+<span class="c"># 方法 3：按命令名查 PID（不知道作业号时用）</span>
+pgrep <span class="nt">-f</span> <span class="s2">"python train.py"</span>  <span class="c"># 输出所有匹配的 PID</span>
+ps aux | <span class="nb">grep</span> <span class="s2">"train.py"</span>    <span class="c"># 更详细，能看到启动时间、CPU 占用</span>
+<span class="c">#   pgrep -f 的 -f 表示"匹配完整命令行"（不加 -f 只匹配进程名）</span>
+
+<span class="c"># ========== 怎么知道它跑完了？==========</span>
+<span class="c"># 方法 1：jobs -l 看状态变化</span>
+<span class="nb">jobs</span> <span class="nt">-l</span>                     <span class="c"># Running 时还在跑</span>
+<span class="c"># （过一会儿）</span>
+<span class="nb">jobs</span> <span class="nt">-l</span>                     <span class="c"># 变成 Done 就跑完了（Done 行很快消失）</span>
+
+<span class="c"># 方法 2：wait 命令阻塞等待（脚本里常用）</span>
+<span class="nb">wait</span> %1                     <span class="c"># 等作业 1 结束再继续（交互式里会卡住）</span>
+<span class="nb">wait </span>12345                  <span class="c"># 等指定 PID 结束</span>
+<span class="nb">echo</span> <span class="nv">$?</span>                     <span class="c"># wait 后看退出码，0=成功，非0=失败</span>
+
+<span class="c"># 方法 3：周期性查 PID 是否还在</span>
+ps <span class="nt">-p</span> 12345                 <span class="c"># 有输出=还在跑；无输出（只有表头）=已结束</span>
+pgrep <span class="nt">-f</span> <span class="s2">"train.py"</span>         <span class="c"># 有输出=还在；无输出=已结束</span>
+
+<span class="c"># 方法 4：进程结束时通知你（推荐，不用反复查）</span>
+<span class="c"># 让进程结束时发通知：</span>
+<span class="nb">wait</span> %1 <span class="o">&amp;&amp;</span> <span class="nb">echo</span> <span class="s2">"训练成功完成"</span> <span class="o">||</span> <span class="nb">echo</span> <span class="s2">"训练失败"</span>
+<span class="c"># 或用 notify-send（桌面环境）：</span>
+<span class="c">#   wait %1 &amp;&amp; notify-send "训练" "完成"</span>
+
+<span class="c"># ========== 推荐做法：启动时就记录 PID ==========</span>
+python train.py <span class="o">&gt;</span> train.log 2&gt;&amp;1 &amp;
+<span class="nv">PID</span><span class="o">=</span><span class="nv">$!</span>                      <span class="c"># 立即抓 PID 存起来</span>
+<span class="nb">echo</span> <span class="s2">"训练已启动，PID=</span><span class="nv">$PID</span><span class="s2">"</span>
+<span class="nb">echo</span> <span class="nv">$PID</span> <span class="o">&gt;</span> train.pid       <span class="c"># 存到文件，方便别的终端/脚本查</span>
+<span class="c"># 之后任何地方都能：</span>
+ps <span class="nt">-p</span> <span class="si">$(</span><span class="nb">cat </span>train.pid<span class="si">)</span>      <span class="c"># 查状态</span>
+<span class="nb">kill</span> <span class="si">$(</span><span class="nb">cat </span>train.pid<span class="si">)</span>       <span class="c"># 杀进程</span>
+<span class="c"># 训练完检查：</span>
+<span class="nb">wait</span> <span class="nv">$PID</span> <span class="o">&amp;&amp;</span> <span class="nb">echo</span> <span class="s2">"成功"</span> <span class="o">||</span> <span class="nb">echo</span> <span class="s2">"失败"</span>
+<span class="nb">rm </span>train.pid                <span class="c"># 清理</span>
+
+<span class="c"># ========== 推荐方案：用 tmux ==========</span>
+<span class="c"># tmux = terminal multiplexer，终端复用器</span>
+<span class="c"># 比 nohup 更好用，可以随时重新连接</span>
+
+tmux new <span class="nt">-s</span> train            <span class="c"># 创建名为 train 的会话</span>
+<span class="c"># 在 tmux 中运行训练...</span>
+<span class="c"># Ctrl+b 然后按 d：脱离会话（训练继续跑）</span>
+<span class="c"># 可以安全关闭终端</span>
+
+tmux <span class="nb">ls</span>                      <span class="c"># 列出所有会话</span>
+tmux attach <span class="nt">-t</span> train         <span class="c"># 重新连接到 train 会话</span>
+
+<span class="c"># tmux 内部常用快捷键（先按 Ctrl+b，再按）：</span>
+<span class="c"># d     脱离会话</span>
+<span class="c"># c     创建新窗口</span>
+<span class="c"># n/p   下一个/上一个窗口</span>
+<span class="c"># %     左右分屏</span>
+<span class="c"># "     上下分屏</span>
+
+<span class="c"># ========== tmux 怎么删除不需要的窗口/会话？==========</span>
+<span class="c"># 删除【窗口】（window）：在 tmux 内部，先按 Ctrl+b，再按 &amp;</span>
+<span class="c">#   会提示 "kill-window window_name? (y/n)"，按 y 确认删除当前窗口</span>
+<span class="c">#   如果只有一个窗口，删掉后会话也会结束</span>
+<span class="c">#</span>
+<span class="c"># 删除【窗格】（pane，分屏出来的小格子）：先按 Ctrl+b，再按 x</span>
+<span class="c">#   会提示确认，按 y 删除当前光标所在的窗格</span>
+<span class="c">#</span>
+<span class="c"># tmux 内部更多快捷键（先按 Ctrl+b）：</span>
+<span class="c"># &amp;     删除当前窗口（会问确认）</span>
+<span class="c"># x     删除当前窗格（会问确认）</span>
+<span class="c"># w     列出所有窗口，可用方向键切换/选择</span>
+<span class="c"># s     列出所有会话，可切换</span>
+<span class="c"># 数字键 0/1/2...  切换到对应编号的窗口</span>
+<span class="c"># ,     给当前窗口改名</span>
+<span class="c"># o     在多个窗格间循环切换</span>
+
+<span class="c"># 删除【会话】（session）—— 在 tmux 外面用命令行：</span>
+tmux kill-session <span class="nt">-t</span> train    <span class="c"># 删除名为 train 的会话</span>
+tmux kill-session <span class="nt">-a</span>          <span class="c"># 删除除当前外的所有会话</span>
+tmux kill-server              <span class="c"># 杀掉 tmux 服务（所有会话全没，慎用）</span>
+
+<span class="c"># 离开会话但想保留它继续跑：用 Ctrl+b d（脱离），而不是关闭窗口</span>
+<span class="c"># 直接关闭终端窗口会话也不会死（这就是 tmux 的意义），但下次要 tmux attach 回来</span>
+</code></pre></div></div>
+<h3 id="43-信号">4.3 信号</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ========== kill：发送信号 ==========</span>
+<span class="nb">kill</span> &lt;PID&gt;                   <span class="c"># 默认发送 SIGTERM（15），请求进程优雅退出</span>
+<span class="nb">kill</span> <span class="nt">-TERM</span> &lt;PID&gt;             <span class="c"># 同上，明确指定</span>
+<span class="nb">kill</span> <span class="nt">-INT</span> &lt;PID&gt;              <span class="c"># 发送 SIGINT（2），等同 Ctrl+C</span>
+<span class="nb">kill</span> <span class="nt">-KILL</span> &lt;PID&gt;             <span class="c"># 发送 SIGKILL（9），强制杀死，不可被捕获！</span>
+
+<span class="c"># ========== 信号的优先级 ==========</span>
+<span class="c"># 1. 先用 kill &lt;PID&gt;（SIGTERM）</span>
+<span class="c">#    → 进程有机会保存 checkpoint、释放资源、刷新日志</span>
+<span class="c"># 2. 等 10 秒还没退出，用 kill -INT &lt;PID&gt;（SIGINT）</span>
+<span class="c">#    → 相当于 Ctrl+C，Python 会抛出 KeyboardInterrupt</span>
+<span class="c"># 3. 最后才用 kill -KILL &lt;PID&gt;（SIGKILL）</span>
+<span class="c">#    → 内核直接终止进程，进程无法清理，可能导致：</span>
+<span class="c">#      - checkpoint 损坏（写到一半被杀）</span>
+<span class="c">#      - 共享内存泄漏</span>
+<span class="c">#      - 临时文件残留</span>
+<span class="c">#      - GPU 显存不释放（需要 nvidia-smi 手动清理）</span>
+
+<span class="c"># ========== 常用信号 ==========</span>
+<span class="c"># SIGHUP  (1)  挂起（终端关闭时发送）→ nohup 忽略这个</span>
+<span class="c"># SIGINT  (2)  中断（Ctrl+C）→ Python 抛出 KeyboardInterrupt</span>
+<span class="c"># SIGTERM (15) 终止 → 请求进程退出（默认 kill 发的）</span>
+<span class="c"># SIGKILL (9)  强制杀死 → 不可被捕获或忽略，最后手段</span>
+<span class="c"># SIGSTOP (19) 暂停 → 不可被捕获</span>
+<span class="c"># SIGCONT (18) 继续 → 让暂停的进程继续运行</span>
+
+<span class="c"># ========== kill 怎么用？完整流程示例 ==========</span>
+<span class="c"># 先澄清一个常见误解：kill 命令本身"没有返回输出"。</span>
+<span class="c">#   - 成功发送信号：什么都不显示（沉默就是成功）</span>
+<span class="c">#   - 失败：报错（如 "kill: (12345) - No such process"）</span>
+<span class="c">#   - "信号"不是 kill 返回给你的，而是 kill 发给进程的</span>
+<span class="c">#   进程收到信号后的反应（退出/暂停/继续）取决于信号类型和进程代码</span>
+
+<span class="c"># 第 1 步：找到要操作的进程 PID</span>
+ps <span class="nt">-ef</span> | <span class="nb">grep </span>train.py
+<span class="c"># lxy  12345  1  0 14:00 ?  00:05 python train.py</span>
+<span class="c">#         ↑ 这个 12345 就是 PID</span>
+
+<span class="c"># 第 2 步：根据需要发信号</span>
+<span class="nb">kill </span>12345                  <span class="c"># 等同 kill -15 / kill -TERM，请求优雅退出</span>
+<span class="c">#   （无输出 = 信号已发出。进程通常会自己退出）</span>
+
+<span class="c"># 怎么确认进程退出了？</span>
+ps <span class="nt">-p</span> 12345                 <span class="c"># 查这个 PID 还在不在</span>
+<span class="c"># 若已退出：报 "PID TTY TIME CMD" 但无该进程行（或 PID 变了）</span>
+<span class="c"># 更直接：</span>
+pgrep <span class="nt">-f</span> train.py           <span class="c"># 还能找到 → 没退出；无输出 → 已退出</span>
+
+<span class="c"># 第 3 步：如果 10 秒后还没退出，升级手段</span>
+<span class="nb">kill</span> <span class="nt">-INT</span> 12345             <span class="c"># 等同 Ctrl+C，Python 会抛 KeyboardInterrupt</span>
+<span class="c"># 仍无输出。再等几秒看进程：</span>
+
+<span class="c"># 第 4 步：还不退？最后手段</span>
+<span class="nb">kill</span> <span class="nt">-KILL</span> 12345            <span class="c"># 或 kill -9 12345，内核直接杀</span>
+<span class="c">#   不可被进程捕获/忽略，一定死</span>
+
+<span class="c"># ========== 用 SIGSTOP/SIGCONT 暂停和恢复进程（演示）==========</span>
+<span class="c"># 这两个信号就是 4.2 节 Ctrl+Z/bg 的底层机制，但可以手动发给任意进程</span>
+<span class="nb">kill</span> <span class="nt">-STOP</span> 12345            <span class="c"># 暂停进程（不杀，状态变 T/stopped）</span>
+ps <span class="nt">-p</span> 12345 <span class="nt">-o</span> pid,stat,cmd
+<span class="c"># 12345 T python train.py   ← T 表示 stopped（暂停）</span>
+<span class="nb">kill</span> <span class="nt">-CONT</span> 12345            <span class="c"># 让暂停的进程继续运行</span>
+ps <span class="nt">-p</span> 12345 <span class="nt">-o</span> pid,stat,cmd
+<span class="c"># 12345 R python train.py   ← R 表示 running（运行中）</span>
+
+<span class="c"># ========== kill -TERM / -INT / -KILL 的区别（一张表记住）==========</span>
+<span class="c"># 命令          信号     能被进程捕获？   Python 反应            用途</span>
+<span class="c"># kill PID      TERM(15) 能              默认退出，可自定义      首选，优雅退出</span>
+<span class="c"># kill -INT PID INT(2)   能              抛 KeyboardInterrupt    等同 Ctrl+C</span>
+<span class="c"># kill -KILL PID KILL(9) 不能            立即死，没机会反应      最后手段</span>
+<span class="c">#</span>
+<span class="c"># "能被捕获"的含义：进程可以用 signal 模块注册处理函数，</span>
+<span class="c">#   收到 TERM/INT 时自己决定怎么处理（比如保存 checkpoint 再退）</span>
+<span class="c">#   KILL 不可捕获 = 进程代码拦不住，内核直接动手</span>
+
+<span class="c"># ========== Python 程序捕获信号的例子（理解"为什么优先 TERM"）==========</span>
+<span class="c"># train.py 里可以这么写：</span>
+<span class="c">#   import signal</span>
+<span class="c">#   def save_and_exit(signum, frame):</span>
+<span class="c">#       torch.save(model.state_dict(), 'ckpt.pth')</span>
+<span class="c">#       sys.exit(0)</span>
+<span class="c">#   signal.signal(signal.SIGTERM, save_and_exit)   # 收到 TERM 就保存退出</span>
+<span class="c">#   signal.signal(signal.SIGINT, save_and_exit)    # 收到 INT(Ctrl+C) 也保存退出</span>
+<span class="c">#</span>
+<span class="c"># 这样 kill PID（发 TERM）时，程序能优雅保存；但 kill -9 直接杀，没机会保存</span>
+
+<span class="c"># ========== 批量杀进程 ==========</span>
+<span class="c"># 杀掉所有 python 进程（危险！确认后再执行）</span>
+pkill <span class="nt">-f</span> <span class="s2">"python train.py"</span>   <span class="c"># 按命令行匹配</span>
+<span class="nb">kill</span> <span class="si">$(</span>pgrep <span class="nt">-f</span> train.py<span class="si">)</span>    <span class="c"># 先找 PID 再杀</span>
+
+</code></pre></div></div>
+<hr>
+<h2 id="五系统资源监控">五、系统资源监控</h2>
+<h3 id="51-cpu-与负载">5.1 CPU 与负载</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ========== top / uptime ==========</span>
+<span class="nb">uptime</span>
+<span class="c"># 14:30:00 up 7 days,  2:15,  3 users,  load average: 0.5, 0.3, 0.2</span>
+<span class="c">#                                ↑     ↑     ↑     ↑</span>
+<span class="c">#                             1分钟  5分钟  15分钟  当前登录用户数</span>
+
+<span class="c"># load average 含义：</span>
+<span class="c"># 单核 CPU：1.0 = 满载，&gt;1.0 = 过载，&lt;1.0 = 空闲</span>
+<span class="c"># 8核 CPU：8.0 = 满载，4.0 = 半载</span>
+<span class="c"># 看 15 分钟的值最稳定</span>
+
+<span class="c"># ========== mpstat：多核 CPU 状态 ==========</span>
+mpstat <span class="nt">-P</span> ALL 1             <span class="c"># 每秒刷新一次，显示所有 CPU 核心</span>
+<span class="c"># %usr   = 用户态 CPU（你的程序）</span>
+<span class="c"># %sys   = 内核态 CPU（系统调用）</span>
+<span class="c"># %iowait = 等 I/O（磁盘/网络）</span>
+<span class="c"># %idle  = 空闲</span>
+</code></pre></div></div>
+<h3 id="52-内存">5.2 内存</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ========== free：系统内存 ==========</span>
+free <span class="nt">-h</span>
+<span class="c">#               total   used   free   shared  buff/cache  available</span>
+<span class="c"># Mem:           62G    12G    20G     2.0G     30G         48G</span>
+<span class="c"># Swap:          8G     0B     8G</span>
+<span class="c">#</span>
+<span class="c"># 关键看 available（可用内存），不是 free</span>
+<span class="c"># Linux 会把空闲内存用作缓存（buff/cache），需要时会自动释放</span>
+<span class="c"># available = free + 可回收的缓存</span>
+
+<span class="c"># ========== ps：进程内存 ==========</span>
+ps aux <span class="nt">--sort</span><span class="o">=</span>-%mem | <span class="nb">head</span> <span class="nt">-10</span>    <span class="c"># 按内存使用排序，显示前 10</span>
+
+<span class="c"># ========== pmap：进程的内存映射 ==========</span>
+pmap <span class="nt">-x</span> 12345 | <span class="nb">tail</span> <span class="nt">-5</span>    <span class="c"># 查看 PID 12345 的内存使用详情</span>
+
+<span class="c"># ========== ps aux --sort=-%mem 逐参数拆解 ==========</span>
+<span class="c"># ps aux     ：列出所有进程（a=所有用户, u=显示用户, x=含无终端进程）</span>
+<span class="c"># --sort=-%mem：按 %MEM 列降序排（- 表示降序，不加-是升序）</span>
+<span class="c">#   %mem 是"进程占用物理内存的百分比"</span>
+<span class="c"># | head -10 ：只取前 10 行</span>
+<span class="c">#</span>
+<span class="c"># 完整输出长这样（列含义）：</span>
+<span class="c"># USER  PID  %CPU %MEM    VSZ   RSS   TTY  STAT START  TIME COMMAND</span>
+<span class="c"># lxy   12345 150  45.2  20g    28g   ?    Rl   14:00  5:30  python train.py</span>
+<span class="c">#  │     │    │    │      │     │     │    │    │      │     │</span>
+<span class="c"># 用户  PID  CPU% 内存%  虚拟  物理  终端 状态 启动   CPU  命令</span>
+<span class="c">#                  ↑      ↑     ↑</span>
+<span class="c">#              关键看这个 RSS = 实际占用的物理内存</span>
+<span class="c">#              VSZ = 申请的虚拟内存（通常很大，不一定是真用）</span>
+<span class="c">#</span>
+<span class="c"># 各列含义：</span>
+<span class="c">#   %CPU  CPU 占用率（一个 8 核机器，单进程满载可能显示 100%，多线程可能 &gt;100%）</span>
+<span class="c">#   %MEM  物理内存占用百分比（45.2 表示占了总内存的 45.2%）</span>
+<span class="c">#   VSZ   Virtual Memory Size，虚拟内存大小（KB），通常很大</span>
+<span class="c">#   RSS   Resident Set Size，常驻物理内存（KB），这是"真正占用内存"，最该关注</span>
+<span class="c">#   STAT  进程状态：R=运行 S=睡眠 D=不可中断睡眠 T=停止 Z=僵尸</span>
+<span class="c">#         带 l=多线程，带 + = 前台进程</span>
+<span class="c">#</span>
+<span class="c"># 常用变体：</span>
+ps aux <span class="nt">--sort</span><span class="o">=</span>-%mem | <span class="nb">head</span> <span class="nt">-10</span>       <span class="c"># 按内存降序，找最吃内存的进程</span>
+ps aux <span class="nt">--sort</span><span class="o">=</span>-%cpu | <span class="nb">head</span> <span class="nt">-10</span>       <span class="c"># 按 CPU 降序，找最吃 CPU 的进程</span>
+ps aux | <span class="nb">grep </span>python                  <span class="c"># 只看 python 进程</span>
+ps <span class="nt">-o</span> pid,rss,vsz,cmd <span class="nt">-p</span> 12345        <span class="c"># 只看指定 PID 的内存列（更简洁）</span>
+
+<span class="c"># ========== pmap -x 12345 | tail -5 逐参数拆解 ==========</span>
+<span class="c"># pmap     ：Process Map，显示一个进程的内存映射（每段内存是什么）</span>
+<span class="c"># -x       ：extended，显示详细信息（含 RSS、Dirty 等）</span>
+<span class="c"># 12345    ：目标进程的 PID</span>
+<span class="c"># | tail -5：只看最后 5 行（最后有汇总行）</span>
+<span class="c">#</span>
+<span class="c"># 完整输出长这样：</span>
+<span class="c"># Address           Kbytes     RSS   Dirty  Mode  Mapping</span>
+<span class="c"># 00007f8c2c000000  1048576   50000       0 rw---   [anon]</span>
+<span class="c"># 00007f8c3a000000     1024    1024       0 r-x--   libtorch.so</span>
+<span class="c"># ...</span>
+<span class="c"># total KB          2097152  512000   12345          ← 汇总行</span>
+<span class="c">#</span>
+<span class="c"># 列含义：</span>
+<span class="c">#   Address  这段内存的起始地址</span>
+<span class="c">#   Kbytes   这段内存总大小（KB）</span>
+<span class="c">#   RSS      实际占用的物理内存（KB）—— 最该关注</span>
+<span class="c">#   Dirty    脏页（被改过还没写回的大小）</span>
+<span class="c">#   Mode     权限（r=读 w=写 x=执行）</span>
+<span class="c">#   Mapping  这段内存是什么（.so 库名 / [anon] 匿名 / [stack] 栈 / [heap] 堆）</span>
+<span class="c">#</span>
+<span class="c"># 看最后一行 total 就知道这个进程总共吃了多少内存：</span>
+pmap <span class="nt">-x</span> 12345 | <span class="nb">tail</span> <span class="nt">-1</span>
+<span class="c"># total KB         2097152  512000   12345</span>
+<span class="c">#                   ↑申请2G  ↑实际512M</span>
+<span class="c">#</span>
+<span class="c"># 什么时候用 pmap？</span>
+<span class="c">#   - ps 看到某进程 RSS 很高，想知道内存被什么占了 → 用 pmap -x 看每段</span>
+<span class="c">#   - 怀疑某个 .so 库占内存太大 → pmap -x PID | grep libtorch</span>
+<span class="c">#   - 排查内存泄漏（RSS 持续增长）→ 定期 pmap 对比</span>
+</code></pre></div></div>
+<h3 id="53-磁盘">5.3 磁盘</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ========== df：文件系统容量 ==========</span>
+<span class="nb">df</span> <span class="nt">-h</span>
+<span class="c"># Filesystem  Size  Used  Avail  Use%  Mounted on</span>
+<span class="c"># /dev/sda1   500G  300G  200G   60%   /</span>
+<span class="c"># /dev/sdb1   2T    1.2T  800G   60%   /data</span>
+<span class="c"># 关键看 Use%，超过 90% 需要清理</span>
+
+<span class="c"># ========== du：目录占用 ==========</span>
+<span class="nb">du</span> <span class="nt">-sh</span> /data/logs/           <span class="c"># -s = summary，只显示总计</span>
+<span class="nb">du</span> <span class="nt">-h</span> <span class="nt">--max-depth</span><span class="o">=</span>1 /data/   <span class="c"># 显示 /data/ 下每个子目录的大小</span>
+
+<span class="c"># ========== 找大文件 ==========</span>
+find /data <span class="nt">-type</span> f <span class="nt">-size</span> +1G <span class="nt">-exec</span> <span class="nb">ls</span> <span class="nt">-lh</span> <span class="o">{}</span> <span class="se">\;</span>    <span class="c"># 找大于 1G 的文件</span>
+<span class="nb">du</span> <span class="nt">-ah</span> /data | <span class="nb">sort</span> <span class="nt">-rh</span> | <span class="nb">head</span> <span class="nt">-20</span>                 <span class="c"># 按大小排序，显示前 20</span>
+
+<span class="c"># ========== iostat：磁盘 I/O ==========</span>
+iostat <span class="nt">-x</span> 1                   <span class="c"># 每秒刷新，显示详细 I/O 统计</span>
+<span class="c"># %util &gt; 80% 说明磁盘很忙</span>
+
+<span class="c"># ========== 这些指令逐参数拆解 ==========</span>
+
+<span class="c"># ----- find /data -type f -size +1G -exec ls -lh {} \; -----</span>
+<span class="c"># find          查找命令</span>
+<span class="c"># /data         从 /data 目录开始找</span>
+<span class="c"># -type f       只找普通文件（f=file），-type d 是只找目录</span>
+<span class="c"># -size +1G     文件大小大于 1G（+ 大于，- 小于，无符号=等于）</span>
+<span class="c">#               单位：c=字节 k=KB M=MB G=GB</span>
+<span class="c"># -exec ls -lh {} \;   对找到的每个文件执行 ls -lh</span>
+<span class="c">#   -exec ... \;       固定语法：-exec 命令 \;</span>
+<span class="c">#   {}                 占位符，代表 find 找到的每个文件</span>
+<span class="c">#   ls -lh {}          对每个文件执行 ls -lh（显示大小，人类可读）</span>
+<span class="c">#</span>
+<span class="c"># 输出示例：</span>
+<span class="c"># -rw-r--r-- 1 lxy staff 2.3G Jun 28 14:00 /data/model_v1.bin</span>
+<span class="c"># -rw-r--r-- 1 lxy staff 1.1G Jun 28 15:00 /data/train_2023.parquet</span>
+<span class="c">#</span>
+<span class="c"># 常用变体：</span>
+find /data <span class="nt">-type</span> f <span class="nt">-size</span> +1G <span class="nt">-mtime</span> <span class="nt">-7</span>             <span class="c"># 7天内修改过的大文件</span>
+find /data <span class="nt">-type</span> f <span class="nt">-name</span> <span class="s2">"*.pt"</span> <span class="nt">-size</span> +1G          <span class="c"># .pt 后缀的大文件</span>
+find /data <span class="nt">-type</span> f <span class="nt">-size</span> +1G <span class="nt">-delete</span>               <span class="c"># ⚠️ 删除所有大文件（慎用！先不加 -delete 看一遍）</span>
+
+<span class="c"># ----- du -ah /data | sort -rh | head -20 -----</span>
+<span class="c"># du          Disk Usage，统计目录/文件占用的磁盘空间</span>
+<span class="c"># -a          all，显示文件和目录（不加 -a 只显示目录）</span>
+<span class="c"># -h          human-readable，用 K/M/G 显示</span>
+<span class="c"># /data       统计 /data 目录</span>
+<span class="c"># | sort -rh  按行排序：-r 降序(reverse)，-h 人类可读数值排序(理解 K&lt;M&lt;G)</span>
+<span class="c"># | head -20  取前 20 行</span>
+<span class="c">#</span>
+<span class="c"># 输出示例：</span>
+<span class="c"># 50G   /data/                          ← 第一行通常是总大小</span>
+<span class="c"># 30G   /data/models/model_v1.bin</span>
+<span class="c"># 15G   /data/train/</span>
+<span class="c"># 12G   /data/train/2023.parquet</span>
+<span class="c"># ...</span>
+<span class="c">#</span>
+<span class="c"># 常用变体：</span>
+<span class="nb">du</span> <span class="nt">-sh</span> /data/<span class="k">*</span>               <span class="c"># 看 /data 下每个子项的大小（-s 只显示汇总）</span>
+<span class="nb">du</span> <span class="nt">-h</span> <span class="nt">--max-depth</span><span class="o">=</span>1 /data    <span class="c"># 只看第一层子目录大小</span>
+<span class="nb">du</span> <span class="nt">-ah</span> /data | <span class="nb">sort</span> <span class="nt">-rh</span> | <span class="nb">head</span> <span class="nt">-5</span>   <span class="c"># 找最大的 5 个</span>
+
+<span class="c"># ----- iostat -x 1 -----</span>
+<span class="c"># iostat        I/O Statistics，磁盘 I/O 统计（sysstat 包，可能要 apt install sysstat）</span>
+<span class="c"># -x            extended，显示详细字段</span>
+<span class="c"># 1             每隔 1 秒刷新一次（按 Ctrl+C 停止）</span>
+<span class="c">#</span>
+<span class="c"># 输出示例：</span>
+<span class="c"># Device   r/s    w/s   rkB/s   wkB/s  rrqm/s  wrqm/s  %util</span>
+<span class="c"># sda      0.00   5.00  0.00    40.00  0.00    0.00    85.0</span>
+<span class="c"># sdb      0.00   0.00  0.00    0.00   0.00    0.00    0.0</span>
+<span class="c">#</span>
+<span class="c"># 关键列：</span>
+<span class="c">#   r/s w/s       每秒读/写次数</span>
+<span class="c">#   rkB/s wkB/s   每秒读/写的数据量（KB）</span>
+<span class="c">#   %util         磁盘繁忙度（0~100%），&gt;80% 说明磁盘成瓶颈了</span>
+<span class="c">#</span>
+<span class="c"># 排查场景：</span>
+<span class="c">#   - 训练 DataLoader 卡顿，怀疑磁盘读不动 → 看 %util 和 rkB/s</span>
+<span class="c">#   - 写 checkpoint 很慢 → 看 w/s、wkB/s、%util</span>
+<span class="c">#   - 没装 iostat？用 apt install sysstat（Ubuntu）/ yum install sysstat（CentOS）</span>
+</code></pre></div></div>
+<h3 id="54-网络">5.4 网络</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ========== ss：查看端口和连接（替代旧版 netstat） ==========</span>
+ss <span class="nt">-lntp</span>                     <span class="c"># 监听中的 TCP 端口</span>
+<span class="c"># -l = listening</span>
+<span class="c"># -n = 不解析端口名（显示数字）</span>
+<span class="c"># -t = TCP</span>
+<span class="c"># -p = 显示进程</span>
+
+ss <span class="nt">-ant</span>                      <span class="c"># 所有 TCP 连接</span>
+<span class="c"># State  Recv-Q  Send-Q  Local Address:Port  Peer Address:Port</span>
+<span class="c"># LISTEN 0       128     0.0.0.0:8000        0.0.0.0:*</span>
+
+<span class="c"># ========== curl：测试 HTTP ==========</span>
+curl <span class="nt">-v</span> http://localhost:8000/health    <span class="c"># -v = verbose，显示详细请求/响应</span>
+curl <span class="nt">-X</span> POST http://api.example.com/predict <span class="nt">-d</span> <span class="s1">'{"text":"hello"}'</span> <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span>
+
+<span class="c"># ========== nc：测试端口连通性 ==========</span>
+nc <span class="nt">-vz</span> 192.168.1.100 22       <span class="c"># 测试 192.168.1.100 的 22 端口是否可达</span>
+nc <span class="nt">-vz</span> gpu-server 29500       <span class="c"># 测试分布式训练端口</span>
+
+<span class="c"># ========== 这三个命令逐参数拆解 + 常用用途 ==========</span>
+
+<span class="c"># ============ ss：查看网络连接和端口（替代 netstat）============</span>
+<span class="c"># 用途：① 看哪些端口被占用/被谁占用  ② 看当前有哪些连接</span>
+<span class="c">#</span>
+<span class="c"># ss -lntp  逐参数：</span>
+<span class="c">#   -l   listening，只看正在监听（等待连接）的端口</span>
+<span class="c">#   -n   numeric，不把端口解析成名字（显示 8000 而不是 http-alt）</span>
+<span class="c">#   -t   TCP，只看 TCP（-u 看 UDP）</span>
+<span class="c">#   -p   processes，显示占用端口的进程（需要 sudo 才能看到别人的进程）</span>
+<span class="c">#</span>
+<span class="c"># 输出示例：</span>
+<span class="c"># State  Recv-Q  Send-Q  Local Address:Port  Peer Address:Port  Process</span>
+<span class="c"># LISTEN 0       128     0.0.0.0:8000        0.0.0.0:*          users:(("python",pid=1234,fd=3))</span>
+<span class="c">#  ↑状态  ↑接收   ↑发送    ↑本地地址:端口      ↑对方地址          ↑占用进程</span>
+<span class="c">#  LISTEN=监听中  队列长度   0.0.0.0=所有网卡                      python 进程 PID 1234 占着 8000</span>
+<span class="c">#</span>
+<span class="c"># 常用场景：</span>
+<span class="c">#   "端口被占用了，谁占的？" → sudo ss -lntp | grep :8000</span>
+<span class="c">#   "我的服务到底监听没？" → ss -lntp | grep python</span>
+<span class="c">#   "当前有哪些外部连接？"  → ss -ant（看所有 TCP 连接的 State）</span>
+<span class="c">#</span>
+<span class="c"># ss -ant 逐参数：-a 所有状态(all)、-n 数字、-t TCP</span>
+<span class="c"># 输出的 State 列含义：</span>
+<span class="c">#   LISTEN     监听中（等服务端连进来）</span>
+<span class="c">#   ESTAB      已建立连接（ Established，正在通信）</span>
+<span class="c">#   TIME-WAIT  主动关闭后等待（正常，过多才需关注）</span>
+<span class="c">#   CLOSE-WAIT 对方关了，你还没关（代码没 close，是 bug）</span>
+
+<span class="c"># ============ curl：测试 HTTP 接口 ============</span>
+<span class="c"># 用途：① 调试 API  ② 下载文件  ③ 测试服务是否正常</span>
+<span class="c">#</span>
+<span class="c"># curl -v http://localhost:8000/health</span>
+<span class="c">#   -v   verbose，显示完整的请求和响应过程（握手、请求头、响应头）</span>
+<span class="c">#   适合排查"服务起来了但访问不了"</span>
+<span class="c">#   输出示例：</span>
+<span class="c">#   *   Trying 127.0.0.1:8000...        ← 在连接</span>
+<span class="c">#   * Connected to localhost            ← 连上了</span>
+<span class="c">#   &gt; GET /health HTTP/1.1              ← 发出的请求行</span>
+<span class="c">#   &gt; Host: localhost:8000</span>
+<span class="c">#   &lt; HTTP/1.1 200 OK                   ← 收到的响应状态码</span>
+<span class="c">#   &lt; Content-Type: application/json</span>
+<span class="c">#   {"status":"ok"}                     ← 响应体</span>
+<span class="c">#</span>
+<span class="c"># curl -X POST http://api.example.com/predict -d '{"text":"hello"}' -H "Content-Type: application/json"</span>
+<span class="c">#   -X POST        指定请求方法（默认 GET，POST/PUT/DELETE 要指定）</span>
+<span class="c">#   -d '...'       请求体数据（data），发了 -d 会自动变成 POST</span>
+<span class="c">#   -H "..."       加请求头（Header），这里指定 JSON 格式</span>
+<span class="c">#   完整含义：向 /predict 发一个 POST 请求，body 是 JSON</span>
+<span class="c">#</span>
+<span class="c"># 常用参数速查：</span>
+curl <span class="nt">-s</span> http://...           <span class="c"># -s silent，不显示进度（脚本里用）</span>
+curl <span class="nt">-o</span> file.json http://... <span class="c"># -o 输出到文件（下载）</span>
+curl <span class="nt">-O</span> http://x/a.tar.gz    <span class="c"># -O 用原文件名保存</span>
+curl <span class="nt">-i</span> http://...           <span class="c"># -i 显示响应头</span>
+curl <span class="nt">-w</span> <span class="s2">"%{http_code}</span><span class="se">\n</span><span class="s2">"</span> ... <span class="c"># -w 只输出状态码（脚本判断用）</span>
+<span class="c"># 常用场景：</span>
+<span class="c">#   测试健康检查：curl http://localhost:8000/health</span>
+<span class="c">#   下载模型：    curl -O https://example.com/model.bin</span>
+<span class="c">#   调 API：      curl -X POST http://api/predict -d '{"x":1}' -H "Content-Type: application/json"</span>
+
+<span class="c"># ============ nc：测试端口连通性（不关心 HTTP，只看通不通）============</span>
+<span class="c"># 用途：① 测端口能不能连  ② 简单的端口扫描  ③ 两台机器间传数据</span>
+<span class="c"># nc = netcat，网络"瑞士军刀"</span>
+<span class="c">#</span>
+<span class="c"># nc -vz 192.168.1.100 22</span>
+<span class="c">#   -v   verbose，显示详细信息</span>
+<span class="c">#   -z   zero-I/O，只测连通性不发数据（扫描模式）</span>
+<span class="c">#   192.168.1.100  目标 IP（也可以用主机名）</span>
+<span class="c">#   22   目标端口</span>
+<span class="c">#   输出：</span>
+<span class="c">#   Connection to 192.168.1.100 22 port [tcp/ssh] succeeded!  ← 通了</span>
+<span class="c">#   或</span>
+<span class="c">#   nc: connect to 192.168.1.100 port 22 (tcp) failed: Connection refused  ← 端口没服务</span>
+<span class="c">#   或</span>
+<span class="c">#   nc: connect to ... failed: Connection timed out  ← 被防火墙挡了/机器不可达</span>
+<span class="c">#</span>
+<span class="c"># 常用场景：</span>
+<span class="c">#   "ssh 连不上服务器" → 先 nc -vz 服务器IP 22 看 22 端口通不通</span>
+<span class="c">#   "分布式训练连不上" → nc -vz gpu-server 29500（DDP 默认端口）</span>
+<span class="c">#   "服务起没起"      → nc -vz localhost 8000</span>
+<span class="c">#</span>
+<span class="c"># 三者关系（排查"服务访问不了"的顺序）：</span>
+<span class="c">#   1. nc -vz host port      → 网络层通不通（最快）</span>
+<span class="c">#   2. ss -lntp | grep port  → 端口到底有没有被监听</span>
+<span class="c">#   3. curl -v http://host:port/path → 应用层 HTTP 通不通</span>
+</code></pre></div></div>
+<h3 id="55-内存不够的排查思路">5.5 “内存不够”的排查思路</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># "内存不够"至少可能指 5 种情况：</span>
+<span class="c"># 1. 主机 RAM 不够        → free -h 看 available</span>
+<span class="c"># 2. GPU 显存不够         → nvidia-smi 看 memory</span>
+<span class="c"># 3. 共享内存 /dev/shm 不够 → df -h /dev/shm（PyTorch DataLoader 常见）</span>
+<span class="c"># 4. 进程地址空间限制      → ulimit -v</span>
+<span class="c"># 5. 磁盘满了（不是内存但报错类似） → df -h</span>
+
+<span class="c"># 排查步骤：</span>
+free <span class="nt">-h</span>                      <span class="c"># 先看主机内存</span>
+nvidia-smi                   <span class="c"># 再看 GPU 显存</span>
+<span class="nb">df</span> <span class="nt">-h</span> /dev/shm               <span class="c"># 看共享内存</span>
+<span class="nb">df</span> <span class="nt">-h</span>                        <span class="c"># 看磁盘</span>
+<span class="nb">ulimit</span> <span class="nt">-a</span>                    <span class="c"># 看用户资源限制</span>
+
+<span class="c"># ========== ulimit -a 怎么看？输出逐行解读 ==========</span>
+<span class="c"># ulimit 是 shell 内置命令，查看/修改"当前用户能用的资源上限"</span>
+<span class="c"># -a = all，显示所有资源限制</span>
+<span class="c">#</span>
+<span class="c"># 典型输出（每行一个限制项）：</span>
+<span class="c"># core file size          (blocks, -c) 0          ← core dump 大小上限，0=不生成</span>
+<span class="c"># data seg size           (kbytes, -d) unlimited  ← 数据段</span>
+<span class="c"># scheduling priority             (-e) 0</span>
+<span class="c"># file size               (blocks, -f) unlimited  ← 单个文件最大多大</span>
+<span class="c"># pending signals                 (-i) 63340      ← 待处理信号数</span>
+<span class="c"># max locked memory       (kbytes, -l) 65536      ← 锁定内存上限</span>
+<span class="c"># max memory size         (kbytes, -m) unlimited</span>
+<span class="c"># open files                      (-n) 1024       ← ⚠️ 最多打开文件数（高频坑）</span>
+<span class="c"># pipe size            (512 bytes, -p) 8</span>
+<span class="c"># POSIX message queues     (bytes, -q) 819200</span>
+<span class="c"># real-time priority              (-r) 0</span>
+<span class="c"># stack size              (kbytes, -s) 8192       ← 栈大小（8MB）</span>
+<span class="c"># cpu time               (seconds, -t) unlimited  ← CPU 时间</span>
+<span class="c"># max user processes              (-u) 63340      ← ⚠️ 每用户最多进程数</span>
+<span class="c"># virtual memory          (kbytes, -v) unlimited  ← 虚拟内存</span>
+<span class="c"># file locks                      (-x) unlimited</span>
+<span class="c">#</span>
+<span class="c"># 重点关注这两项：</span>
+<span class="c">#   open files (-n)   —— "Too many open files" 报错的元凶</span>
+<span class="c">#     默认 1024，跑大量文件/数据库/训练时经常不够</span>
+<span class="c">#     临时调大：ulimit -n 65535  （只对当前终端有效）</span>
+<span class="c">#     永久调大：改 /etc/security/limits.conf 加 * soft nofile 65535</span>
+<span class="c">#</span>
+<span class="c">#   max user processes (-u) —— "fork: retry: Resource temporarily unavailable"</span>
+<span class="c">#     进程/线程数超限，多线程训练时可能撞上</span>
+<span class="c">#</span>
+<span class="c"># 使用方法：</span>
+<span class="nb">ulimit</span> <span class="nt">-a</span>                    <span class="c"># 查看所有限制</span>
+<span class="nb">ulimit</span> <span class="nt">-n</span>                    <span class="c"># 只看 open files</span>
+<span class="nb">ulimit</span> <span class="nt">-n</span> 65535              <span class="c"># 临时改 open files 到 65535</span>
+<span class="c"># 注意：改的限制只对当前 shell 及其子进程生效，重启终端就恢复默认</span>
+<span class="c">#       永久生效要改 /etc/security/limits.conf 和 systemd 服务的 LimitNOFILE</span>
+</code></pre></div></div>
+<hr>
+<h2 id="六环境变量">六、环境变量</h2>
+<h3 id="61-基本操作">6.1 基本操作</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ========== 设置环境变量 ==========</span>
+<span class="nb">export </span><span class="nv">CUDA_HOME</span><span class="o">=</span>/usr/local/cuda
+<span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">"</span><span class="nv">$CUDA_HOME</span><span class="s2">/bin:</span><span class="nv">$PATH</span><span class="s2">"</span>
+<span class="nb">export </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="s2">"</span><span class="nv">$CUDA_HOME</span><span class="s2">/lib64:</span><span class="k">${</span><span class="nv">LD_LIBRARY_PATH</span><span class="k">:-}</span><span class="s2">"</span>
+
+<span class="c"># export 的含义：</span>
+<span class="c"># 把变量标记为"环境变量"，子进程能继承</span>
+<span class="c"># 不加 export 的变量只在当前 Shell 可见，子进程看不到</span>
+
+<span class="c"># ========== 查看 ==========</span>
+<span class="nb">env</span> | <span class="nb">sort</span>                   <span class="c"># 列出所有环境变量（排序后）</span>
+<span class="nb">echo</span> <span class="nv">$CUDA_HOME</span>              <span class="c"># 查看特定变量</span>
+<span class="nb">echo</span> <span class="nv">$PATH</span>                   <span class="c"># 查看 PATH（命令搜索路径）</span>
+
+<span class="c"># ========== which / type：命令来自哪里 ==========</span>
+which python                 <span class="c"># /home/lxy/miniconda3/bin/python</span>
+which <span class="nt">-a</span> python              <span class="c"># 显示所有同名的 python（PATH 中有多个时）</span>
+<span class="nb">type</span> <span class="nt">-a</span> python               <span class="c"># 更详细：包括 alias、function、builtin</span>
+
+<span class="c"># ========== env | sort 按什么排序？==========</span>
+<span class="c"># env        列出所有环境变量，每行一个，格式 "KEY=value"</span>
+<span class="c"># | sort     按每行【整行】做字典序排序（ASCII 码顺序），从小到大（A→Z）</span>
+<span class="c">#            排序的是【行首字符】，所以是按【变量名(KEY)】排序的</span>
+<span class="c">#</span>
+<span class="c"># 字典序规则（ASCII 顺序，从小到大）：</span>
+<span class="c">#   数字 0-9 (48-57) &lt; 大写 A-Z (65-90) &lt; 小写 a-z (97-122)</span>
+<span class="c">#   所以排序后：CUDA_HOME、HOME、LANG、LD_LIBRARY_PATH、PATH...</span>
+<span class="c">#   （大写字母开头的在前，按字母顺序）</span>
+<span class="c">#</span>
+<span class="c"># 常见变体：</span>
+<span class="nb">env</span> | <span class="nb">sort</span>                   <span class="c"># 默认按整行字典序升序（最常用）</span>
+<span class="nb">env</span> | <span class="nb">sort</span> <span class="nt">-r</span>                <span class="c"># -r 降序（Z→A）</span>
+<span class="nb">env</span> | <span class="nb">sort</span> <span class="nt">-t</span><span class="o">=</span> <span class="nt">-k1</span>           <span class="c"># -t= 用=分隔，-k1 按第1字段(变量名)排序（和默认差不多）</span>
+<span class="nb">env</span> | <span class="nb">grep</span> <span class="nt">-i</span> cuda           <span class="c"># 只看含 cuda 的环境变量（不区分大小写）</span>
+<span class="nb">env</span> | <span class="nb">wc</span> <span class="nt">-l</span>                  <span class="c"># 数一下有多少个环境变量</span>
+
+<span class="c"># ========== which vs which -a vs type -a 区别 ==========</span>
+<span class="c"># 先理解 PATH：它是一组目录（用 : 分隔），Shell 执行命令时按顺序在这些目录里找</span>
+<span class="c"># echo $PATH</span>
+<span class="c"># /home/lxy/miniconda3/bin:/usr/local/cuda/bin:/usr/bin:/bin</span>
+<span class="c">#</span>
+<span class="c"># which python</span>
+<span class="c">#   只显示【第一个】找到的 python（按 PATH 顺序，找到就停）</span>
+<span class="c">#   输出：/home/lxy/miniconda3/bin/python</span>
+<span class="c">#   用途：确认"我现在敲 python 用的是哪个"（conda? 系统?）</span>
+<span class="c">#</span>
+<span class="c"># which -a python</span>
+<span class="c">#   -a = all，显示【所有】PATH 里能找到的同名 python</span>
+<span class="c">#   输出可能是：</span>
+<span class="c">#   /home/lxy/miniconda3/bin/python</span>
+<span class="c">#   /usr/bin/python</span>
+<span class="c">#   用途：排查"为什么用的不是我想要的 python"——看 PATH 里到底有几个</span>
+<span class="c">#</span>
+<span class="c"># type -a python</span>
+<span class="c">#   type 是 shell 内置命令（which 是外部程序），能看到【所有类型】的命令来源：</span>
+<span class="c">#     - alias（别名）</span>
+<span class="c">#     - function（函数）</span>
+<span class="c">#     - builtin（shell 内置，如 cd、echo）</span>
+<span class="c">#     - file（可执行文件，相当于 which 的结果）</span>
+<span class="c">#   输出示例：</span>
+<span class="c">#   python is /home/lxy/miniconda3/bin/python</span>
+<span class="c">#   python is /usr/bin/python</span>
+<span class="c">#   （如果设了别名还会显示：python is aliased to `python3'）</span>
+<span class="c">#</span>
+<span class="c"># 什么时候用哪个？</span>
+<span class="c">#   which xxx    → 只想知道可执行文件在哪（够用）</span>
+<span class="c">#   which -a xxx → 怀疑 PATH 里有多个同名命令，想全列出来</span>
+<span class="c">#   type -a xxx  → 命令"行为不对"，想看是不是被 alias/function 拦截了</span>
+<span class="c">#</span>
+<span class="c"># 例子：为什么 `ls` 有颜色？type -a ls 会告诉你 ls 是个 alias</span>
+<span class="c">#   type ls</span>
+<span class="c">#   ls is aliased to `ls --color=auto'   ← 真相：ls 被 alias 加了 --color</span>
+
+<span class="c"># ========== 只在当前命令有效的环境变量 ==========</span>
+<span class="nv">CUDA_VISIBLE_DEVICES</span><span class="o">=</span>0 python train.py    <span class="c"># 只对这条命令设置</span>
+<span class="c"># 等价于：</span>
+<span class="c"># export CUDA_VISIBLE_DEVICES=0</span>
+<span class="c"># python train.py</span>
+<span class="c"># 但前者不污染后续命令的环境</span>
+</code></pre></div></div>
+<h3 id="62-持久化环境变量">6.2 持久化环境变量</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ========== 写入 ~/.bashrc（推荐） ==========</span>
+<span class="c"># ~/.bashrc 在每次启动新的交互式 Shell 时执行</span>
+<span class="nb">echo</span> <span class="s1">'export CUDA_HOME=/usr/local/cuda'</span> <span class="o">&gt;&gt;</span> ~/.bashrc
+<span class="nb">echo</span> <span class="s1">'export PATH="$CUDA_HOME/bin:$PATH"'</span> <span class="o">&gt;&gt;</span> ~/.bashrc
+
+<span class="c"># 修改 ~/.bashrc 后需要重新加载：</span>
+<span class="nb">source</span> ~/.bashrc             <span class="c"># 或：. ~/.bashrc（. 是 source 的简写）</span>
+
+<span class="c"># ⚠️ 重要：修改 ~/.bashrc 不会影响已经运行的终端、IDE 或服务</span>
+<span class="c"># 需要重新打开终端，或在该终端中 source ~/.bashrc</span>
+<span class="c"># IDE（如 VSCode）需要重启才能继承新的环境变量</span>
+
+<span class="c"># ========== ~/.bashrc vs ~/.bash_profile vs ~/.profile ==========</span>
+<span class="c"># ~/.bash_profile : 登录 Shell 执行（SSH 登录时）</span>
+<span class="c"># ~/.bashrc       : 交互式非登录 Shell 执行（打开新终端时）</span>
+<span class="c"># ~/.profile      : 所有 Shell 都可能执行</span>
+<span class="c"># 通常在 ~/.bash_profile 中 source ~/.bashrc</span>
+
+<span class="c"># ========== 详细解释：Shell 的四种分类（决定加载哪个文件）==========</span>
+<span class="c"># Shell 有两个维度，组合出四种场景：</span>
+<span class="c">#</span>
+<span class="c"># 维度一：登录(login) vs 非登录(non-login)</span>
+<span class="c">#   登录 Shell   ：需要输用户名/密码才进入的（或带 -l/--login 参数）</span>
+<span class="c">#     - ssh user@host              ← SSH 登录 ✅ 登录 Shell</span>
+<span class="c">#     - su - user / su -l user     ← 带 - 的 su ✅ 登录 Shell</span>
+<span class="c">#     - 本机 tty 控制台登录         ← ✅ 登录 Shell</span>
+<span class="c">#   非登录 Shell  ：在已经登录后再开的</span>
+<span class="c">#     - 在桌面环境里打开终端窗口      ← 非登录 Shell（多数情况）</span>
+<span class="c">#     - bash 子进程                 ← 非登录 Shell</span>
+<span class="c">#</span>
+<span class="c"># 维度二：交互(interactive) vs 非交互(non-interactive)</span>
+<span class="c">#   交互 Shell   ：能跟你互动，有提示符，你敲命令它执行</span>
+<span class="c">#     - SSH 登录后的终端             ← 交互 Shell</span>
+<span class="c">#     - IDE(VSCode) 里新开终端       ← 交互 Shell</span>
+<span class="c">#     - 桌面终端窗口                 ← 交互 Shell</span>
+<span class="c">#   非交互 Shell  ：没有提示符，通常用来跑脚本</span>
+<span class="c">#     - bash script.sh              ← 非交互 Shell</span>
+<span class="c">#     - ssh user@host "nvidia-smi"  ← 非交互（执行完就退出）</span>
+<span class="c">#     - cron 定时任务                ← 非交互</span>
+<span class="c">#</span>
+<span class="c"># ========== 四种组合分别加载哪些文件（以 bash 为例）==========</span>
+<span class="c">#</span>
+<span class="c"># ┌─────────────┬──────────────┬──────────────────────────────────┐</span>
+<span class="c"># │             │  交互        │  非交互                          │</span>
+<span class="c"># ├─────────────┼──────────────┼──────────────────────────────────┤</span>
+<span class="c"># │ 登录 Shell  │ /etc/profile │ （罕见，基本不出现）              │</span>
+<span class="c"># │             │ ~/.bash_profile (或 ~/.profile)│               │</span>
+<span class="c"># │             │ → 然后 ~/.bashrc（如果 profile 里 source 了） │</span>
+<span class="c"># ├─────────────┼──────────────┼──────────────────────────────────┤</span>
+<span class="c"># │ 非登录 Shell│ ~/.bashrc    │ $BASH_ENV 指向的文件（默认不加载）│</span>
+<span class="c"># └─────────────┴──────────────┴──────────────────────────────────┘</span>
+<span class="c">#</span>
+<span class="c"># 关键结论（回答你的疑问）：</span>
+<span class="c">#</span>
+<span class="c"># Q: bash_profile 是只有 SSH 登录才执行吗？</span>
+<span class="c"># A: 准确说是"登录 Shell"才执行。SSH 登录是登录 Shell，所以会执行。</span>
+<span class="c">#    本机 tty 登录、su - 也是登录 Shell，也会执行。</span>
+<span class="c">#    但桌面/IDE 里"新开终端"通常是【非登录交互 Shell】，只加载 ~/.bashrc，</span>
+<span class="c">#    不加载 ~/.bash_profile。</span>
+<span class="c">#</span>
+<span class="c"># Q: IDE 已登录后新增终端会执行哪个？</span>
+<span class="c"># A: 看 IDE 终端的启动方式：</span>
+<span class="c">#    - VSCode/PyCharm 默认开的是【非登录交互 Shell】→ 只执行 ~/.bashrc</span>
+<span class="c">#    - 如果 IDE 设置里勾了 "Run as login shell" → 才执行 ~/.bash_profile</span>
+<span class="c">#    （VSCode: 在 settings.json 加 "terminal.integrated.profiles.linux.args": ["-l"]）</span>
+<span class="c">#    所以如果你在 ~/.bash_profile 里设的环境变量，IDE 终端没生效，</span>
+<span class="c">#    八成是因为 IDE 开的是非登录 Shell，根本没读 ~/.bash_profile。</span>
+<span class="c">#</span>
+<span class="c"># ========== 为什么推荐"在 ~/.bash_profile 里 source ~/.bashrc" ==========</span>
+<span class="c"># 因为登录 Shell 只读 ~/.bash_profile 不读 ~/.bashrc，</span>
+<span class="c"># 如果你的配置都写在 ~/.bashrc，SSH 登录(登录 Shell)就拿不到。</span>
+<span class="c"># 在 ~/.bash_profile 里加一行 source ~/.bashrc，两边就都覆盖了：</span>
+<span class="c">#</span>
+<span class="c">#   ~/.bash_profile 内容：</span>
+<span class="c">#   if [ -f ~/.bashrc ]; then</span>
+<span class="c">#       source ~/.bashrc</span>
+<span class="c">#   fi</span>
+<span class="c">#</span>
+<span class="c"># 这样无论登录/非登录，~/.bashrc 都会被执行，配置就统一了。</span>
+
+<span class="c"># ========== 常见场景速查表 ==========</span>
+<span class="c"># ┌──────────────────────────┬─────────────┬────────────┐</span>
+<span class="c"># │ 场景                     │ 执行的文件  │ Shell 类型 │</span>
+<span class="c"># ├──────────────────────────┼─────────────┼────────────┤</span>
+<span class="c"># │ ssh user@host            │ .bash_profile(+.bashrc)│ 登录交互  │</span>
+<span class="c"># │ ssh user@host "cmd"      │ $BASH_ENV   │ 非登录非交互│</span>
+<span class="c"># │ 桌面终端开窗口           │ .bashrc     │ 非登录交互 │</span>
+<span class="c"># │ VSCode 新终端(默认)      │ .bashrc     │ 非登录交互 │</span>
+<span class="c"># │ VSCode 新终端(开login)   │ .bash_profile(+.bashrc)│ 登录交互 │</span>
+<span class="c"># │ bash script.sh           │ 无(只读$BASH_ENV)      │ 非登录非交互│</span>
+<span class="c"># │ crontab 定时任务         │ 无(环境很简陋)         │ 非登录非交互│</span>
+<span class="c"># │ su - user                │ .bash_profile(+.bashrc)│ 登录交互  │</span>
+<span class="c"># │ su user(不带-)           │ 无(只读.bashrc?)       │ 非登录交互│</span>
+<span class="c"># └──────────────────────────┴─────────────┴────────────┘</span>
+<span class="c">#</span>
+<span class="c"># 实践建议：</span>
+<span class="c">#   1. 把环境变量、alias、PATH 都写在 ~/.bashrc（最常被加载）</span>
+<span class="c">#   2. ~/.bash_profile 里写一行 source ~/.bashrc 兜底登录场景</span>
+<span class="c">#   3. 服务/脚本/cron 需要的环境变量，别依赖这些文件，要在脚本里自己 export</span>
+</code></pre></div></div>
+<h3 id="63-常见-ai-开发环境变量">6.3 常见 AI 开发环境变量</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ========== CUDA 相关 ==========</span>
+<span class="nb">export </span><span class="nv">CUDA_HOME</span><span class="o">=</span>/usr/local/cuda
+<span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">"</span><span class="nv">$CUDA_HOME</span><span class="s2">/bin:</span><span class="nv">$PATH</span><span class="s2">"</span>
+<span class="nb">export </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="s2">"</span><span class="nv">$CUDA_HOME</span><span class="s2">/lib64:</span><span class="k">${</span><span class="nv">LD_LIBRARY_PATH</span><span class="k">:-}</span><span class="s2">"</span>
+<span class="nb">export </span><span class="nv">CUDA_VISIBLE_DEVICES</span><span class="o">=</span>0,1    <span class="c"># 只使用 0 号和 1 号 GPU</span>
+
+<span class="c"># ========== Python 相关 ==========</span>
+<span class="nb">export </span><span class="nv">PYTHONPATH</span><span class="o">=</span>/home/lxy/projects:<span class="nv">$PYTHONPATH</span>  <span class="c"># 自定义模块搜索路径</span>
+<span class="nb">export </span><span class="nv">PYTHONDONTWRITEBYTECODE</span><span class="o">=</span>1    <span class="c"># 不生成 .pyc 文件</span>
+
+<span class="c"># ========== 分布式训练 ==========</span>
+<span class="nb">export </span><span class="nv">MASTER_ADDR</span><span class="o">=</span>192.168.1.100    <span class="c"># 主节点地址</span>
+<span class="nb">export </span><span class="nv">MASTER_PORT</span><span class="o">=</span>29500            <span class="c"># 主节点端口</span>
+<span class="nb">export </span><span class="nv">WORLD_SIZE</span><span class="o">=</span>4                 <span class="c"># 总进程数</span>
+<span class="nb">export </span><span class="nv">RANK</span><span class="o">=</span>0                       <span class="c"># 当前进程的 rank</span>
+
+<span class="c"># ========== 用 env -i 在干净环境中复现问题 ==========</span>
+<span class="nb">env</span> <span class="nt">-i</span> <span class="nv">HOME</span><span class="o">=</span><span class="s2">"</span><span class="nv">$HOME</span><span class="s2">"</span> <span class="nv">PATH</span><span class="o">=</span>/usr/bin:/bin bash <span class="nt">--noprofile</span> <span class="nt">--norc</span>
+<span class="c"># -i = 忽略所有环境变量，从空白开始</span>
+<span class="c"># 然后手动添加需要的变量</span>
+<span class="c"># 用于排查"在我的环境能跑但在你那里不行"的问题</span>
+
+<span class="c"># ========== 这条命令逐参数拆解 ==========</span>
+<span class="c"># env          环境变量管理命令，"env 命令 [参数]" 表示【在指定环境变量下运行命令】</span>
+<span class="c"># -i           ignore，忽略继承的所有环境变量，从一个【空白环境】开始</span>
+<span class="c"># HOME="$HOME" 这是给新环境的变量：HOME = 当前 Shell 的 $HOME（保留家目录）</span>
+<span class="c"># PATH=/usr/bin:/bin  新环境的 PATH，只含系统基础目录（没有 conda/cuda）</span>
+<span class="c"># bash         在上面构造的环境里启动一个 bash</span>
+<span class="c"># --noprofile  启动 bash 时【不读】 ~/.bash_profile / ~/.profile</span>
+<span class="c"># --norc       启动 bash 时【不读】 ~/.bashrc</span>
+<span class="c">#</span>
+<span class="c"># 整条命令的含义：</span>
+<span class="c">#   开一个"最干净"的 bash —— 没有继承环境变量、不加载任何配置文件，</span>
+<span class="c">#   只有 HOME 和最基础的 PATH，用来排除"我环境里某配置捣乱"的干扰</span>
+<span class="c">#</span>
+<span class="c"># ========== 为什么需要"干净环境"？典型场景 ==========</span>
+<span class="c"># 场景：你 pip install 的包能跑，同事的机器报错。怀疑是环境变量/配置文件捣乱。</span>
+<span class="c">#   用 env -i 进入干净环境，手动逐步添加变量，看加到哪个就出问题 → 定位元凶</span>
+<span class="c">#</span>
+<span class="c"># ========== 实操演示：怎么用 ==========</span>
+<span class="c"># 第 1 步：进入干净环境</span>
+<span class="nb">env</span> <span class="nt">-i</span> <span class="nv">HOME</span><span class="o">=</span><span class="s2">"</span><span class="nv">$HOME</span><span class="s2">"</span> <span class="nv">PATH</span><span class="o">=</span>/usr/bin:/bin bash <span class="nt">--noprofile</span> <span class="nt">--norc</span>
+<span class="c"># 现在提示符可能变成 bash-5.1$ （因为 PS1 也没了），这是正常的</span>
+
+<span class="c"># 第 2 步：看看环境有多"干净"</span>
+<span class="nb">env</span>                          <span class="c"># 只有 HOME 和 PATH 两个变量</span>
+<span class="nb">echo</span> <span class="nv">$CUDA_HOME</span>              <span class="c"># 空（被 -i 清掉了）</span>
+which python                 <span class="c"># /usr/bin/python 或报错（conda 没了）</span>
+
+<span class="c"># 第 3 步：手动添加怀疑有问题的变量，逐个测试</span>
+<span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">"/home/lxy/miniconda3/bin:</span><span class="nv">$PATH</span><span class="s2">"</span>
+python <span class="nt">-c</span> <span class="s2">"import torch; print(torch.__version__)"</span>
+<span class="c"># 如果现在能跑了 → 说明问题在 PATH</span>
+<span class="c"># 如果还报错 → 继续加其他变量（CUDA_HOME、LD_LIBRARY_PATH...）</span>
+
+<span class="c"># 第 4 步：排查完，exit 退出干净环境，回到正常 Shell</span>
+<span class="nb">exit</span>
+
+<span class="c"># ========== 进阶用法 ==========</span>
+<span class="c"># 只测一条命令，不进入交互式 Shell：</span>
+<span class="nb">env</span> <span class="nt">-i</span> <span class="nv">PATH</span><span class="o">=</span>/usr/bin:/bin python <span class="nt">-c</span> <span class="s2">"import torch"</span>
+<span class="c"># 含义：在干净环境(只有PATH)下跑这一句 python，看报不报错</span>
+
+<span class="c"># 带上 BASH_ENV 给非交互 bash 脚本指定配置：</span>
+<span class="nb">env</span> <span class="nt">-i</span> <span class="nv">BASH_ENV</span><span class="o">=</span>./test_env.sh bash script.sh
+
+<span class="c"># 小结：env -i 是"排除变量法"——把环境清空，逐个加回来，</span>
+<span class="c">#       哪一步出问题，哪个变量就是元凶。比在 .bashrc 里注释来注释去高效得多。</span>
+</code></pre></div></div>
+<hr>
+<h2 id="七ssh-与远程操作">七、SSH 与远程操作</h2>
+<h3 id="71-ssh-基本配置">7.1 SSH 基本配置</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ========== 生成密钥对 ==========</span>
+ssh-keygen <span class="nt">-t</span> ed25519 <span class="nt">-C</span> <span class="s2">"your-email@example.com"</span>
+<span class="c"># -t ed25519: 使用 Ed25519 算法（比 RSA 更安全更快）</span>
+<span class="c"># -C: 注释（通常写邮箱）</span>
+<span class="c"># 生成两个文件：</span>
+<span class="c">#   ~/.ssh/id_ed25519     私钥（绝对不能泄露！）</span>
+<span class="c">#   ~/.ssh/id_ed25519.pub 公钥（可以给别人）</span>
+
+<span class="c"># ========== 把公钥拷贝到服务器 ==========</span>
+ssh-copy-id user@gpu-server
+<span class="c"># 把公钥追加到服务器的 ~/.ssh/authorized_keys</span>
+<span class="c"># 之后 SSH 登录不再需要输密码</span>
+
+<span class="c"># ========== 基本登录 ==========</span>
+ssh user@192.168.1.100
+ssh user@gpu-server          <span class="c"># 用 /etc/hosts 或 ~/.ssh/config 中的别名</span>
+
+<span class="c"># ========== 执行远程命令后立即返回 ==========</span>
+ssh gpu-server <span class="s2">"nvidia-smi"</span>
+ssh gpu-server <span class="s2">"df -h /data"</span>
+</code></pre></div></div>
+<h3 id="72-ssh-config强烈推荐">7.2 SSH Config（强烈推荐）</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ~/.ssh/config 文件，简化日常使用</span>
+
+Host gpu-dev
+    HostName 192.168.1.100
+    User lxy
+    IdentityFile ~/.ssh/id_ed25519
+    ServerAliveInterval 60        <span class="c"># 每 60 秒发心跳包，防止连接断开</span>
+    ServerAliveCountMax 3         <span class="c"># 3 次心跳无响应才认为断开</span>
+
+Host gpu-prod
+    HostName 10.0.0.50
+    User deploy
+    IdentityFile ~/.ssh/deploy_key
+    Port 2222                     <span class="c"># 非默认端口</span>
+
+<span class="c"># 配置好后直接用别名：</span>
+ssh gpu-dev                      <span class="c"># 等价于 ssh -i ~/.ssh/id_ed25519 lxy@192.168.1.100</span>
+scp file.tar.gz gpu-dev:~/        <span class="c"># 拷贝文件</span>
+rsync <span class="nt">-av</span> ./project/ gpu-dev:~/project/  <span class="c"># 同步目录</span>
+</code></pre></div></div>
+<h3 id="73-文件传输">7.3 文件传输</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ========== scp：简单拷贝 ==========</span>
+scp train.py gpu-dev:~/projects/          <span class="c"># 本地 → 远程</span>
+scp gpu-dev:~/results/metrics.json ./     <span class="c"># 远程 → 本地</span>
+scp <span class="nt">-r</span> configs/ gpu-dev:~/projects/       <span class="c"># -r 递归拷贝目录</span>
+
+<span class="c"># ========== rsync：增量同步（推荐） ==========</span>
+rsync <span class="nt">-av</span> <span class="nt">--progress</span> ./project/ gpu-dev:~/project/
+<span class="c"># -a = archive 模式（递归 + 保留权限/时间/软链接等）</span>
+<span class="c"># -v = verbose</span>
+<span class="c"># --progress = 显示传输进度</span>
+
+<span class="c"># ⚠️ 源路径末尾的 / 很重要！</span>
+rsync <span class="nt">-av</span> ./data/ gpu-dev:~/data/     <span class="c"># 把 data/ 里的内容拷到远程的 data/</span>
+rsync <span class="nt">-av</span> ./data gpu-dev:~/           <span class="c"># 把 data 目录本身拷到远程的 home</span>
+
+<span class="c"># rsync 的优势：</span>
+<span class="c"># 1. 增量传输：只传有变化的部分（scp 每次全量传输）</span>
+<span class="c"># 2. 断点续传：中断后重新运行会跳过已传完的文件</span>
+<span class="c"># 3. 可排除文件：--exclude='*.pyc' --exclude='__pycache__/'</span>
+
+<span class="c"># ========== --exclude 怎么用？从单个到多个 ==========</span>
+<span class="c">#</span>
+<span class="c"># 排除单个文件类型：</span>
+rsync <span class="nt">-av</span> <span class="nt">--exclude</span><span class="o">=</span><span class="s1">'*.pyc'</span> ./project/ gpu-dev:~/project/
+<span class="c">#   --exclude='*.pyc'  不传所有 .pyc 文件（模式匹配，不是完整路径）</span>
+
+<span class="c"># 排除单个文件夹：</span>
+rsync <span class="nt">-av</span> <span class="nt">--exclude</span><span class="o">=</span><span class="s1">'__pycache__/'</span> ./project/ gpu-dev:~/project/
+<span class="c">#   末尾加 / 表示"只排除目录"，不加 / 则目录和同名文件都排除</span>
+
+<span class="c"># 排除多个（写多个 --exclude）：</span>
+rsync <span class="nt">-av</span> <span class="se">\</span>
+  <span class="nt">--exclude</span><span class="o">=</span><span class="s1">'*.pyc'</span> <span class="se">\</span>
+  <span class="nt">--exclude</span><span class="o">=</span><span class="s1">'__pycache__/'</span> <span class="se">\</span>
+  <span class="nt">--exclude</span><span class="o">=</span><span class="s1">'.git/'</span> <span class="se">\</span>
+  <span class="nt">--exclude</span><span class="o">=</span><span class="s1">'*.log'</span> <span class="se">\</span>
+  <span class="nt">--exclude</span><span class="o">=</span><span class="s1">'node_modules/'</span> <span class="se">\</span>
+  ./project/ gpu-dev:~/project/
+<span class="c">#   每行一个 --exclude，可读性好，适合 3~5 个</span>
+
+<span class="c"># 排除很多个？用 --exclude-from 从文件读：</span>
+<span class="c"># 先建一个排除清单文件 exclude.txt：</span>
+<span class="c">#   *.pyc</span>
+<span class="c">#   __pycache__/</span>
+<span class="c">#   .git/</span>
+<span class="c">#   *.log</span>
+<span class="c">#   node_modules/</span>
+<span class="c">#   .venv/</span>
+<span class="c">#   *.egg-info/</span>
+rsync <span class="nt">-av</span> <span class="nt">--exclude-from</span><span class="o">=</span><span class="s1">'exclude.txt'</span> ./project/ gpu-dev:~/project/
+<span class="c">#   --exclude-from='文件'  每行一个模式，方便维护（可加入 git 跟踪）</span>
+
+<span class="c"># ========== exclude 模式书写规则（容易踩坑） ==========</span>
+<span class="c"># 模式是相对于【源路径】的，不是绝对路径：</span>
+rsync <span class="nt">-av</span> <span class="nt">--exclude</span><span class="o">=</span><span class="s1">'logs/'</span> ./project/ gpu-dev:~/project/
+<span class="c">#   排除 ./project/logs/，但不会排除 ./project/sub/logs/</span>
+
+<span class="c"># 想排除所有层级的 logs/：</span>
+rsync <span class="nt">-av</span> <span class="nt">--exclude</span><span class="o">=</span><span class="s1">'logs'</span> ./project/ gpu-dev:~/project/
+<span class="c">#   不带 / 的模式会匹配任意层级的同名文件/目录</span>
+
+<span class="c"># 以 / 开头表示"锚定到源根目录"：</span>
+rsync <span class="nt">-av</span> <span class="nt">--exclude</span><span class="o">=</span><span class="s1">'/logs'</span> ./project/ gpu-dev:~/project/
+<span class="c">#   只排除 ./project/logs/（根层），不排除 ./project/sub/logs/</span>
+
+<span class="c"># 通配符：</span>
+<span class="c">#   *     匹配任意字符（不含 /）</span>
+<span class="c">#   **    匹配任意层级（rsync 3.x 需要额外参数，实际 * 配合无 / 已够用）</span>
+<span class="c">#   ?     匹配单个字符</span>
+<span class="c">#   [abc] 匹配 a/b/c 中任一个</span>
+
+<span class="c"># ========== 常用 exclude 清单（Python/ML 项目模板） ==========</span>
+<span class="c"># 建议在项目根放一个 .rsync-exclude 文件，内容：</span>
+<span class="c">#   __pycache__/</span>
+<span class="c">#   *.pyc</span>
+<span class="c">#   *.pyo</span>
+<span class="c">#   .git/</span>
+<span class="c">#   .venv/</span>
+<span class="c">#   venv/</span>
+<span class="c">#   *.egg-info/</span>
+<span class="c">#   .pytest_cache/</span>
+<span class="c">#   .mypy_cache/</span>
+<span class="c">#   runs/</span>
+<span class="c">#   wandb/</span>
+<span class="c">#   *.log</span>
+<span class="c">#   *.ckpt</span>
+<span class="c">#   checkpoints/</span>
+<span class="c"># 每次同步：</span>
+rsync <span class="nt">-av</span> <span class="nt">--exclude-from</span><span class="o">=</span><span class="s1">'.rsync-exclude'</span> ./project/ gpu-dev:~/project/
+
+<span class="c"># ========== 同时排除和包含（--include 优先级更高） ==========</span>
+<span class="c"># 想传 .git/ 但排除 .git/objects（太大）：</span>
+rsync <span class="nt">-av</span> <span class="nt">--include</span><span class="o">=</span><span class="s1">'.git/'</span> <span class="nt">--exclude</span><span class="o">=</span><span class="s1">'.git/objects/'</span> ./project/ gpu-dev:~/project/
+<span class="c">#   规则：rsync 按顺序匹配，先 include 优先；include 必须写在对应 exclude 之前</span>
+
+<span class="c"># ========== 共享机器上的安全红线 ==========</span>
+<span class="c"># 学校/公司 GPU 服务器是多人共用，最容易出安全事故：</span>
+<span class="c">#</span>
+<span class="c"># 1. 私钥永远只在本地，绝不传到服务器</span>
+<span class="c">#    ❌ scp ~/.ssh/id_ed25519 gpu-dev:~/.ssh/      # 千万别这么做</span>
+<span class="c">#    ✅ 只把 ~/.ssh/id_ed25519.pub 放到服务器的 authorized_keys</span>
+<span class="c">#</span>
+<span class="c"># 2. 敏感数据（数据集、模型权重、内部代码）不要留在共享机器的 /tmp</span>
+<span class="c">#    /tmp 任何用户都能读，用完及时清理或放自己的家目录并 chmod 700</span>
+<span class="c">#</span>
+<span class="c"># 3. .env / 配置文件里的 token、API key</span>
+<span class="c">#    chmod 600 .env          # 只有自己能读</span>
+<span class="c">#    不要 git add .env       # 加进 .gitignore</span>
+<span class="c">#</span>
+<span class="c"># 4. 离开时确认没有把私钥权限设成 644（应该是 600）</span>
+<span class="nb">ls</span> <span class="nt">-l</span> ~/.ssh/id_ed25519
+<span class="c"># -rw------- ...   ← 正确，600</span>
+<span class="c"># -rw-r--r-- ...   ← 危险，别人能读，立刻 chmod 600</span>
+</code></pre></div></div>
+<hr>
+<h2 id="八动态库与环境">八、动态库与环境</h2>
+<blockquote><p>📺 <strong>动手实践</strong>：本章命令的可复现 Demo 见 <a href="./Linux%E5%8A%A8%E6%80%81%E5%BA%93%E8%B0%83%E8%AF%95_Demo%E5%AE%9E%E8%B7%B5.md"><code class="language-plaintext highlighter-rouge">Linux动态库调试_Demo实践.md</code></a>（用一个小项目跑通 ldd / readelf / nm / ldconfig / RPATH 的完整输入输出）</p></blockquote>
+<h3 id="81-动态库搜索路径">8.1 动态库搜索路径</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ========== 程序运行时需要找到动态库（.so 文件） ==========</span>
+<span class="c"># 搜索顺序：</span>
+<span class="c"># 1. 编译时写入的 RPATH/RUNPATH</span>
+<span class="c"># 2. LD_LIBRARY_PATH 环境变量</span>
+<span class="c"># 3. /etc/ld.so.cache 缓存（由 ldconfig 更新）</span>
+<span class="c"># 4. 默认目录：/lib, /usr/lib</span>
+
+<span class="c"># ========== 临时设置（诊断用） ==========</span>
+<span class="nb">export </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/usr/local/cuda/lib64:<span class="nv">$LD_LIBRARY_PATH</span>
+python train.py
+
+<span class="c"># ⚠️ 不要把 LD_LIBRARY_PATH 写进 ~/.bashrc 作为长期方案</span>
+<span class="c"># 它可能影响其他程序的库加载，造成难以排查的冲突</span>
+<span class="c"># 正确做法：用 RPATH 或把库安装到标准目录</span>
+
+<span class="c"># ========== 查看程序依赖的动态库 ==========</span>
+ldd build/app
+<span class="c"># linux-vdso.so.1 (0x...)</span>
+<span class="c"># libtorch.so =&gt; /usr/local/lib/libtorch.so (0x...)</span>
+<span class="c"># libcudart.so.12 =&gt; /usr/local/cuda/lib64/libcudart.so.12 (0x...)</span>
+<span class="c"># not found  ← 这个库找不到！需要排查</span>
+
+<span class="c"># ========== readelf：查看二进制的动态段 ==========</span>
+readelf <span class="nt">-d</span> build/app | <span class="nb">grep </span>NEEDED    <span class="c"># 查看需要的动态库</span>
+readelf <span class="nt">-d</span> build/app | <span class="nb">grep </span>RUNPATH   <span class="c"># 查看编译时设置的搜索路径</span>
+
+<span class="c"># ========== nm：查看符号 ==========</span>
+nm <span class="nt">-C</span> libmymath.so | <span class="nb">grep </span>add    <span class="c"># 查看库中是否有 add 符号（-C 反修饰 C++ 名称）</span>
+<span class="c"># T = 在 .text 段（有定义）</span>
+<span class="c"># U = 未定义（需要从其他库链接）</span>
+
+<span class="c"># ========== 先回答一个新人高频疑问：app 是什么？ ==========</span>
+<span class="c"># 这里的 "app" 不是什么特殊东西，就是【可执行文件的名字】。</span>
+<span class="c"># 它来自编译命令的 -o 参数：</span>
+<span class="c">#   g++ main.cpp -o app    ← -o app 表示输出文件叫 app</span>
+<span class="c">#   g++ main.o add.o -o app</span>
+<span class="c"># 你完全可以叫别的名字：g++ main.cpp -o mytrain → 产物叫 mytrain</span>
+<span class="c"># 之后 ldd mytrain、readelf -d mytrain 都行，名字只是个标签。</span>
+<span class="c">#</span>
+<span class="c"># 为什么你之前在 `cpp/编译链接模板与构建系统.md` 的 CMake 项目里</span>
+<span class="c"># 没看到 "app" 这个东西？</span>
+<span class="c"># 因为那个 CMake 项目(7.5 节)的可执行文件叫 `vector_ops_app`，不叫 app：</span>
+<span class="c">#   add_executable(vector_ops_app src/main.cpp)</span>
+<span class="c"># 产物在 build/vector_ops_app（不是 build/app）。</span>
+<span class="c"># 所以在那篇笔记里，对应的命令应该写成：</span>
+<span class="c">#   ldd build/vector_ops_app</span>
+<span class="c">#   readelf -d build/vector_ops_app</span>
+<span class="c"># 本质完全一样——ldd/readelf/nm 后面跟的就是【可执行文件或库的路径】。</span>
+
+<span class="c"># ========== 用 cpp 笔记的 vector_ops 项目做完整演示 ==========</span>
+<span class="c"># 引用 `cpp/编译链接模板与构建系统.md` 7.5 节的项目（vector_ops/），</span>
+<span class="c"># 假设你已经按那篇笔记 cmake --build build 编译出了 build/vector_ops_app。</span>
+<span class="c">#</span>
+<span class="c"># 项目结构（见 cpp 笔记 7.2 节）：</span>
+<span class="c"># vector_ops/</span>
+<span class="c"># ├── CMakeLists.txt</span>
+<span class="c"># ├── include/vector_ops.h</span>
+<span class="c"># └── src/{vector_ops.cpp, main.cpp}</span>
+<span class="c"># 编译产物：build/vector_ops_app（可执行文件）+ build/libvector_ops.a（静态库）</span>
+
+<span class="nb">cd </span>vector_ops                <span class="c"># 进项目目录</span>
+
+<span class="c"># ----- ldd：看可执行文件依赖哪些动态库 -----</span>
+ldd build/vector_ops_app
+<span class="c"># 输出示例：</span>
+<span class="c">#   linux-vdso.so.1 (0x00007ffd2f9fe000)</span>
+<span class="c">#   libstdc++.so.6 =&gt; /lib/x86_64-linux-gnu/libstdc++.so.6 (0x...)</span>
+<span class="c">#   libm.so.6 =&gt; /lib/x86_64-linux-gnu/libm.so.6 (0x...)</span>
+<span class="c">#   libc.so.6 =&gt; /lib/x86_64-linux-gnu/libc.so.6 (0x...)</span>
+<span class="c">#   /lib64/ld-linux-x86-64.so.2 (0x...)</span>
+<span class="c"># 每行含义：</span>
+<span class="c">#   库名 =&gt; 它在系统里的实际路径 (加载地址)</span>
+<span class="c">#   出现 "=&gt; not found" 就是找不到这个库（运行会报错）</span>
+<span class="c">#   linux-vdso 是虚拟库（内核提供的，不是真文件，正常现象）</span>
+<span class="c"># 怎么用：程序运行报 "cannot open shared object file" 时，先 ldd 看哪个 not found</span>
+
+<span class="c"># ----- readelf -d：看二进制的"动态段"（NEEDED/RPATH/RUNPATH）-----</span>
+readelf <span class="nt">-d</span> build/vector_ops_app | <span class="nb">grep </span>NEEDED
+<span class="c"># 输出：</span>
+<span class="c"># 0x0000000000000001 (NEEDED)  Shared library: [libstdc++.so.6]</span>
+<span class="c"># 0x0000000000000001 (NEEDED)  Shared library: [libc.so.6]</span>
+<span class="c">#   NEEDED = 这个程序运行时需要的动态库清单（编译时由链接器写入）</span>
+<span class="c">#   注意：只列出动态库依赖；静态库(.a)在链接时已经"复制进去"了，不出现在这里</span>
+<span class="c">#         （vector_ops 用的是 libvector_ops.a 静态库，所以这里看不到它——正常）</span>
+
+readelf <span class="nt">-d</span> build/vector_ops_app | <span class="nb">grep</span> <span class="nt">-i</span> path
+<span class="c"># 输出：（可能为空，表示没设 RPATH/RUNPATH）</span>
+<span class="c"># 0x000000000000001d (RUNPATH)  Library runpath: [/some/path]</span>
+<span class="c">#   RPATH/RUNPATH = 编译时写进二进制的"库搜索路径"</span>
+<span class="c">#   没设就是空。要设的话在 g++ 加 -Wl,-rpath,/path（见 cpp 笔记 A.11 节）</span>
+
+<span class="c"># ----- nm：看二进制里的符号（函数/变量）-----</span>
+nm <span class="nt">-C</span> build/vector_ops_app | <span class="nb">grep</span> <span class="nt">-i</span> <span class="nb">sum</span>
+<span class="c"># 输出：</span>
+<span class="c"># 0000000000001199 T sum(std::vector&lt;float, std::allocator&lt;float&gt; &gt; const&amp;)</span>
+<span class="c">#   T = 这个符号在 .text 段（有定义，即这个程序的代码里有 sum 的实现）</span>
+<span class="c"># nm -C 的 -C = demangle，把 C++ 修饰名还原成人话</span>
+<span class="c">#   不加 -C 会看到：_Z3sumRSt6vectorIfSaIfEE （这串乱码就是 name mangling）</span>
+
+<span class="c"># 看哪些符号是"未定义的"（要靠外部库提供）：</span>
+nm <span class="nt">-C</span> build/vector_ops_app | <span class="nb">grep</span> <span class="s1">' U '</span>
+<span class="c">#                  U std::cout          ← U = undefined，运行时要靠 libstdc++ 提供</span>
+<span class="c">#                  U __libc_start_main   ← 要靠 libc 提供</span>
+<span class="c"># U 不是错误，是正常的——程序总要依赖标准库</span>
+
+<span class="c"># ----- 对静态库也能用 nm -----</span>
+nm <span class="nt">-C</span> build/libvector_ops.a
+<span class="c"># 输出：</span>
+<span class="c"># vector_ops.cpp.o:</span>
+<span class="c"># 0000000000000000 T sum(std::vector&lt;float, ...&gt; const&amp;)</span>
+<span class="c">#   能看到库里有 sum 符号 → 确认库编译对了</span>
+
+<span class="c"># ========== 三个命令一句话区分 ==========</span>
+<span class="c"># ldd       看"运行时依赖哪些 .so"           → 排查 "找不到库"</span>
+<span class="c"># readelf   看"二进制里写了什么（NEEDED/RPATH）" → 排查"为什么去那个路径找库"</span>
+<span class="c"># nm        看"符号表（有哪些函数，定义了没）"   → 排查"undefined reference / 链接问题"</span>
+</code></pre></div></div>
+<h3 id="82-常见的找不到库排查">8.2 常见的”找不到库”排查</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 场景：运行程序报错 "error while loading shared libraries: libxxx.so: cannot open shared object file"</span>
+
+<span class="c"># 步骤 1：确认程序需要哪些库</span>
+ldd app | <span class="nb">grep</span> <span class="s2">"not found"</span>
+<span class="c"># libxxx.so =&gt; not found</span>
+
+<span class="c"># 步骤 2：找这个库在系统哪里</span>
+find / <span class="nt">-name</span> <span class="s2">"libxxx.so*"</span> 2&gt;/dev/null
+<span class="c"># /usr/local/custom/lib/libxxx.so</span>
+
+<span class="c"># 步骤 3：把目录加到搜索路径</span>
+<span class="nb">export </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/usr/local/custom/lib:<span class="nv">$LD_LIBRARY_PATH</span>
+
+<span class="c"># 步骤 4：再试一次</span>
+ldd app | <span class="nb">grep </span>libxxx
+<span class="c"># libxxx.so =&gt; /usr/local/custom/lib/libxxx.so ✅</span>
+
+<span class="c"># 步骤 5：如果需要持久化，写入 /etc/ld.so.conf.d/xxx.conf</span>
+<span class="nb">echo</span> <span class="s2">"/usr/local/custom/lib"</span> | <span class="nb">sudo tee</span> /etc/ld.so.conf.d/custom.conf
+<span class="nb">sudo </span>ldconfig    <span class="c"># 更新缓存</span>
+
+<span class="c"># ========== tee 是什么？为什么这里要用它？==========</span>
+<span class="c"># tee 命令：从 stdin 读数据，同时写到【文件】和【stdout】（像三通管，分流）</span>
+<span class="c"># 名字来自水管"T 型接头"——水流进来，分两路出去</span>
+<span class="c">#</span>
+<span class="c"># 为什么不能直接 sudo echo "..." &gt; /file？</span>
+<span class="c">#   因为 shell 解析重定向 &gt; 时是用【当前用户】身份打开文件，</span>
+<span class="c">#   sudo 只作用于 echo 命令，不作用于 &gt; 重定向！</span>
+<span class="c">#   当前用户没权限写 /etc/...，所以会报 "Permission denied"</span>
+<span class="c">#   ❌ sudo echo "x" &gt; /etc/file        → 重定向失败（sudo 管不到 &gt;）</span>
+<span class="c">#</span>
+<span class="c"># 用 tee 解决：tee 以 sudo 身份运行，由它来打开文件写入</span>
+<span class="c">#   ✅ echo "x" | sudo tee /etc/file    → echo 的输出经管道给 sudo tee，tee 写文件</span>
+<span class="c">#</span>
+<span class="c"># tee 的基本用法：</span>
+<span class="nb">echo</span> <span class="s2">"hello"</span> | <span class="nb">tee </span>a.txt      <span class="c"># 写到 a.txt，同时屏幕也显示 hello</span>
+<span class="nb">echo</span> <span class="s2">"hello"</span> | <span class="nb">tee </span>a.txt b.txt <span class="c"># 同时写到 a.txt 和 b.txt</span>
+<span class="nb">echo</span> <span class="s2">"hello"</span> | <span class="nb">tee</span> <span class="nt">-a</span> log.txt  <span class="c"># -a = append 追加（不加 -a 是覆盖）</span>
+<span class="c"># 屏幕输出：hello</span>
+<span class="c"># cat log.txt: hello（已追加）</span>
+
+<span class="c"># 本例拆解：</span>
+<span class="c"># echo "/usr/local/custom/lib"   → 输出一行路径</span>
+<span class="c"># |                              → 管道把输出交给后面的 tee</span>
+<span class="c"># sudo tee /etc/ld.so.conf.d/custom.conf</span>
+<span class="c">#   → tee 以 root 身份把这行写到 custom.conf 文件</span>
+<span class="c">#   （同时屏幕也会回显这行，因为 tee 默认也输出到 stdout）</span>
+
+<span class="c"># ========== ldconfig 是什么？为什么能直接 sudo ldconfig ==========</span>
+<span class="c"># ldconfig = dynamic linker configuration，动态链接器配置工具</span>
+<span class="c"># 作用：扫描 /etc/ld.so.conf、/etc/ld.so.conf.d/*.conf 里列出的目录，</span>
+<span class="c">#       以及默认目录(/lib /usr/lib)，把里面所有 .so 库建立一份"索引缓存"</span>
+<span class="c">#       缓存文件在 /etc/ld.so.cache，程序运行时动态加载器靠它快速找库</span>
+<span class="c">#</span>
+<span class="c"># 为什么需要它？</span>
+<span class="c">#   程序运行时找 .so 的顺序（见 8.1 节）里有一步是查 /etc/ld.so.cache</span>
+<span class="c">#   你往 /usr/local/lib 放了新库，或者改了 ld.so.conf.d 的配置，</span>
+<span class="c">#   不跑 ldconfig，缓存还是旧的 → 程序还是找不到新库</span>
+<span class="c">#   跑了 ldconfig，缓存更新 → 程序下次运行就能找到了</span>
+<span class="c">#</span>
+<span class="c"># 为什么直接 sudo ldconfig 不带任何参数也能用？</span>
+<span class="c">#   ldconfig 不带参数时，默认行为就是"重新扫描所有配置目录、重建缓存"</span>
+<span class="c">#   这正是我们想要的——刚加了 custom.conf，让它重新扫描一遍</span>
+<span class="c">#   所以 sudo ldconfig = 用 root 权限重建动态库缓存（最常用形式）</span>
+<span class="c">#</span>
+<span class="c"># ldconfig 常用变体：</span>
+<span class="nb">sudo </span>ldconfig               <span class="c"># 重建缓存（最常用，装新库后跑一下）</span>
+<span class="nb">sudo </span>ldconfig <span class="nt">-v</span>            <span class="c"># -v verbose，显示扫描过程（看它扫了哪些目录、加了哪些库）</span>
+ldconfig <span class="nt">-p</span> | <span class="nb">grep </span>libxxx   <span class="c"># -p print，查缓存里有没有某个库（不用 sudo，只读缓存）</span>
+<span class="c">#   ldconfig -p 输出当前缓存内容，grep 用来确认"库是否已进缓存"</span>
+
+<span class="c"># ========== 完整的"装自定义库"流程（回顾） ==========</span>
+<span class="c"># 1. 把库放到 /usr/local/custom/lib/libxxx.so</span>
+<span class="c"># 2. echo "目录路径" | sudo tee /etc/ld.so.conf.d/custom.conf   （告诉系统去哪找）</span>
+<span class="c"># 3. sudo ldconfig                                              （重建缓存）</span>
+<span class="c"># 4. ldconfig -p | grep libxxx                                  （验证已进缓存）</span>
+<span class="c"># 5. ldd 你的程序 | grep libxxx                                  （验证程序能找到了）</span>
+<span class="c"># 这样比 LD_LIBRARY_PATH 更持久，重启后也生效，是生产环境的推荐做法</span>
+</code></pre></div></div>
+<hr>
+<h2 id="九调试原生程序">九、调试原生程序</h2>
+<blockquote><p>📺 <strong>动手实践</strong>：本章命令的可复现 Demo 见 <a href="./Linux%E5%8E%9F%E7%94%9F%E7%A8%8B%E5%BA%8F%E8%B0%83%E8%AF%95_Demo%E5%AE%9E%E8%B7%B5.md"><code class="language-plaintext highlighter-rouge">Linux原生程序调试_Demo实践.md</code></a>（用 4 个会崩的小程序跑通 GDB / core dump / ASan / strace 的完整输入输出）</p></blockquote>
+<h3 id="91-编译带调试信息">9.1 编译带调试信息</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ========== 编译时加 -g ==========</span>
+g++ <span class="nt">-g</span> <span class="nt">-O0</span> main.cpp <span class="nt">-o</span> app_debug    <span class="c"># -g 加调试信息, -O0 不优化</span>
+g++ <span class="nt">-g</span> <span class="nt">-O2</span> main.cpp <span class="nt">-o</span> app          <span class="c"># -O2 优化但保留调试信息（用于 release 排查）</span>
+
+<span class="c"># ========== AddressSanitizer：检测内存错误 ==========</span>
+g++ <span class="nt">-fsanitize</span><span class="o">=</span>address,undefined <span class="nt">-g</span> <span class="nt">-O0</span> main.cpp <span class="nt">-o</span> app_asan
+./app_asan
+<span class="c"># ASAN 能检测：</span>
+<span class="c"># - 越界访问（数组越界、堆越界）</span>
+<span class="c"># - use-after-free（释放后使用）</span>
+<span class="c"># - 内存泄漏</span>
+<span class="c"># - 整数溢出（UBSan 部分）</span>
+
+<span class="c"># ========== ThreadSanitizer：检测数据竞争 ==========</span>
+g++ <span class="nt">-fsanitize</span><span class="o">=</span>thread <span class="nt">-g</span> <span class="nt">-O0</span> main.cpp <span class="nt">-o</span> app_tsan
+./app_tsan
+<span class="c"># ⚠️ ASAN 和 TSAN 不能同时使用</span>
+
+<span class="c"># ========== GDB vs Sanitizer：什么时候用哪个 ==========</span>
+<span class="c"># 这是新人最常混淆的，先记住分工：</span>
+<span class="c">#</span>
+<span class="c">#   GDB       回答 "在哪里崩"     → 崩溃后看调用栈，定位到某行</span>
+<span class="c">#   ASan      回答 "哪次非法内存操作造成的它" → 在出错的那条指令当场停下</span>
+<span class="c">#   UBSan     回答 "哪行触发了未定义行为"    → 即使没崩也报出来</span>
+<span class="c">#   TSan      回答 "哪两个线程发生了数据竞争" → 报告两个线程的调用栈</span>
+<span class="c">#   MSan      回答 "哪个未初始化的值被用了"   → 只 Clang 支持</span>
+<span class="c">#</span>
+<span class="c"># 典型流程：</span>
+<span class="c">#   1. 程序崩了 → 先 gdb + core dump 看 bt，知道大概在哪</span>
+<span class="c">#   2. 用 ASan/UBSan 重编再跑一次 → 它会在"第一次出错"时停下来，</span>
+<span class="c">#      而不是等到崩溃（崩溃点往往离真正的 bug 很远）</span>
+<span class="c">#   3. 调数据竞争 → 单独用 TSan（不能和 ASan 同用）</span>
+<span class="c">#</span>
+<span class="c"># 关键区别：GDB 是"事后分析"，Sanitizer 是"当场抓获"。</span>
+<span class="c"># 很多内存错误用 GDB 只能看到崩溃现场（已经晚了），</span>
+<span class="c"># 而 ASan 能在越界访问发生的那一条指令就停下来。</span>
+
+<span class="c"># ========== 优化版（Release）崩溃了怎么办 ==========</span>
+<span class="c"># 别用 -O0 重编去复现，可能因为优化级别不同就复现不了了</span>
+<span class="c"># 正确做法：保留优化，只加调试信息</span>
+g++ <span class="nt">-O2</span> <span class="nt">-g</span> main.cpp <span class="nt">-o</span> app_release    <span class="c"># 优化 + 调试信息</span>
+<span class="c"># 这样产生的 core dump 有可读的调用栈（带文件名行号），</span>
+<span class="c"># 既复现了 release 的崩溃，又能用 gdb 看到源码位置</span>
+<span class="c"># ⚠️ 注意：-O2 下变量可能被优化掉，print 某些变量会显示 &lt;optimized out&gt;</span>
+<span class="c">#         这是正常的，配合 ASan 通常能补上这块信息</span>
+</code></pre></div></div>
+<h3 id="92-gdb-基本操作">9.2 GDB 基本操作</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ========== 启动 GDB ==========</span>
+gdb ./app
+gdb ./app core_dump_file    <span class="c"># 分析 core dump</span>
+
+<span class="c"># ========== 基本命令 ==========</span>
+<span class="o">(</span>gdb<span class="o">)</span> <span class="nb">break </span>main            <span class="c"># 在 main 函数设断点</span>
+<span class="o">(</span>gdb<span class="o">)</span> <span class="nb">break </span>file.cpp:42     <span class="c"># 在 file.cpp 第 42 行设断点</span>
+<span class="o">(</span>gdb<span class="o">)</span> <span class="nb">break </span>func <span class="k">if </span>x <span class="o">&gt;</span> 10  <span class="c"># 条件断点</span>
+
+<span class="o">(</span>gdb<span class="o">)</span> run                   <span class="c"># 开始运行</span>
+<span class="o">(</span>gdb<span class="o">)</span> run arg1 arg2         <span class="c"># 带参数运行</span>
+
+<span class="o">(</span>gdb<span class="o">)</span> next                  <span class="c"># 单步（不进入函数）</span>
+<span class="o">(</span>gdb<span class="o">)</span> step                  <span class="c"># 单步（进入函数）</span>
+<span class="o">(</span>gdb<span class="o">)</span> <span class="k">continue</span>              <span class="c"># 继续运行到下一个断点</span>
+
+<span class="o">(</span>gdb<span class="o">)</span> print variable        <span class="c"># 查看变量值</span>
+<span class="o">(</span>gdb<span class="o">)</span> print <span class="k">*</span>ptr            <span class="c"># 查看指针指向的值</span>
+<span class="o">(</span>gdb<span class="o">)</span> print arr@10          <span class="c"># 查看数组前 10 个元素</span>
+
+<span class="o">(</span>gdb<span class="o">)</span> backtrace             <span class="c"># 查看调用栈（崩溃时最重要！）</span>
+<span class="o">(</span>gdb<span class="o">)</span> bt full              <span class="c"># 查看调用栈 + 所有局部变量</span>
+
+<span class="o">(</span>gdb<span class="o">)</span> info locals           <span class="c"># 查看当前函数的所有局部变量</span>
+<span class="o">(</span>gdb<span class="o">)</span> info args             <span class="c"># 查看函数参数</span>
+
+<span class="o">(</span>gdb<span class="o">)</span> list                  <span class="c"># 查看当前位置周围的源码</span>
+<span class="o">(</span>gdb<span class="o">)</span> frame 2               <span class="c"># 切换到调用栈的第 2 帧</span>
+
+<span class="o">(</span>gdb<span class="o">)</span> quit                  <span class="c"># 退出</span>
+
+<span class="c"># ========== 实际调试流程 ==========</span>
+<span class="c"># 1. 程序崩溃了，有 core dump</span>
+gdb ./app core
+<span class="o">(</span>gdb<span class="o">)</span> bt                    <span class="c"># 看调用栈，确定在哪里崩的</span>
+<span class="o">(</span>gdb<span class="o">)</span> frame 3               <span class="c"># 切到出错的函数</span>
+<span class="o">(</span>gdb<span class="o">)</span> print <span class="k">*</span>this           <span class="c"># 查看关键变量</span>
+<span class="o">(</span>gdb<span class="o">)</span> list                  <span class="c"># 看源码</span>
+</code></pre></div></div>
+<h3 id="93-strace追踪系统调用">9.3 strace：追踪系统调用</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ========== strace：看程序在系统层面做了什么 ==========</span>
+strace <span class="nt">-f</span> <span class="nt">-o</span> trace.log ./app
+<span class="c"># -f = 跟踪子进程</span>
+<span class="c"># -o = 输出到文件</span>
+
+<span class="c"># 常用过滤：</span>
+strace <span class="nt">-f</span> <span class="nt">-e</span> <span class="nv">trace</span><span class="o">=</span>open,openat ./app    <span class="c"># 只看文件打开操作</span>
+strace <span class="nt">-f</span> <span class="nt">-e</span> <span class="nv">trace</span><span class="o">=</span>network ./app        <span class="c"># 只看网络操作</span>
+
+<span class="c"># 排查"找不到文件/库"：</span>
+strace <span class="nt">-f</span> ./app 2&gt;&amp;1 | <span class="nb">grep</span> <span class="nt">-i</span> <span class="s2">"enoent</span><span class="se">\|</span><span class="s2">eacces"</span>
+<span class="c"># ENOENT = 文件不存在</span>
+<span class="c"># EACCES = 权限不足</span>
+
+<span class="c"># 实际场景：Python 导入模块失败</span>
+strace <span class="nt">-f</span> python <span class="nt">-c</span> <span class="s2">"import torch"</span> 2&gt;&amp;1 | <span class="nb">grep</span> <span class="s2">"torch"</span> | <span class="nb">head</span> <span class="nt">-20</span>
+<span class="c"># 能看到 Python 在哪些路径找 torch，最后在哪个路径找到了</span>
+</code></pre></div></div>
+<hr>
+<h2 id="十概念速查表">十、概念速查表</h2>
+<table>
+<thead><tr>
+<th>概念</th>
+<th>一句话记忆</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code class="language-plaintext highlighter-rouge">ls -lah</code></td>
+<td>查看目录（含隐藏、详细信息、人类可读大小）</td>
+</tr>
+<tr>
+<td><code class="language-plaintext highlighter-rouge">find -name</code></td>
+<td>按文件名查找</td>
+</tr>
+<tr>
+<td><code class="language-plaintext highlighter-rouge">rg</code></td>
+<td>在文件内容中搜索（比 grep 快）</td>
+</tr>
+<tr>
+<td>管道 <code class="language-plaintext highlighter-rouge">|</code>
+</td>
+<td>前一个命令的输出 → 后一个命令的输入</td>
+</tr>
+<tr>
+<td><code class="language-plaintext highlighter-rouge">2&gt;&amp;1</code></td>
+<td>stderr 重定向到 stdout</td>
+</tr>
+<tr>
+<td><code class="language-plaintext highlighter-rouge">2&gt;/dev/null</code></td>
+<td>丢弃错误信息</td>
+</tr>
+<tr>
+<td><code class="language-plaintext highlighter-rouge">set -euo pipefail</code></td>
+<td>Bash 脚本三件套：失败退出、未定义报错、管道传递失败</td>
+</tr>
+<tr>
+<td><code class="language-plaintext highlighter-rouge">chmod 755</code></td>
+<td>rwxr-xr-x（所有者读写执行，其他人读和执行）</td>
+</tr>
+<tr>
+<td><code class="language-plaintext highlighter-rouge">chmod 600</code></td>
+<td>rw——-（仅所有者可读写，用于密钥）</td>
+</tr>
+<tr>
+<td><code class="language-plaintext highlighter-rouge">kill -TERM</code></td>
+<td>请求进程优雅退出（默认）</td>
+</tr>
+<tr>
+<td><code class="language-plaintext highlighter-rouge">kill -KILL</code></td>
+<td>强制杀死（最后手段，进程无法清理）</td>
+</tr>
+<tr>
+<td><code class="language-plaintext highlighter-rouge">tmux</code></td>
+<td>终端复用器，断开后进程继续运行</td>
+</tr>
+<tr>
+<td><code class="language-plaintext highlighter-rouge">free -h</code></td>
+<td>看内存（看 available 不是 free）</td>
+</tr>
+<tr>
+<td><code class="language-plaintext highlighter-rouge">df -h</code></td>
+<td>看磁盘容量</td>
+</tr>
+<tr>
+<td><code class="language-plaintext highlighter-rouge">du -sh</code></td>
+<td>看目录大小</td>
+</tr>
+<tr>
+<td><code class="language-plaintext highlighter-rouge">ldd</code></td>
+<td>查看程序依赖的动态库</td>
+</tr>
+<tr>
+<td><code class="language-plaintext highlighter-rouge">LD_LIBRARY_PATH</code></td>
+<td>动态库搜索路径（临时诊断用，别长期设）</td>
+</tr>
+<tr>
+<td><code class="language-plaintext highlighter-rouge">source ~/.bashrc</code></td>
+<td>重新加载环境变量配置</td>
+</tr>
+<tr>
+<td><code class="language-plaintext highlighter-rouge">ssh-copy-id</code></td>
+<td>把公钥拷到服务器，免密登录</td>
+</tr>
+<tr>
+<td><code class="language-plaintext highlighter-rouge">rsync -av</code></td>
+<td>增量同步目录（比 scp 好）</td>
+</tr>
+<tr>
+<td><code class="language-plaintext highlighter-rouge">gdb bt</code></td>
+<td>查看调用栈（崩溃排查第一步）</td>
+</tr>
+<tr>
+<td><code class="language-plaintext highlighter-rouge">strace</code></td>
+<td>追踪系统调用（排查”找不到文件/库”）</td>
+</tr>
+<tr>
+<td><code class="language-plaintext highlighter-rouge">nvidia-smi</code></td>
+<td>查看 GPU 状态和显存</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="十一关联笔记">十一、关联笔记</h2>
+<ul>
+<li>
+<code class="language-plaintext highlighter-rouge">python/Python进阶笔记3_并发与性能分析.md</code>（Python 线程/进程/asyncio）</li>
+<li>
+<code class="language-plaintext highlighter-rouge">devops/</code> 目录（部署相关）</li>
+<li><code class="language-plaintext highlighter-rouge">技术工具学习索引.md</code></li>
+<li>
+<code class="language-plaintext highlighter-rouge">linux/Linux动态库调试_Demo实践.md</code>（第八章动手实践：ldd/readelf/nm/ldconfig/RPATH）</li>
+<li>
+<code class="language-plaintext highlighter-rouge">linux/Linux原生程序调试_Demo实践.md</code>（第九章动手实践：GDB/core dump/ASan/strace）</li>
+<li>
+<code class="language-plaintext highlighter-rouge">cpp/编译链接模板与构建系统.md</code>（C++ 编译链接、动态库创建、g++ 参数详解，与第八章动态库、第九章调试紧密关联）</li>
+</ul></section><!-- Previous / Next navigation --><nav class="notes-pager"><div class="notes-pager-links"> <a href="/notes/Linux%E5%8E%9F%E7%94%9F%E7%A8%8B%E5%BA%8F%E8%B0%83%E8%AF%95-Demo%E5%AE%9E%E8%B7%B5/" class="notes-pager-prev"> <span class="notes-pager-label">← 上一章</span> <span class="notes-pager-title">Linux原生程序调试_Demo实践</span> </a> <span></span>
+</div></nav>
+</div></article><!-- Right Sidebar: Table of Contents (built by JS from DOM) --><aside class="notes-toc" id="notes-toc"><div class="notes-toc-inner">
+<h4 class="notes-toc-title">目录</h4>
+<nav class="notes-toc-nav"><ul class="notes-toc-list" id="notes-toc-list"> <!-- Populated by notes-toc.js -->
+</ul></nav>
+</div></aside>
+</div><script src="https://1571859588.github.io/assets/js/notes-toc.js"></script> <script> (function() { var q = new URLSearchParams(location.search).get('q'); if (!q || q.length < 2) return; var body = document.querySelector('.notes-body'); if (!body) return; // Walk text nodes, find and highlight matches var walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT, null, false); var textNodes = []; while (walker.nextNode()) { var p = walker.currentNode.parentNode; // Skip script, style, code blocks, and already-marked text if (p.tagName === 'SCRIPT' || p.tagName === 'STYLE' || p.tagName === 'MARK' || p.closest('pre') || p.closest('.notes-search-hit')) continue; textNodes.push(walker.currentNode); } var first = null; var re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'); textNodes.forEach(function(node) { var text = node.textContent; if (!re.test(text)) return; re.lastIndex = 0; // reset after test var frag = document.createDocumentFragment(); var lastIdx = 0; var match; while ((match = re.exec(text)) !== null) { if (match.index > lastIdx) { frag.appendChild(document.createTextNode(text.substring(lastIdx, match.index))); } var mark = document.createElement('mark'); mark.className = 'notes-search-mark'; mark.textContent = match[0]; frag.appendChild(mark); if (!first) first = mark; lastIdx = match.index + match[0].length; } if (lastIdx < text.length) { frag.appendChild(document.createTextNode(text.substring(lastIdx))); } node.parentNode.replaceChild(frag, node); }); if (first) { setTimeout(function() { first.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300); } })(); </script><div class="page__footer"><footer> <!-- start custom footer snippets --> <a href="/sitemap/">Sitemap</a> <!-- end custom footer snippets --><div class="page__footer-follow"><ul class="social-icons">
+<li><strong>Follow:</strong></li>
+<li><a href="http://github.com/1571859588"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a></li>
+<li><a href="https://1571859588.github.io/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+</ul></div>
+<div class="page__footer-copyright"> © 2026 Yuntao Nie, Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://github.com/academicpages/academicpages.github.io">AcademicPages</a>, a fork of <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.<br> Site last updated 2026-07-06</div></footer></div><script src="https://1571859588.github.io/assets/js/main.min.js"></script> <script src="https://1571859588.github.io/assets/js/paper-details.js"></script> <!-- Fix kramdown stripping backslashes before _ in math spans. kramdown treats \_ as a markdown escape, converting $seq\_len$ to $seq_len$. MathJax then interprets _ as subscript instead of a literal underscore. This runs synchronously before MathJax (async) processes the page. --> <script> (function() { var content = document.querySelector('.page__content'); if (!content) return; var walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT, null, false); var nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode); nodes.forEach(function(node) { var text = node.textContent; var fixed = text.replace(/\$([^$\n]+?)\$/g, function(match, math) { // Inside $...$, add \ before _ followed by 2+ lowercase letters. // Safe: legitimate subscripts use single chars ($d_k$) or braces ($x_{ij}$). var fixedMath = math.replace(/_([a-z]{2,})/g, '\\_$1'); return fixedMath !== math ? '$' + fixedMath + '$' : match; }); if (fixed !== text) node.textContent = fixed; }); })(); </script> <script> var SERIES_INDEX = [ {t:"Linux动态库调试_Demo实践", u:"/notes/Linux%E5%8A%A8%E6%80%81%E5%BA%93%E8%B0%83%E8%AF%95-Demo%E5%AE%9E%E8%B7%B5/"}, {t:"Linux原生程序调试_Demo实践", u:"/notes/Linux%E5%8E%9F%E7%94%9F%E7%A8%8B%E5%BA%8F%E8%B0%83%E8%AF%95-Demo%E5%AE%9E%E8%B7%B5/"}, {t:"Linux开发基本功_新人入门版", u:"/notes/Linux%E5%BC%80%E5%8F%91%E5%9F%BA%E6%9C%AC%E5%8A%9F-%E6%96%B0%E4%BA%BA%E5%85%A5%E9%97%A8%E7%89%88/"} ]; (function() { if (!SERIES_INDEX.length) return; var inp = document.getElementById('notes-sidebar-search-input'); var box = document.getElementById('notes-sidebar-search-results'); if (!inp || !box) return; function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; } function hl(t, q) { var o = '', L = 0, lo = t.toLowerCase(), ql = q.toLowerCase(), i; while ((i = lo.indexOf(ql, L)) !== -1) { o += esc(t.substring(L, i)) + '<mark class="notes-search-highlight">' + esc(t.substring(i, i + q.length)) + '</mark>'; L = i + q.length; } return o + esc(t.substring(L)); } inp.addEventListener('input', function() { var q = this.value.trim(); if (!q) { box.style.display = 'none'; box.innerHTML = ''; return; } var ql = q.toLowerCase(), hits = []; for (var i = 0; i < SERIES_INDEX.length; i++) { if (SERIES_INDEX[i].t.toLowerCase().indexOf(ql) !== -1) hits.push(SERIES_INDEX[i]); } if (!hits.length) { box.innerHTML = '<div class="notes-sidebar-search-empty">无匹配</div>'; } else { var h = ''; for (var j = 0; j < Math.min(hits.length, 15); j++) { h += '<a href="' + hits[j].u + '" class="notes-sidebar-search-hit" data-q="' + esc(q) + '">' + '<span class="notes-sidebar-search-hit-title">' + hl(hits[j].t, q) + '</span></a>'; } box.innerHTML = h; } box.style.display = 'block'; }); inp.addEventListener('keydown', function(e) { if (e.key === 'Escape') { box.style.display = 'none'; box.innerHTML = ''; this.blur(); } }); box.addEventListener('click', function(e) { var a = e.target.closest('.notes-sidebar-search-hit'); if (a && a.dataset.q) sessionStorage.setItem('notes-search-q', a.dataset.q); }); document.addEventListener('click', function(e) { if (!e.target.closest('#notes-sidebar-search')) { box.style.display = 'none'; box.innerHTML = ''; } }); })(); </script></body></html>

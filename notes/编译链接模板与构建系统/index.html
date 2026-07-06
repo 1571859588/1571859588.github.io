@@ -1,0 +1,990 @@
+<!doctype html><html lang="en" class="no-js"><head><meta charset="utf-8"> <!-- begin SEO --><title>编译链接模板与构建系统 - Yuntao Nie</title><meta property="og:locale" content="en-US"><meta property="og:site_name" content="Yuntao Nie"><meta property="og:title" content="编译链接模板与构建系统"><link rel="canonical" href="https://1571859588.github.io/notes/%E7%BC%96%E8%AF%91%E9%93%BE%E6%8E%A5%E6%A8%A1%E6%9D%BF%E4%B8%8E%E6%9E%84%E5%BB%BA%E7%B3%BB%E7%BB%9F/"><meta property="og:url" content="https://1571859588.github.io/notes/%E7%BC%96%E8%AF%91%E9%93%BE%E6%8E%A5%E6%A8%A1%E6%9D%BF%E4%B8%8E%E6%9E%84%E5%BB%BA%E7%B3%BB%E7%BB%9F/"><meta property="og:description" content="C++ 编译、链接、模板与构建系统"> <script type="application/ld+json"> { "@context" : "http://schema.org", "@type" : "Person", "name" : "Yuntao Nie", "url" : "https://1571859588.github.io", "sameAs" : null } </script> <!-- end SEO --><link href="https://1571859588.github.io/feed.xml" type="application/atom+xml" rel="alternate" title="Yuntao Nie Feed"> <!-- http://t.co/dKP3o1e --><meta name="HandheldFriendly" content="True"><meta name="MobileOptimized" content="320"><meta name="viewport" content="width=device-width, initial-scale=1.0"> <script> document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js '; </script> <!-- For all browsers --><link rel="stylesheet" href="https://1571859588.github.io/assets/css/main.css"><meta http-equiv="cleartype" content="on"> <!-- start custom head snippets --><link rel="apple-touch-icon" sizes="57x57" href="https://1571859588.github.io/images/apple-touch-icon-57x57.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="60x60" href="https://1571859588.github.io/images/apple-touch-icon-60x60.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="72x72" href="https://1571859588.github.io/images/apple-touch-icon-72x72.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="76x76" href="https://1571859588.github.io/images/apple-touch-icon-76x76.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="114x114" href="https://1571859588.github.io/images/apple-touch-icon-114x114.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="120x120" href="https://1571859588.github.io/images/apple-touch-icon-120x120.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="144x144" href="https://1571859588.github.io/images/apple-touch-icon-144x144.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="152x152" href="https://1571859588.github.io/images/apple-touch-icon-152x152.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="180x180" href="https://1571859588.github.io/images/apple-touch-icon-180x180.png?v=M44lzPylqQ"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-32x32.png?v=M44lzPylqQ" sizes="32x32"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/android-chrome-192x192.png?v=M44lzPylqQ" sizes="192x192"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-96x96.png?v=M44lzPylqQ" sizes="96x96"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-16x16.png?v=M44lzPylqQ" sizes="16x16"><link rel="manifest" href="https://1571859588.github.io/images/manifest.json?v=M44lzPylqQ"><link rel="mask-icon" href="https://1571859588.github.io/images/safari-pinned-tab.svg?v=M44lzPylqQ" color="#000000"><link rel="shortcut icon" href="/images/favicon.ico?v=M44lzPylqQ"><meta name="msapplication-TileColor" content="#000000"><meta name="msapplication-TileImage" content="https://1571859588.github.io/images/mstile-144x144.png?v=M44lzPylqQ"><meta name="msapplication-config" content="https://1571859588.github.io/images/browserconfig.xml?v=M44lzPylqQ"><meta name="theme-color" content="#ffffff"><link rel="stylesheet" href="https://1571859588.github.io/assets/css/academicons.css"/> <!-- MathJax for math rendering --> <script> MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['\\(', '\\)']] } }; </script> <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script> <!-- end custom head snippets --></head><body> <!--[if lt IE 9]><div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div><![endif]--><div class="masthead"><div class="masthead__inner-wrap"><div class="masthead__menu"><nav id="site-nav" class="greedy-nav"> <button><div class="navicon"></div></button><ul class="visible-links"><li class="masthead__menu-item masthead__menu-item--lg"><a href="https://1571859588.github.io/">Yuntao Nie</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/publications/">Publications</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/cv/">CV</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/notes/">Notes</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/year-archive/">Blog</a></li></ul><ul class="hidden-links hidden"></ul></nav></div></div></div><div id="main" role="main" class="notes-layout"> <!-- Left Sidebar: Series Chapter Navigation --><aside class="notes-sidebar" id="notes-sidebar"><div class="notes-sidebar-inner"><div class="notes-series-header"><h3 class="notes-series-title">cpp</h3></div><div class="notes-sidebar-search" id="notes-sidebar-search"> <input type="text" class="notes-sidebar-search-input" id="notes-sidebar-search-input" placeholder="搜索本专题…" autocomplete="off"><div class="notes-sidebar-search-results" id="notes-sidebar-search-results" style="display:none"></div></div><nav class="notes-chapter-nav"><ul class="notes-chapter-list"><li class="notes-chapter-item "> <a href="/notes/Python%E4%B8%8EC-%E4%BA%92%E6%93%8D%E4%BD%9C/" class="notes-chapter-link"> <span class="notes-chapter-num">1</span> <span class="notes-chapter-title">Python与C++互操作</span> </a></li><li class="notes-chapter-item "> <a href="/notes/%E5%86%85%E5%AD%98%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%B8%8E%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" class="notes-chapter-link"> <span class="notes-chapter-num">2</span> <span class="notes-chapter-title">内存生命周期与资源管理</span> </a></li><li class="notes-chapter-item "> <a href="/notes/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%95%99%E7%A8%8B/" class="notes-chapter-link"> <span class="notes-chapter-num">3</span> <span class="notes-chapter-title">环境配置教程</span> </a></li><li class="notes-chapter-item active"> <a href="/notes/%E7%BC%96%E8%AF%91%E9%93%BE%E6%8E%A5%E6%A8%A1%E6%9D%BF%E4%B8%8E%E6%9E%84%E5%BB%BA%E7%B3%BB%E7%BB%9F/" class="notes-chapter-link"> <span class="notes-chapter-num">4</span> <span class="notes-chapter-title">编译链接模板与构建系统</span> </a></li></ul></nav><div class="notes-sidebar-footer"> <a href="/notes/" class="notes-back-link">← 所有笔记系列</a></div></div></aside><!-- Mobile sidebar toggle --> <button class="notes-sidebar-toggle" id="notes-sidebar-toggle" aria-label="Toggle sidebar"> <span class="notes-sidebar-toggle-icon"></span> </button> <!-- Main Content --><article class="notes-content" itemscope itemtype="http://schema.org/CreativeWork"><meta itemprop="headline" content="编译链接模板与构建系统"><div class="notes-content-inner"><header class="notes-header"><div class="notes-breadcrumb"> <a href="/notes/">Notes</a> <span class="notes-sep">›</span> <span>cpp</span> <span class="notes-sep">›</span> <span>编译链接模板与构建系统</span></div><h1 class="notes-page-title" itemprop="headline">编译链接模板与构建系统</h1></header><section class="notes-body" itemprop="text"><h1 id="c-编译链接模板与构建系统">C++ 编译、链接、模板与构建系统</h1><blockquote><p>更新时间：2026-07-01 状态：学习笔记（从零开始，逐句拆解） 适用读者：有 Python/Java 基础，刚接触 C++ 的人 关联：<code class="language-plaintext highlighter-rouge">cpp/内存生命周期与资源管理.md</code></p></blockquote><hr /><h2 id="一句话结论">一句话结论</h2><p>C++ 程序从源代码到可执行文件要经过<strong>预处理 → 编译 → 汇编 → 链接</strong>四个阶段，每个阶段都可能出错。新手最容易混淆的是”编译错误”和”链接错误”——前者是语法/类型问题，后者是”找不到定义”。现代 C++ 项目用 <strong>CMake</strong> 管理构建，用 <strong>模板</strong> 在编译期生成代码，用 <strong>STL 容器</strong> 替代手写数据结构。</p><hr /><h2 id="零为什么-python-不用操心这些">零、为什么 Python 不用操心这些？</h2><p>先建立直觉——对比 Python 和 C++ 的构建流程：</p><table><thead><tr><th>维度</th><th>Python</th><th>C++</th></tr></thead><tbody><tr><td>源码到运行</td><td><code class="language-plaintext highlighter-rouge">.py</code> 直接运行</td><td><code class="language-plaintext highlighter-rouge">.cpp</code> 要编译链接成可执行文件</td></tr><tr><td>头文件</td><td>不需要</td><td>需要（声明 vs 定义分离）</td></tr><tr><td>依赖管理</td><td><code class="language-plaintext highlighter-rouge">pip install</code></td><td>CMake + 链接库</td></tr><tr><td>错误出现时机</td><td>运行时</td><td><strong>编译时</strong>（类型检查更严格）</td></tr><tr><td>跨平台</td><td>解释器管</td><td>你要管编译器、操作系统、CPU 架构</td></tr></tbody></table><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Python:  write code.py → python code.py → 直接运行
+C++:     write code.cpp → 预处理 → 编译 → 汇编 → 链接 → ./app
+</code></pre></div></div><p>C++ 的”麻烦”换来的是：<strong>编译时就能发现很多错误</strong>，性能远超 Python。</p><hr /><h2 id="一从源代码到可执行文件">一、从源代码到可执行文件</h2><h3 id="11-四个阶段总览">1.1 四个阶段总览</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>源文件 .cpp
+  │
+  ▼ ① 预处理（Preprocess）
+  │   - 展开 #include（把头文件内容粘贴进来）
+  │   - 展开宏（#define）
+  │   - 处理条件编译（#ifdef）
+  │   产物：.ii（预处理后的源码）
+  │
+  ▼ ② 编译（Compile）
+  │   - 语法检查
+  │   - 类型检查
+  │   - 生成汇编代码
+  │   产物：.s（汇编文件）
+  │
+  ▼ ③ 汇编（Assemble）
+  │   - 汇编代码 → 机器码
+  │   产物：.o（目标文件，二进制）
+  │
+  ▼ ④ 链接（Link）
+  │   - 解析符号（把"调用了 add()"和"add() 的定义"对应起来）
+  │   - 合并多个 .o 文件
+  │   - 链接外部库
+  │   产物：可执行文件（app）或库（.a / .so）
+  │
+  ▼
+可执行文件 app
+</code></pre></div></div><h3 id="12-逐步观察每个阶段">1.2 逐步观察每个阶段</h3><p><strong>准备一个最简单的项目</strong>——先建一个文件夹，放三个文件：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>myproject/          ← 自己建一个文件夹，名字随意
+├── add.h           ← 头文件：放声明（告诉编译器"有这个函数"）
+├── add.cpp         ← 源文件：放定义（函数的真正实现）
+└── main.cpp        ← 主程序：调用 add 函数
+</code></pre></div></div><blockquote><p><strong>下面所有的命令，都在 <code class="language-plaintext highlighter-rouge">myproject/</code> 文件夹里执行</strong>（即先 <code class="language-plaintext highlighter-rouge">cd myproject</code> 再跑命令）。</p></blockquote><p>把下面三个文件的内容分别写进对应的文件（用 VS Code、记事本、vim 都行）：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// add.h —— 头文件：放声明（告诉编译器"有这个函数"）</span>
+<span class="cp">#pragma once  // 防止重复包含（同一个 .cpp 里 #include 两次也不会出错）
+</span><span class="kt">int</span> <span class="nf">add</span><span class="p">(</span><span class="kt">int</span> <span class="n">lhs</span><span class="p">,</span> <span class="kt">int</span> <span class="n">rhs</span><span class="p">);</span>  <span class="c1">// 只写函数签名，不写函数体！末尾有分号</span>
+</code></pre></div></div><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// add.cpp —— 源文件：放定义（函数的真正实现）</span>
+<span class="cp">#include</span> <span class="cpf">"add.h"</span><span class="c1">  // 引入自己的头文件（双引号表示"在当前目录找"）</span><span class="cp">
+</span><span class="kt">int</span> <span class="nf">add</span><span class="p">(</span><span class="kt">int</span> <span class="n">lhs</span><span class="p">,</span> <span class="kt">int</span> <span class="n">rhs</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// 这里写函数体，真正实现</span>
+    <span class="k">return</span> <span class="n">lhs</span> <span class="o">+</span> <span class="n">rhs</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// main.cpp —— 主程序</span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="c1">  // 标准库，用尖括号（在系统目录找）</span><span class="cp">
+#include</span> <span class="cpf">"add.h"</span><span class="c1">     // 自己的头文件，用双引号（在当前目录找）</span><span class="cp">
+</span>                     <span class="c1">// 告诉编译器：add 函数存在，签名是 int add(int, int)</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>  <span class="c1">// 调用 add，输出 3</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>  <span class="c1">// main 返回 0 表示程序正常结束</span>
+<span class="p">}</span>
+</code></pre></div></div><p><strong>逐步执行每个阶段</strong>（在 <code class="language-plaintext highlighter-rouge">myproject/</code> 目录下，逐条复制到终端跑）：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ========== ① 只预处理：展开 #include 和宏 ==========</span>
+g++ <span class="nt">-E</span> main.cpp <span class="nt">-o</span> main.ii
+<span class="c"># 逐字解释：</span>
+<span class="c">#   g++         调用 C++ 编译器</span>
+<span class="c">#   -E          只做预处理（Preprocess），然后停下来</span>
+<span class="c">#   main.cpp    输入文件</span>
+<span class="c">#   -o main.ii  输出文件名（.ii 是预处理后的源码后缀）</span>
+<span class="c">#</span>
+<span class="c"># main.ii 是纯文本，可以用编辑器打开看</span>
+<span class="c"># 你会发现 &lt;iostream&gt; 的全部内容被粘贴进来了（好几万行！）</span>
+<span class="c"># 这就是"展开 #include"的含义——把头文件内容原地复制过来</span>
+
+<span class="c"># ========== ② 只编译：生成汇编代码 ==========</span>
+g++ <span class="nt">-S</span> main.ii <span class="nt">-o</span> main.s
+<span class="c">#   -S  只做编译（Compile），停在汇编阶段</span>
+<span class="c"># main.s 是汇编代码（人类可读的机器指令前身）</span>
+<span class="c"># 用编辑器打开能看到 main:、call add 等汇编指令</span>
+
+<span class="c"># 提示：也可以直接从 .cpp 编到 .s，跳过手动预处理：</span>
+<span class="c"># g++ -S main.cpp -o main.s</span>
+
+<span class="c"># ========== ③ 只汇编：生成目标文件（二进制） ==========</span>
+g++ <span class="nt">-c</span> main.cpp <span class="nt">-o</span> main.o
+<span class="c">#   -c  只做编译+汇编（Compile + Assemble），不链接</span>
+<span class="c"># main.o 是二进制目标文件，用编辑器打开是乱码</span>
+<span class="c"># 里面有你写的 main 函数的机器码</span>
+<span class="c"># 但 main 调用了 add，add 的定义在另一个文件里——这个符号还没解析</span>
+
+<span class="c"># 同样把 add.cpp 也编译成 .o</span>
+g++ <span class="nt">-c</span> add.cpp <span class="nt">-o</span> add.o
+<span class="c"># 现在 myproject/ 里有 main.o 和 add.o 两个目标文件</span>
+
+<span class="c"># ========== ④ 链接：把 main.o 和 add.o 合并成可执行文件 ==========</span>
+g++ main.o add.o <span class="nt">-o</span> app
+<span class="c">#   main.o add.o  要链接的目标文件（顺序无所谓）</span>
+<span class="c">#   -o app        输出可执行文件名叫 app</span>
+<span class="c"># 链接器把两个 .o 合并，把 main 里"调用 add"和 add.o 里"add 的定义"对应起来</span>
+
+<span class="c"># 运行</span>
+./app
+<span class="c"># 输出：3</span>
+</code></pre></div></div><blockquote><p><strong>新人最常问</strong>：为什么要拆成 <code class="language-plaintext highlighter-rouge">add.h</code> + <code class="language-plaintext highlighter-rouge">add.cpp</code> 两个文件？ 答案见下一节 1.3。现在先记住：头文件是”菜单”，源文件是”厨房”。</p></blockquote><h3 id="13-为什么要分头文件和源文件">1.3 为什么要分头文件和源文件？</h3><table><thead><tr><th>文件</th><th>内容</th><th>谁需要包含它</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">.h</code> 头文件</td><td><strong>声明</strong>（函数签名、类定义）</td><td>所有调用它的 <code class="language-plaintext highlighter-rouge">.cpp</code></td></tr><tr><td><code class="language-plaintext highlighter-rouge">.cpp</code> 源文件</td><td><strong>定义</strong>（函数的真正实现）</td><td>只在编译时需要，不暴露给其他文件</td></tr></tbody></table><p><strong>类比</strong>：</p><ul><li>头文件 = <strong>菜单</strong>（告诉客人有什么菜）</li><li>源文件 = <strong>厨房</strong>（菜真正怎么做）</li></ul><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// add.h —— 菜单：声明"有 add 这个菜"</span>
+<span class="kt">int</span> <span class="nf">add</span><span class="p">(</span><span class="kt">int</span> <span class="n">lhs</span><span class="p">,</span> <span class="kt">int</span> <span class="n">rhs</span><span class="p">);</span>
+
+<span class="c1">// add.cpp —— 厨房：add 的真正做法</span>
+<span class="kt">int</span> <span class="nf">add</span><span class="p">(</span><span class="kt">int</span> <span class="n">lhs</span><span class="p">,</span> <span class="kt">int</span> <span class="n">rhs</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">lhs</span> <span class="o">+</span> <span class="n">rhs</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// main.cpp —— 顾客：看了菜单，点菜</span>
+<span class="cp">#include</span> <span class="cpf">"add.h"</span><span class="c1">  // 看菜单</span><span class="cp">
+</span><span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>     <span class="c1">// 点菜</span>
+<span class="p">}</span>
+</code></pre></div></div><p><strong>为什么不直接把定义写在头文件里？</strong></p><ul><li>如果多个 <code class="language-plaintext highlighter-rouge">.cpp</code> 都包含了这个头文件，函数会被定义多次 → 链接时报”重复定义”错误</li><li>例外：<code class="language-plaintext highlighter-rouge">inline</code> 函数、模板、<code class="language-plaintext highlighter-rouge">constexpr</code> 函数可以写在头文件里</li></ul><hr /><h2 id="二三类错误编译链接运行时">二、三类错误：编译、链接、运行时</h2><h3 id="21-错误分类表">2.1 错误分类表</h3><table><thead><tr><th>阶段</th><th>典型报错</th><th>常见原因</th><th>什么时候发现</th></tr></thead><tbody><tr><td><strong>编译错误</strong></td><td><code class="language-plaintext highlighter-rouge">not declared</code>、类型不匹配</td><td>缺声明、语法错误、模板实例化失败</td><td><code class="language-plaintext highlighter-rouge">g++ -c</code> 时</td></tr><tr><td><strong>链接错误</strong></td><td><code class="language-plaintext highlighter-rouge">undefined reference to 'add(int, int)'</code></td><td>只声明未定义、漏链接库</td><td><code class="language-plaintext highlighter-rouge">g++ *.o -o app</code> 时</td></tr><tr><td><strong>运行时装载错误</strong></td><td><code class="language-plaintext highlighter-rouge">cannot open shared object file</code></td><td>动态库不在搜索路径、架构不匹配</td><td><code class="language-plaintext highlighter-rouge">./app</code> 运行时</td></tr></tbody></table><h3 id="22-编译错误示例">2.2 编译错误示例</h3><blockquote><p>这个例子只需要一个文件 <code class="language-plaintext highlighter-rouge">bug_compile.cpp</code>，单独建个文件夹放就行。</p></blockquote><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// bug_compile.cpp —— 故意写一个会报编译错误的代码</span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>  <span class="c1">// ❌ add 未声明</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c1">// 问题：main 里调用了 add，但从没告诉编译器 add 是什么</span>
+<span class="c1">// 编译器不认识 add → 编译阶段就报错（还没到链接阶段）</span>
+</code></pre></div></div><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 在 bug_compile.cpp 所在目录执行：</span>
+g++ <span class="nt">-c</span> bug_compile.cpp
+<span class="c"># 报错：</span>
+<span class="c"># error: 'add' was not declared in this scope</span>
+<span class="c">#    7 |     std::cout &lt;&lt; add(1, 2) &lt;&lt; '\n';</span>
+<span class="c">#      |                     ^~~</span>
+<span class="c">#</span>
+<span class="c"># 含义：'add' 在这个作用域里没声明过</span>
+<span class="c"># 时机：编译阶段（g++ -c 时），还没到链接</span>
+</code></pre></div></div><p><strong>修复</strong>：加上声明（告诉编译器 add 存在）</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// bug_compile_fixed.cpp</span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span><span class="kt">int</span> <span class="nf">add</span><span class="p">(</span><span class="kt">int</span> <span class="n">lhs</span><span class="p">,</span> <span class="kt">int</span> <span class="n">rhs</span><span class="p">);</span>  <span class="c1">// ← 加上声明（只要有签名就行，不需要函数体）</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>  <span class="c1">// 现在编译器认识 add 了</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>g++ <span class="nt">-c</span> bug_compile_fixed.cpp   <span class="c"># 编译通过 ✅（但链接还会出错，见下节）</span>
+</code></pre></div></div><h3 id="23-链接错误示例">2.3 链接错误示例</h3><blockquote><p>这个例子也只需要一个文件 <code class="language-plaintext highlighter-rouge">bug_link.cpp</code>。它和 2.2 的区别：<strong>声明有了，但定义没有</strong>。</p></blockquote><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// bug_link.cpp</span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span><span class="kt">int</span> <span class="nf">add</span><span class="p">(</span><span class="kt">int</span> <span class="n">lhs</span><span class="p">,</span> <span class="kt">int</span> <span class="n">rhs</span><span class="p">);</span>  <span class="c1">// ✅ 有声明：编译器知道 add 存在</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>  <span class="c1">// 编译通过</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c1">// 但没有 add 的定义（函数体）！</span>
+<span class="c1">// 编译器说"OK，add 存在"，但链接器找不到 add 的真正实现 → 链接错误</span>
+</code></pre></div></div><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>g++ bug_link.cpp <span class="nt">-o</span> app
+<span class="c"># 报错：</span>
+<span class="c"># /usr/bin/ld: /tmp/ccXXX.o: in function `main':</span>
+<span class="c"># bug_link.cpp:(.text+0x20): undefined reference to `add(int, int)'</span>
+<span class="c"># collect2: error: ld returned 1 exit status</span>
+<span class="c">#</span>
+<span class="c"># 含义：undefined reference = 找不到 add 的定义</span>
+<span class="c"># /usr/bin/ld = 链接器（linker）报的，不是编译器</span>
+<span class="c"># 时机：链接阶段（编译已经通过了）</span>
+</code></pre></div></div><p><strong>修复</strong>：提供 add 的定义。最简单的方式是把 <code class="language-plaintext highlighter-rouge">add.cpp</code>（第一章 1.2 写的那个）一起编译：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 假设 bug_link.cpp 和 add.cpp 在同一个文件夹里</span>
+<span class="c"># （如果没有 add.cpp，回到第一章 1.2 把 add.cpp 和 add.h 复制过来）</span>
+g++ bug_link.cpp add.cpp <span class="nt">-o</span> app   <span class="c"># 把 add.cpp 一起编译，链接器就能找到 add 的定义了</span>
+./app                              <span class="c"># 输出 3 ✅</span>
+</code></pre></div></div><blockquote><p><strong>编译错误 vs 链接错误的判断</strong>（新人必记）：</p><ul><li>报错里有 <code class="language-plaintext highlighter-rouge">error:</code> 且提到 <code class="language-plaintext highlighter-rouge">not declared</code>、<code class="language-plaintext highlighter-rouge">expected</code> → <strong>编译错误</strong>，代码语法/类型有问题</li><li>报错里有 <code class="language-plaintext highlighter-rouge">undefined reference</code>、<code class="language-plaintext highlighter-rouge">ld returned</code> → <strong>链接错误</strong>，声明了但找不到定义</li></ul></blockquote><h3 id="24-运行时装载错误示例">2.4 运行时装载错误示例</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 编译时链接了动态库</span>
+g++ main.cpp <span class="nt">-lmylib</span> <span class="nt">-o</span> app
+
+<span class="c"># 运行时找不到动态库</span>
+./app
+<span class="c"># 报错：</span>
+<span class="c"># ./app: error while loading shared libraries: libmylib.so:</span>
+<span class="c"># cannot open shared object file: No such file or directory</span>
+</code></pre></div></div><p><strong>修复方案</strong>：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 方案一：设置 LD_LIBRARY_PATH（临时诊断用）</span>
+<span class="nb">export </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/path/to/lib:<span class="nv">$LD_LIBRARY_PATH</span>
+./app
+
+<span class="c"># 方案二：编译时设置 RPATH（推荐，写入二进制）</span>
+g++ main.cpp <span class="nt">-L</span>/path/to/lib <span class="nt">-lmylib</span> <span class="nt">-Wl</span>,-rpath,/path/to/lib <span class="nt">-o</span> app
+
+<span class="c"># 方案三：把库装到系统目录</span>
+<span class="nb">sudo cp </span>libmylib.so /usr/local/lib/
+<span class="nb">sudo </span>ldconfig
+</code></pre></div></div><h3 id="25-调试符号的常用命令">2.5 调试符号的常用命令</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 查看 app 里的符号（函数名等），-C 反修饰 C++ 名称</span>
+nm <span class="nt">-C</span> build/app | less
+<span class="c"># 输出示例：</span>
+<span class="c"># 0000000000001149 T add(int, int)    ← T 表示已定义</span>
+<span class="c">#                  U std::cout        ← U 表示未定义（外部符号）</span>
+
+<span class="c"># Linux：查看动态库依赖</span>
+ldd build/app
+<span class="c"># 输出示例：</span>
+<span class="c">#   libstdc++.so.6 =&gt; /lib/x86_64-linux-gnu/libstdc++.so.6 (0x...)</span>
+<span class="c">#   libmylib.so =&gt; not found  ← 问题在这里</span>
+
+<span class="c"># 查看 ELF 文件的动态段（RPATH 等）</span>
+readelf <span class="nt">-d</span> build/app | <span class="nb">grep</span> <span class="nt">-i</span> path
+<span class="c"># 0x000000000000000f (RPATH)  Library rpath [/path/to/lib]</span>
+</code></pre></div></div><blockquote><p><strong>macOS 对应</strong>：<code class="language-plaintext highlighter-rouge">otool -L app</code> 查看动态库依赖（替代 <code class="language-plaintext highlighter-rouge">ldd</code>）。</p></blockquote><hr /><h2 id="三静态库与动态库">三、静态库与动态库</h2><h3 id="31-对比表">3.1 对比表</h3><table><thead><tr><th>维度</th><th>静态库（.a / .lib）</th><th>动态库（.so / .dylib / .dll）</th></tr></thead><tbody><tr><td>链接时机</td><td><strong>编译时</strong></td><td><strong>运行时</strong></td></tr><tr><td>代码位置</td><td>复制到可执行文件里</td><td>独立文件，运行时加载</td></tr><tr><td>产物大小</td><td>大（每个程序都复制一份）</td><td>小（多个程序共享一份）</td></tr><tr><td>更新库</td><td>要重新编译所有依赖的程序</td><td>替换 .so 文件即可</td></tr><tr><td>部署</td><td>简单（只发一个可执行文件）</td><td>要带上 .so 文件</td></tr><tr><td>启动速度</td><td>快</td><td>略慢（要加载动态库）</td></tr></tbody></table><h3 id="32-创建和使用静态库">3.2 创建和使用静态库</h3><blockquote><p><strong>完整可复现项目</strong>——建一个文件夹 <code class="language-plaintext highlighter-rouge">mylib/</code>，放三个文件：</p></blockquote><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mylib/              ← 建一个新文件夹
+├── math_lib.h      ← 头文件：声明 square 函数
+├── math_lib.cpp    ← 源文件：实现 square 函数
+└── main.cpp        ← 主程序：调用 square
+</code></pre></div></div><blockquote><p>下面所有命令都在 <code class="language-plaintext highlighter-rouge">mylib/</code> 文件夹里执行（先 <code class="language-plaintext highlighter-rouge">cd mylib</code>）。</p></blockquote><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// math_lib.h —— 头文件：声明</span>
+<span class="cp">#pragma once
+</span><span class="kt">int</span> <span class="nf">square</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">);</span>  <span class="c1">// 声明：返回 x 的平方</span>
+</code></pre></div></div><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// math_lib.cpp —— 源文件：实现</span>
+<span class="cp">#include</span> <span class="cpf">"math_lib.h"</span><span class="cp">
+</span><span class="kt">int</span> <span class="nf">square</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span><span class="p">;</span> <span class="p">}</span>  <span class="c1">// 定义：x * x</span>
+</code></pre></div></div><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// main.cpp —— 主程序：调用 square</span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">"math_lib.h"</span><span class="c1">  // 引入头文件，告诉编译器 square 存在</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">square</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>  <span class="c1">// 输出 25</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div><p><strong>创建静态库并使用</strong>（在 <code class="language-plaintext highlighter-rouge">mylib/</code> 目录下逐条执行）：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ① 编译 math_lib.cpp 成目标文件</span>
+g++ <span class="nt">-c</span> math_lib.cpp <span class="nt">-o</span> math_lib.o
+<span class="c">#   -c  只编译+汇编，不链接</span>
+<span class="c">#   产物：math_lib.o（二进制目标文件）</span>
+
+<span class="c"># ② 打包成静态库（ar = archiver，归档工具）</span>
+ar rcs libmymath.a math_lib.o
+<span class="c">#   ar       归档工具</span>
+<span class="c">#   r        插入/替换（把 math_lib.o 放进库）</span>
+<span class="c">#   c        创建（库不存在就创建）</span>
+<span class="c">#   s        写索引（让链接器能快速查找）</span>
+<span class="c">#   libmymath.a  库文件名（静态库以 lib 开头、.a 结尾是约定）</span>
+<span class="c">#   math_lib.o   要打包的目标文件</span>
+
+<span class="c"># ③ 编译 main.cpp 并链接静态库</span>
+g++ main.cpp <span class="nt">-L</span><span class="nb">.</span> <span class="nt">-lmymath</span> <span class="nt">-o</span> app
+<span class="c">#   main.cpp     主程序源文件</span>
+<span class="c">#   -L.          在当前目录（.）搜索库文件</span>
+<span class="c">#   -lmymath     链接名为 mymath 的库（自动加 lib 前缀和 .a 后缀 → libmymath.a）</span>
+<span class="c">#   -o app       输出可执行文件</span>
+<span class="c">#</span>
+<span class="c"># 注意：-lmymath 不是文件名 libmymath.a，而是去掉 lib 前缀和 .a 后缀的"库名"</span>
+
+<span class="c"># ④ 运行</span>
+./app
+<span class="c"># 输出：25</span>
+</code></pre></div></div><h3 id="33-创建和使用动态库">3.3 创建和使用动态库</h3><blockquote><p><strong>用同样的项目结构</strong>（3.2 的 <code class="language-plaintext highlighter-rouge">mylib/</code> 文件夹和三个文件），只是编译命令不同。</p></blockquote><p><strong>创建动态库并使用</strong>（在 <code class="language-plaintext highlighter-rouge">mylib/</code> 目录下逐条执行）：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ① 编译成位置无关代码（PIC）</span>
+g++ <span class="nt">-c</span> <span class="nt">-fPIC</span> math_lib.cpp <span class="nt">-o</span> math_lib.o
+<span class="c">#   -fPIC  Position Independent Code（位置无关代码）</span>
+<span class="c">#          动态库必须加这个，因为 .so 加载到内存的位置不固定</span>
+<span class="c">#          静态库不需要，因为它在链接时直接复制进可执行文件</span>
+
+<span class="c"># ② 打包成动态库（-shared）</span>
+g++ <span class="nt">-shared</span> <span class="nt">-o</span> libmymath.so math_lib.o
+<span class="c">#   -shared          生成动态库（.so）而非可执行文件</span>
+<span class="c">#   -o libmymath.so  输出文件名（动态库以 lib 开头、.so 结尾是约定）</span>
+<span class="c">#   math_lib.o       要打包的目标文件</span>
+
+<span class="c"># ③ 编译 main.cpp 并链接动态库（命令和静态库一样）</span>
+g++ main.cpp <span class="nt">-L</span><span class="nb">.</span> <span class="nt">-lmymath</span> <span class="nt">-o</span> app
+<span class="c">#   -L. -lmymath  和静态库完全一样的写法</span>
+<span class="c">#   链接器会优先找 .so（动态库），找不到才找 .a（静态库）</span>
+
+<span class="c"># ④ 运行时需要找到 .so 文件</span>
+./app
+<span class="c"># 报错：./app: error while loading shared libraries: libmymath.so:</span>
+<span class="c">#       cannot open shared object file: No such file or directory</span>
+<span class="c">#</span>
+<span class="c"># 为什么？动态库是运行时加载的，系统不知道去 mylib/ 目录找 .so</span>
+<span class="c"># 解决：告诉系统去当前目录找</span>
+
+<span class="nb">export </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>.:<span class="nv">$LD_LIBRARY_PATH</span>
+<span class="c">#   把当前目录（.）加到动态库搜索路径里</span>
+<span class="c">#   这是临时方案（只对当前终端有效）</span>
+
+./app
+<span class="c"># 输出：25 ✅</span>
+</code></pre></div></div><blockquote><p><strong>静态库 vs 动态库对新人来说的关键区别</strong>：</p><ul><li>静态库 <code class="language-plaintext highlighter-rouge">.a</code>：链接时把库代码<strong>复制进</strong>可执行文件，运行时不需要 .a 文件了</li><li>动态库 <code class="language-plaintext highlighter-rouge">.so</code>：链接时只记一个”依赖关系”，运行时才去加载 .so，所以运行时必须能找到 .so</li></ul></blockquote><h3 id="34-动态库搜索路径linux">3.4 动态库搜索路径（Linux）</h3><p>运行时找 <code class="language-plaintext highlighter-rouge">.so</code> 的顺序：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. RPATH/RUNPATH（编译时写入二进制的路径）
+2. LD_LIBRARY_PATH（环境变量，临时用）
+3. /etc/ld.so.cache（系统缓存，由 ldconfig 生成）
+4. /lib, /usr/lib（默认目录）
+</code></pre></div></div><blockquote><p><strong>原则</strong>：<code class="language-plaintext highlighter-rouge">LD_LIBRARY_PATH</code> 适合临时诊断，不应成为掩盖安装布局问题的长期方案。生产环境用 RPATH。</p></blockquote><hr /><h2 id="四abi源码兼容--二进制兼容">四、ABI：源码兼容 ≠ 二进制兼容</h2><h3 id="41-什么是-abi先看类比">4.1 什么是 ABI（先看类比）</h3><p><strong>先说结论</strong>：新人现阶段大概率不会自己踩 ABI 的坑，但用到第三方库（特别是 Python C++ 扩展）时会遇到别人踩的坑。理解概念即可，不用死记细节。</p><p><strong>类比</strong>：想象两个人要合作拼乐高——</p><ul><li><strong>源码兼容</strong> = 两个人看的是同一份拼装图纸（都能看懂怎么拼）</li><li><strong>二进制兼容（ABI）</strong> = 两个人的乐高积木接口尺寸一样（能物理插到一起）</li></ul><p>两个人图纸一样（源码兼容），但一个用标准乐高、一个用仿制乐高，接口尺寸差 0.1mm——拼不上（ABI 不兼容）。</p><p><strong>ABI（Application Binary Interface）</strong> 就是编译后的二进制文件之间的”接口尺寸”，规定：</p><ul><li>调用约定：函数参数怎么传（寄存器还是栈）、返回值放哪</li><li>名称修饰（name mangling）：<code class="language-plaintext highlighter-rouge">add(int, int)</code> 编译后在二进制里叫什么名字（比如 <code class="language-plaintext highlighter-rouge">_Z3addii</code>）</li><li>对象布局：一个 struct 在内存里各字段怎么排布、占多少字节</li><li>标准库类型实现：<code class="language-plaintext highlighter-rouge">std::string</code> 在内存里长什么样</li></ul><p><strong>源码兼容</strong>：你的代码能编译通过（图纸一样）。<br /> <strong>二进制兼容</strong>：编译好的 <code class="language-plaintext highlighter-rouge">.o</code> / <code class="language-plaintext highlighter-rouge">.so</code> 能直接链接使用（积木接口一样）。</p><blockquote><p><strong>新人现阶段的理解</strong>：你写 C++ 代码用 <code class="language-plaintext highlighter-rouge">g++</code> 编译，通常不会遇到 ABI 问题。但当你要<strong>链接别人编译好的 .so 库</strong>，或者<strong>做 Python C++ 扩展</strong>时，可能遇到”代码明明对、编译也通过、运行时却报 undefined symbol”——这就是 ABI 不匹配。</p></blockquote><h3 id="42-什么时候会-abi-不兼容">4.2 什么时候会 ABI 不兼容</h3><table><thead><tr><th>情况</th><th>说明</th><th>新人会遇到吗</th></tr></thead><tbody><tr><td>编译器版本不同</td><td>GCC 9 编译的库，GCC 12 可能链接不上</td><td>很少（通常用同一版本）</td></tr><tr><td>标准库实现不同</td><td>libstdc++（GCC）vs libc++（Clang）</td><td>偶尔（Mac 上 Clang 用 libc++）</td></tr><tr><td>编译选项不同</td><td><code class="language-plaintext highlighter-rouge">-D_GLIBCXX_USE_CXX11_ABI=0</code> vs <code class="language-plaintext highlighter-rouge">=1</code></td><td><strong>常见</strong>（Python 扩展高频坑）</td></tr><tr><td>Debug/Release 混用</td><td>MSVC 的 <code class="language-plaintext highlighter-rouge">/MDd</code> vs <code class="language-plaintext highlighter-rouge">/MD</code></td><td>Windows 上可能遇到</td></tr><tr><td>CPU 架构不同</td><td>x86_64 vs ARM64</td><td>很少（除非跨平台部署）</td></tr></tbody></table><h3 id="43-实际案例python-c-扩展新人最可能遇到的场景">4.3 实际案例：Python C++ 扩展（新人最可能遇到的场景）</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 场景：你用 pybind11 编译了一个 Python 扩展 myext.so</span>
+<span class="c"># 编译时用的是新版 GCC（默认新 ABI）</span>
+
+<span class="c"># 导入时报错</span>
+python <span class="nt">-c</span> <span class="s2">"import myext"</span>
+<span class="c"># ImportError: undefined symbol: _ZNSt7__cxx1112basic_string...</span>
+<span class="c">#</span>
+<span class="c"># 那串乱码 _ZNSt7__cxx1112basic_string 是 name mangling 后的 std::string</span>
+<span class="c"># 报错含义：你的扩展用了"新版 std::string"，</span>
+<span class="c">#           但 Python 解释器（或某个依赖）用的是"旧版 std::string"</span>
+<span class="c">#           两者 ABI 不匹配，找不到对方的符号</span>
+
+<span class="c"># 解决：强制统一 ABI</span>
+g++ ... <span class="nt">-D_GLIBCXX_USE_CXX11_ABI</span><span class="o">=</span>1
+<span class="c"># 这个宏控制 std::string 等 STL 类型用新 ABI 还是旧 ABI</span>
+<span class="c"># 新版 GCC 默认是 1（新 ABI），但某些老环境/老 Python 可能是 0（旧 ABI）</span>
+<span class="c"># 两边要一致</span>
+</code></pre></div></div><blockquote><p><strong>排查思路</strong>：”能编译但导入失败”时，除了检查 Python 路径，还要检查扩展和依赖库的 ABI、架构与符号。这在新人做 pybind11 扩展时是高频问题。</p></blockquote><hr /><h2 id="五模板编译期生成代码">五、模板：编译期生成代码</h2><h3 id="51-什么是模板">5.1 什么是模板</h3><p><strong>模板</strong>：写一份”通用代码”，编译器根据你用的类型自动生成特化版本。</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 写一个通用的 add，T 是类型参数</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="n">T</span> <span class="nf">add</span><span class="p">(</span><span class="n">T</span> <span class="n">lhs</span><span class="p">,</span> <span class="n">T</span> <span class="n">rhs</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">lhs</span> <span class="o">+</span> <span class="n">rhs</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// 使用时，编译器自动生成两个版本：</span>
+<span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>        <span class="c1">// 实例化 add&lt;int&gt;：int add(int, int)</span>
+<span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">add</span><span class="p">(</span><span class="mf">1.0</span><span class="n">f</span><span class="p">,</span> <span class="mf">2.0</span><span class="n">f</span><span class="p">);</span>  <span class="c1">// 实例化 add&lt;float&gt;：float add(float, float)</span>
+</code></pre></div></div><p><strong>类比</strong>：</p><ul><li>Python 的 duck typing：<code class="language-plaintext highlighter-rouge">def add(a, b): return a + b</code> 运行时检查</li><li>C++ 模板：<code class="language-plaintext highlighter-rouge">template&lt;T&gt; T add(T a, T b)</code> <strong>编译时</strong>生成具体类型版本</li></ul><h3 id="52-模板必须放在头文件里新人高频踩坑">5.2 模板必须放在头文件里（新人高频踩坑）</h3><blockquote><p>这是一个<strong>很容易踩的坑</strong>：模板和普通函数不同，定义必须放头文件里。下面用完整的对比示例说明。</p></blockquote><p><strong>❌ 错误写法：模板声明在 .h，定义在 .cpp（和普通函数一样拆分）</strong></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bad_template/
+├── add.h       ← 声明模板
+├── add.cpp     ← 定义模板
+└── main.cpp    ← 使用模板
+</code></pre></div></div><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// add.h —— 声明模板</span>
+<span class="cp">#pragma once
+</span><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="n">T</span> <span class="nf">add</span><span class="p">(</span><span class="n">T</span> <span class="n">lhs</span><span class="p">,</span> <span class="n">T</span> <span class="n">rhs</span><span class="p">);</span>  <span class="c1">// 只声明</span>
+</code></pre></div></div><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// add.cpp —— 定义模板</span>
+<span class="cp">#include</span> <span class="cpf">"add.h"</span><span class="cp">
+</span><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="n">T</span> <span class="nf">add</span><span class="p">(</span><span class="n">T</span> <span class="n">lhs</span><span class="p">,</span> <span class="n">T</span> <span class="n">rhs</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lhs</span> <span class="o">+</span> <span class="n">rhs</span><span class="p">;</span> <span class="p">}</span>  <span class="c1">// 定义</span>
+</code></pre></div></div><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// main.cpp —— 使用模板</span>
+<span class="cp">#include</span> <span class="cpf">"add.h"</span><span class="cp">
+</span><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span> <span class="p">}</span>  <span class="c1">// 调用 add&lt;int&gt;</span>
+</code></pre></div></div><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>g++ main.cpp add.cpp <span class="nt">-o</span> app
+<span class="c"># 报错：</span>
+<span class="c"># undefined reference to `int add&lt;int&gt;(int, int)'</span>
+<span class="c">#</span>
+<span class="c"># 为什么？看下面的图解</span>
+</code></pre></div></div><p><strong>为什么报错？画个图就明白了</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>编译 main.cpp 时：
+  编译器看到 add(1, 2) → 想生成 add&lt;int&gt; 的代码
+  但 main.cpp 只 #include 了 add.h（只有声明，没有定义）
+  编译器想："我没有函数体，怎么生成机器码？"
+  → 编译器只能记下"需要 add&lt;int&gt; 这个符号"，等链接时找
+
+编译 add.cpp 时：
+  编译器看到 add 的模板定义
+  但编译器不知道谁会用 add&lt;int&gt;（main.cpp 的事它不知道）
+  → 编译器什么都没生成
+  → add.o 里没有 add&lt;int&gt; 的机器码
+
+链接时：
+  main.o 说"我需要 add&lt;int&gt;"
+  add.o 里没有 add&lt;int&gt;
+  → undefined reference！
+</code></pre></div></div><p><strong>✅ 正确写法：模板定义放头文件里</strong></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>good_template/
+├── add.h       ← 声明 + 定义（模板放这里！）
+└── main.cpp    ← 使用模板
+</code></pre></div></div><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// add.h —— 模板的声明和定义都放头文件</span>
+<span class="cp">#pragma once
+</span><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="n">T</span> <span class="nf">add</span><span class="p">(</span><span class="n">T</span> <span class="n">lhs</span><span class="p">,</span> <span class="n">T</span> <span class="n">rhs</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">lhs</span> <span class="o">+</span> <span class="n">rhs</span><span class="p">;</span>  <span class="c1">// 定义就在这里</span>
+<span class="p">}</span>
+</code></pre></div></div><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// main.cpp —— 使用模板</span>
+<span class="cp">#include</span> <span class="cpf">"add.h"</span><span class="c1">   // #include 会把 add.h 的全部内容粘贴进来</span><span class="cp">
+</span>                   <span class="c1">// 所以编译 main.cpp 时，编译器同时看到了声明和定义</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>  <span class="c1">// 编译器看到定义，直接生成 add&lt;int&gt; 的机器码</span>
+<span class="p">}</span>
+</code></pre></div></div><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>g++ main.cpp <span class="nt">-o</span> app   <span class="c"># 不需要 add.cpp 了！编译通过 ✅</span>
+./app<span class="p">;</span> <span class="nb">echo</span> <span class="nv">$?</span>         <span class="c"># 输出 3（main 的返回值）</span>
+</code></pre></div></div><p><strong>对比普通函数和模板的区别</strong>：</p><table><thead><tr><th> </th><th>普通函数</th><th>模板</th></tr></thead><tbody><tr><td>声明放哪</td><td>.h</td><td>.h</td></tr><tr><td>定义放哪</td><td>.cpp（可以）</td><td><strong>必须放 .h</strong>（新人记住这条）</td></tr><tr><td>为什么</td><td>编译 .cpp 时生成固定类型的机器码，链接时能找到</td><td>编译器需要在”用到的点”看到完整定义才能生成具体类型的代码</td></tr></tbody></table><blockquote><p><strong>新人记忆口诀</strong>：普通函数可以”声明在 .h、定义在 .cpp”；<strong>模板不行</strong>，模板的定义必须跟着声明一起在 .h 里。</p></blockquote><h3 id="53-非类型模板参数">5.3 非类型模板参数</h3><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;array&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span>
+<span class="c1">// N 是编译期常量，不是类型</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">N</span><span class="p">&gt;</span>
+<span class="n">T</span> <span class="nf">sum</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">N</span><span class="o">&gt;&amp;</span> <span class="n">values</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">T</span> <span class="n">result</span><span class="p">{};</span>                        <span class="c1">// ← 为什么用 {}？见下方解释</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">value</span> <span class="o">:</span> <span class="n">values</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">result</span> <span class="o">+=</span> <span class="n">value</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="mi">5</span><span class="o">&gt;</span> <span class="n">arr</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">};</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sum</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>  <span class="c1">// 15</span>
+    <span class="c1">// 编译器生成 sum&lt;int, 5&gt;</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span> <span class="mi">3</span><span class="o">&gt;</span> <span class="n">darr</span> <span class="o">=</span> <span class="p">{</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">};</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sum</span><span class="p">(</span><span class="n">darr</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>  <span class="c1">// 7.0</span>
+    <span class="c1">// 编译器生成 sum&lt;double, 3&gt;</span>
+<span class="p">}</span>
+</code></pre></div></div><h4 id="t-result-为什么用--而不是-t-result"><code class="language-plaintext highlighter-rouge">T result{};</code> 为什么用 <code class="language-plaintext highlighter-rouge">{}</code> 而不是 <code class="language-plaintext highlighter-rouge">T result;</code>？</h4><p>新人看到这行很容易疑惑：为什么不写 <code class="language-plaintext highlighter-rouge">T result;</code>，偏要加个 <code class="language-plaintext highlighter-rouge">{}</code>？这涉及 C++ 一个重要的坑。</p><p><strong>先看 <code class="language-plaintext highlighter-rouge">T result;</code>（不加 <code class="language-plaintext highlighter-rouge">{}</code>）会怎样</strong>：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">result</span><span class="p">;</span>        <span class="c1">// 未初始化！值是垃圾（可能是 0，也可能是 32767）</span>
+<span class="kt">double</span> <span class="n">result</span><span class="p">;</span>     <span class="c1">// 未初始化！值是垃圾</span>
+</code></pre></div></div><p>在 C++ 里，<strong>局部变量如果不初始化，它的值是未定义的</strong>（内存里上一个程序留下的垃圾值）。如果你写：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">T</span> <span class="n">result</span><span class="p">;</span>          <span class="c1">// result 是垃圾值</span>
+<span class="n">result</span> <span class="o">+=</span> <span class="n">value</span><span class="p">;</span>   <span class="c1">// 垃圾值 + value = 还是垃圾</span>
+</code></pre></div></div><p>那求和结果就完全错了。这是 C++ 新人最常见的 bug 之一——Python 不会这样（Python 变量必须赋值才能用），所以从 Python 转 C++ 的人特别容易踩。</p><p><strong><code class="language-plaintext highlighter-rouge">T result{};</code> 的含义：值初始化（zero-initialization）</strong>：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">result</span><span class="p">{};</span>      <span class="c1">// result = 0</span>
+<span class="kt">double</span> <span class="n">result</span><span class="p">{};</span>   <span class="c1">// result = 0.0</span>
+<span class="kt">bool</span> <span class="n">result</span><span class="p">{};</span>     <span class="c1">// result = false</span>
+<span class="c1">// 任何类型用 {} 初始化，都会被设为该类型的"零值"</span>
+</code></pre></div></div><p><code class="language-plaintext highlighter-rouge">{}</code> 是 C++11 引入的<strong>列表初始化</strong>语法，对于基本类型（int、double 等）来说，它会初始化为零值。</p><p><strong>对比四种写法</strong>：</p><table><thead><tr><th>写法</th><th>含义</th><th>result 的值</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">T result;</code></td><td>默认初始化（基本类型 = 不初始化）</td><td><strong>垃圾值</strong>（未定义）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">T result{};</code></td><td>值初始化（列表初始化）</td><td>零值（int→0, double→0.0）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">T result = 0;</code></td><td>拷贝初始化</td><td>0（但只对数值类型有效）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">T result = T{};</code></td><td>显式构造临时对象再拷贝</td><td>零值</td></tr></tbody></table><p><strong>为什么模板里用 <code class="language-plaintext highlighter-rouge">{}</code> 而不是 <code class="language-plaintext highlighter-rouge">= 0</code></strong>：</p><p>因为 <code class="language-plaintext highlighter-rouge">T</code> 是模板参数，可能是 <code class="language-plaintext highlighter-rouge">int</code>、<code class="language-plaintext highlighter-rouge">double</code>、<code class="language-plaintext highlighter-rouge">float</code>，甚至可能是自定义类型。<code class="language-plaintext highlighter-rouge">T result = 0;</code> 只对数值类型有效（自定义类型可能不接受 <code class="language-plaintext highlighter-rouge">= 0</code>），但 <code class="language-plaintext highlighter-rouge">T result{};</code> 对所有类型都有效——基本类型初始化为零值，自定义类型调用默认构造函数。这就是模板代码里几乎总是用 <code class="language-plaintext highlighter-rouge">{}</code> 的原因。</p><blockquote><p><strong>新人记忆</strong>：C++ 里声明局部变量时，<strong>养成加 <code class="language-plaintext highlighter-rouge">{}</code> 的习惯</strong>。<code class="language-plaintext highlighter-rouge">int x{};</code> 比 <code class="language-plaintext highlighter-rouge">int x;</code> 安全得多，永远不会有垃圾值。</p></blockquote><p><strong>为什么有用</strong>：N 是编译期常量，编译器可以据此优化（比如展开循环）。</p><h3 id="54-模板在-cuda-中的应用">5.4 模板在 CUDA 中的应用</h3><p>CUDA 和高性能计算大量使用模板：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 数据类型特化</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="n">__global__</span> <span class="kt">void</span> <span class="nf">vector_add</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">b</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">blockDim</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">)</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="c1">// 用 float、half、bfloat16 实例化</span>
+
+<span class="c1">// 非类型参数：tile 大小</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="kt">int</span> <span class="n">TILE_SIZE</span><span class="p">&gt;</span>
+<span class="n">__global__</span> <span class="kt">void</span> <span class="n">matrix_mul</span><span class="p">(</span><span class="kt">float</span><span class="o">*</span> <span class="n">C</span><span class="p">,</span> <span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">B</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">__shared__</span> <span class="kt">float</span> <span class="n">tile_A</span><span class="p">[</span><span class="n">TILE_SIZE</span><span class="p">][</span><span class="n">TILE_SIZE</span><span class="p">];</span>
+    <span class="n">__shared__</span> <span class="kt">float</span> <span class="n">tile_B</span><span class="p">[</span><span class="n">TILE_SIZE</span><span class="p">][</span><span class="n">TILE_SIZE</span><span class="p">];</span>
+    <span class="c1">// ...</span>
+<span class="p">}</span>
+<span class="c1">// 实例化 matrix_mul&lt;16&gt;, matrix_mul&lt;32&gt;</span>
+</code></pre></div></div><h3 id="55-模板错误的阅读方法">5.5 模板错误的阅读方法</h3><p>模板错误往往很长（几十行），阅读方法：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>error: no matching function for call to 'add(int, double)'
+  auto x = add(1, 2.5);
+           ^~~
+note: candidate template ignored: deduced conflicting types
+      for parameter 'T' ('int' vs. 'double')
+  T add(T lhs, T rhs) {
+    ^
+</code></pre></div></div><p><strong>阅读顺序</strong>：</p><ol><li><strong>最前面</strong>：用户代码哪里出错了 → <code class="language-plaintext highlighter-rouge">add(1, 2.5)</code> 调用失败</li><li><strong>最底层</strong>：真正的原因 → T 推导冲突，既想是 int 又想是 double</li><li><strong>忽略中间</strong>几十层展开</li></ol><p><strong>修复</strong>：显式指定类型，或让类型一致</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">add</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">);</span>     <span class="c1">// 显式指定 T=int</span>
+<span class="k">auto</span> <span class="n">y</span> <span class="o">=</span> <span class="n">add</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">);</span>        <span class="c1">// 都是 double</span>
+<span class="k">auto</span> <span class="n">z</span> <span class="o">=</span> <span class="n">add</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="mf">2.5</span><span class="p">);</span>  <span class="c1">// 转换</span>
+</code></pre></div></div><hr /><h2 id="六stl-容器与迭代器">六、STL 容器与迭代器</h2><h3 id="61-常用容器对比">6.1 常用容器对比</h3><table><thead><tr><th>容器</th><th>内存特征</th><th>访问</th><th>插入/删除</th><th>常见用途</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">std::vector&lt;T&gt;</code></td><td>连续内存</td><td>随机访问 O(1)</td><td>尾部 O(1)，中间 O(n)</td><td><strong>默认选择</strong>，数值缓冲区</td></tr><tr><td><code class="language-plaintext highlighter-rouge">std::array&lt;T,N&gt;</code></td><td>连续内存</td><td>随机访问 O(1)</td><td>不能改大小</td><td>编译期已知大小的小数组</td></tr><tr><td><code class="language-plaintext highlighter-rouge">std::deque&lt;T&gt;</code></td><td>分段存储</td><td>随机访问 O(1)</td><td>两端 O(1)</td><td>队列、滑动窗口</td></tr><tr><td><code class="language-plaintext highlighter-rouge">std::list&lt;T&gt;</code></td><td>链表</td><td>顺序 O(n)</td><td>任意位置 O(1)</td><td>频繁中间插删（少用）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">std::unordered_map&lt;K,V&gt;</code></td><td>哈希表</td><td>平均 O(1)</td><td>平均 O(1)</td><td>无序键值索引</td></tr><tr><td><code class="language-plaintext highlighter-rouge">std::map&lt;K,V&gt;</code></td><td>红黑树</td><td>O(log n)</td><td>O(log n)</td><td>需要有序遍历/范围查询</td></tr><tr><td><code class="language-plaintext highlighter-rouge">std::unordered_set&lt;T&gt;</code></td><td>哈希表</td><td>平均 O(1)</td><td>平均 O(1)</td><td>去重</td></tr><tr><td><code class="language-plaintext highlighter-rouge">std::string</code></td><td>连续内存</td><td>随机访问 O(1)</td><td>尾部 O(1)</td><td>字符串</td></tr></tbody></table><h3 id="62-vector-完整示例">6.2 vector 完整示例</h3><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// 创建</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v1</span><span class="p">;</span>              <span class="c1">// 空</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v2</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>        <span class="c1">// 5 个 0</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v3</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>  <span class="c1">// 列表初始化</span>
+
+    <span class="c1">// 访问</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">v3</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>       <span class="c1">// 1（不检查越界）</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">v3</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>    <span class="c1">// 2（检查越界，抛异常）</span>
+
+    <span class="c1">// 修改</span>
+    <span class="n">v3</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>                   <span class="c1">// 尾部添加</span>
+    <span class="n">v3</span><span class="p">.</span><span class="n">pop_back</span><span class="p">();</span>                     <span class="c1">// 尾部删除</span>
+    <span class="n">v3</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>                         <span class="c1">// 3</span>
+    <span class="n">v3</span><span class="p">.</span><span class="n">empty</span><span class="p">();</span>                        <span class="c1">// false</span>
+
+    <span class="c1">// 遍历</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">x</span> <span class="o">:</span> <span class="n">v3</span><span class="p">)</span> <span class="p">{</span>                 <span class="c1">// 只读遍历</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="sc">' '</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span><span class="o">&amp;</span> <span class="n">x</span> <span class="o">:</span> <span class="n">v3</span><span class="p">)</span> <span class="p">{</span>                <span class="c1">// 可修改遍历</span>
+        <span class="n">x</span> <span class="o">*=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 迭代器</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">it</span> <span class="o">=</span> <span class="n">v3</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">v3</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">it</span> <span class="o">&lt;&lt;</span> <span class="sc">' '</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div><h3 id="63-迭代器失效重要陷阱">6.3 迭代器失效——重要陷阱</h3><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">};</span>
+
+<span class="c1">// ❌ 危险：遍历时 erase，迭代器失效</span>
+<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">it</span> <span class="o">=</span> <span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">it</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">v</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">it</span><span class="p">);</span>  <span class="c1">// it 失效！下次 ++it 是 UB</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// ✅ 正确：用 erase 的返回值</span>
+<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">it</span> <span class="o">=</span> <span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">it</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">it</span> <span class="o">=</span> <span class="n">v</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">it</span><span class="p">);</span>  <span class="c1">// erase 返回下一个有效迭代器</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="o">++</span><span class="n">it</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div><h3 id="64-vector-扩容与迭代器失效">6.4 vector 扩容与迭代器失效</h3><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>  <span class="c1">// 指向第一个元素</span>
+
+<span class="n">v</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>    <span class="c1">// 可能触发扩容！</span>
+<span class="c1">// 如果扩容了，ptr 指向的旧内存被释放</span>
+<span class="c1">// *ptr = 99;  // ❌ UB！ptr 悬空了</span>
+
+<span class="c1">// 预防：提前 reserve</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v2</span><span class="p">;</span>
+<span class="n">v2</span><span class="p">.</span><span class="n">reserve</span><span class="p">(</span><span class="mi">1024</span><span class="p">);</span>  <span class="c1">// 预分配，避免后续扩容</span>
+</code></pre></div></div><h3 id="65-map-和-unordered_map">6.5 map 和 unordered_map</h3><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;map&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;unordered_map&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// unordered_map：哈希表，平均 O(1)</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">ages</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="p">{</span><span class="s">"Alice"</span><span class="p">,</span> <span class="mi">25</span><span class="p">},</span> <span class="p">{</span><span class="s">"Bob"</span><span class="p">,</span> <span class="mi">30</span><span class="p">}</span>
+    <span class="p">};</span>
+    <span class="n">ages</span><span class="p">[</span><span class="s">"Charlie"</span><span class="p">]</span> <span class="o">=</span> <span class="mi">28</span><span class="p">;</span>          <span class="c1">// 插入</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ages</span><span class="p">[</span><span class="s">"Alice"</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>  <span class="c1">// 25</span>
+
+    <span class="c1">// 遍历（无序）</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="p">[</span><span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">]</span> <span class="o">:</span> <span class="n">ages</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">name</span> <span class="o">&lt;&lt;</span> <span class="s">": "</span> <span class="o">&lt;&lt;</span> <span class="n">age</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// map：红黑树，O(log n)，有序</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">sorted_ages</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="p">{</span><span class="s">"Alice"</span><span class="p">,</span> <span class="mi">25</span><span class="p">},</span> <span class="p">{</span><span class="s">"Bob"</span><span class="p">,</span> <span class="mi">30</span><span class="p">}</span>
+    <span class="p">};</span>
+    <span class="c1">// 遍历（按 key 排序）</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="p">[</span><span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">]</span> <span class="o">:</span> <span class="n">sorted_ages</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">name</span> <span class="o">&lt;&lt;</span> <span class="s">": "</span> <span class="o">&lt;&lt;</span> <span class="n">age</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>
+        <span class="c1">// Alice: 25, Bob: 30（按字母序）</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div><h3 id="66-性能提示缓存局部性">6.6 性能提示：缓存局部性</h3><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 理论上 list 插删 O(1)，vector 插删 O(n)</span>
+<span class="c1">// 但实际 vector 往往更快！</span>
+
+<span class="c1">// 原因：vector 连续内存 → CPU 缓存友好</span>
+<span class="c1">// list 节点分散 → 缓存 miss 频繁</span>
+
+<span class="c1">// 经验：除非需要在中间频繁插删且元素很大，</span>
+<span class="c1">// 否则优先 vector</span>
+</code></pre></div></div><blockquote><p><strong>原则</strong>：性能敏感代码除了看大 O 复杂度，还要看连续性、分配次数、缓存局部性。很多场景中，线性扫描连续 vector 比理论查找复杂度更低但指针跳转频繁的结构更快。</p></blockquote><hr /><h2 id="七最小-cmake-项目">七、最小 CMake 项目</h2><h3 id="71-为什么用-cmake">7.1 为什么用 CMake</h3><table><thead><tr><th>手动 g++</th><th>CMake</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">g++ main.cpp add.cpp -o app</code></td><td>写一次 CMakeLists.txt，跨平台</td></tr><tr><td>文件多了命令很长</td><td>自动管理依赖</td></tr><tr><td>换机器要改命令</td><td><code class="language-plaintext highlighter-rouge">cmake -B build</code> 就行</td></tr><tr><td>没有增量编译</td><td>自动只编译改动过的文件</td></tr></tbody></table><h3 id="72-项目结构">7.2 项目结构</h3><blockquote><p><strong>完整可复现项目</strong>——建一个文件夹 <code class="language-plaintext highlighter-rouge">vector_ops/</code>，按下面的结构放文件：</p></blockquote><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vector_ops/                 ← 建一个新文件夹
+├── CMakeLists.txt          ← 构建配置（CMake 的"说明书"）
+├── include/
+│   └── vector_ops.h        ← 公开头文件（放声明）
+└── src/
+    ├── vector_ops.cpp      ← 实现（放定义）
+    └── main.cpp            ← 主程序（7.5 节会加）
+</code></pre></div></div><blockquote><p>下面所有命令都在 <code class="language-plaintext highlighter-rouge">vector_ops/</code> 文件夹里执行（先 <code class="language-plaintext highlighter-rouge">cd vector_ops</code>）。</p></blockquote><p>先创建目录结构：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> <span class="nt">-p</span> vector_ops/include vector_ops/src
+<span class="nb">cd </span>vector_ops
+<span class="c"># 现在你在 vector_ops/ 里</span>
+</code></pre></div></div><p>把下面三个文件的内容分别写进对应文件：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// include/vector_ops.h —— 公开头文件</span>
+<span class="cp">#pragma once
+#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+</span>
+<span class="kt">float</span> <span class="nf">sum</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;&amp;</span> <span class="n">values</span><span class="p">);</span>  <span class="c1">// 声明：对 vector 求和</span>
+</code></pre></div></div><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// src/vector_ops.cpp —— 实现</span>
+<span class="cp">#include</span> <span class="cpf">"vector_ops.h"</span><span class="c1">   // 引入自己的头文件</span><span class="cp">
+#include</span> <span class="cpf">&lt;numeric&gt;</span><span class="c1">        // std::accumulate 在这里</span><span class="cp">
+</span>
+<span class="kt">float</span> <span class="nf">sum</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;&amp;</span> <span class="n">values</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// std::accumulate：从 begin 到 end 累加，初始值 0.0f</span>
+    <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">accumulate</span><span class="p">(</span><span class="n">values</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">values</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mf">0.0</span><span class="n">f</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div><blockquote><p>注意：<code class="language-plaintext highlighter-rouge">src/vector_ops.cpp</code> 里 <code class="language-plaintext highlighter-rouge">#include "vector_ops.h"</code> 能找到 <code class="language-plaintext highlighter-rouge">include/</code> 下的头文件，是因为 CMakeLists.txt 里配了头文件搜索路径（见下节 <code class="language-plaintext highlighter-rouge">target_include_directories</code>）。</p></blockquote><h3 id="73-cmakeliststxt-逐行解释">7.3 CMakeLists.txt 逐行解释</h3><p>在 <code class="language-plaintext highlighter-rouge">vector_ops/</code> 根目录下创建 <code class="language-plaintext highlighter-rouge">CMakeLists.txt</code>（注意大小写，C 代表大写）：</p><div class="language-cmake highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 要求 CMake 最低版本 3.20（太老的 CMake 不支持某些语法）</span>
+<span class="nb">cmake_minimum_required</span><span class="p">(</span>VERSION 3.20<span class="p">)</span>
+
+<span class="c1"># 项目名：vector_ops，语言：CXX（C++ 的缩写，C 语言是 C）</span>
+<span class="nb">project</span><span class="p">(</span>vector_ops LANGUAGES CXX<span class="p">)</span>
+
+<span class="c1"># 创建一个静态库 target，名字叫 vector_ops，源文件是 src/vector_ops.cpp</span>
+<span class="c1"># "target" 是 CMake 的核心概念：你定义一个"构建目标"</span>
+<span class="c1"># target 可以是库（add_library）或可执行文件（add_executable）</span>
+<span class="nb">add_library</span><span class="p">(</span>vector_ops src/vector_ops.cpp<span class="p">)</span>
+
+<span class="c1"># 设置头文件搜索路径（相当于 g++ 的 -I 参数）</span>
+<span class="c1"># PUBLIC = 对内对外都生效（见下方关键字解释）</span>
+<span class="nb">target_include_directories</span><span class="p">(</span>vector_ops PUBLIC include<span class="p">)</span>
+<span class="c1"># 意思：编译 vector_ops 库时，去 include/ 找头文件</span>
+<span class="c1">#       而且链接这个库的人，也会自动获得这个搜索路径</span>
+
+<span class="c1"># 要求 C++20 标准（相当于 g++ 的 -std=c++20）</span>
+<span class="c1"># PUBLIC = 依赖此库的也要用 C++20</span>
+<span class="nb">target_compile_features</span><span class="p">(</span>vector_ops PUBLIC cxx_std_20<span class="p">)</span>
+
+<span class="c1"># 对 GCC/Clang 启用警告（相当于 g++ 的 -Wall -Wextra -Wpedantic）</span>
+<span class="nb">if</span><span class="p">(</span>CMAKE_CXX_COMPILER_ID MATCHES <span class="s2">"GNU|Clang"</span><span class="p">)</span>
+  <span class="nb">target_compile_options</span><span class="p">(</span>vector_ops PRIVATE -Wall -Wextra -Wpedantic<span class="p">)</span>
+<span class="nb">endif</span><span class="p">()</span>
+<span class="c1"># PRIVATE = 只对 vector_ops 自己生效，链接它的人不受影响</span>
+</code></pre></div></div><p><strong>关键字解释</strong>（新人最容易混淆的三个）：</p><table><thead><tr><th>关键字</th><th>含义</th><th>类比</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">PUBLIC</code></td><td>对内对外都生效（自己编译要用，依赖我的人也要用）</td><td>餐厅的公开菜单：自己和客人都能看</td></tr><tr><td><code class="language-plaintext highlighter-rouge">PRIVATE</code></td><td>只对自己生效（依赖我的人不需要）</td><td>厨房的内部工具：只有厨师用</td></tr><tr><td><code class="language-plaintext highlighter-rouge">INTERFACE</code></td><td>只对依赖我的人生效（自己不用）</td><td>只给客人看的规则：厨师不用遵守</td></tr></tbody></table><blockquote><p><strong>新人最常问</strong>：什么时候用 PUBLIC，什么时候用 PRIVATE？</p><ul><li>头文件路径：如果你在 <code class="language-plaintext highlighter-rouge">.h</code> 里 <code class="language-plaintext highlighter-rouge">#include</code> 了某个库，链接你的人也需要那个库的头文件 → <code class="language-plaintext highlighter-rouge">PUBLIC</code></li><li>头文件路径：如果你只在 <code class="language-plaintext highlighter-rouge">.cpp</code> 里 <code class="language-plaintext highlighter-rouge">#include</code>，链接你的人不需要 → <code class="language-plaintext highlighter-rouge">PRIVATE</code></li><li>编译选项（-Wall 等）：只对自己有意义 → <code class="language-plaintext highlighter-rouge">PRIVATE</code></li></ul></blockquote><h3 id="74-构建命令">7.4 构建命令</h3><p>在 <code class="language-plaintext highlighter-rouge">vector_ops/</code> 目录下执行（有 CMakeLists.txt 的那个目录）：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ① 生成构建文件（CMake 解析 CMakeLists.txt，在 build/ 里生成 Makefile）</span>
+cmake <span class="nt">-S</span> <span class="nb">.</span> <span class="nt">-B</span> build <span class="nt">-DCMAKE_BUILD_TYPE</span><span class="o">=</span>Release
+<span class="c">#   -S .            源码目录是当前目录（.）</span>
+<span class="c">#   -B build        构建目录是 build/（CMake 会自动创建）</span>
+<span class="c">#   -DCMAKE_BUILD_TYPE=Release  设置构建类型为 Release（启用优化）</span>
+<span class="c"># 执行后会在 build/ 里生成一堆文件，包括 Makefile</span>
+
+<span class="c"># ② 编译（执行 Makefile，实际调用 g++）</span>
+cmake <span class="nt">--build</span> build <span class="nt">--parallel</span>
+<span class="c">#   --build build   在 build/ 目录里构建</span>
+<span class="c">#   --parallel      并行编译（利用多核，更快）</span>
+<span class="c"># 产物：build/libvector_ops.a（静态库）</span>
+
+<span class="c"># ③ 清理重建（改了 CMakeLists.txt 后可能需要）</span>
+<span class="nb">rm</span> <span class="nt">-rf</span> build/                              <span class="c"># 删掉 build 目录</span>
+cmake <span class="nt">-S</span> <span class="nb">.</span> <span class="nt">-B</span> build <span class="nt">-DCMAKE_BUILD_TYPE</span><span class="o">=</span>Release  <span class="c"># 重新配置</span>
+cmake <span class="nt">--build</span> build <span class="nt">--parallel</span>             <span class="c"># 重新编译</span>
+</code></pre></div></div><h3 id="75-加一个可执行文件-target">7.5 加一个可执行文件 target</h3><blockquote><p>目前 <code class="language-plaintext highlighter-rouge">vector_ops</code> 只是一个<strong>库</strong>，不能直接运行。我们加一个 <code class="language-plaintext highlighter-rouge">main.cpp</code> 来调用它，编译成<strong>可执行文件</strong>。</p></blockquote><p>在 <code class="language-plaintext highlighter-rouge">src/</code> 下新建 <code class="language-plaintext highlighter-rouge">main.cpp</code>：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// src/main.cpp —— 主程序，调用 vector_ops 库的 sum 函数</span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">"vector_ops.h"</span><span class="c1">  // 因为 vector_ops 的 include 是 PUBLIC，自动可用</span><span class="cp">
+</span>                         <span class="c1">// 不需要手动写 -Iinclude，CMake 自动处理</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">v</span> <span class="o">=</span> <span class="p">{</span><span class="mf">1.0</span><span class="n">f</span><span class="p">,</span> <span class="mf">2.0</span><span class="n">f</span><span class="p">,</span> <span class="mf">3.0</span><span class="n">f</span><span class="p">};</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sum</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>  <span class="c1">// 输出 6</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div><p>在 <code class="language-plaintext highlighter-rouge">CMakeLists.txt</code> 末尾<strong>追加</strong>两行：</p><div class="language-cmake highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 在上面的 CMakeLists.txt 后面加：</span>
+
+<span class="c1"># 创建一个可执行文件 target，名字叫 vector_ops_app，源文件是 src/main.cpp</span>
+<span class="nb">add_executable</span><span class="p">(</span>vector_ops_app src/main.cpp<span class="p">)</span>
+
+<span class="c1"># 让 vector_ops_app 链接 vector_ops 库</span>
+<span class="c1"># PRIVATE = 只是 main.cpp 自己要用这个库</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span>vector_ops_app PRIVATE vector_ops<span class="p">)</span>
+<span class="c1"># 链接后，main.cpp 自动继承 vector_ops 的 PUBLIC 属性：</span>
+<span class="c1">#   - include/ 头文件路径（所以 #include "vector_ops.h" 能找到）</span>
+<span class="c1">#   - C++20 标准</span>
+</code></pre></div></div><p>重新构建：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 在 vector_ops/ 目录下</span>
+cmake <span class="nt">--build</span> build <span class="nt">--parallel</span>
+<span class="c"># 产物：build/vector_ops_app（可执行文件）</span>
+
+<span class="c"># 运行</span>
+./build/vector_ops_app
+<span class="c"># 输出：6</span>
+</code></pre></div></div><blockquote><p><strong>完整的项目结构现在是</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vector_ops/
+├── CMakeLists.txt
+├── include/
+│   └── vector_ops.h
+└── src/
+    ├── vector_ops.cpp    ← 库的实现
+    └── main.cpp          ← 主程序（调用库）
+</code></pre></div></div><p><strong>原理</strong>：现代 CMake 的核心是 target。用 <code class="language-plaintext highlighter-rouge">target_include_directories</code>、<code class="language-plaintext highlighter-rouge">target_link_libraries</code>、<code class="language-plaintext highlighter-rouge">target_compile_features</code> 描述依赖，少用全局的 <code class="language-plaintext highlighter-rouge">include_directories</code> 和手工拼接编译命令。</p></blockquote><hr /><h2 id="八c-并发的最小认知">八、C++ 并发的最小认知</h2><blockquote><p><strong>新人提示</strong>：这章的代码都可以用一个文件跑。关键是编译时<strong>必须加 <code class="language-plaintext highlighter-rouge">-pthread</code></strong>，否则运行时报错。 文件结构：建一个文件夹 <code class="language-plaintext highlighter-rouge">concurrency/</code>，每节的代码单独存成一个 <code class="language-plaintext highlighter-rouge">.cpp</code> 文件。</p></blockquote><h3 id="81-数据竞争">8.1 数据竞争</h3><p><strong>先看一个会出错的代码</strong>（两个线程同时改一个变量）：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// data_race.cpp —— 数据竞争示例</span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;thread&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  <span class="c1">// 全局变量，两个线程都会改它</span>
+
+<span class="kt">void</span> <span class="nf">increment</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">100000</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">counter</span><span class="o">++</span><span class="p">;</span>  <span class="c1">// ❌ 两个线程同时执行这行 → 数据竞争</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">t1</span><span class="p">(</span><span class="n">increment</span><span class="p">);</span>  <span class="c1">// 启动线程 1</span>
+    <span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">t2</span><span class="p">(</span><span class="n">increment</span><span class="p">);</span>  <span class="c1">// 启动线程 2</span>
+
+    <span class="n">t1</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>  <span class="c1">// 等线程 1 跑完</span>
+    <span class="n">t2</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>  <span class="c1">// 等线程 2 跑完</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">counter</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>  <span class="c1">// 期望 200000，实际可能是 143287 等</span>
+    <span class="c1">// counter++ 不是一步操作（读→加1→写），两个线程交错执行会丢更新</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 编译时必须加 -pthread！</span>
+g++ <span class="nt">-std</span><span class="o">=</span>c++20 <span class="nt">-pthread</span> data_race.cpp <span class="nt">-o</span> data_race
+<span class="c">#   -pthread  链接线程库（不加会运行报错：Enable multithreading to use std::thread）</span>
+
+./data_race
+<span class="c"># 输出可能是 143287（每次不一样，但通常不是 200000）</span>
+<span class="c"># 这就是数据竞争：结果不可预测</span>
+</code></pre></div></div><h3 id="82-用互斥锁修复">8.2 用互斥锁修复</h3><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// mutex_fix.cpp —— 用互斥锁修复数据竞争</span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;thread&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;mutex&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">mutex</span> <span class="n">mtx</span><span class="p">;</span>  <span class="c1">// 互斥锁：保证同一时刻只有一个线程能访问</span>
+
+<span class="kt">void</span> <span class="nf">increment</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">100000</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">guard</span><span class="p">(</span><span class="n">mtx</span><span class="p">);</span>  <span class="c1">// 加锁</span>
+        <span class="n">counter</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>  <span class="c1">// guard 离开这个大括号自动解锁（RAII！见 cpp/内存生命周期与资源管理.md）</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">t1</span><span class="p">(</span><span class="n">increment</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">t2</span><span class="p">(</span><span class="n">increment</span><span class="p">);</span>
+
+    <span class="n">t1</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>
+    <span class="n">t2</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">counter</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>  <span class="c1">// 200000 ✅</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>g++ <span class="nt">-std</span><span class="o">=</span>c++20 <span class="nt">-pthread</span> mutex_fix.cpp <span class="nt">-o</span> mutex_fix
+./mutex_fix
+<span class="c"># 输出：200000</span>
+</code></pre></div></div><p><strong><code class="language-plaintext highlighter-rouge">std::lock_guard</code> 就是 RAII</strong>：构造时加锁，析构时解锁，即使中间抛异常也会解锁。不用手动 <code class="language-plaintext highlighter-rouge">mtx.lock()</code> / <code class="language-plaintext highlighter-rouge">mtx.unlock()</code>。</p><h3 id="83-原子变量简单场景">8.3 原子变量（简单场景）</h3><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// atomic_fix.cpp —— 用原子变量替代锁（更轻量）</span>
+<span class="cp">#include</span> <span class="cpf">&lt;atomic&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;thread&gt;</span><span class="cp">
+</span>
+<span class="n">std</span><span class="o">::</span><span class="n">atomic</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">counter</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>  <span class="c1">// 原子变量：加法是不可分割的操作</span>
+
+<span class="kt">void</span> <span class="n">increment</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">100000</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">counter</span><span class="o">++</span><span class="p">;</span>  <span class="c1">// 原子操作，不需要锁</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">t1</span><span class="p">(</span><span class="n">increment</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">t2</span><span class="p">(</span><span class="n">increment</span><span class="p">);</span>
+
+    <span class="n">t1</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>
+    <span class="n">t2</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">counter</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>  <span class="c1">// 200000 ✅</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>g++ <span class="nt">-std</span><span class="o">=</span>c++20 <span class="nt">-pthread</span> atomic_fix.cpp <span class="nt">-o</span> atomic_fix
+./atomic_fix
+<span class="c"># 输出：200000</span>
+</code></pre></div></div><p><strong>什么时候用原子 vs 锁</strong>：</p><table><thead><tr><th>场景</th><th>推荐</th></tr></thead><tbody><tr><td>单个变量的读写</td><td><code class="language-plaintext highlighter-rouge">std::atomic</code></td></tr><tr><td>多个变量要一起修改</td><td><code class="language-plaintext highlighter-rouge">std::mutex</code> + <code class="language-plaintext highlighter-rouge">lock_guard</code></td></tr><tr><td>简单计数器</td><td><code class="language-plaintext highlighter-rouge">std::atomic</code></td></tr><tr><td>复杂临界区</td><td><code class="language-plaintext highlighter-rouge">std::mutex</code></td></tr></tbody></table><h3 id="84-条件变量等待状态变化">8.4 条件变量（等待状态变化）</h3><p><strong>先说场景</strong>：主线程启动两个工作线程后，要”等 1 秒再通知它们开始干活”。工作线程在收到通知前一直阻塞（不消耗 CPU）。</p><p><strong>条件变量解决什么问题</strong>：让线程能”等待某个条件成立”，而不是用 <code class="language-plaintext highlighter-rouge">while (!ready);</code> 死循环空转浪费 CPU。</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// cond_var.cpp —— 条件变量示例</span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;thread&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;mutex&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;condition_variable&gt;</span><span class="cp">
+</span>
+<span class="n">std</span><span class="o">::</span><span class="n">mutex</span> <span class="n">mtx</span><span class="p">;</span>              <span class="c1">// 互斥锁：保护 ready 变量的读写</span>
+<span class="n">std</span><span class="o">::</span><span class="n">condition_variable</span> <span class="n">cv</span><span class="p">;</span>  <span class="c1">// 条件变量：用来"通知"和"等待"</span>
+<span class="kt">bool</span> <span class="n">ready</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>          <span class="c1">// 共享状态：是否可以开始工作</span>
+
+<span class="kt">void</span> <span class="nf">worker</span><span class="p">(</span><span class="kt">int</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// worker 线程：等主线程说"准备好了"才开始干活</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">unique_lock</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">lock</span><span class="p">(</span><span class="n">mtx</span><span class="p">);</span>    <span class="c1">// 先加锁（条件变量要求配合 unique_lock）</span>
+    <span class="n">cv</span><span class="p">.</span><span class="n">wait</span><span class="p">(</span><span class="n">lock</span><span class="p">,</span> <span class="p">[]</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ready</span><span class="p">;</span> <span class="p">});</span>        <span class="c1">// 等待 ready 变 true</span>
+    <span class="c1">//  ↑ 这一行做了三件事：</span>
+    <span class="c1">//    1. 检查 lambda（[] { return ready; }）是否为 true</span>
+    <span class="c1">//    2. 如果是 false：自动解锁 mtx，然后线程在这里"睡觉"（不占 CPU）</span>
+    <span class="c1">//    3. 被 notify 唤醒后：自动重新加锁 mtx，再检查 lambda</span>
+    <span class="c1">//    （循环检查直到 true，防止"虚假唤醒"）</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Worker "</span> <span class="o">&lt;&lt;</span> <span class="n">id</span> <span class="o">&lt;&lt;</span> <span class="s">" started</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="c1">// 离开函数时 lock 析构，自动解锁</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">t1</span><span class="p">(</span><span class="n">worker</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>  <span class="c1">// 启动 worker 线程 1（会卡在 cv.wait 等 ready）</span>
+    <span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">t2</span><span class="p">(</span><span class="n">worker</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>  <span class="c1">// 启动 worker 线程 2（同上）</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">sleep_for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">seconds</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span>  <span class="c1">// 主线程睡 1 秒</span>
+    <span class="c1">//  模拟"准备工作"——这 1 秒里两个 worker 都在 cv.wait 处阻塞</span>
+
+    <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">lock</span><span class="p">(</span><span class="n">mtx</span><span class="p">);</span>  <span class="c1">// 加锁，准备改 ready</span>
+        <span class="n">ready</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>                           <span class="c1">// 改成"准备好了"</span>
+    <span class="p">}</span>  <span class="c1">// 离开大括号，lock 析构自动解锁（一定要先解锁再 notify！）</span>
+    <span class="n">cv</span><span class="p">.</span><span class="n">notify_all</span><span class="p">();</span>  <span class="c1">// 唤醒所有在 cv.wait 等待的线程（t1 和 t2）</span>
+
+    <span class="n">t1</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>  <span class="c1">// 等 t1 跑完</span>
+    <span class="n">t2</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>  <span class="c1">// 等 t2 跑完</span>
+<span class="p">}</span>
+</code></pre></div></div><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>g++ <span class="nt">-std</span><span class="o">=</span>c++20 <span class="nt">-pthread</span> cond_var.cpp <span class="nt">-o</span> cond_var
+./cond_var
+<span class="c"># 输出（顺序可能不同）：</span>
+<span class="c"># Worker 1 started</span>
+<span class="c"># Worker 2 started</span>
+</code></pre></div></div><p><strong>逐行解读关键点</strong>：</p><table><thead><tr><th>代码</th><th>为什么这么写</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">std::unique_lock&lt;std::mutex&gt;</code></td><td>条件变量的 <code class="language-plaintext highlighter-rouge">wait</code> 要求用 <code class="language-plaintext highlighter-rouge">unique_lock</code>（不是 <code class="language-plaintext highlighter-rouge">lock_guard</code>），因为 <code class="language-plaintext highlighter-rouge">wait</code> 内部需要解锁/加锁，<code class="language-plaintext highlighter-rouge">unique_lock</code> 支持这个</td></tr><tr><td><code class="language-plaintext highlighter-rouge">cv.wait(lock, [] { return ready; })</code></td><td>第二个参数是 lambda（判断条件）。<code class="language-plaintext highlighter-rouge">wait</code> 会循环检查它，只有返回 <code class="language-plaintext highlighter-rouge">true</code> 才继续往下执行</td></tr><tr><td><code class="language-plaintext highlighter-rouge">{ std::lock_guard lock(mtx); ready = true; }</code></td><td>改 <code class="language-plaintext highlighter-rouge">ready</code> 要加锁（防止和 worker 的读操作竞争），大括号保证离开时立即解锁</td></tr><tr><td><code class="language-plaintext highlighter-rouge">cv.notify_all()</code></td><td>必须在<strong>解锁之后</strong>调用，否则 worker 被唤醒后想加锁却加不上，又卡住了</td></tr><tr><td><code class="language-plaintext highlighter-rouge">notify_all</code> vs <code class="language-plaintext highlighter-rouge">notify_one</code></td><td><code class="language-plaintext highlighter-rouge">notify_all</code> 唤醒所有等待的线程；<code class="language-plaintext highlighter-rouge">notify_one</code> 只唤醒一个</td></tr></tbody></table><p><strong>执行时间线</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>时间   主线程              worker 1           worker 2
+ 0s    启动 t1, t2        cv.wait(睡觉)     cv.wait(睡觉)
+ 0s    sleep 1 秒         ...                ...
+ 1s    加锁, ready=true   ...                ...
+ 1s    解锁                ...                ...
+ 1s    notify_all          被唤醒, 加锁       被唤醒, 加锁
+ 1s                        ready==true        ready==true
+ 1s                        输出 Worker 1      输出 Worker 2
+ 1s                        解锁, 结束         解锁, 结束
+ 1s    join 完成
+</code></pre></div></div><h3 id="85-volatile-不是线程同步工具">8.5 volatile 不是线程同步工具</h3><p><strong>先说 volatile 是什么</strong>：</p><p><code class="language-plaintext highlighter-rouge">volatile</code> 是 C++ 的一个关键字，它的本意是告诉编译器：”这个变量的值可能在你看不到的地方被改变（比如被硬件寄存器改），所以每次用到它都要从内存重新读，不要把它缓存到寄存器里偷懒。”</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 编译器可能这样优化：</span>
+<span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">flag</span><span class="p">;</span>   <span class="c1">// 读一次 flag 到寄存器</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>   <span class="c1">// 用寄存器里的值</span>
+<span class="c1">// 如果编译器觉得 x 没被改，下次用 flag 时可能不重新读内存</span>
+
+<span class="k">volatile</span> <span class="kt">int</span> <span class="n">flag</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  <span class="c1">// 加 volatile 后：</span>
+<span class="c1">// 编译器每次用 flag 都从内存重新读，不缓存到寄存器</span>
+</code></pre></div></div><p><strong>新人常见的错误想法</strong>：”既然 volatile 让编译器每次都重新读内存，那用它修饰的变量在多线程里就是安全的吧？”</p><p><strong>答案是：不行！</strong> 看这个例子：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// ❌ 错误：volatile 不能保证线程安全</span>
+<span class="k">volatile</span> <span class="kt">int</span> <span class="n">flag</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="c1">// 线程1: flag = 1;</span>
+<span class="c1">// 线程2: while (flag == 0);  // 可能永远循环，即使线程1已经把 flag 改成 1 了</span>
+</code></pre></div></div><p><strong>为什么不行</strong>：<code class="language-plaintext highlighter-rouge">volatile</code> 只解决了”编译器不要缓存到寄存器”这一个问题，但它<strong>不提供</strong>多线程需要的三个保证：</p><table><thead><tr><th>需要的保证</th><th>volatile 提供？</th><th>std::atomic 提供？</th></tr></thead><tbody><tr><td><strong>原子性</strong>（读和写不可分割，不会读到”写了一半”的值）</td><td>❌ 不提供</td><td>✅ 提供</td></tr><tr><td><strong>内存序</strong>（一个线程的写对另一个线程”可见”的顺序保证）</td><td>❌ 不提供</td><td>✅ 提供</td></tr><tr><td><strong>禁止编译器缓存</strong>（每次从内存读）</td><td>✅ 提供</td><td>✅ 提供</td></tr></tbody></table><p>volatile 只提供了 3 个保证中的 1 个。特别是”可见性”——线程 1 把 <code class="language-plaintext highlighter-rouge">flag</code> 改成 1 后，线程 2 可能<strong>永远看不到</strong>这个变化（因为 CPU 缓存、指令重排等原因，volatile 在 C++ 里管不了这些）。</p><blockquote><p><strong>补充</strong>：Java 的 <code class="language-plaintext highlighter-rouge">volatile</code> 和 C++ 的 <code class="language-plaintext highlighter-rouge">volatile</code> <strong>不是一回事</strong>。Java 的 <code class="language-plaintext highlighter-rouge">volatile</code> 确实提供了可见性保证，所以从 Java 转过来的人特别容易误用 C++ 的 <code class="language-plaintext highlighter-rouge">volatile</code>。</p></blockquote><p><strong>正确做法</strong>：用 <code class="language-plaintext highlighter-rouge">std::atomic</code></p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// ✅ 正确</span>
+<span class="n">std</span><span class="o">::</span><span class="n">atomic</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">flag</span><span class="p">{</span><span class="nb">false</span><span class="p">};</span>
+<span class="c1">// 线程1: flag = true;        // 原子写，且保证对其他线程可见</span>
+<span class="c1">// 线程2: while (!flag);      // 原子读，能看到线程1的修改</span>
+</code></pre></div></div><p><code class="language-plaintext highlighter-rouge">std::atomic</code> 同时提供原子性 + 内存序 + 禁止缓存，才是多线程正确的工具。</p><blockquote><p><strong>新人记忆</strong>：C++ 里看到 <code class="language-plaintext highlighter-rouge">volatile</code> 想到两个场景——① 裸机/嵌入式开发读写硬件寄存器（这是它本来的用途）；② 多线程同步——<strong>不用 volatile，用 atomic</strong>。</p></blockquote><h3 id="86-用-threadsanitizer-检测数据竞争">8.6 用 ThreadSanitizer 检测数据竞争</h3><blockquote><p>用 8.1 的 <code class="language-plaintext highlighter-rouge">data_race.cpp</code> 来测——不用改代码，只改编译命令。</p></blockquote><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 编译时启用 TSan（ThreadSanitizer）</span>
+g++ <span class="nt">-std</span><span class="o">=</span>c++20 <span class="nt">-pthread</span> <span class="nt">-fsanitize</span><span class="o">=</span>thread <span class="nt">-g</span> data_race.cpp <span class="nt">-o</span> data_race_tsan
+<span class="c">#   -fsanitize=thread  启用线程竞争检测</span>
+<span class="c">#   -g                 加调试信息（让报错信息有行号）</span>
+
+./data_race_tsan
+<span class="c"># 如果有数据竞争，TSan 会输出详细报告，包含：</span>
+<span class="c">#   - 哪两个线程在竞争</span>
+<span class="c">#   - 竞争的变量地址</span>
+<span class="c">#   - 两个线程的调用栈</span>
+</code></pre></div></div><h4 id="wsl2-上-tsan-报-unexpected-memory-mapping-怎么办">WSL2 上 TSan 报 <code class="language-plaintext highlighter-rouge">unexpected memory mapping</code> 怎么办</h4><p>在 WSL2（Windows Subsystem for Linux 2）里跑 TSan，大概率会遇到这个报错：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FATAL: ThreadSanitizer: unexpected memory mapping 0x5b0c8d7c3000-0x5b0c8d7c4000
+</code></pre></div></div><p><strong>这不是你的代码有问题</strong>，而是 WSL2 的已知限制。</p><p><strong>原因</strong>：TSan 需要监控程序的内存映射，它假设 Linux 的内存布局符合一定规律。但 WSL2 是跑在虚拟机里的，它的虚拟内存映射方式和原生 Linux 不一样，TSan 的假设不成立，直接 <code class="language-plaintext highlighter-rouge">FATAL</code> 退出。这是 WSL2 + TSan 的已知不兼容，不是你的代码 bug。</p><p><strong>解法（按推荐顺序）</strong>：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ========== 解法 1：用 helgrind 替代（WSL2 里推荐） ==========</span>
+<span class="c"># helgrind 是 valgrind 套件里的线程错误检测工具，不依赖 TSan 的内存映射假设</span>
+<span class="c"># 8.1 装过 valgrind 的话直接用：</span>
+valgrind <span class="nt">--tool</span><span class="o">=</span>helgrind ./data_race
+<span class="c"># 不需要重新编译（不用 -fsanitize=thread），用普通的 data_race 就行</span>
+<span class="c"># 输出会报告数据竞争的详细信息</span>
+<span class="c"># 缺点：比 TSan 慢很多（valgrind 是模拟执行）</span>
+
+<span class="c"># ========== 解法 2：在 Docker 容器里跑 TSan ==========</span>
+<span class="c"># Docker 容器用的是真正的 Linux 内核（不是 WSL2 的虚拟机内核），TSan 能正常工作</span>
+docker run <span class="nt">--rm</span> <span class="nt">-it</span> <span class="nt">-v</span> <span class="s2">"</span><span class="nv">$PWD</span><span class="s2">:/work"</span> <span class="nt">-w</span> /work ubuntu:22.04 bash
+<span class="c"># 容器内：</span>
+apt update <span class="o">&amp;&amp;</span> apt <span class="nb">install</span> <span class="nt">-y</span> g++ <span class="o">&amp;&amp;</span> g++ <span class="nt">-std</span><span class="o">=</span>c++20 <span class="nt">-pthread</span> <span class="nt">-fsanitize</span><span class="o">=</span>thread <span class="nt">-g</span> data_race.cpp <span class="nt">-o</span> data_race_tsan
+./data_race_tsan
+
+<span class="c"># ========== 解法 3：升级 WSL2 内核（可能修复，不保证） ==========</span>
+<span class="c"># 在 PowerShell（管理员）里：</span>
+wsl <span class="nt">--update</span>
+<span class="c"># 然后重启 WSL：wsl --shutdown</span>
+<span class="c"># 重新打开终端再试，部分版本能修复此问题</span>
+
+<span class="c"># ========== 解法 4：用真机 Linux ==========</span>
+<span class="c"># 如果你有双系统的 Linux 或远程 Linux 服务器，直接在那上面跑 TSan</span>
+</code></pre></div></div><blockquote><p><strong>总结</strong>：WSL2 上 TSan 基本不可用，优先用 <strong>helgrind</strong>（解法 1，最方便）或 <strong>Docker 容器</strong>（解法 2，最接近原生）。ASan（AddressSanitizer）在 WSL2 上一般没问题，只有 TSan 有这个限制。</p></blockquote><blockquote><p><strong>注意</strong>：ThreadSanitizer 和 AddressSanitizer <strong>不能同时启用</strong>。先测内存错误（ASan），再单独测线程竞争（TSan 或 helgrind）。</p></blockquote><hr /><h2 id="九概念速查表">九、概念速查表</h2><table><thead><tr><th>概念</th><th>一句话记忆</th></tr></thead><tbody><tr><td>预处理</td><td>展开 #include 和宏</td></tr><tr><td>编译</td><td>语法/类型检查，生成汇编</td></tr><tr><td>汇编</td><td>汇编 → 机器码，生成 .o</td></tr><tr><td>链接</td><td>解析符号，合并 .o，生成可执行文件</td></tr><tr><td>头文件</td><td>放声明（菜单）</td></tr><tr><td>源文件</td><td>放定义（厨房）</td></tr><tr><td>编译错误</td><td>“没声明”、类型不匹配</td></tr><tr><td>链接错误</td><td>undefined reference（没定义）</td></tr><tr><td>静态库 .a</td><td>编译时复制进可执行文件</td></tr><tr><td>动态库 .so</td><td>运行时加载，可共享</td></tr><tr><td>RPATH</td><td>写入二进制的库搜索路径</td></tr><tr><td>ABI</td><td>二进制兼容性，源码兼容≠二进制兼容</td></tr><tr><td>模板</td><td>编译期生成类型特化代码</td></tr><tr><td>模板必须放头文件</td><td>编译器在用点需要看到完整定义</td></tr><tr><td><code class="language-plaintext highlighter-rouge">std::vector</code></td><td>连续内存，默认选择</td></tr><tr><td><code class="language-plaintext highlighter-rouge">std::map</code></td><td>红黑树，有序，O(log n)</td></tr><tr><td><code class="language-plaintext highlighter-rouge">std::unordered_map</code></td><td>哈希表，无序，平均 O(1)</td></tr><tr><td>迭代器失效</td><td>vector 扩容后旧指针/引用失效</td></tr><tr><td><code class="language-plaintext highlighter-rouge">reserve()</code></td><td>预分配，避免扩容</td></tr><tr><td>CMake target</td><td>现代 CMake 核心，用 target_* 描述依赖</td></tr><tr><td>PUBLIC/PRIVATE</td><td>对内对外生效 / 只对自己生效</td></tr><tr><td><code class="language-plaintext highlighter-rouge">std::mutex</code></td><td>互斥锁，保护临界区</td></tr><tr><td><code class="language-plaintext highlighter-rouge">std::lock_guard</code></td><td>RAII 锁，构造加锁析构解锁</td></tr><tr><td><code class="language-plaintext highlighter-rouge">std::atomic</code></td><td>原子变量，简单场景替代锁</td></tr><tr><td><code class="language-plaintext highlighter-rouge">volatile</code></td><td><strong>不是</strong>线程同步工具，用 atomic</td></tr><tr><td>ThreadSanitizer</td><td>检测数据竞争</td></tr></tbody></table><hr /><h2 id="十构建流程决策树">十、构建流程决策树</h2><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>你要编译一个 C++ 项目
+│
+├─ 单文件、简单 → 直接 g++ main.cpp -o app
+│
+├─ 多文件、但简单 → g++ main.cpp add.cpp -o app
+│
+├─ 多文件、多目录、需要配置 → 用 CMake
+│   ├─ cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+│   └─ cmake --build build --parallel
+│
+└─ 大型项目、跨平台 → CMake + 分层目录 + target 依赖
+</code></pre></div></div><hr /><h2 id="十一调试工具速查">十一、调试工具速查</h2><table><thead><tr><th>工具</th><th>用途</th><th>命令</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">nm -C</code></td><td>查看二进制符号</td><td><code class="language-plaintext highlighter-rouge">nm -C app \| grep add</code></td></tr><tr><td><code class="language-plaintext highlighter-rouge">ldd</code></td><td>查看动态库依赖</td><td><code class="language-plaintext highlighter-rouge">ldd app</code></td></tr><tr><td><code class="language-plaintext highlighter-rouge">readelf -d</code></td><td>查看 ELF 动态段（RPATH）</td><td><code class="language-plaintext highlighter-rouge">readelf -d app \| grep PATH</code></td></tr><tr><td><code class="language-plaintext highlighter-rouge">objdump -d</code></td><td>反汇编</td><td><code class="language-plaintext highlighter-rouge">objdump -d app \| less</code></td></tr><tr><td>AddressSanitizer</td><td>检测越界、use-after-free</td><td><code class="language-plaintext highlighter-rouge">-fsanitize=address</code></td></tr><tr><td>UBSan</td><td>检测未定义行为</td><td><code class="language-plaintext highlighter-rouge">-fsanitize=undefined</code></td></tr><tr><td>ThreadSanitizer</td><td>检测数据竞争</td><td><code class="language-plaintext highlighter-rouge">-fsanitize=thread</code></td></tr></tbody></table><hr /><h2 id="十二关联笔记">十二、关联笔记</h2><ul><li><code class="language-plaintext highlighter-rouge">cpp/内存生命周期与资源管理.md</code>（RAII、智能指针，与本篇并发部分的 lock_guard 互相关联）</li><li><code class="language-plaintext highlighter-rouge">python/Python进阶笔记3_并发与性能分析.md</code>（Python GIL vs C++ 真多线程对比）</li><li><code class="language-plaintext highlighter-rouge">pytorch/PyTorch常见操作速查.md</code>（CUDA 模板、GPU 内存管理）</li></ul><hr /><h2 id="附录-ag-命令行参数详解">附录 A：g++ 命令行参数详解</h2><blockquote><p>本附录系统梳理 <code class="language-plaintext highlighter-rouge">g++</code> 后面常用的参数，按功能分组，每组配示例。 同类参数在 <code class="language-plaintext highlighter-rouge">clang++</code> 上大多一致；MSVC（<code class="language-plaintext highlighter-rouge">cl.exe</code>）参数体系完全不同，不在本篇范围。</p></blockquote><h3 id="a1-分阶段控制参数最常用">A.1 分阶段控制参数（最常用）</h3><p>这组参数控制”编译器停在哪一步”，对应第一章的四阶段流程：</p><table><thead><tr><th>参数</th><th>作用</th><th>产物</th><th>对应阶段</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">-E</code></td><td>只预处理</td><td><code class="language-plaintext highlighter-rouge">.ii</code>（纯文本）</td><td>预处理</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-S</code></td><td>预处理 + 编译，停在汇编</td><td><code class="language-plaintext highlighter-rouge">.s</code>（汇编代码）</td><td>编译</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-c</code></td><td>预处理 + 编译 + 汇编，不链接</td><td><code class="language-plaintext highlighter-rouge">.o</code>（目标文件）</td><td>汇编</td></tr><tr><td>无</td><td>全流程到链接</td><td>可执行文件</td><td>链接</td></tr></tbody></table><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>g++ <span class="nt">-E</span> main.cpp <span class="nt">-o</span> main.ii     <span class="c"># 只预处理（看 #include 展开结果）</span>
+g++ <span class="nt">-S</span> main.cpp <span class="nt">-o</span> main.s      <span class="c"># 到汇编（看生成的汇编指令）</span>
+g++ <span class="nt">-c</span> main.cpp <span class="nt">-o</span> main.o      <span class="c"># 到目标文件（不链接，多个文件分开编）</span>
+g++ main.o add.o <span class="nt">-o</span> app        <span class="c"># 单独链接（把多个 .o 合并）</span>
+g++ main.cpp add.cpp <span class="nt">-o</span> app    <span class="c"># 一步到位（编译+链接）</span>
+</code></pre></div></div><p><strong>记忆口诀</strong>：<code class="language-plaintext highlighter-rouge">-E</code> 看 macro、<code class="language-plaintext highlighter-rouge">-S</code> 看汇编、<code class="language-plaintext highlighter-rouge">-c</code> 出 <code class="language-plaintext highlighter-rouge">.o</code>、不加就出可执行。</p><h3 id="a2-输出文件名-o">A.2 输出文件名：<code class="language-plaintext highlighter-rouge">-o</code></h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>g++ main.cpp <span class="nt">-o</span> app            <span class="c"># 输出文件名为 app</span>
+g++ main.cpp                   <span class="c"># 不加 -o，默认输出 a.out（Linux）/ a.exe（Windows）</span>
+</code></pre></div></div><p><code class="language-plaintext highlighter-rouge">-o</code> 可以放任意位置，但习惯放在最后。如果和 <code class="language-plaintext highlighter-rouge">-c</code> 一起用，输出是 <code class="language-plaintext highlighter-rouge">.o</code> 文件名：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>g++ <span class="nt">-c</span> main.cpp <span class="nt">-o</span> main.o      <span class="c"># 显式指定 .o 文件名</span>
+g++ <span class="nt">-c</span> main.cpp                <span class="c"># 默认输出 main.o（取源文件名换后缀）</span>
+</code></pre></div></div><h3 id="a3-c-标准版本-std">A.3 C++ 标准版本：<code class="language-plaintext highlighter-rouge">-std=</code></h3><p>指定用哪个 C++ 标准版本，这是现代 C++ 必加的参数。</p><table><thead><tr><th>参数</th><th>标准</th><th>典型特性</th><th>GCC 支持版本</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">-std=c++11</code></td><td>C++11</td><td>auto、lambda、智能指针、range-for</td><td>4.7+</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-std=c++14</code></td><td>C++14</td><td>泛型 lambda、<code class="language-plaintext highlighter-rouge">std::make_unique</code></td><td>4.9+</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-std=c++17</code></td><td>C++17</td><td><code class="language-plaintext highlighter-rouge">std::optional</code>、结构化绑定、<code class="language-plaintext highlighter-rouge">if constexpr</code></td><td>5+</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-std=c++20</code></td><td>C++20</td><td>concepts、ranges、<code class="language-plaintext highlighter-rouge">std::span</code>、协程</td><td>10+</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-std=c++23</code></td><td>C++23</td><td><code class="language-plaintext highlighter-rouge">std::print</code>、<code class="language-plaintext highlighter-rouge">std::expected</code>、deducing this</td><td>13+（部分）</td></tr></tbody></table><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>g++ <span class="nt">-std</span><span class="o">=</span>c++20 main.cpp <span class="nt">-o</span> app         <span class="c"># 用 C++20 标准</span>
+g++ <span class="nt">-std</span><span class="o">=</span>gnu++20 main.cpp <span class="nt">-o</span> app       <span class="c"># gnu++ 扩展版（默认开启 GNU 扩展）</span>
+</code></pre></div></div><p><strong><code class="language-plaintext highlighter-rouge">c++NN</code> vs <code class="language-plaintext highlighter-rouge">gnu++NN</code></strong>：<code class="language-plaintext highlighter-rouge">c++NN</code> 是纯标准，<code class="language-plaintext highlighter-rouge">gnu++NN</code> 额外开启 GNU 扩展（如 <code class="language-plaintext highlighter-rouge">__int128</code>、变长数组）。g++ 默认用 <code class="language-plaintext highlighter-rouge">gnu++NN</code>，写笔记/教学时一般用纯 <code class="language-plaintext highlighter-rouge">c++NN</code> 避免依赖扩展。</p><blockquote><p><strong>重要</strong>：<code class="language-plaintext highlighter-rouge">-std=c++20</code> 和 <code class="language-plaintext highlighter-rouge">-std=gnu++20</code> 都<strong>只是”语法标准”</strong>，不等于”能用 <code class="language-plaintext highlighter-rouge">&lt;span&gt;</code>“。能否用某特性还取决于 GCC 版本是否实现了它。判断方法：用 <code class="language-plaintext highlighter-rouge">g++ --version</code> 看版本，对照 GCC 文档的”C++ 标准库支持状态”。</p></blockquote><h3 id="a4-警告参数-w">A.4 警告参数：<code class="language-plaintext highlighter-rouge">-W</code></h3><p>控制编译器报多少警告。警告不是错误（默认不阻止编译），但应该尽量消除。</p><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">-w</code></td><td><strong>关闭所有警告</strong>（不推荐，掩盖问题）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-Wall</code></td><td>开启常见警告（未使用变量、有符号比较、返回值等）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-Wextra</code></td><td>在 <code class="language-plaintext highlighter-rouge">-Wall</code> 基础上再加一批（空基类、缺失字段初始化等）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-Wpedantic</code></td><td>严格按标准，禁用 GNU 扩展警告（用了扩展会报）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-Werror</code></td><td>把警告当错误（有警告就停止编译）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-Wno-xxx</code></td><td>关闭某个具体警告（如 <code class="language-plaintext highlighter-rouge">-Wno-unused-variable</code>）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-Wxxx</code></td><td>开启某个具体警告（如 <code class="language-plaintext highlighter-rouge">-Wshadow</code>、<code class="language-plaintext highlighter-rouge">-Wconversion</code>）</td></tr></tbody></table><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 推荐的开发组合：开全警告 + 当错误处理</span>
+g++ <span class="nt">-std</span><span class="o">=</span>c++20 <span class="nt">-Wall</span> <span class="nt">-Wextra</span> <span class="nt">-Wpedantic</span> <span class="nt">-Werror</span> main.cpp <span class="nt">-o</span> app
+
+<span class="c"># 只想关掉某个烦人的警告</span>
+g++ <span class="nt">-Wall</span> <span class="nt">-Wextra</span> <span class="nt">-Wno-unused-parameter</span> main.cpp <span class="nt">-o</span> app
+</code></pre></div></div><p><strong><code class="language-plaintext highlighter-rouge">-Wall</code> 并不是”所有警告”</strong>：名字有误导，它只开”最常见”的。<code class="language-plaintext highlighter-rouge">-Wextra</code> 才补上更多。想看全部可以用 <code class="language-plaintext highlighter-rouge">-Weverything</code>（仅 Clang）或 <code class="language-plaintext highlighter-rouge">-Wall -Wextra -Wpedantic -Wconversion -Wshadow -Wnon-virtual-dtor</code>。</p><h3 id="a5-优化参数-o">A.5 优化参数：<code class="language-plaintext highlighter-rouge">-O</code></h3><p>控制编译器优化级别，影响性能和调试体验。</p><table><thead><tr><th>参数</th><th>优化级别</th><th>效果</th><th>调试</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">-O0</code></td><td>不优化（默认）</td><td>代码和源码一一对应</td><td>✅ 最好</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-O1</code></td><td>轻度优化</td><td>稍快，变量可能被重排</td><td>⚠️ 部分变量丢失</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-O2</code></td><td>标准优化（Release 推荐）</td><td>内联、循环展开、向量化</td><td>❌ 变量大量 <code class="language-plaintext highlighter-rouge">&lt;optimized out&gt;</code></td></tr><tr><td><code class="language-plaintext highlighter-rouge">-O3</code></td><td>激进优化</td><td>更激进的内联和向量化，可能增大体积</td><td>❌ 同上</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-Os</code></td><td>优化体积</td><td>类似 <code class="language-plaintext highlighter-rouge">-O2</code> 但禁用增体积的优化</td><td>❌</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-Ofast</code></td><td><code class="language-plaintext highlighter-rouge">-O3</code> + 不严格遵守标准</td><td>启用 <code class="language-plaintext highlighter-rouge">-ffast-math</code> 等，可能改变浮点结果</td><td>❌</td></tr></tbody></table><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Debug 构建：不优化 + 调试信息</span>
+g++ <span class="nt">-std</span><span class="o">=</span>c++20 <span class="nt">-O0</span> <span class="nt">-g</span> main.cpp <span class="nt">-o</span> app_debug
+
+<span class="c"># Release 构建：标准优化</span>
+g++ <span class="nt">-std</span><span class="o">=</span>c++20 <span class="nt">-O2</span> main.cpp <span class="nt">-o</span> app_release
+
+<span class="c"># 性能极致（注意浮点行为可能变）</span>
+g++ <span class="nt">-std</span><span class="o">=</span>c++20 <span class="nt">-Ofast</span> main.cpp <span class="nt">-o</span> app_fast
+</code></pre></div></div><p><strong>关键认知</strong>：</p><ul><li><code class="language-plaintext highlighter-rouge">-O2</code> 是 Release 的默认选择，平衡性能和安全</li><li><code class="language-plaintext highlighter-rouge">-O3</code> 不一定比 <code class="language-plaintext highlighter-rouge">-O2</code> 快，激进内联可能导致 icache miss</li><li>优化后崩溃排查：用 <code class="language-plaintext highlighter-rouge">-O2 -g</code>（保留调试信息），GDB 能看到调用栈但部分变量是 <code class="language-plaintext highlighter-rouge">&lt;optimized out&gt;</code></li></ul><h3 id="a6-调试信息-g">A.6 调试信息：<code class="language-plaintext highlighter-rouge">-g</code></h3><p>在二进制里嵌入调试信息（源文件名、行号、变量名），供 GDB 使用。</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>g++ <span class="nt">-g</span> main.cpp <span class="nt">-o</span> app               <span class="c"># 默认级别（DWARF 格式）</span>
+g++ <span class="nt">-g</span> <span class="nt">-O0</span> main.cpp <span class="nt">-o</span> app_debug     <span class="c"># 调试最佳：不优化 + 调试信息</span>
+g++ <span class="nt">-g</span> <span class="nt">-O2</span> main.cpp <span class="nt">-o</span> app           <span class="c"># 优化版也保留调试信息（排查 release 崩溃）</span>
+g++ <span class="nt">-g3</span> main.cpp <span class="nt">-o</span> app              <span class="c"># g3 包含宏定义（GDB 里能展开宏）</span>
+</code></pre></div></div><table><thead><tr><th>级别</th><th>内容</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">-g</code> / <code class="language-plaintext highlighter-rouge">-g2</code></td><td>行号、变量名、函数名</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-g3</code></td><td>额外包含宏定义（<code class="language-plaintext highlighter-rouge">#define</code> 的值，GDB 里 <code class="language-plaintext highlighter-rouge">macro expand</code> 可用）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-g0</code></td><td>无调试信息</td></tr></tbody></table><p><strong>注意</strong>：调试信息让二进制变大（可能几倍），但<strong>不影响运行性能</strong>。发布版可以 <code class="language-plaintext highlighter-rouge">strip</code> 掉：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>strip app                 <span class="c"># 删除调试符号，二进制变小</span>
+<span class="c"># 注意：strip 后无法用 GDB 调试，调用栈只有地址没有函数名</span>
+</code></pre></div></div><h3 id="a7-头文件搜索路径-i">A.7 头文件搜索路径：<code class="language-plaintext highlighter-rouge">-I</code></h3><p>告诉编译器去哪里找 <code class="language-plaintext highlighter-rouge">#include "xxx.h"</code>（双引号包含）。</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 项目结构：</span>
+<span class="c"># project/</span>
+<span class="c"># ├── include/       ← 公开头文件</span>
+<span class="c"># │   └── mylib.h</span>
+<span class="c"># └── src/main.cpp   ← #include "mylib.h"</span>
+
+g++ <span class="nt">-Iinclude</span> src/main.cpp <span class="nt">-o</span> app
+<span class="c"># -Iinclude 表示把 include/ 加入头文件搜索路径</span>
+</code></pre></div></div><p><strong>搜索顺序</strong>（双引号 <code class="language-plaintext highlighter-rouge">#include "x.h"</code>）：</p><ol><li>当前源文件所在目录</li><li><code class="language-plaintext highlighter-rouge">-I</code> 指定的目录（按命令行顺序）</li><li>系统目录（<code class="language-plaintext highlighter-rouge">/usr/include</code>、<code class="language-plaintext highlighter-rouge">/usr/local/include</code>、编译器自带目录）</li></ol><p><strong>尖括号 <code class="language-plaintext highlighter-rouge">#include &lt;x.h&gt;</code></strong>：跳过第 1 步，直接从 <code class="language-plaintext highlighter-rouge">-I</code> 和系统目录开始找。所以自己的头文件用双引号，系统/第三方库头文件用尖括号。</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 多个搜索路径</span>
+g++ <span class="nt">-Iinclude</span> <span class="nt">-Ithird_party</span>/eigen <span class="nt">-I</span>/usr/local/cuda/include main.cpp <span class="nt">-o</span> app
+</code></pre></div></div><h3 id="a8-宏定义-d---u">A.8 宏定义：<code class="language-plaintext highlighter-rouge">-D</code> / <code class="language-plaintext highlighter-rouge">-U</code></h3><p>在命令行定义/取消宏，等价于源码里的 <code class="language-plaintext highlighter-rouge">#define</code> / <code class="language-plaintext highlighter-rouge">#undef</code>。</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 定义 DEBUG 宏（不带值，等价于 #define DEBUG）</span>
+g++ <span class="nt">-DDEBUG</span> main.cpp <span class="nt">-o</span> app
+
+<span class="c"># 定义带值的宏</span>
+g++ <span class="nt">-DVERSION</span><span class="o">=</span><span class="se">\"</span>1.0<span class="se">\"</span> <span class="nt">-DBUFFER_SIZE</span><span class="o">=</span>1024 main.cpp <span class="nt">-o</span> app
+<span class="c"># 注意：字符串要用 \" 转义，否则 shell 会吃掉引号</span>
+
+<span class="c"># 取消宏</span>
+g++ <span class="nt">-UDEBUG</span> main.cpp <span class="nt">-o</span> app     <span class="c"># 等价于 #undef DEBUG</span>
+</code></pre></div></div><p><strong>实际用途</strong>：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 区分 Debug/Release 构建</span>
+g++ <span class="nt">-DDEBUG</span> <span class="nt">-g</span> <span class="nt">-O0</span> main.cpp <span class="nt">-o</span> app_debug      <span class="c"># 源码里 #ifdef DEBUG 开启调试日志</span>
+g++ <span class="nt">-DNDEBUG</span> <span class="nt">-O2</span> main.cpp <span class="nt">-o</span> app_release       <span class="c"># NDEBUG 禁用 assert</span>
+
+<span class="c"># 控制日志级别</span>
+g++ <span class="nt">-DLOG_LEVEL</span><span class="o">=</span>2 main.cpp <span class="nt">-o</span> app              <span class="c"># 源码里 #if LOG_LEVEL &gt;= 2 时输出详细日志</span>
+
+<span class="c"># CUDA 项目里常见</span>
+g++ <span class="nt">-D_GLIBCXX_USE_CXX11_ABI</span><span class="o">=</span>1 main.cpp <span class="nt">-o</span> app  <span class="c"># 强制新 ABI（见第四章 ABI）</span>
+</code></pre></div></div><h3 id="a9-库搜索路径与链接-l---l">A.9 库搜索路径与链接：<code class="language-plaintext highlighter-rouge">-L</code> / <code class="language-plaintext highlighter-rouge">-l</code></h3><p>控制链接器去哪里找库文件。</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># -L&lt;path&gt;    添加库搜索路径</span>
+<span class="c"># -l&lt;name&gt;    链接名为 lib&lt;name&gt;.a 或 lib&lt;name&gt;.so 的库</span>
+
+g++ main.cpp <span class="nt">-L</span>/usr/local/lib <span class="nt">-lmylib</span> <span class="nt">-o</span> app
+<span class="c"># 在 /usr/local/lib 找 libmylib.so 或 libmylib.a</span>
+</code></pre></div></div><p><strong>搜索顺序</strong>：</p><ol><li><code class="language-plaintext highlighter-rouge">-L</code> 指定的目录（按命令行顺序）</li><li>编译时写入的 RPATH/RUNPATH</li><li>系统默认目录（<code class="language-plaintext highlighter-rouge">/lib</code>、<code class="language-plaintext highlighter-rouge">/usr/lib</code>、<code class="language-plaintext highlighter-rouge">/usr/local/lib</code>）</li></ol><p><strong>静态库 vs 动态库的选择</strong>：如果同目录下同时有 <code class="language-plaintext highlighter-rouge">libmylib.a</code> 和 <code class="language-plaintext highlighter-rouge">libmylib.so</code>，默认链接动态库。强制用静态库：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>g++ main.cpp <span class="nt">-L</span><span class="nb">.</span> <span class="nt">-l</span>:libmylib.a <span class="nt">-o</span> app    <span class="c"># 用 -l: 显式指定文件名</span>
+<span class="c"># 或</span>
+g++ main.cpp <span class="nt">-L</span><span class="nb">.</span> <span class="nt">-Wl</span>,-Bstatic <span class="nt">-lmylib</span> <span class="nt">-Wl</span>,-Bdynamic <span class="nt">-o</span> app
+</code></pre></div></div><p><strong>链接顺序很重要</strong>：被依赖的库要放在依赖它的后面：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ❌ 错误：mylib 依赖 math，但 math 在前，链接器扫描到 mylib 时找不到 math 的符号</span>
+g++ main.cpp <span class="nt">-lmath</span> <span class="nt">-lmylib</span> <span class="nt">-o</span> app
+
+<span class="c"># ✅ 正确：依赖者在前，被依赖者在后</span>
+g++ main.cpp <span class="nt">-lmylib</span> <span class="nt">-lmath</span> <span class="nt">-o</span> app
+</code></pre></div></div><h3 id="a10-动态库相关-fpic---shared---rdynamic">A.10 动态库相关：<code class="language-plaintext highlighter-rouge">-fPIC</code> / <code class="language-plaintext highlighter-rouge">-shared</code> / <code class="language-plaintext highlighter-rouge">-rdynamic</code></h3><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">-fPIC</code></td><td>生成位置无关代码（Position Independent Code），编译动态库的目标文件时必须</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-shared</code></td><td>生成动态库（.so）而非可执行文件</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-rdynamic</code></td><td>导出可执行文件的符号表（让动态库能回调可执行文件里的函数）</td></tr></tbody></table><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 创建动态库</span>
+g++ <span class="nt">-c</span> <span class="nt">-fPIC</span> mylib.cpp <span class="nt">-o</span> mylib.o        <span class="c"># ① 编译成 PIC 目标文件</span>
+g++ <span class="nt">-shared</span> <span class="nt">-o</span> libmylib.so mylib.o        <span class="c"># ② 打包成 .so</span>
+
+<span class="c"># 使用动态库</span>
+g++ main.cpp <span class="nt">-L</span><span class="nb">.</span> <span class="nt">-lmylib</span> <span class="nt">-o</span> app
+<span class="nb">export </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>.:<span class="nv">$LD_LIBRARY_PATH</span>
+./app
+
+<span class="c"># -rdynamic 的用途：插件系统</span>
+g++ <span class="nt">-rdynamic</span> main.cpp <span class="nt">-lplugin</span> <span class="nt">-o</span> app
+<span class="c"># main.cpp 里定义了 register_handler()，plugin.so 要回调它</span>
+<span class="c"># 不加 -rdynamic，plugin.so 找不到 register_handler 的符号</span>
+</code></pre></div></div><h3 id="a11-链接器透传参数-wl">A.11 链接器透传参数：<code class="language-plaintext highlighter-rouge">-Wl,</code></h3><p>把参数透传给底层链接器 <code class="language-plaintext highlighter-rouge">ld</code>。<code class="language-plaintext highlighter-rouge">-Wl,</code> 后面的内容按逗号分隔传给 ld。</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 设置 RPATH（把库路径写进二进制）</span>
+g++ main.cpp <span class="nt">-L</span>/opt/lib <span class="nt">-lmylib</span> <span class="nt">-Wl</span>,-rpath,/opt/lib <span class="nt">-o</span> app
+<span class="c"># -Wl,-rpath,/opt/lib  →  传给 ld：-rpath /opt/lib</span>
+
+<span class="c"># 设置 RUNPATH（现代版 RPATH，优先级更低但更灵活）</span>
+g++ main.cpp <span class="nt">-L</span>/opt/lib <span class="nt">-lmylib</span> <span class="nt">-Wl</span>,--enable-new-dtags,-rpath,/opt/lib <span class="nt">-o</span> app
+
+<span class="c"># 生成 map 文件（调试链接问题时看符号布局）</span>
+g++ main.cpp <span class="nt">-o</span> app <span class="nt">-Wl</span>,-Map,app.map
+
+<span class="c"># 去掉未使用的段</span>
+g++ main.cpp <span class="nt">-o</span> app <span class="nt">-Wl</span>,--gc-sections <span class="nt">-ffunction-sections</span> <span class="nt">-fdata-sections</span>
+</code></pre></div></div><p><strong><code class="language-plaintext highlighter-rouge">-Wl,-rpath,&lt;path&gt;</code> vs <code class="language-plaintext highlighter-rouge">LD_LIBRARY_PATH</code></strong>：</p><ul><li>RPATH 写进二进制，部署后不用管环境变量（推荐生产）</li><li>LD_LIBRARY_PATH 是运行时环境变量，临时诊断用，不要写进 <code class="language-plaintext highlighter-rouge">~/.bashrc</code> 长期依赖</li></ul><h3 id="a12-sanitizer-参数">A.12 Sanitizer 参数</h3><p>详见 <code class="language-plaintext highlighter-rouge">cpp/内存生命周期与资源管理.md</code> 和 <code class="language-plaintext highlighter-rouge">cpp/环境配置教程.md</code>。</p><table><thead><tr><th>参数</th><th>检测什么</th><th>不能和谁同用</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">-fsanitize=address</code></td><td>内存错误（越界、use-after-free、泄漏）</td><td>TSan、MSan</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-fsanitize=undefined</code></td><td>未定义行为（整数溢出、空指针解引用等）</td><td>无冲突</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-fsanitize=thread</code></td><td>数据竞争</td><td>ASan、MSan</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-fsanitize=memory</code></td><td>未初始化内存读取（仅 Clang）</td><td>ASan、TSan</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-fsanitize=leak</code></td><td>内存泄漏（ASan 的子集，开销更小）</td><td>TSan、MSan</td></tr></tbody></table><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 内存错误 + UB（最常用组合）</span>
+g++ <span class="nt">-std</span><span class="o">=</span>c++20 <span class="nt">-fsanitize</span><span class="o">=</span>address,undefined <span class="nt">-g</span> <span class="nt">-O0</span> main.cpp <span class="nt">-o</span> app_asan
+
+<span class="c"># 数据竞争（单独用）</span>
+g++ <span class="nt">-std</span><span class="o">=</span>c++20 <span class="nt">-fsanitize</span><span class="o">=</span>thread <span class="nt">-g</span> <span class="nt">-O0</span> main.cpp <span class="nt">-o</span> app_tsan
+
+<span class="c"># 常用附加参数（让错误报告更详细）</span>
+g++ <span class="nt">-fsanitize</span><span class="o">=</span>address <span class="nt">-g</span> <span class="nt">-O0</span> <span class="nt">-fno-omit-frame-pointer</span> main.cpp <span class="nt">-o</span> app
+<span class="c"># -fno-omit-frame-pointer：保留帧指针，栈回溯更清晰</span>
+</code></pre></div></div><h3 id="a13-多线程与并行-pthread---fopenmp">A.13 多线程与并行：<code class="language-plaintext highlighter-rouge">-pthread</code> / <code class="language-plaintext highlighter-rouge">-fopenmp</code></h3><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">-pthread</code></td><td>链接 pthread 库（用 <code class="language-plaintext highlighter-rouge">std::thread</code> 时必须加）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-fopenmp</code></td><td>启用 OpenMP 指令（<code class="language-plaintext highlighter-rouge">#pragma omp parallel</code>）</td></tr></tbody></table><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 用 std::thread</span>
+g++ <span class="nt">-std</span><span class="o">=</span>c++20 <span class="nt">-pthread</span> main.cpp <span class="nt">-o</span> app
+
+<span class="c"># 用 OpenMP</span>
+g++ <span class="nt">-std</span><span class="o">=</span>c++20 <span class="nt">-fopenmp</span> main.cpp <span class="nt">-o</span> app
+</code></pre></div></div><p><strong>容易踩的坑</strong>：用了 <code class="language-plaintext highlighter-rouge">std::thread</code> 但忘记 <code class="language-plaintext highlighter-rouge">-pthread</code>，编译通过但运行时报 <code class="language-plaintext highlighter-rouge">std::system_error: Enable multithreading to use std::thread</code>。<code class="language-plaintext highlighter-rouge">-pthread</code> 要同时加在编译和链接阶段（CMake 里 <code class="language-plaintext highlighter-rouge">target_link_libraries(app PRIVATE pthread)</code>）。</p><h3 id="a14-cpu-架构优化-march">A.14 CPU 架构优化：<code class="language-plaintext highlighter-rouge">-march</code></h3><p>让编译器针对特定 CPU 架构生成指令（AVX、SSE 等）。</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>g++ <span class="nt">-march</span><span class="o">=</span>native main.cpp <span class="nt">-o</span> app        <span class="c"># 针对当前机器的 CPU（自动检测）</span>
+g++ <span class="nt">-march</span><span class="o">=</span>haswell main.cpp <span class="nt">-o</span> app       <span class="c"># 针对 Haswell 架构</span>
+g++ <span class="nt">-mavx2</span> <span class="nt">-mfma</span> main.cpp <span class="nt">-o</span> app         <span class="c"># 只开启 AVX2 和 FMA 指令集</span>
+</code></pre></div></div><p><strong><code class="language-plaintext highlighter-rouge">-march=native</code> 的风险</strong>：在本机编译的代码，拷到老 CPU 上可能报 <code class="language-plaintext highlighter-rouge">Illegal instruction</code> 崩溃。生产部署要么不指定 <code class="language-plaintext highlighter-rouge">-march</code>，要么明确指定一个保守的目标架构。</p><h3 id="a15-其他常用参数">A.15 其他常用参数</h3><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">-v</code></td><td>显示详细的编译过程（预处理、编译、链接各阶段调用的命令）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-save-temps</code></td><td>保留中间产物（<code class="language-plaintext highlighter-rouge">.ii</code>、<code class="language-plaintext highlighter-rouge">.s</code>、<code class="language-plaintext highlighter-rouge">.o</code>），调试编译问题时用</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-pipe</code></td><td>用管道代替临时文件传中间结果，稍快</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-j&lt;N&gt;</code></td><td>g++ 本身没有并行编译，用 CMake 的 <code class="language-plaintext highlighter-rouge">--parallel</code> 或 <code class="language-plaintext highlighter-rouge">make -j</code></td></tr><tr><td><code class="language-plaintext highlighter-rouge">-fno-rtti</code></td><td>禁用 RTTI（<code class="language-plaintext highlighter-rouge">dynamic_cast</code>），减小体积（某些嵌入式场景用）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-fno-exceptions</code></td><td>禁用异常，减小体积（嵌入式/内核开发用）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-fvisibility=hidden</code></td><td>默认隐藏符号（默认不导出，减少符号表体积，做库时推荐）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-flto</code></td><td>链接时优化（Link-Time Optimization），跨文件内联，慢但优化更彻底</td></tr></tbody></table><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 排查"为什么找不到头文件"：加 -v 看搜索路径</span>
+g++ <span class="nt">-v</span> main.cpp 2&gt;&amp;1 | <span class="nb">grep</span> <span class="nt">-A</span> 20 <span class="s1">'search starts here'</span>
+
+<span class="c"># 排查"编译器到底生成了什么"：保留中间产物</span>
+g++ <span class="nt">-save-temps</span> main.cpp <span class="nt">-o</span> app
+<span class="nb">ls</span> <span class="k">*</span>.ii <span class="k">*</span>.s <span class="k">*</span>.o    <span class="c"># 看到所有中间文件</span>
+
+<span class="c"># 生产库：隐藏符号 + 链接时优化</span>
+g++ <span class="nt">-fvisibility</span><span class="o">=</span>hidden <span class="nt">-flto</span> <span class="nt">-O2</span> mylib.cpp <span class="nt">-shared</span> <span class="nt">-o</span> libmylib.so
+</code></pre></div></div><hr /><h2 id="附录-b常用编译组合速查">附录 B：常用编译组合速查</h2><p>按场景给出”拿来就能用”的命令组合。</p><h3 id="b1-日常学习调试">B.1 日常学习/调试</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 单文件，C++20，带警告和调试信息，不优化</span>
+g++ <span class="nt">-std</span><span class="o">=</span>c++20 <span class="nt">-Wall</span> <span class="nt">-Wextra</span> <span class="nt">-g</span> <span class="nt">-O0</span> main.cpp <span class="nt">-o</span> app
+
+<span class="c"># 跑 Sanitizer 抓内存错误</span>
+g++ <span class="nt">-std</span><span class="o">=</span>c++20 <span class="nt">-Wall</span> <span class="nt">-Wextra</span> <span class="nt">-g</span> <span class="nt">-O0</span> <span class="se">\</span>
+    <span class="nt">-fsanitize</span><span class="o">=</span>address,undefined <span class="nt">-fno-omit-frame-pointer</span> <span class="se">\</span>
+    main.cpp <span class="nt">-o</span> app_asan
+</code></pre></div></div><h3 id="b2-多文件项目">B.2 多文件项目</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 分开编译（改一个文件只重编那一个）</span>
+g++ <span class="nt">-std</span><span class="o">=</span>c++20 <span class="nt">-c</span> main.cpp <span class="nt">-o</span> main.o
+g++ <span class="nt">-std</span><span class="o">=</span>c++20 <span class="nt">-c</span> add.cpp <span class="nt">-o</span> add.o
+g++ main.o add.o <span class="nt">-o</span> app
+
+<span class="c"># 一步到位（简单项目）</span>
+g++ <span class="nt">-std</span><span class="o">=</span>c++20 main.cpp add.cpp <span class="nt">-o</span> app
+</code></pre></div></div><h3 id="b3-release-构建">B.3 Release 构建</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 优化 + 警告，不带调试信息</span>
+g++ <span class="nt">-std</span><span class="o">=</span>c++20 <span class="nt">-O2</span> <span class="nt">-Wall</span> <span class="nt">-Wextra</span> main.cpp <span class="nt">-o</span> app_release
+
+<span class="c"># 发布版：优化 + strip 掉调试符号</span>
+g++ <span class="nt">-std</span><span class="o">=</span>c++20 <span class="nt">-O2</span> main.cpp <span class="nt">-o</span> app_release
+strip app_release
+</code></pre></div></div><h3 id="b4-创建和使用库">B.4 创建和使用库</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 静态库</span>
+g++ <span class="nt">-c</span> mylib.cpp <span class="nt">-o</span> mylib.o
+ar rcs libmylib.a mylib.o
+g++ main.cpp <span class="nt">-L</span><span class="nb">.</span> <span class="nt">-lmylib</span> <span class="nt">-o</span> app
+
+<span class="c"># 动态库</span>
+g++ <span class="nt">-c</span> <span class="nt">-fPIC</span> mylib.cpp <span class="nt">-o</span> mylib.o
+g++ <span class="nt">-shared</span> <span class="nt">-o</span> libmylib.so mylib.o
+g++ main.cpp <span class="nt">-L</span><span class="nb">.</span> <span class="nt">-lmylib</span> <span class="nt">-Wl</span>,-rpath,. <span class="nt">-o</span> app
+<span class="c"># -Wl,-rpath,. 把当前目录写进 RPATH，运行时不用设 LD_LIBRARY_PATH</span>
+</code></pre></div></div><h3 id="b5-多线程">B.5 多线程</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># std::thread</span>
+g++ <span class="nt">-std</span><span class="o">=</span>c++20 <span class="nt">-pthread</span> <span class="nt">-g</span> main.cpp <span class="nt">-o</span> app
+
+<span class="c"># OpenMP</span>
+g++ <span class="nt">-std</span><span class="o">=</span>c++20 <span class="nt">-fopenmp</span> <span class="nt">-O2</span> main.cpp <span class="nt">-o</span> app
+
+<span class="c"># 测数据竞争</span>
+g++ <span class="nt">-std</span><span class="o">=</span>c++20 <span class="nt">-pthread</span> <span class="nt">-fsanitize</span><span class="o">=</span>thread <span class="nt">-g</span> <span class="nt">-O0</span> main.cpp <span class="nt">-o</span> app_tsan
+</code></pre></div></div><h3 id="b6-外部依赖">B.6 外部依赖</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 链接 OpenCV</span>
+g++ main.cpp <span class="nt">-I</span>/usr/include/opencv4 <span class="nt">-lopencv_core</span> <span class="nt">-lopencv_imgproc</span> <span class="nt">-o</span> app
+
+<span class="c"># 链接 CUDA（编译自定义算子）</span>
+g++ <span class="nt">-std</span><span class="o">=</span>c++17 <span class="nt">-I</span>/usr/local/cuda/include <span class="se">\</span>
+    <span class="nt">-L</span>/usr/local/cuda/lib64 <span class="nt">-lcudart</span> <span class="nt">-lcublas</span> <span class="se">\</span>
+    main.cpp <span class="nt">-o</span> app
+
+<span class="c"># pybind11 扩展</span>
+g++ <span class="nt">-O3</span> <span class="nt">-Wall</span> <span class="nt">-shared</span> <span class="nt">-std</span><span class="o">=</span>c++20 <span class="nt">-fPIC</span> <span class="se">\</span>
+    <span class="si">$(</span>python <span class="nt">-m</span> pybind11 <span class="nt">--includes</span><span class="si">)</span> <span class="se">\</span>
+    module.cpp <span class="nt">-o</span> module<span class="si">$(</span>python3-config <span class="nt">--extension-suffix</span><span class="si">)</span>
+</code></pre></div></div><h3 id="b7-排查问题专用">B.7 排查问题专用</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 看头文件搜索路径</span>
+g++ <span class="nt">-v</span> <span class="nt">-E</span> <span class="nt">-x</span> c++ /dev/null 2&gt;&amp;1 | <span class="nb">grep</span> <span class="nt">-A</span> 20 <span class="s1">'search starts here'</span>
+
+<span class="c"># 看一个宏是否被定义、值是多少</span>
+g++ <span class="nt">-dM</span> <span class="nt">-E</span> <span class="nt">-x</span> c++ /dev/null | <span class="nb">grep</span> <span class="nt">-i</span> <span class="s1">'__cplusplus'</span>
+<span class="c"># 输出：#define __cplusplus 201703L（表示默认 C++17）</span>
+
+<span class="c"># 保留中间产物排查"预处理后长什么样"</span>
+g++ <span class="nt">-save-temps</span> <span class="nt">-std</span><span class="o">=</span>c++20 main.cpp <span class="nt">-o</span> app
+<span class="c"># 生成 main.ii（预处理后）、main.s（汇编）、main.o（目标文件）</span>
+
+<span class="c"># 看二进制依赖了哪些库</span>
+ldd app
+
+<span class="c"># 看二进制导出/未定义的符号</span>
+nm <span class="nt">-C</span> app | <span class="nb">grep</span> <span class="s1">' T '</span>      <span class="c"># T = 已定义的导出符号</span>
+nm <span class="nt">-C</span> app | <span class="nb">grep</span> <span class="s1">' U '</span>      <span class="c"># U = 未定义（要外部链接）</span>
+</code></pre></div></div><hr /><h2 id="附录-c参数位置与顺序">附录 C：参数位置与顺序</h2><p><code class="language-plaintext highlighter-rouge">g++</code> 命令行的参数顺序有讲究，记不住时遵循这个模板：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>g++ [编译选项] [源文件] [库选项] -o [输出文件]
+</code></pre></div></div><p><strong>核心规则</strong>：</p><ol><li><strong><code class="language-plaintext highlighter-rouge">-I</code>、<code class="language-plaintext highlighter-rouge">-D</code>、<code class="language-plaintext highlighter-rouge">-std</code>、<code class="language-plaintext highlighter-rouge">-W</code>、<code class="language-plaintext highlighter-rouge">-O</code>、<code class="language-plaintext highlighter-rouge">-g</code>、<code class="language-plaintext highlighter-rouge">-fsanitize</code></strong>：编译期选项，放在源文件前后都行，习惯放前面</li><li><strong><code class="language-plaintext highlighter-rouge">-L</code>、<code class="language-plaintext highlighter-rouge">-l</code></strong>：链接期选项，必须放在源文件<strong>后面</strong>（因为链接器按顺序扫描，源文件的未定义符号要靠后面的 <code class="language-plaintext highlighter-rouge">-l</code> 解决）</li><li><strong><code class="language-plaintext highlighter-rouge">-l</code> 之间的顺序</strong>：被依赖的库放后面（A 依赖 B，则 <code class="language-plaintext highlighter-rouge">-lA -lB</code>）</li></ol><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ✅ 正确：编译选项在前，源文件在中，库在后</span>
+g++ <span class="nt">-std</span><span class="o">=</span>c++20 <span class="nt">-O2</span> <span class="nt">-Iinclude</span> main.cpp <span class="nt">-Llib</span> <span class="nt">-lmylib</span> <span class="nt">-lm</span> <span class="nt">-o</span> app
+
+<span class="c"># ❌ 错误：-l 放在源文件前面，链接器扫描到 main.cpp 时还不知道去哪找库</span>
+g++ <span class="nt">-std</span><span class="o">=</span>c++20 <span class="nt">-Llib</span> <span class="nt">-lmylib</span> main.cpp <span class="nt">-o</span> app
+</code></pre></div></div><p><strong>用 CMake 就不用操心这些</strong>：CMake 会自动处理参数顺序，这也是用 CMake 的好处之一（见第七章）。</p></section><!-- Previous / Next navigation --><nav class="notes-pager"><div class="notes-pager-links"> <a href="/notes/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%95%99%E7%A8%8B/" class="notes-pager-prev"> <span class="notes-pager-label">← 上一章</span> <span class="notes-pager-title">环境配置教程</span> </a> <span></span></div></nav></div></article><!-- Right Sidebar: Table of Contents (built by JS from DOM) --><aside class="notes-toc" id="notes-toc"><div class="notes-toc-inner"><h4 class="notes-toc-title">目录</h4><nav class="notes-toc-nav"><ul class="notes-toc-list" id="notes-toc-list"> <!-- Populated by notes-toc.js --></ul></nav></div></aside></div><script src="https://1571859588.github.io/assets/js/notes-toc.js"></script> <script> (function() { var q = new URLSearchParams(location.search).get('q'); if (!q || q.length < 2) return; var body = document.querySelector('.notes-body'); if (!body) return; // Walk text nodes, find and highlight matches var walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT, null, false); var textNodes = []; while (walker.nextNode()) { var p = walker.currentNode.parentNode; // Skip script, style, code blocks, and already-marked text if (p.tagName === 'SCRIPT' || p.tagName === 'STYLE' || p.tagName === 'MARK' || p.closest('pre') || p.closest('.notes-search-hit')) continue; textNodes.push(walker.currentNode); } var first = null; var re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'); textNodes.forEach(function(node) { var text = node.textContent; if (!re.test(text)) return; re.lastIndex = 0; // reset after test var frag = document.createDocumentFragment(); var lastIdx = 0; var match; while ((match = re.exec(text)) !== null) { if (match.index > lastIdx) { frag.appendChild(document.createTextNode(text.substring(lastIdx, match.index))); } var mark = document.createElement('mark'); mark.className = 'notes-search-mark'; mark.textContent = match[0]; frag.appendChild(mark); if (!first) first = mark; lastIdx = match.index + match[0].length; } if (lastIdx < text.length) { frag.appendChild(document.createTextNode(text.substring(lastIdx))); } node.parentNode.replaceChild(frag, node); }); if (first) { setTimeout(function() { first.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300); } })(); </script><div class="page__footer"><footer> <!-- start custom footer snippets --> <a href="/sitemap/">Sitemap</a> <!-- end custom footer snippets --><div class="page__footer-follow"><ul class="social-icons"><li><strong>Follow:</strong></li><li><a href="http://github.com/1571859588"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a></li><li><a href="https://1571859588.github.io/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li></ul></div><div class="page__footer-copyright"> &copy; 2026 Yuntao Nie, Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://github.com/academicpages/academicpages.github.io">AcademicPages</a>, a fork of <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.<br /> Site last updated 2026-07-06</div></footer></div><script src="https://1571859588.github.io/assets/js/main.min.js"></script> <script src="https://1571859588.github.io/assets/js/paper-details.js"></script> <!-- Fix kramdown stripping backslashes before _ in math spans. kramdown treats \_ as a markdown escape, converting $seq\_len$ to $seq_len$. MathJax then interprets _ as subscript instead of a literal underscore. This runs synchronously before MathJax (async) processes the page. --> <script> (function() { var content = document.querySelector('.page__content'); if (!content) return; var walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT, null, false); var nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode); nodes.forEach(function(node) { var text = node.textContent; var fixed = text.replace(/\$([^$\n]+?)\$/g, function(match, math) { // Inside $...$, add \ before _ followed by 2+ lowercase letters. // Safe: legitimate subscripts use single chars ($d_k$) or braces ($x_{ij}$). var fixedMath = math.replace(/_([a-z]{2,})/g, '\\_$1'); return fixedMath !== math ? '$' + fixedMath + '$' : match; }); if (fixed !== text) node.textContent = fixed; }); })(); </script> <script> var SERIES_INDEX = [ {t:"Python与C++互操作", u:"/notes/Python%E4%B8%8EC-%E4%BA%92%E6%93%8D%E4%BD%9C/"}, {t:"内存生命周期与资源管理", u:"/notes/%E5%86%85%E5%AD%98%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%B8%8E%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/"}, {t:"环境配置教程", u:"/notes/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%95%99%E7%A8%8B/"}, {t:"编译链接模板与构建系统", u:"/notes/%E7%BC%96%E8%AF%91%E9%93%BE%E6%8E%A5%E6%A8%A1%E6%9D%BF%E4%B8%8E%E6%9E%84%E5%BB%BA%E7%B3%BB%E7%BB%9F/"} ]; (function() { if (!SERIES_INDEX.length) return; var inp = document.getElementById('notes-sidebar-search-input'); var box = document.getElementById('notes-sidebar-search-results'); if (!inp || !box) return; function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; } function hl(t, q) { var o = '', L = 0, lo = t.toLowerCase(), ql = q.toLowerCase(), i; while ((i = lo.indexOf(ql, L)) !== -1) { o += esc(t.substring(L, i)) + '<mark class="notes-search-highlight">' + esc(t.substring(i, i + q.length)) + '</mark>'; L = i + q.length; } return o + esc(t.substring(L)); } inp.addEventListener('input', function() { var q = this.value.trim(); if (!q) { box.style.display = 'none'; box.innerHTML = ''; return; } var ql = q.toLowerCase(), hits = []; for (var i = 0; i < SERIES_INDEX.length; i++) { if (SERIES_INDEX[i].t.toLowerCase().indexOf(ql) !== -1) hits.push(SERIES_INDEX[i]); } if (!hits.length) { box.innerHTML = '<div class="notes-sidebar-search-empty">无匹配</div>'; } else { var h = ''; for (var j = 0; j < Math.min(hits.length, 15); j++) { h += '<a href="' + hits[j].u + '" class="notes-sidebar-search-hit" data-q="' + esc(q) + '">' + '<span class="notes-sidebar-search-hit-title">' + hl(hits[j].t, q) + '</span></a>'; } box.innerHTML = h; } box.style.display = 'block'; }); inp.addEventListener('keydown', function(e) { if (e.key === 'Escape') { box.style.display = 'none'; box.innerHTML = ''; this.blur(); } }); box.addEventListener('click', function(e) { var a = e.target.closest('.notes-sidebar-search-hit'); if (a && a.dataset.q) sessionStorage.setItem('notes-search-q', a.dataset.q); }); document.addEventListener('click', function(e) { if (!e.target.closest('#notes-sidebar-search')) { box.style.display = 'none'; box.innerHTML = ''; } }); })(); </script></body></html>

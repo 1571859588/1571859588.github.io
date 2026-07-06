@@ -1,0 +1,588 @@
+<!doctype html><html lang="en" class="no-js"><head><meta charset="utf-8"> <!-- begin SEO --><title>Python进阶笔记3_并发与性能分析 - Yuntao Nie</title><meta property="og:locale" content="en-US"><meta property="og:site_name" content="Yuntao Nie"><meta property="og:title" content="Python进阶笔记3_并发与性能分析"><link rel="canonical" href="https://1571859588.github.io/notes/Python%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B03-%E5%B9%B6%E5%8F%91%E4%B8%8E%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90/"><meta property="og:url" content="https://1571859588.github.io/notes/Python%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B03-%E5%B9%B6%E5%8F%91%E4%B8%8E%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90/"><meta property="og:description" content="Python 进阶笔记 3：并发、性能分析与优化"> <script type="application/ld+json"> { "@context" : "http://schema.org", "@type" : "Person", "name" : "Yuntao Nie", "url" : "https://1571859588.github.io", "sameAs" : null } </script> <!-- end SEO --><link href="https://1571859588.github.io/feed.xml" type="application/atom+xml" rel="alternate" title="Yuntao Nie Feed"> <!-- http://t.co/dKP3o1e --><meta name="HandheldFriendly" content="True"><meta name="MobileOptimized" content="320"><meta name="viewport" content="width=device-width, initial-scale=1.0"> <script> document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js '; </script> <!-- For all browsers --><link rel="stylesheet" href="https://1571859588.github.io/assets/css/main.css"><meta http-equiv="cleartype" content="on"> <!-- start custom head snippets --><link rel="apple-touch-icon" sizes="57x57" href="https://1571859588.github.io/images/apple-touch-icon-57x57.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="60x60" href="https://1571859588.github.io/images/apple-touch-icon-60x60.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="72x72" href="https://1571859588.github.io/images/apple-touch-icon-72x72.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="76x76" href="https://1571859588.github.io/images/apple-touch-icon-76x76.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="114x114" href="https://1571859588.github.io/images/apple-touch-icon-114x114.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="120x120" href="https://1571859588.github.io/images/apple-touch-icon-120x120.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="144x144" href="https://1571859588.github.io/images/apple-touch-icon-144x144.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="152x152" href="https://1571859588.github.io/images/apple-touch-icon-152x152.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="180x180" href="https://1571859588.github.io/images/apple-touch-icon-180x180.png?v=M44lzPylqQ"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-32x32.png?v=M44lzPylqQ" sizes="32x32"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/android-chrome-192x192.png?v=M44lzPylqQ" sizes="192x192"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-96x96.png?v=M44lzPylqQ" sizes="96x96"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-16x16.png?v=M44lzPylqQ" sizes="16x16"><link rel="manifest" href="https://1571859588.github.io/images/manifest.json?v=M44lzPylqQ"><link rel="mask-icon" href="https://1571859588.github.io/images/safari-pinned-tab.svg?v=M44lzPylqQ" color="#000000"><link rel="shortcut icon" href="/images/favicon.ico?v=M44lzPylqQ"><meta name="msapplication-TileColor" content="#000000"><meta name="msapplication-TileImage" content="https://1571859588.github.io/images/mstile-144x144.png?v=M44lzPylqQ"><meta name="msapplication-config" content="https://1571859588.github.io/images/browserconfig.xml?v=M44lzPylqQ"><meta name="theme-color" content="#ffffff"><link rel="stylesheet" href="https://1571859588.github.io/assets/css/academicons.css"/> <!-- MathJax for math rendering --> <script> MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['\\(', '\\)']] } }; </script> <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script> <!-- end custom head snippets --></head><body> <!--[if lt IE 9]><div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div><![endif]--><div class="masthead"><div class="masthead__inner-wrap"><div class="masthead__menu"><nav id="site-nav" class="greedy-nav"> <button><div class="navicon"></div></button><ul class="visible-links"><li class="masthead__menu-item masthead__menu-item--lg"><a href="https://1571859588.github.io/">Yuntao Nie</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/publications/">Publications</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/cv/">CV</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/notes/">Notes</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/year-archive/">Blog</a></li></ul><ul class="hidden-links hidden"></ul></nav></div></div></div><div id="main" role="main" class="notes-layout"> <!-- Left Sidebar: Series Chapter Navigation --><aside class="notes-sidebar" id="notes-sidebar"><div class="notes-sidebar-inner"><div class="notes-series-header"><h3 class="notes-series-title">python</h3></div><div class="notes-sidebar-search" id="notes-sidebar-search"> <input type="text" class="notes-sidebar-search-input" id="notes-sidebar-search-input" placeholder="搜索本专题…" autocomplete="off"><div class="notes-sidebar-search-results" id="notes-sidebar-search-results" style="display:none"></div></div><nav class="notes-chapter-nav"><ul class="notes-chapter-list"><li class="notes-chapter-item "> <a href="/notes/Python%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B02-%E8%BF%AD%E4%BB%A3%E5%99%A8-%E8%A3%85%E9%A5%B0%E5%99%A8-%E4%B8%8A%E4%B8%8B%E6%96%87%E7%AE%A1%E7%90%86%E5%99%A8/" class="notes-chapter-link"> <span class="notes-chapter-num">1</span> <span class="notes-chapter-title">Python进阶笔记2_迭代器_装饰器_上下文管理器</span> </a></li><li class="notes-chapter-item active"> <a href="/notes/Python%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B03-%E5%B9%B6%E5%8F%91%E4%B8%8E%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90/" class="notes-chapter-link"> <span class="notes-chapter-num">2</span> <span class="notes-chapter-title">Python进阶笔记3_并发与性能分析</span> </a></li><li class="notes-chapter-item "> <a href="/notes/Python%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0-%E5%90%8D%E5%AD%97%E7%BB%91%E5%AE%9A-%E9%97%AD%E5%8C%85-%E7%B1%BB%E4%B8%8E%E5%8D%8F%E8%AE%AE/" class="notes-chapter-link"> <span class="notes-chapter-num">3</span> <span class="notes-chapter-title">Python进阶笔记_名字绑定_闭包_类与协议</span> </a></li></ul></nav><div class="notes-sidebar-footer"> <a href="/notes/" class="notes-back-link">← 所有笔记系列</a></div></div></aside><!-- Mobile sidebar toggle --> <button class="notes-sidebar-toggle" id="notes-sidebar-toggle" aria-label="Toggle sidebar"> <span class="notes-sidebar-toggle-icon"></span> </button> <!-- Main Content --><article class="notes-content" itemscope itemtype="http://schema.org/CreativeWork"><meta itemprop="headline" content="Python进阶笔记3_并发与性能分析"><div class="notes-content-inner"><header class="notes-header"><div class="notes-breadcrumb"> <a href="/notes/">Notes</a> <span class="notes-sep">›</span> <span>python</span> <span class="notes-sep">›</span> <span>Python进阶笔记3_并发与性能分析</span></div><h1 class="notes-page-title" itemprop="headline">Python进阶笔记3_并发与性能分析</h1></header><section class="notes-body" itemprop="text"><h1 id="python-进阶笔记-3并发性能分析与优化">Python 进阶笔记 3：并发、性能分析与优化</h1><blockquote><p>更新时间：2026-06-30 状态：学习笔记（逐句拆解并发与性能分析概念） 关联：<code class="language-plaintext highlighter-rouge">python/Python进阶笔记_名字绑定_闭包_类与协议.md</code>、<code class="language-plaintext highlighter-rouge">python/Python进阶笔记2_迭代器_装饰器_上下文管理器.md</code></p></blockquote><hr /><h2 id="一句话结论">一句话结论</h2><p>本篇拆解 Python 并发三大模型（线程/多进程/asyncio）、基准测试、性能定位和优化优先级。核心认知：<strong>先判断瓶颈是 I/O 还是 CPU，再选并发模型</strong>；<strong>GIL 限制的是纯 Python CPU 计算，不限制 I/O 和原生扩展</strong>；<strong>优化优先改算法和批处理，最后才考虑写 C++/CUDA</strong>。</p><hr /><h2 id="一并发与并行先分清">一、并发与并行：先分清</h2><h3 id="11-概念区分">1.1 概念区分</h3><table><thead><tr><th>概念</th><th>含义</th><th>例子</th></tr></thead><tbody><tr><td><strong>并发（concurrency）</strong></td><td>多个任务在同一时间段内<strong>交替推进</strong></td><td>一个人同时写文档、回邮件、喝咖啡（切换着做）</td></tr><tr><td><strong>并行（parallelism）</strong></td><td>多个任务在同一时刻<strong>真正同时执行</strong></td><td>两个人分别写文档和回邮件（各干各的）</td></tr></tbody></table><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>并发（交替推进）：        并行（同时执行）：
+任务A ██  ██  ██          任务A ████████
+任务B   ██  ██            任务B ████████
+任务C     ██              任务C ████████
+（一个 CPU 核心切换）      （三个核心各跑一个）
+</code></pre></div></div><h3 id="12-按瓶颈选并发模型">1.2 按瓶颈选并发模型</h3><table><thead><tr><th>任务类型</th><th>典型例子</th><th>常见选择</th><th>原因</th></tr></thead><tbody><tr><td><strong>I/O 密集</strong></td><td>请求 API、读大量小文件</td><td>线程或 asyncio</td><td>瓶颈在等 I/O，CPU 空闲，并发即可</td></tr><tr><td><strong>Python CPU 密集</strong></td><td>纯 Python 解析、复杂循环</td><td>多进程</td><td>GIL 限制线程，必须多进程才能并行</td></tr><tr><td><strong>原生算子密集</strong></td><td>NumPy/PyTorch/CUDA 运算</td><td>底层线程池/GPU 并行</td><td>原生扩展会释放 GIL，Python 只负责调度</td></tr><tr><td><strong>大数据跨进程</strong></td><td>数据加载、共享缓存</td><td>多进程 + 共享内存</td><td>避免重复加载，但要谨慎序列化</td></tr></tbody></table><p><strong>选型决策树</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>你的代码慢在哪？
+│
+├─ 等网络/磁盘/数据库响应
+│   ├─ 请求数量适中 → 线程（ThreadPoolExecutor）
+│   └─ 请求数量很大（上千） → asyncio
+│
+├─ 纯 Python 计算（循环、解析）
+│   └─ 多进程（ProcessPoolExecutor）
+│
+├─ NumPy/PyTorch 矩阵运算
+│   └─ 不用管，底层已并行，Python 调度即可
+│
+└─ 大数据加载（如 DataLoader）
+    └─ 多进程 + 共享内存（遵循框架推荐配置）
+</code></pre></div></div><hr /><h2 id="二gil-到底限制了什么">二、GIL 到底限制了什么</h2><h3 id="21-gil-是什么">2.1 GIL 是什么</h3><p><strong>GIL（Global Interpreter Lock，全局解释器锁）</strong>：CPython 实现中的一个互斥锁，保证<strong>同一进程中只有一个线程能同时执行 Python 字节码</strong>。</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>没有 GIL 的话（假想）：           有 GIL 的现实：
+线程1: 执行 Python 代码            线程1: 拿到 GIL，执行 ████████
+线程2: 同时执行 Python 代码         线程2: 等 GIL        ........
+（两个线程真的并行）                （线程2 要等线程1 释放 GIL）
+</code></pre></div></div><h3 id="22-gil-限制什么不限制什么">2.2 GIL 限制什么、不限制什么</h3><table><thead><tr><th>场景</th><th>GIL 影响</th><th>说明</th></tr></thead><tbody><tr><td>两个纯 Python CPU 线程</td><td>❌ 不能并行</td><td>同一时刻只有一个线程执行字节码</td></tr><tr><td>阻塞 I/O（网络、文件）</td><td>✅ 不影响</td><td>I/O 等待时释放 GIL，其他线程能跑</td></tr><tr><td>NumPy/PyTorch 原生运算</td><td>✅ 不影响</td><td>原生扩展在计算时释放 GIL</td></tr><tr><td>后台日志、预取</td><td>✅ 不影响</td><td>轻量任务适合线程</td></tr></tbody></table><p><strong>关键认知</strong>：GIL 不是”Python 线程没用”，而是”纯 Python CPU 计算用线程没用”。I/O 和原生运算不受限。</p><h3 id="23-一句话总结">2.3 一句话总结</h3><blockquote><p>GIL 是 CPython 实现细节，不应泛化成所有 Python 实现的永恒规则。判断性能时要测量当前解释器和依赖，而不是只背结论。</p></blockquote><hr /><h2 id="三线程共享内存也共享风险">三、线程：共享内存，也共享风险</h2><h3 id="31-完整代码逐句拆解">3.1 完整代码逐句拆解</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">ThreadPoolExecutor</span>
+<span class="kn">from</span> <span class="nn">urllib.request</span> <span class="kn">import</span> <span class="n">urlopen</span>
+
+<span class="k">def</span> <span class="nf">fetch_size</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="s">"""获取网页内容大小"""</span>
+    <span class="k">with</span> <span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span> <span class="k">as</span> <span class="n">response</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="n">read</span><span class="p">())</span>
+
+<span class="n">urls</span> <span class="o">=</span> <span class="p">[</span><span class="s">"https://example.com"</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span>    <span class="c1"># 4 个相同的 URL
+</span><span class="k">with</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
+    <span class="n">sizes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">pool</span><span class="p">.</span><span class="nb">map</span><span class="p">(</span><span class="n">fetch_size</span><span class="p">,</span> <span class="n">urls</span><span class="p">))</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">sizes</span><span class="p">)</span>    <span class="c1"># [1256, 1256, 1256, 1256]（example.com 的页面大小）
+</span></code></pre></div></div><p><strong>逐句解释</strong>：</p><table><thead><tr><th>代码</th><th>含义</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">from concurrent.futures import ThreadPoolExecutor</code></td><td>导入线程池执行器</td></tr><tr><td><code class="language-plaintext highlighter-rouge">ThreadPoolExecutor(max_workers=4)</code></td><td>创建一个有 4 个线程的线程池</td></tr><tr><td><code class="language-plaintext highlighter-rouge">with ... as pool</code></td><td>用 with 管理，退出时自动关闭线程池</td></tr><tr><td><code class="language-plaintext highlighter-rouge">pool.map(fetch_size, urls)</code></td><td>把 urls 列表的每个元素交给 fetch_size 函数处理，4 个线程并行执行</td></tr><tr><td><code class="language-plaintext highlighter-rouge">list(...)</code></td><td>pool.map 返回迭代器，转成 list 拿到所有结果</td></tr></tbody></table><p><strong>执行流程</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>urls = [url, url, url, url]    （4 个任务）
+
+ThreadPoolExecutor(max_workers=4):
+  线程1 → fetch_size(url) → 等网络 → 拿到 1256
+  线程2 → fetch_size(url) → 等网络 → 拿到 1256    （4 个同时等网络）
+  线程3 → fetch_size(url) → 等网络 → 拿到 1256
+  线程4 → fetch_size(url) → 等网络 → 拿到 1256
+
+sizes = [1256, 1256, 1256, 1256]
+</code></pre></div></div><p><strong>为什么线程适合 I/O 密集</strong>：4 个线程同时等网络，总耗时 ≈ 最慢的一个请求，而不是 4 个请求时间相加。等网络时 GIL 会释放，其他线程能同时等。</p><h3 id="32-竞态条件与锁">3.2 竞态条件与锁</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Lock</span>
+
+<span class="n">lock</span> <span class="o">=</span> <span class="n">Lock</span><span class="p">()</span>         <span class="c1"># 创建锁
+</span><span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="k">def</span> <span class="nf">increment</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">global</span> <span class="n">counter</span>
+    <span class="k">with</span> <span class="n">lock</span><span class="p">:</span>         <span class="c1"># 获取锁，执行完自动释放
+</span>        <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>   <span class="c1"># 临界区：读取-修改-写回
+</span></code></pre></div></div><p><strong>为什么需要锁</strong>：</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 不加锁的竞态条件：
+</span><span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="k">def</span> <span class="nf">increment_bad</span><span class="p">():</span>
+    <span class="k">global</span> <span class="n">counter</span>
+    <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>       <span class="c1"># 这一步不是原子的！
+</span>    <span class="c1"># 实际等价于：
+</span>    <span class="c1"># temp = counter    （1. 读取）
+</span>    <span class="c1"># temp = temp + 1   （2. 修改）
+</span>    <span class="c1"># counter = temp    （3. 写回）
+</span>
+<span class="c1"># 两个线程同时执行：
+# 线程1: temp = counter (0)
+# 线程2: temp = counter (0)    ← 也读到 0！
+# 线程1: counter = 1
+# 线程2: counter = 1           ← 应该是 2，但变成了 1！
+</span></code></pre></div></div><hr /><h3 id="️-33-重要补充python-312-的-gil-检查机制变化">⚠️ 3.3 重要补充：Python 3.12+ 的 GIL 检查机制变化</h3><blockquote><p><strong>实测发现</strong>：在 Python 3.12+ 中，<code class="language-plaintext highlighter-rouge">counter += 1</code> 不加锁时结果<strong>经常是正确的</strong>（即使百万次循环也不出错）。这与”理论上的竞态条件”不一致，原因是 <strong>CPython 3.12 重写了 eval 循环，GIL 检查点发生了变化</strong>。</p></blockquote><h4 id="331-根本原因gil-检查点变了">3.3.1 根本原因：GIL 检查点变了</h4><p><strong>Python &lt; 3.12（旧机制）</strong>：GIL 在<strong>每条字节码指令之间</strong>都会检查是否需要切换线程。所以 <code class="language-plaintext highlighter-rouge">LOAD_NAME</code> 和 <code class="language-plaintext highlighter-rouge">STORE_NAME</code> 之间可能发生线程切换 → 竞态条件。</p><p><strong>Python 3.12+（新机制）</strong>：GIL 只在<strong>特定检查点</strong>才检查是否需要切换：</p><ol><li><strong>循环跳转</strong>（<code class="language-plaintext highlighter-rouge">JUMP_BACKWARD</code>，即 for/while 每轮迭代结束时）</li><li><strong>函数调用</strong>（<code class="language-plaintext highlighter-rouge">CALL</code> 指令）</li><li><strong>其他少数点</strong>（<code class="language-plaintext highlighter-rouge">YIELD_VALUE</code>、某些 <code class="language-plaintext highlighter-rouge">IMPORT_NAME</code> 等）</li></ol><p><strong>不再在每条字节码指令之间都检查！</strong></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Python &lt; 3.12（每条指令都检查 GIL）：
+  LOAD_NAME(counter)     ← 检查 GIL ← 这里可能切换！
+  LOAD_CONST(1)          ← 检查 GIL
+  BINARY_OP(+=)          ← 检查 GIL ← 这里也可能切换！
+  STORE_NAME(counter)    ← 检查 GIL
+  JUMP_BACKWARD          ← 检查 GIL
+
+Python 3.12+（只在特定点检查 GIL）：
+  LOAD_NAME(counter)     ← 不检查
+  LOAD_CONST(1)          ← 不检查
+  BINARY_OP(+=)          ← 不检查
+  STORE_NAME(counter)    ← 不检查
+  JUMP_BACKWARD          ← ✅ 检查 GIL（只有循环跳转才检查）
+</code></pre></div></div><p><strong>结论</strong>：<code class="language-plaintext highlighter-rouge">counter += 1</code> 的 4 条字节码指令在 Python 3.12+ 中<strong>连续执行，中间不会释放 GIL</strong>，因此在这个特定场景下<strong>事实上是原子的</strong>。</p><h4 id="332-实验验证">3.3.2 实验验证</h4><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+
+<span class="n">sys</span><span class="p">.</span><span class="n">setswitchinterval</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">)</span>  <span class="c1"># 1 纳秒切换，极端压力测试
+</span>
+<span class="c1"># ========== 测试 A: counter += 1（无函数调用） ==========
+# 结果：10 轮全部正确，0 丢失！
+</span><span class="k">for</span> <span class="n">trial</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">def</span> <span class="nf">worker</span><span class="p">():</span>
+        <span class="k">nonlocal</span> <span class="n">counter</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">500000</span><span class="p">):</span>
+            <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>  <span class="c1"># 4 条字节码，中间无 GIL 检查
+</span>
+    <span class="n">threads</span> <span class="o">=</span> <span class="p">[</span><span class="n">threading</span><span class="p">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">worker</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)]</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">threads</span><span class="p">:</span>
+        <span class="n">t</span><span class="p">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">threads</span><span class="p">:</span>
+        <span class="n">t</span><span class="p">.</span><span class="n">join</span><span class="p">()</span>
+    <span class="c1"># 期望 2000000, 实际 2000000, 丢失 0 ✅
+</span>
+<span class="c1"># ========== 测试 B: counter = add_one(counter)（有函数调用） ==========
+# 结果：大量丢失！
+</span><span class="k">def</span> <span class="nf">add_one</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+
+<span class="k">for</span> <span class="n">trial</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">def</span> <span class="nf">worker</span><span class="p">():</span>
+        <span class="k">nonlocal</span> <span class="n">counter</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">200000</span><span class="p">):</span>
+            <span class="n">counter</span> <span class="o">=</span> <span class="n">add_one</span><span class="p">(</span><span class="n">counter</span><span class="p">)</span>  <span class="c1"># CALL 指令触发 GIL 检查！
+</span>
+    <span class="n">threads</span> <span class="o">=</span> <span class="p">[</span><span class="n">threading</span><span class="p">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">worker</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)]</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">threads</span><span class="p">:</span>
+        <span class="n">t</span><span class="p">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">threads</span><span class="p">:</span>
+        <span class="n">t</span><span class="p">.</span><span class="n">join</span><span class="p">()</span>
+    <span class="c1"># 期望 800000, 实际 ~340000, 丢失 ~460000 ❌
+</span></code></pre></div></div><p><strong>字节码对比</strong>（用 <code class="language-plaintext highlighter-rouge">dis</code> 模块查看）：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>--- counter += 1 ---（无函数调用，GIL 不检查）
+  LOAD_NAME    0 (counter)
+  LOAD_CONST   0 (1)
+  BINARY_OP    13 (+=)
+  STORE_NAME   0 (counter)
+
+--- counter = add_one(counter) ---（有 CALL，GIL 检查！）
+  LOAD_NAME    0 (add_one)
+  PUSH_NULL
+  LOAD_NAME    1 (counter)     ← 读取 counter
+  CALL         1               ← ✅ GIL 检查点！可能在这里切换！
+  STORE_NAME   1 (counter)     ← 写回 counter（此时 counter 可能已被其他线程改过）
+</code></pre></div></div><h4 id="333-这意味着什么">3.3.3 这意味着什么</h4><table><thead><tr><th>场景</th><th>Python 3.12+ 是否有竞态</th><th>原因</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">counter += 1</code></td><td>❌ 事实上不会出现</td><td>4 条字节码中间无 GIL 检查点</td></tr><tr><td><code class="language-plaintext highlighter-rouge">counter = counter + 1</code></td><td>❌ 事实上不会出现</td><td>同上，等价字节码</td></tr><tr><td><code class="language-plaintext highlighter-rouge">counter = add_one(counter)</code></td><td>✅ 大量竞态</td><td><code class="language-plaintext highlighter-rouge">CALL</code> 指令触发 GIL 检查</td></tr><tr><td><code class="language-plaintext highlighter-rouge">dict['k'] = dict['k'] + 1</code></td><td>❌ 事实上不会出现</td><td>无函数调用，无循环跳转</td></tr><tr><td><code class="language-plaintext highlighter-rouge">list[0] = list[0] + 1</code></td><td>❌ 事实上不会出现</td><td>同上</td></tr><tr><td><code class="language-plaintext highlighter-rouge">if key not in d: d[key] = 1</code></td><td>✅ 可能有竞态</td><td>两行语句之间有 GIL 检查</td></tr></tbody></table><h4 id="334-正确的态度">3.3.4 正确的态度</h4><blockquote><p><strong>虽然 <code class="language-plaintext highlighter-rouge">counter += 1</code> 在 Python 3.12+ 中事实上不会出错，但这只是 CPython 实现的”副作用”，不是语言规范保证的行为。</strong></p></blockquote><ol><li><strong>不要依赖这个行为</strong>：CPython 实现细节随时可能变化（比如 free-threaded Python / no-GIL 正在开发中）</li><li><strong>写代码时仍然要加锁</strong>：<code class="language-plaintext highlighter-rouge">with lock: counter += 1</code> 是正确的写法</li><li><strong>面试时要解释清楚</strong>：理论上有竞态（字节码不是原子的），但在 CPython 3.12+ 中由于 GIL 检查机制变化，简单操作事实上不会出错</li><li><strong>真正的竞态</strong>：涉及函数调用、多步操作、或跨多行的 read-modify-write 仍然会出错</li></ol><p><strong>一句话总结</strong>：<code class="language-plaintext highlighter-rouge">counter += 1</code> 在 Python 3.12+ 中”看起来不出错”是 CPython eval 循环的实现细节，不是线程安全保证。写多线程代码时仍然必须加锁。</p><hr /><p><strong><code class="language-plaintext highlighter-rouge">with lock:</code> 的作用</strong>：</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">with</span> <span class="n">lock</span><span class="p">:</span>
+    <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<span class="c1"># 等价于：
+</span><span class="n">lock</span><span class="p">.</span><span class="n">acquire</span><span class="p">()</span>        <span class="c1"># 获取锁（其他线程要等）
+</span><span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>          <span class="c1"># 只有持锁线程能执行
+</span><span class="n">lock</span><span class="p">.</span><span class="n">release</span><span class="p">()</span>        <span class="c1"># 释放锁
+# with 的好处：即使 counter += 1 报错，锁也会自动释放
+</span></code></pre></div></div><p><strong>使用示例</strong>：</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">ThreadPoolExecutor</span>
+<span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Lock</span>
+
+<span class="n">lock</span> <span class="o">=</span> <span class="n">Lock</span><span class="p">()</span>
+<span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="k">def</span> <span class="nf">increment</span><span class="p">():</span>
+    <span class="k">global</span> <span class="n">counter</span>
+    <span class="k">with</span> <span class="n">lock</span><span class="p">:</span>
+        <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<span class="c1"># 1000 个线程各自 increment 一次
+</span><span class="k">with</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
+    <span class="nb">list</span><span class="p">(</span><span class="n">pool</span><span class="p">.</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">increment</span><span class="p">(),</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)))</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">counter</span><span class="p">)</span>    <span class="c1"># 1000（加了锁，结果正确）
+</span>
+<span class="c1"># 注意：在 Python 3.12+ 中，即使不加锁，counter 也可能是 1000
+# 但这只是 CPython 实现的副作用，不应依赖此行为！
+# 在 Python &lt; 3.12 或未来 no-GIL 版本中，不加锁就可能出错
+</span></code></pre></div></div><blockquote><p><strong>原则</strong>：不要依赖”某个内置操作看起来是原子的”来设计正确性。解释器版本、对象实现或复合操作都可能破坏这种假设。需要线程安全就用锁。</p></blockquote><hr /><h2 id="四多进程绕开-gil但数据搬运有成本">四、多进程：绕开 GIL，但数据搬运有成本</h2><h3 id="41-完整代码逐句拆解">4.1 完整代码逐句拆解</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">ProcessPoolExecutor</span>
+
+<span class="k">def</span> <span class="nf">count_primes</span><span class="p">(</span><span class="n">limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="s">"""统计小于 limit 的素数个数"""</span>
+    <span class="k">def</span> <span class="nf">is_prime</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">value</span> <span class="o">%</span> <span class="n">divisor</span> <span class="k">for</span> <span class="n">divisor</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="o">**</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">is_prime</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">limit</span><span class="p">))</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">ProcessPoolExecutor</span><span class="p">()</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">pool</span><span class="p">.</span><span class="nb">map</span><span class="p">(</span><span class="n">count_primes</span><span class="p">,</span> <span class="p">[</span><span class="mi">50_000</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span><span class="p">))</span>
+</code></pre></div></div><p><strong>逐句拆解</strong>：</p><table><thead><tr><th>代码</th><th>含义</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">ProcessPoolExecutor()</code></td><td>创建进程池（默认进程数 = CPU 核心数）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">pool.map(count_primes, [50_000] * 4)</code></td><td>把 <code class="language-plaintext highlighter-rouge">[50000, 50000, 50000, 50000]</code> 的每个元素交给 count_primes，4 个进程并行执行</td></tr><tr><td><code class="language-plaintext highlighter-rouge">list(...)</code></td><td>转成 list 拿到结果</td></tr><tr><td><code class="language-plaintext highlighter-rouge">if __name__ == "__main__":</code></td><td><strong>关键</strong>：多进程必须加这行</td></tr></tbody></table><p><strong><code class="language-plaintext highlighter-rouge">[50_000] * 4</code> 是什么</strong>：</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="mi">50_000</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span>
+<span class="c1"># 等于 [50000, 50000, 50000, 50000]
+# 4 个相同的参数，分别交给 4 个进程执行
+# 每个进程统计 50000 以内的素数
+</span></code></pre></div></div><p><strong>执行流程</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[50000, 50000, 50000, 50000]    （4 个任务）
+
+ProcessPoolExecutor（4 个进程）:
+  进程1 → count_primes(50000) → 5133    （各自独立的 Python 解释器）
+  进程2 → count_primes(50000) → 5133    （真正并行，不受 GIL 限制）
+  进程3 → count_primes(50000) → 5133
+  进程4 → count_primes(50000) → 5133
+
+results = [5133, 5133, 5133, 5133]
+</code></pre></div></div><h3 id="42-为什么必须加-if-__name__--__main__">4.2 为什么必须加 <code class="language-plaintext highlighter-rouge">if __name__ == "__main__":</code></h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">ProcessPoolExecutor</span><span class="p">()</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
+        <span class="p">...</span>
+</code></pre></div></div><p><strong>原因</strong>：多进程在 Windows 和 macOS 上用 <code class="language-plaintext highlighter-rouge">spawn</code> 方式启动子进程，子进程会<strong>重新导入当前模块</strong>。如果不加 <code class="language-plaintext highlighter-rouge">if __name__</code> 保护，子进程导入时会再次执行 <code class="language-plaintext highlighter-rouge">ProcessPoolExecutor()</code>，导致<strong>无限递归创建子进程</strong>。</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 错误写法（不加保护）：
+# myscript.py
+</span><span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">ProcessPoolExecutor</span>
+
+<span class="k">with</span> <span class="n">ProcessPoolExecutor</span><span class="p">()</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>    <span class="c1"># 这行在模块顶层
+</span>    <span class="n">results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">pool</span><span class="p">.</span><span class="nb">map</span><span class="p">(</span><span class="n">count_primes</span><span class="p">,</span> <span class="p">[</span><span class="mi">50000</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="c1"># 运行 python myscript.py：
+# 主进程执行 → 创建 4 个子进程
+# 每个子进程导入 myscript.py → 又执行 ProcessPoolExecutor → 又创建子进程
+# 无限递归！报错或卡死
+</span>
+<span class="c1"># 正确写法：
+</span><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>    <span class="c1"># 只有主进程才执行
+</span>    <span class="k">with</span> <span class="n">ProcessPoolExecutor</span><span class="p">()</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">pool</span><span class="p">.</span><span class="nb">map</span><span class="p">(</span><span class="n">count_primes</span><span class="p">,</span> <span class="p">[</span><span class="mi">50000</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span><span class="p">))</span>
+<span class="c1"># 子进程导入时 __name__ 不是 "__main__"，跳过这行
+</span></code></pre></div></div><h3 id="43-多进程的成本">4.3 多进程的成本</h3><table><thead><tr><th>成本类型</th><th>说明</th></tr></thead><tbody><tr><td>创建进程</td><td>比创建线程慢 10-100 倍</td></tr><tr><td>序列化</td><td>参数和返回值要 pickle 序列化/反序列化</td></tr><tr><td>内存复制</td><td>每个进程有独立内存空间</td></tr><tr><td>进程间通信</td><td>需要队列/管道，比线程共享内存慢</td></tr></tbody></table><p><strong>如果每个任务只做几十微秒工作，调度成本可能比计算更高</strong>。应增大任务粒度，避免来回传递大型数组。</p><h3 id="44-gpu-关联警告">4.4 GPU 关联警告</h3><blockquote><p>不要在父进程初始化 CUDA 后随意 fork。</p></blockquote><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 错误：父进程初始化了 CUDA，fork 后子进程 CUDA 状态混乱
+</span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="s">"model.pt"</span><span class="p">)</span>    <span class="c1"># 父进程初始化 CUDA
+</span>
+<span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">ProcessPoolExecutor</span>
+<span class="k">with</span> <span class="n">ProcessPoolExecutor</span><span class="p">()</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
+    <span class="n">pool</span><span class="p">.</span><span class="nb">map</span><span class="p">(</span><span class="n">infer</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>    <span class="c1"># fork 出的子进程 CUDA 状态有问题
+</span>
+<span class="c1"># 正确：子进程内部初始化 CUDA
+</span><span class="k">def</span> <span class="nf">infer</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">torch</span>              <span class="c1"># 子进程内部导入
+</span>    <span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="s">"model.pt"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">ProcessPoolExecutor</span><span class="p">()</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
+        <span class="n">pool</span><span class="p">.</span><span class="nb">map</span><span class="p">(</span><span class="n">infer</span><span class="p">,</span> <span class="n">data_batches</span><span class="p">)</span>
+</code></pre></div></div><hr /><h2 id="五asyncio协作式-io-并发">五、asyncio：协作式 I/O 并发</h2><h3 id="51-什么是协程">5.1 什么是协程</h3><p><strong>协程 = 可以暂停和恢复的函数</strong>，用 <code class="language-plaintext highlighter-rouge">async def</code> 定义，用 <code class="language-plaintext highlighter-rouge">await</code> 暂停。</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">async</span> <span class="k">def</span> <span class="nf">worker</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">delay</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">delay</span><span class="p">)</span>    <span class="c1"># 在这里暂停，把控制权还给事件循环
+</span>    <span class="k">return</span> <span class="n">name</span>
+</code></pre></div></div><p><strong>协程 vs 普通函数</strong>：</p><table><thead><tr><th>普通函数</th><th>协程</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">def func():</code></td><td><code class="language-plaintext highlighter-rouge">async def func():</code></td></tr><tr><td>调用即执行完</td><td>调用返回协程对象，需要 await 或调度</td></tr><tr><td>不能暂停</td><td>在 await 处暂停</td></tr><tr><td><code class="language-plaintext highlighter-rouge">return</code> 返回结果</td><td><code class="language-plaintext highlighter-rouge">return</code> 返回结果（通过 await 接收）</td></tr></tbody></table><h3 id="52-完整代码逐句拆解">5.2 完整代码逐句拆解</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">asyncio</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">worker</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">delay</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">delay</span><span class="p">)</span>    <span class="c1"># 模拟非阻塞 I/O（暂停 delay 秒）
+</span>    <span class="k">return</span> <span class="n">name</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">gather</span><span class="p">(</span>
+        <span class="n">worker</span><span class="p">(</span><span class="s">"a"</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">),</span>         <span class="c1"># worker a 要 0.2 秒
+</span>        <span class="n">worker</span><span class="p">(</span><span class="s">"b"</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span>         <span class="c1"># worker b 要 0.1 秒
+</span>    <span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+
+<span class="n">asyncio</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div></div><p><strong>逐句拆解</strong>：</p><table><thead><tr><th>代码</th><th>含义</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">async def worker(...)</code></td><td>定义协程函数</td></tr><tr><td><code class="language-plaintext highlighter-rouge">await asyncio.sleep(delay)</code></td><td>暂停 delay 秒（非阻塞，期间其他协程能跑）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">asyncio.gather(...)</code></td><td>并发执行多个协程，等全部完成</td></tr><tr><td><code class="language-plaintext highlighter-rouge">await asyncio.gather(...)</code></td><td>等待所有协程完成并收集结果</td></tr><tr><td><code class="language-plaintext highlighter-rouge">asyncio.run(main())</code></td><td>启动事件循环，运行 main 协程</td></tr></tbody></table><h3 id="53-为什么输出-a-b-而不是-b-a">5.3 为什么输出 <code class="language-plaintext highlighter-rouge">['a', 'b']</code> 而不是 <code class="language-plaintext highlighter-rouge">['b', 'a']</code></h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">results</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">gather</span><span class="p">(</span>
+    <span class="n">worker</span><span class="p">(</span><span class="s">"a"</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">),</span>    <span class="c1"># 第 1 个参数
+</span>    <span class="n">worker</span><span class="p">(</span><span class="s">"b"</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span>    <span class="c1"># 第 2 个参数
+</span><span class="p">)</span>
+</code></pre></div></div><p><strong><code class="language-plaintext highlighter-rouge">asyncio.gather</code> 的返回顺序</strong>：按<strong>传入参数的顺序</strong>返回，不管谁先完成。</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>时间轴：
+0.0s  worker("a") 开始，sleep 0.2s
+0.0s  worker("b") 开始，sleep 0.1s
+0.1s  worker("b") 完成，返回 "b"
+0.2s  worker("a") 完成，返回 "a"
+
+gather 收集结果，按传入顺序排列：
+results = ["a", "b"]    ← 按参数顺序，不是完成顺序
+</code></pre></div></div><p><strong>对比</strong>：如果按完成顺序，应该是 <code class="language-plaintext highlighter-rouge">["b", "a"]</code>（b 先完成）。但 gather 保证按<strong>传入顺序</strong>返回，这样代码行为可预测。</p><h3 id="54-总耗时">5.4 总耗时</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>串行执行：0.2 + 0.1 = 0.3 秒
+asyncio 并发：max(0.2, 0.1) = 0.2 秒    ← 等最慢的那个
+</code></pre></div></div><h3 id="55-改成异步库是什么意思">5.5 “改成异步库”是什么意思</h3><p>原文说”在事件循环中直接执行阻塞 I/O 会卡住所有协程，应改用异步库”。</p><p><strong>阻塞 I/O 的问题</strong>：</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span> <span class="nn">requests</span>    <span class="c1"># 阻塞库
+</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">bad_fetch</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+    <span class="c1"># requests.get 是阻塞的，会卡住整个事件循环！
+</span>    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>    <span class="c1"># 其他协程全部暂停等待
+</span>    <span class="k">return</span> <span class="n">response</span><span class="p">.</span><span class="n">text</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">gather</span><span class="p">(</span>
+        <span class="n">bad_fetch</span><span class="p">(</span><span class="s">"https://example.com"</span><span class="p">),</span>
+        <span class="n">bad_fetch</span><span class="p">(</span><span class="s">"https://example.org"</span><span class="p">),</span>
+    <span class="p">)</span>
+<span class="c1"># 实际上是串行的：第 1 个请求完成后才开始第 2 个
+</span></code></pre></div></div><p><strong>改成异步库</strong>：</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span> <span class="nn">aiohttp</span>    <span class="c1"># 异步 HTTP 库
+</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">good_fetch</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+    <span class="k">async</span> <span class="k">with</span> <span class="n">aiohttp</span><span class="p">.</span><span class="n">ClientSession</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+        <span class="k">async</span> <span class="k">with</span> <span class="n">session</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="k">as</span> <span class="n">response</span><span class="p">:</span>
+            <span class="k">return</span> <span class="k">await</span> <span class="n">response</span><span class="p">.</span><span class="n">text</span><span class="p">()</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">gather</span><span class="p">(</span>
+        <span class="n">good_fetch</span><span class="p">(</span><span class="s">"https://example.com"</span><span class="p">),</span>
+        <span class="n">good_fetch</span><span class="p">(</span><span class="s">"https://example.org"</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+
+<span class="n">asyncio</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+<span class="c1"># 两个请求真正并发，总耗时 ≈ 最慢的一个
+</span></code></pre></div></div><p><strong>常见阻塞库 vs 异步库对照</strong>：</p><table><thead><tr><th>场景</th><th>阻塞库（会卡住 asyncio）</th><th>异步库（配合 asyncio）</th></tr></thead><tbody><tr><td>HTTP 请求</td><td><code class="language-plaintext highlighter-rouge">requests</code></td><td><code class="language-plaintext highlighter-rouge">aiohttp</code> / <code class="language-plaintext highlighter-rouge">httpx</code></td></tr><tr><td>文件 I/O</td><td><code class="language-plaintext highlighter-rouge">open()</code></td><td><code class="language-plaintext highlighter-rouge">aiofiles</code></td></tr><tr><td>数据库</td><td><code class="language-plaintext highlighter-rouge">pymysql</code></td><td><code class="language-plaintext highlighter-rouge">aiomysql</code></td></tr><tr><td>Redis</td><td><code class="language-plaintext highlighter-rouge">redis-py</code>（同步模式）</td><td><code class="language-plaintext highlighter-rouge">redis.asyncio</code></td></tr></tbody></table><hr /><h2 id="六正确做基准测试">六、正确做基准测试</h2><h3 id="61-为什么不能只测一次">6.1 为什么不能只测一次</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">perf_counter</span>
+
+<span class="c1"># 错误：只测一次
+</span><span class="n">start</span> <span class="o">=</span> <span class="n">perf_counter</span><span class="p">()</span>
+<span class="n">my_function</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
+<span class="c1"># 问题：
+# 1. 可能受系统波动影响（其他进程占用 CPU）
+# 2. 第一次执行可能有初始化开销（导入、JIT 编译、缓存预热）
+# 3. GPU 操作是异步的，CPU 计时器量不到真实耗时
+</span></code></pre></div></div><h3 id="62-timeit-命令行用法">6.2 timeit 命令行用法</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python <span class="nt">-m</span> timeit <span class="nt">-s</span> <span class="s1">'xs = list(range(1000))'</span> <span class="s1">'sum(xs)'</span>
+</code></pre></div></div><p><strong>逐段拆解</strong>：</p><table><thead><tr><th>部分</th><th>含义</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">python -m timeit</code></td><td>以模块方式运行 timeit（Python 内置的基准测试工具）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-s 'xs = list(range(1000))'</code></td><td>setup：预先执行的代码（准备测试数据），不计入计时</td></tr><tr><td><code class="language-plaintext highlighter-rouge">'sum(xs)'</code></td><td>要计时的代码（真正测的部分）</td></tr></tbody></table><p><strong>为什么这么写</strong>：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># -s 后面是"准备阶段"，只执行一次，不计入时间</span>
+<span class="c"># 比如造一个 0-999 的列表</span>
+
+<span class="c"># 后面是要测的代码，timeit 会自动跑很多次取平均</span>
+<span class="c"># 测的是 sum(xs) 这一行的时间</span>
+</code></pre></div></div><p><strong>输出示例</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200000 loops, best of 5: 1.23 usec per loop
+</code></pre></div></div><p>含义：跑了 5 组，每组 20 万次，取最好的那组的平均值：每次 1.23 微秒。</p><p><strong>为什么不用代码块写</strong>：timeit 命令行适合快速测试单行表达式。如果要测复杂逻辑，用下面的 Python 代码方式。</p><h3 id="63-手工基准测试函数逐句拆解">6.3 手工基准测试函数逐句拆解</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">statistics</span> <span class="kn">import</span> <span class="n">median</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">perf_counter</span>
+
+<span class="k">def</span> <span class="nf">benchmark</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">warmup</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">repeat</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="s">"""基准测试：预热 + 多次测量取中位数"""</span>
+
+    <span class="c1"># 1. 预热：先跑几次，消除初始化开销（缓存、JIT 等）
+</span>    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">warmup</span><span class="p">):</span>
+        <span class="n">fn</span><span class="p">()</span>
+
+    <span class="c1"># 2. 正式测量：跑 repeat 次，记录每次耗时
+</span>    <span class="n">samples</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repeat</span><span class="p">):</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">perf_counter</span><span class="p">()</span>
+        <span class="n">fn</span><span class="p">()</span>
+        <span class="n">samples</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
+
+    <span class="c1"># 3. 返回中位数（比平均值更抗异常值）
+</span>    <span class="k">return</span> <span class="n">median</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+</code></pre></div></div><p><strong><code class="language-plaintext highlighter-rouge">median</code> 的作用</strong>：</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">statistics</span> <span class="kn">import</span> <span class="n">median</span>
+
+<span class="c1"># median = 中位数，把数据排序后取中间值
+# 比平均值更抗异常值
+</span>
+<span class="n">samples</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.010</span><span class="p">,</span> <span class="mf">0.011</span><span class="p">,</span> <span class="mf">0.010</span><span class="p">,</span> <span class="mf">0.500</span><span class="p">,</span> <span class="mf">0.010</span><span class="p">]</span>
+<span class="c1">#                                  ↑ 异常值（可能系统卡了一下）
+</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"平均值: </span><span class="si">{</span><span class="nb">sum</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span><span class="si">:</span><span class="p">.</span><span class="mi">3</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>    <span class="c1"># 0.108（被异常值拉高）
+</span><span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"中位数: </span><span class="si">{</span><span class="n">median</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span><span class="si">:</span><span class="p">.</span><span class="mi">3</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>               <span class="c1"># 0.010（不受异常值影响）
+</span></code></pre></div></div><p><strong>为什么用中位数而不是平均值</strong>：基准测试中可能有异常值（系统调度、GC 等），中位数不受极端值影响，更稳定。</p><h3 id="64-gpu-基准测试的坑">6.4 GPU 基准测试的坑</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="c1"># 错误：GPU 操作是异步的，CPU 计时器量不到真实耗时
+</span><span class="n">start</span> <span class="o">=</span> <span class="n">perf_counter</span><span class="p">()</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>          <span class="c1"># 这只是"提交任务"到 GPU，可能还没执行完
+</span><span class="n">elapsed</span> <span class="o">=</span> <span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>  <span class="c1"># 量到的是提交时间，不是执行时间
+</span>
+<span class="c1"># 正确：用 torch.cuda.synchronize() 同步，等 GPU 真正执行完
+</span><span class="n">start</span> <span class="o">=</span> <span class="n">perf_counter</span><span class="p">()</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+<span class="n">torch</span><span class="p">.</span><span class="n">cuda</span><span class="p">.</span><span class="n">synchronize</span><span class="p">()</span>       <span class="c1"># 等 GPU 执行完
+</span><span class="n">elapsed</span> <span class="o">=</span> <span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>  <span class="c1"># 现在量到的是真实耗时
+</span>
+<span class="c1"># 更精确：用 CUDA Event
+</span><span class="n">start_event</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">cuda</span><span class="p">.</span><span class="n">Event</span><span class="p">(</span><span class="n">enable_timing</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">end_event</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">cuda</span><span class="p">.</span><span class="n">Event</span><span class="p">(</span><span class="n">enable_timing</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="n">start_event</span><span class="p">.</span><span class="n">record</span><span class="p">()</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+<span class="n">end_event</span><span class="p">.</span><span class="n">record</span><span class="p">()</span>
+<span class="n">torch</span><span class="p">.</span><span class="n">cuda</span><span class="p">.</span><span class="n">synchronize</span><span class="p">()</span>
+<span class="n">elapsed</span> <span class="o">=</span> <span class="n">start_event</span><span class="p">.</span><span class="n">elapsed_time</span><span class="p">(</span><span class="n">end_event</span><span class="p">)</span>    <span class="c1"># 毫秒
+</span></code></pre></div></div><hr /><h2 id="七从慢定位到具体代码">七、从”慢”定位到具体代码</h2><h3 id="71-性能定位流程">7.1 性能定位流程</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. 端到端计时 → 确认慢是真的
+2. 阶段计时 → 区分数据/计算/通信/保存
+3. 函数级 profiling → cProfile 找耗时函数
+4. 行级 profiling → 定位热点行
+5. 内存 profiling → tracemalloc 找内存增长
+6. GPU profiling → PyTorch Profiler / Nsight
+</code></pre></div></div><h3 id="72-cprofile--pstats-完整使用示例">7.2 cProfile + pstats 完整使用示例</h3><p><strong>第一步：用 cProfile 运行脚本</strong></p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python <span class="nt">-m</span> cProfile <span class="nt">-o</span> profile.out train.py
+</code></pre></div></div><table><thead><tr><th>参数</th><th>含义</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">python -m cProfile</code></td><td>以模块方式运行 cProfile（Python 内置性能分析器）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">-o profile.out</code></td><td>把分析结果输出到 profile.out 文件（二进制格式）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">train.py</code></td><td>要分析的脚本</td></tr></tbody></table><p><strong>第二步：用 pstats 查看结果</strong></p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python <span class="nt">-m</span> pstats profile.out
+</code></pre></div></div><p>进入 pstats 交互界面后：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>% sort cumulative       ← 按累计耗时排序
+% stats 30              ← 显示前 30 条
+</code></pre></div></div><p><strong>完整交互示例</strong>：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>python <span class="nt">-m</span> cProfile <span class="nt">-o</span> profile.out train.py
+<span class="c"># （train.py 执行完成，生成 profile.out）</span>
+
+<span class="nv">$ </span>python <span class="nt">-m</span> pstats profile.out
+Welcome to the profile statistics browser.
+profile.out% <span class="nb">sort </span>cumulative
+profile.out% stats 10
+   ncalls  tottime  percall  cumtime  percall filename:lineno<span class="o">(</span><span class="k">function</span><span class="o">)</span>
+       10    0.001    0.000    5.234    0.523 train.py:15<span class="o">(</span>train_step<span class="o">)</span>
+       50    4.100    0.082    4.100    0.082 <span class="o">{</span>built-in method matmul<span class="o">}</span>
+        5    0.000    0.000    1.123    0.225 train.py:25<span class="o">(</span>load_data<span class="o">)</span>
+      ...
+profile.out% quit
+</code></pre></div></div><p><strong>列含义</strong>：</p><table><thead><tr><th>列</th><th>含义</th><th>关注点</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">ncalls</code></td><td>调用次数</td><td>被调用最多的函数</td></tr><tr><td><code class="language-plaintext highlighter-rouge">tottime</code></td><td>函数自身耗时（不含子调用）</td><td><strong>找热点函数看这个</strong></td></tr><tr><td><code class="language-plaintext highlighter-rouge">cumtime</code></td><td>累计耗时（含子调用）</td><td><strong>找瓶颈路径看这个</strong></td></tr><tr><td><code class="language-plaintext highlighter-rouge">percall</code></td><td>每次调用平均耗时</td><td>单次很慢的函数</td></tr><tr><td><code class="language-plaintext highlighter-rouge">filename:lineno(function)</code></td><td>函数位置</td><td>定位代码</td></tr></tbody></table><h3 id="73-tracemalloc-完整示例">7.3 tracemalloc 完整示例</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">tracemalloc</span>
+
+<span class="c1"># 开始追踪内存分配
+</span><span class="n">tracemalloc</span><span class="p">.</span><span class="n">start</span><span class="p">()</span>
+
+<span class="c1"># === 运行待检查的代码 ===
+</span><span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100000</span><span class="p">):</span>
+    <span class="n">data</span><span class="p">.</span><span class="n">append</span><span class="p">([</span><span class="n">j</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">)])</span>
+
+<span class="c1"># 拍快照
+</span><span class="n">snapshot</span> <span class="o">=</span> <span class="n">tracemalloc</span><span class="p">.</span><span class="n">take_snapshot</span><span class="p">()</span>
+
+<span class="c1"># 按行号统计内存分配，显示前 10
+</span><span class="k">for</span> <span class="n">stat</span> <span class="ow">in</span> <span class="n">snapshot</span><span class="p">.</span><span class="n">statistics</span><span class="p">(</span><span class="s">"lineno"</span><span class="p">)[:</span><span class="mi">10</span><span class="p">]:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">stat</span><span class="p">)</span>
+
+<span class="c1"># 输出示例：
+# test.py:7: size=386 MB, count=999998, average=402 B
+# test.py:6: size=128 MB, count=100000, average=1334 B
+# ...
+# 这说明第 7 行（内层列表推导）分配了最多内存
+</span></code></pre></div></div><h3 id="74-pytorch-profilergpu-场景">7.4 PyTorch Profiler（GPU 场景）</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch.profiler</span> <span class="kn">import</span> <span class="n">profile</span><span class="p">,</span> <span class="n">ProfilerActivity</span>
+
+<span class="k">with</span> <span class="n">profile</span><span class="p">(</span>
+    <span class="n">activities</span><span class="o">=</span><span class="p">[</span><span class="n">ProfilerActivity</span><span class="p">.</span><span class="n">CPU</span><span class="p">,</span> <span class="n">ProfilerActivity</span><span class="p">.</span><span class="n">CUDA</span><span class="p">],</span>
+    <span class="n">record_shapes</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="k">as</span> <span class="n">prof</span><span class="p">:</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+    <span class="n">loss</span><span class="p">.</span><span class="n">backward</span><span class="p">()</span>
+
+<span class="c1"># 打印 CUDA 耗时前 10
+</span><span class="k">print</span><span class="p">(</span><span class="n">prof</span><span class="p">.</span><span class="n">key_averages</span><span class="p">().</span><span class="n">table</span><span class="p">(</span><span class="n">sort_by</span><span class="o">=</span><span class="s">"cuda_time_total"</span><span class="p">,</span> <span class="n">row_limit</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
+</code></pre></div></div><hr /><h2 id="八性能优化的优先级">八、性能优化的优先级</h2><h3 id="81-推荐顺序">8.1 推荐顺序</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. 先改算法复杂度和数据结构        ← 最有效（O(n²) → O(n log n) 远超微优化）
+2. 减少不必要的 I/O、复制和序列化   ← 消除无意义开销
+3. Python 循环 → 批处理/向量化      ← 用 NumPy/PyTorch 矩阵运算替代 for 循环
+4. 减少 Python 与 C++/GPU 边界往返  ← 每次跨边界都有调度开销
+5. 最后才写 C++/CUDA/Triton 扩展    ← 确认热点后，用原生代码优化
+</code></pre></div></div><h3 id="82-向量化示例第-3-步">8.2 向量化示例（第 3 步）</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="c1"># 慢：Python for 循环
+</span><span class="k">def</span> <span class="nf">slow_square</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+        <span class="n">result</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span> <span class="o">*</span> <span class="n">v</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="c1"># 快：NumPy 向量化
+</span><span class="k">def</span> <span class="nf">fast_square</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">values</span> <span class="o">*</span> <span class="n">values</span>    <span class="c1"># 一次调用，底层 C 并行
+</span>
+<span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1_000_000</span><span class="p">)</span>
+<span class="c1"># slow: ~200ms
+# fast: ~2ms    ← 快 100 倍
+</span></code></pre></div></div><h3 id="83-减少边界往返示例第-4-步">8.3 减少边界往返示例（第 4 步）</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 慢：100 万次小算子调用（每次跨 Python→C++→Python）
+</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1_000_000</span><span class="p">):</span>
+    <span class="n">tensor</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">tensor</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>    <span class="c1"># 每次都是一次跨边界调用
+</span>
+<span class="c1"># 快：1 次大算子调用
+</span><span class="n">tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>    <span class="c1"># 一次调用处理全部，1 次跨边界
+</span>
+<span class="c1"># 一百万次小算子调用即使每次都很快，也会累积大量调度开销
+# 批处理后调用一次大算子，通常比微调 Python 语法有效得多
+</span></code></pre></div></div><hr /><h2 id="九完整测试脚本">九、完整测试脚本</h2><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s">"""Python 进阶 3 完整测试脚本
+运行：python python_advanced_3_test.py
+"""</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">ThreadPoolExecutor</span><span class="p">,</span> <span class="n">ProcessPoolExecutor</span>
+<span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Lock</span>
+<span class="kn">from</span> <span class="nn">statistics</span> <span class="kn">import</span> <span class="n">median</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">perf_counter</span>
+
+<span class="c1"># ============ 1. 线程池 ============
+</span><span class="k">print</span><span class="p">(</span><span class="s">"=== 1. 线程池（I/O 密集）==="</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">fake_io_task</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="s">"""模拟 I/O 任务"""</span>
+    <span class="n">time</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>    <span class="c1"># 模拟网络等待
+</span>    <span class="k">return</span> <span class="n">n</span> <span class="o">*</span> <span class="mi">2</span>
+
+<span class="c1"># 串行：4 × 0.1s = 0.4s
+</span><span class="n">start</span> <span class="o">=</span> <span class="n">perf_counter</span><span class="p">()</span>
+<span class="n">results_serial</span> <span class="o">=</span> <span class="p">[</span><span class="n">fake_io_task</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)]</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  串行: </span><span class="si">{</span><span class="n">perf_counter</span><span class="p">()</span><span class="o">-</span><span class="n">start</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">s, 结果: </span><span class="si">{</span><span class="n">results_serial</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+
+<span class="c1"># 并发：max(0.1, 0.1, 0.1, 0.1) = 0.1s
+</span><span class="n">start</span> <span class="o">=</span> <span class="n">perf_counter</span><span class="p">()</span>
+<span class="k">with</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
+    <span class="n">results_thread</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">pool</span><span class="p">.</span><span class="nb">map</span><span class="p">(</span><span class="n">fake_io_task</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  线程: </span><span class="si">{</span><span class="n">perf_counter</span><span class="p">()</span><span class="o">-</span><span class="n">start</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">s, 结果: </span><span class="si">{</span><span class="n">results_thread</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+
+<span class="c1"># ============ 2. 锁 ============
+</span><span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">=== 2. 锁（竞态条件）==="</span><span class="p">)</span>
+
+<span class="c1"># 不加锁
+</span><span class="n">counter_no_lock</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">def</span> <span class="nf">increment_no_lock</span><span class="p">():</span>
+    <span class="k">global</span> <span class="n">counter_no_lock</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100000</span><span class="p">):</span>
+        <span class="n">counter_no_lock</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<span class="c1"># 加锁
+</span><span class="n">lock</span> <span class="o">=</span> <span class="n">Lock</span><span class="p">()</span>
+<span class="n">counter_with_lock</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">def</span> <span class="nf">increment_with_lock</span><span class="p">():</span>
+    <span class="k">global</span> <span class="n">counter_with_lock</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100000</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">lock</span><span class="p">:</span>
+            <span class="n">counter_with_lock</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<span class="k">with</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
+    <span class="nb">list</span><span class="p">(</span><span class="n">pool</span><span class="p">.</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">increment_no_lock</span><span class="p">(),</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  不加锁（期望 400000）: </span><span class="si">{</span><span class="n">counter_no_lock</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
+    <span class="nb">list</span><span class="p">(</span><span class="n">pool</span><span class="p">.</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">increment_with_lock</span><span class="p">(),</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  加锁（期望 400000）: </span><span class="si">{</span><span class="n">counter_with_lock</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+
+<span class="c1"># ============ 3. 多进程 ============
+</span><span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">=== 3. 多进程（CPU 密集）==="</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">count_primes</span><span class="p">(</span><span class="n">limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">is_prime</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">value</span> <span class="o">%</span> <span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="o">**</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">is_prime</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">limit</span><span class="p">))</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">perf_counter</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">ProcessPoolExecutor</span><span class="p">()</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">pool</span><span class="p">.</span><span class="nb">map</span><span class="p">(</span><span class="n">count_primes</span><span class="p">,</span> <span class="p">[</span><span class="mi">50000</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  多进程: </span><span class="si">{</span><span class="n">perf_counter</span><span class="p">()</span><span class="o">-</span><span class="n">start</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">s, 结果: </span><span class="si">{</span><span class="n">results</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+
+    <span class="c1"># 对比串行
+</span>    <span class="n">start</span> <span class="o">=</span> <span class="n">perf_counter</span><span class="p">()</span>
+    <span class="n">results_serial</span> <span class="o">=</span> <span class="p">[</span><span class="n">count_primes</span><span class="p">(</span><span class="mi">50000</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)]</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  串行: </span><span class="si">{</span><span class="n">perf_counter</span><span class="p">()</span><span class="o">-</span><span class="n">start</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">s, 结果: </span><span class="si">{</span><span class="n">results_serial</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+
+<span class="c1"># ============ 4. asyncio ============
+</span><span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">=== 4. asyncio ==="</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">asyncio</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">worker</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">delay</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">delay</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">name</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">gather</span><span class="p">(</span>
+        <span class="n">worker</span><span class="p">(</span><span class="s">"a"</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">),</span>
+        <span class="n">worker</span><span class="p">(</span><span class="s">"b"</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">results</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  asyncio.gather 结果: </span><span class="si">{</span><span class="n">results</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>    <span class="c1"># ['a', 'b']
+</span>
+<span class="c1"># ============ 5. 基准测试 ============
+</span><span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">=== 5. 基准测试 ==="</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">benchmark</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">warmup</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">warmup</span><span class="p">):</span>
+        <span class="n">fn</span><span class="p">()</span>
+    <span class="n">samples</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repeat</span><span class="p">):</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">perf_counter</span><span class="p">()</span>
+        <span class="n">fn</span><span class="p">()</span>
+        <span class="n">samples</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">median</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">test_fn</span><span class="p">():</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">))</span>
+
+<span class="n">median_time</span> <span class="o">=</span> <span class="n">benchmark</span><span class="p">(</span><span class="n">test_fn</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  sum(range(1000)) 中位数耗时: </span><span class="si">{</span><span class="n">median_time</span><span class="o">*</span><span class="mi">1000</span><span class="si">:</span><span class="p">.</span><span class="mi">3</span><span class="n">f</span><span class="si">}</span><span class="s"> ms"</span><span class="p">)</span>
+
+<span class="c1"># ============ 6. cProfile 示例 ============
+</span><span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">=== 6. cProfile 示例 ==="</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">cProfile</span>
+<span class="kn">import</span> <span class="nn">pstats</span>
+<span class="kn">import</span> <span class="nn">io</span>
+
+<span class="k">def</span> <span class="nf">slow_function</span><span class="p">():</span>
+    <span class="s">"""模拟慢函数"""</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000000</span><span class="p">):</span>
+        <span class="n">total</span> <span class="o">+=</span> <span class="n">i</span>
+    <span class="k">return</span> <span class="n">total</span>
+
+<span class="k">def</span> <span class="nf">fast_function</span><span class="p">():</span>
+    <span class="s">"""模拟快函数"""</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1000000</span><span class="p">))</span>
+
+<span class="c1"># 用 cProfile 分析
+</span><span class="n">pr</span> <span class="o">=</span> <span class="n">cProfile</span><span class="p">.</span><span class="n">Profile</span><span class="p">()</span>
+<span class="n">pr</span><span class="p">.</span><span class="n">enable</span><span class="p">()</span>
+<span class="n">slow_function</span><span class="p">()</span>
+<span class="n">fast_function</span><span class="p">()</span>
+<span class="n">pr</span><span class="p">.</span><span class="n">disable</span><span class="p">()</span>
+
+<span class="c1"># 打印结果
+</span><span class="n">s</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">StringIO</span><span class="p">()</span>
+<span class="n">ps</span> <span class="o">=</span> <span class="n">pstats</span><span class="p">.</span><span class="n">Stats</span><span class="p">(</span><span class="n">pr</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="n">s</span><span class="p">).</span><span class="n">sort_stats</span><span class="p">(</span><span class="s">"cumulative"</span><span class="p">)</span>
+<span class="n">ps</span><span class="p">.</span><span class="n">print_stats</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">getvalue</span><span class="p">())</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">"=== 全部测试完成 ==="</span><span class="p">)</span>
+</code></pre></div></div><hr /><h2 id="十概念速查表">十、概念速查表</h2><table><thead><tr><th>概念</th><th>一句话记忆</th></tr></thead><tbody><tr><td>并发 vs 并行</td><td>并发是交替推进，并行是同时执行</td></tr><tr><td>GIL</td><td>同一进程只有一个线程能执行 Python 字节码，但 I/O 和原生扩展不受限</td></tr><tr><td>线程</td><td>共享内存，适合 I/O 密集，纯 CPU 受 GIL 限制</td></tr><tr><td>多进程</td><td>独立内存，绕开 GIL，适合 CPU 密集，但数据搬运有成本</td></tr><tr><td>asyncio</td><td>协程 + 事件循环，适合大量 I/O 并发，不能跑阻塞代码</td></tr><tr><td>协程</td><td>async def 定义的函数，在 await 处暂停</td></tr><tr><td>asyncio.gather</td><td>并发执行多个协程，按传入顺序返回结果</td></tr><tr><td>Lock</td><td>保护临界区，with lock 自动获取释放</td></tr><tr><td><code class="language-plaintext highlighter-rouge">if __name__ == "__main__"</code></td><td>多进程必须加，防止子进程递归创建</td></tr><tr><td>timeit</td><td>命令行基准测试工具，-s 是准备代码，后面是测试代码</td></tr><tr><td>median</td><td>中位数，比平均值更抗异常值</td></tr><tr><td>cProfile</td><td>函数级性能分析，-o 输出到文件</td></tr><tr><td>pstats</td><td>查看 cProfile 结果，sort cumulative 按累计耗时排序</td></tr><tr><td>tracemalloc</td><td>内存分配追踪，take_snapshot 拍快照</td></tr><tr><td>优化优先级</td><td>算法 → I/O → 向量化 → 减少边界往返 → C++/CUDA</td></tr></tbody></table><hr /><h2 id="十一关联笔记">十一、关联笔记</h2><ul><li><code class="language-plaintext highlighter-rouge">python/Python进阶笔记_名字绑定_闭包_类与协议.md</code>（第一篇）</li><li><code class="language-plaintext highlighter-rouge">python/Python进阶笔记2_迭代器_装饰器_上下文管理器.md</code>（第二篇）</li><li><code class="language-plaintext highlighter-rouge">pytorch/PyTorch常见操作速查.md</code>（GPU 基准测试、DataLoader 多进程）</li><li><code class="language-plaintext highlighter-rouge">pytorch/多机多卡训练与部署笔记.md</code>（分布式多进程）</li><li><code class="language-plaintext highlighter-rouge">backend/FastAPI学习笔记.md</code>（asyncio 异步路由）</li><li><code class="language-plaintext highlighter-rouge">技术工具学习索引.md</code></li></ul></section><!-- Previous / Next navigation --><nav class="notes-pager"><div class="notes-pager-links"> <a href="/notes/Python%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B02-%E8%BF%AD%E4%BB%A3%E5%99%A8-%E8%A3%85%E9%A5%B0%E5%99%A8-%E4%B8%8A%E4%B8%8B%E6%96%87%E7%AE%A1%E7%90%86%E5%99%A8/" class="notes-pager-prev"> <span class="notes-pager-label">← 上一章</span> <span class="notes-pager-title">Python进阶笔记2_迭代器_装饰器_上下文管理器</span> </a> <a href="/notes/Python%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0-%E5%90%8D%E5%AD%97%E7%BB%91%E5%AE%9A-%E9%97%AD%E5%8C%85-%E7%B1%BB%E4%B8%8E%E5%8D%8F%E8%AE%AE/" class="notes-pager-next"> <span class="notes-pager-label">下一章 →</span> <span class="notes-pager-title">Python进阶笔记_名字绑定_闭包_类与协议</span> </a></div></nav></div></article><!-- Right Sidebar: Table of Contents (built by JS from DOM) --><aside class="notes-toc" id="notes-toc"><div class="notes-toc-inner"><h4 class="notes-toc-title">目录</h4><nav class="notes-toc-nav"><ul class="notes-toc-list" id="notes-toc-list"> <!-- Populated by notes-toc.js --></ul></nav></div></aside></div><script src="https://1571859588.github.io/assets/js/notes-toc.js"></script> <script> (function() { var q = new URLSearchParams(location.search).get('q'); if (!q || q.length < 2) return; var body = document.querySelector('.notes-body'); if (!body) return; // Walk text nodes, find and highlight matches var walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT, null, false); var textNodes = []; while (walker.nextNode()) { var p = walker.currentNode.parentNode; // Skip script, style, code blocks, and already-marked text if (p.tagName === 'SCRIPT' || p.tagName === 'STYLE' || p.tagName === 'MARK' || p.closest('pre') || p.closest('.notes-search-hit')) continue; textNodes.push(walker.currentNode); } var first = null; var re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'); textNodes.forEach(function(node) { var text = node.textContent; if (!re.test(text)) return; re.lastIndex = 0; // reset after test var frag = document.createDocumentFragment(); var lastIdx = 0; var match; while ((match = re.exec(text)) !== null) { if (match.index > lastIdx) { frag.appendChild(document.createTextNode(text.substring(lastIdx, match.index))); } var mark = document.createElement('mark'); mark.className = 'notes-search-mark'; mark.textContent = match[0]; frag.appendChild(mark); if (!first) first = mark; lastIdx = match.index + match[0].length; } if (lastIdx < text.length) { frag.appendChild(document.createTextNode(text.substring(lastIdx))); } node.parentNode.replaceChild(frag, node); }); if (first) { setTimeout(function() { first.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300); } })(); </script><div class="page__footer"><footer> <!-- start custom footer snippets --> <a href="/sitemap/">Sitemap</a> <!-- end custom footer snippets --><div class="page__footer-follow"><ul class="social-icons"><li><strong>Follow:</strong></li><li><a href="http://github.com/1571859588"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a></li><li><a href="https://1571859588.github.io/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li></ul></div><div class="page__footer-copyright"> &copy; 2026 Yuntao Nie, Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://github.com/academicpages/academicpages.github.io">AcademicPages</a>, a fork of <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.<br /> Site last updated 2026-07-06</div></footer></div><script src="https://1571859588.github.io/assets/js/main.min.js"></script> <script src="https://1571859588.github.io/assets/js/paper-details.js"></script> <!-- Fix kramdown stripping backslashes before _ in math spans. kramdown treats \_ as a markdown escape, converting $seq\_len$ to $seq_len$. MathJax then interprets _ as subscript instead of a literal underscore. This runs synchronously before MathJax (async) processes the page. --> <script> (function() { var content = document.querySelector('.page__content'); if (!content) return; var walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT, null, false); var nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode); nodes.forEach(function(node) { var text = node.textContent; var fixed = text.replace(/\$([^$\n]+?)\$/g, function(match, math) { // Inside $...$, add \ before _ followed by 2+ lowercase letters. // Safe: legitimate subscripts use single chars ($d_k$) or braces ($x_{ij}$). var fixedMath = math.replace(/_([a-z]{2,})/g, '\\_$1'); return fixedMath !== math ? '$' + fixedMath + '$' : match; }); if (fixed !== text) node.textContent = fixed; }); })(); </script> <script> var SERIES_INDEX = [ {t:"Python进阶笔记2_迭代器_装饰器_上下文管理器", u:"/notes/Python%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B02-%E8%BF%AD%E4%BB%A3%E5%99%A8-%E8%A3%85%E9%A5%B0%E5%99%A8-%E4%B8%8A%E4%B8%8B%E6%96%87%E7%AE%A1%E7%90%86%E5%99%A8/"}, {t:"Python进阶笔记3_并发与性能分析", u:"/notes/Python%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B03-%E5%B9%B6%E5%8F%91%E4%B8%8E%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90/"}, {t:"Python进阶笔记_名字绑定_闭包_类与协议", u:"/notes/Python%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0-%E5%90%8D%E5%AD%97%E7%BB%91%E5%AE%9A-%E9%97%AD%E5%8C%85-%E7%B1%BB%E4%B8%8E%E5%8D%8F%E8%AE%AE/"} ]; (function() { if (!SERIES_INDEX.length) return; var inp = document.getElementById('notes-sidebar-search-input'); var box = document.getElementById('notes-sidebar-search-results'); if (!inp || !box) return; function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; } function hl(t, q) { var o = '', L = 0, lo = t.toLowerCase(), ql = q.toLowerCase(), i; while ((i = lo.indexOf(ql, L)) !== -1) { o += esc(t.substring(L, i)) + '<mark class="notes-search-highlight">' + esc(t.substring(i, i + q.length)) + '</mark>'; L = i + q.length; } return o + esc(t.substring(L)); } inp.addEventListener('input', function() { var q = this.value.trim(); if (!q) { box.style.display = 'none'; box.innerHTML = ''; return; } var ql = q.toLowerCase(), hits = []; for (var i = 0; i < SERIES_INDEX.length; i++) { if (SERIES_INDEX[i].t.toLowerCase().indexOf(ql) !== -1) hits.push(SERIES_INDEX[i]); } if (!hits.length) { box.innerHTML = '<div class="notes-sidebar-search-empty">无匹配</div>'; } else { var h = ''; for (var j = 0; j < Math.min(hits.length, 15); j++) { h += '<a href="' + hits[j].u + '" class="notes-sidebar-search-hit" data-q="' + esc(q) + '">' + '<span class="notes-sidebar-search-hit-title">' + hl(hits[j].t, q) + '</span></a>'; } box.innerHTML = h; } box.style.display = 'block'; }); inp.addEventListener('keydown', function(e) { if (e.key === 'Escape') { box.style.display = 'none'; box.innerHTML = ''; this.blur(); } }); box.addEventListener('click', function(e) { var a = e.target.closest('.notes-sidebar-search-hit'); if (a && a.dataset.q) sessionStorage.setItem('notes-search-q', a.dataset.q); }); document.addEventListener('click', function(e) { if (!e.target.closest('#notes-sidebar-search')) { box.style.display = 'none'; box.innerHTML = ''; } }); })(); </script></body></html>

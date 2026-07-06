@@ -1,0 +1,996 @@
+<!doctype html><html lang="en" class="no-js"><head><meta charset="utf-8"> <!-- begin SEO --><title>内存生命周期与资源管理 - Yuntao Nie</title><meta property="og:locale" content="en-US"><meta property="og:site_name" content="Yuntao Nie"><meta property="og:title" content="内存生命周期与资源管理"><link rel="canonical" href="https://1571859588.github.io/notes/%E5%86%85%E5%AD%98%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%B8%8E%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/"><meta property="og:url" content="https://1571859588.github.io/notes/%E5%86%85%E5%AD%98%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%B8%8E%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/"><meta property="og:description" content="C++ 内存、生命周期与资源管理"> <script type="application/ld+json"> { "@context" : "http://schema.org", "@type" : "Person", "name" : "Yuntao Nie", "url" : "https://1571859588.github.io", "sameAs" : null } </script> <!-- end SEO --><link href="https://1571859588.github.io/feed.xml" type="application/atom+xml" rel="alternate" title="Yuntao Nie Feed"> <!-- http://t.co/dKP3o1e --><meta name="HandheldFriendly" content="True"><meta name="MobileOptimized" content="320"><meta name="viewport" content="width=device-width, initial-scale=1.0"> <script> document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js '; </script> <!-- For all browsers --><link rel="stylesheet" href="https://1571859588.github.io/assets/css/main.css"><meta http-equiv="cleartype" content="on"> <!-- start custom head snippets --><link rel="apple-touch-icon" sizes="57x57" href="https://1571859588.github.io/images/apple-touch-icon-57x57.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="60x60" href="https://1571859588.github.io/images/apple-touch-icon-60x60.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="72x72" href="https://1571859588.github.io/images/apple-touch-icon-72x72.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="76x76" href="https://1571859588.github.io/images/apple-touch-icon-76x76.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="114x114" href="https://1571859588.github.io/images/apple-touch-icon-114x114.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="120x120" href="https://1571859588.github.io/images/apple-touch-icon-120x120.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="144x144" href="https://1571859588.github.io/images/apple-touch-icon-144x144.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="152x152" href="https://1571859588.github.io/images/apple-touch-icon-152x152.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="180x180" href="https://1571859588.github.io/images/apple-touch-icon-180x180.png?v=M44lzPylqQ"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-32x32.png?v=M44lzPylqQ" sizes="32x32"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/android-chrome-192x192.png?v=M44lzPylqQ" sizes="192x192"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-96x96.png?v=M44lzPylqQ" sizes="96x96"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-16x16.png?v=M44lzPylqQ" sizes="16x16"><link rel="manifest" href="https://1571859588.github.io/images/manifest.json?v=M44lzPylqQ"><link rel="mask-icon" href="https://1571859588.github.io/images/safari-pinned-tab.svg?v=M44lzPylqQ" color="#000000"><link rel="shortcut icon" href="/images/favicon.ico?v=M44lzPylqQ"><meta name="msapplication-TileColor" content="#000000"><meta name="msapplication-TileImage" content="https://1571859588.github.io/images/mstile-144x144.png?v=M44lzPylqQ"><meta name="msapplication-config" content="https://1571859588.github.io/images/browserconfig.xml?v=M44lzPylqQ"><meta name="theme-color" content="#ffffff"><link rel="stylesheet" href="https://1571859588.github.io/assets/css/academicons.css"/> <!-- MathJax for math rendering --> <script> MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['\\(', '\\)']] } }; </script> <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script> <!-- end custom head snippets --></head><body> <!--[if lt IE 9]><div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div><![endif]--><div class="masthead"><div class="masthead__inner-wrap"><div class="masthead__menu"><nav id="site-nav" class="greedy-nav"> <button><div class="navicon"></div></button><ul class="visible-links"><li class="masthead__menu-item masthead__menu-item--lg"><a href="https://1571859588.github.io/">Yuntao Nie</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/publications/">Publications</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/cv/">CV</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/notes/">Notes</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/year-archive/">Blog</a></li></ul><ul class="hidden-links hidden"></ul></nav></div></div></div><div id="main" role="main" class="notes-layout"> <!-- Left Sidebar: Series Chapter Navigation --><aside class="notes-sidebar" id="notes-sidebar"><div class="notes-sidebar-inner"><div class="notes-series-header"><h3 class="notes-series-title">cpp</h3></div><div class="notes-sidebar-search" id="notes-sidebar-search"> <input type="text" class="notes-sidebar-search-input" id="notes-sidebar-search-input" placeholder="搜索本专题…" autocomplete="off"><div class="notes-sidebar-search-results" id="notes-sidebar-search-results" style="display:none"></div></div><nav class="notes-chapter-nav"><ul class="notes-chapter-list"><li class="notes-chapter-item "> <a href="/notes/Python%E4%B8%8EC-%E4%BA%92%E6%93%8D%E4%BD%9C/" class="notes-chapter-link"> <span class="notes-chapter-num">1</span> <span class="notes-chapter-title">Python与C++互操作</span> </a></li><li class="notes-chapter-item active"> <a href="/notes/%E5%86%85%E5%AD%98%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%B8%8E%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" class="notes-chapter-link"> <span class="notes-chapter-num">2</span> <span class="notes-chapter-title">内存生命周期与资源管理</span> </a></li><li class="notes-chapter-item "> <a href="/notes/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%95%99%E7%A8%8B/" class="notes-chapter-link"> <span class="notes-chapter-num">3</span> <span class="notes-chapter-title">环境配置教程</span> </a></li><li class="notes-chapter-item "> <a href="/notes/%E7%BC%96%E8%AF%91%E9%93%BE%E6%8E%A5%E6%A8%A1%E6%9D%BF%E4%B8%8E%E6%9E%84%E5%BB%BA%E7%B3%BB%E7%BB%9F/" class="notes-chapter-link"> <span class="notes-chapter-num">4</span> <span class="notes-chapter-title">编译链接模板与构建系统</span> </a></li></ul></nav><div class="notes-sidebar-footer"> <a href="/notes/" class="notes-back-link">← 所有笔记系列</a></div></div></aside><!-- Mobile sidebar toggle --> <button class="notes-sidebar-toggle" id="notes-sidebar-toggle" aria-label="Toggle sidebar"> <span class="notes-sidebar-toggle-icon"></span> </button> <!-- Main Content --><article class="notes-content" itemscope itemtype="http://schema.org/CreativeWork"><meta itemprop="headline" content="内存生命周期与资源管理"><div class="notes-content-inner"><header class="notes-header"><div class="notes-breadcrumb"> <a href="/notes/">Notes</a> <span class="notes-sep">›</span> <span>cpp</span> <span class="notes-sep">›</span> <span>内存生命周期与资源管理</span></div><h1 class="notes-page-title" itemprop="headline">内存生命周期与资源管理</h1></header><section class="notes-body" itemprop="text"><h1 id="c-内存生命周期与资源管理">C++ 内存、生命周期与资源管理</h1><blockquote><p>更新时间：2026-07-01 状态：学习笔记（从零开始，逐句拆解） 适用读者：有 Python/Java 基础，刚接触 C++ 的人</p></blockquote><hr /><h2 id="一句话结论">一句话结论</h2><p>C++ 区别于 Python/Java 的核心：<strong>你必须亲手管理内存和资源的生命周期</strong>。现代 C++ 的解法是 <strong>RAII</strong>——把资源绑定到对象的生命周期上，让作用域替你自动释放。记住：能用 <code class="language-plaintext highlighter-rouge">std::vector</code> 就别 <code class="language-plaintext highlighter-rouge">new</code>，能用 <code class="language-plaintext highlighter-rouge">unique_ptr</code> 就别裸指针，能用 <code class="language-plaintext highlighter-rouge">const</code> 就别不加。</p><hr /><h2 id="零为什么-c-要操心内存">零、为什么 C++ 要操心内存？</h2><p>先建立直觉——对比三种语言的内存管理：</p><table><thead><tr><th>语言</th><th>谁管内存</th><th>怎么回收</th><th>你的责任</th></tr></thead><tbody><tr><td><strong>Python</strong></td><td>解释器</td><td>引用计数 + GC</td><td>几乎不用管</td></tr><tr><td><strong>Java</strong></td><td>JVM</td><td>垃圾回收器（GC）</td><td>不用管，但可能 STW</td></tr><tr><td><strong>C++</strong></td><td><strong>你</strong></td><td>手动 <code class="language-plaintext highlighter-rouge">delete</code> 或 RAII 自动释放</td><td><strong>必须管，否则内存泄漏或崩溃</strong></td></tr></tbody></table><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Python:  x = [1,2,3]        → 不用管，GC 自动回收
+Java:    int[] x = {1,2,3}; → 不用管，JVM 自动回收
+C++:     int* x = new int[3]{1,2,3};  → 你必须 delete[] x;
+         std::vector&lt;int&gt; x = {1,2,3}; → vector 帮你管（RAII）
+</code></pre></div></div><p><strong>核心问题</strong>：C++ 没有垃圾回收器。你 <code class="language-plaintext highlighter-rouge">new</code> 出来的东西必须自己 <code class="language-plaintext highlighter-rouge">delete</code>，否则内存永远不释放（内存泄漏）。如果 <code class="language-plaintext highlighter-rouge">delete</code> 了两次（重复释放），程序可能崩溃。</p><p>现代 C++（C++11 以后）给出了答案：<strong>RAII + 智能指针</strong>，让你写起来像 Python 一样省心，但性能像 C 一样快。</p><hr /><h2 id="一值地址指针与引用">一、值、地址、指针与引用</h2><h3 id="11-三个核心概念">1.1 三个核心概念</h3><p>先看一段代码，建立直觉：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">value</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>    <span class="c1">// 在内存中创建一个 int，值为 42</span>
+    <span class="kt">int</span><span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">value</span><span class="p">;</span> <span class="c1">// ptr 保存 value 的地址（指针）</span>
+    <span class="kt">int</span><span class="o">&amp;</span> <span class="n">ref</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>  <span class="c1">// ref 是 value 的别名（引用）</span>
+
+    <span class="o">*</span><span class="n">ptr</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>          <span class="c1">// 通过指针找到 value，改成 7</span>
+    <span class="n">ref</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>          <span class="c1">// 通过引用找到 value，加 1</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">value</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>  <span class="c1">// 输出 8</span>
+<span class="p">}</span>
+</code></pre></div></div><p><strong>逐行拆解</strong>：</p><table><thead><tr><th>代码</th><th>含义</th><th>类比</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">int value = 42;</code></td><td>在内存中创建一个变量，名字叫 value，值为 42</td><td>一个盒子里装了 42</td></tr><tr><td><code class="language-plaintext highlighter-rouge">&amp;value</code></td><td>取 value 的内存地址</td><td>盒子在仓库里的坐标</td></tr><tr><td><code class="language-plaintext highlighter-rouge">int* ptr = &amp;value;</code></td><td>ptr 是一个指针，保存 value 的地址</td><td>一张纸条写着”42号盒子在A3货架”</td></tr><tr><td><code class="language-plaintext highlighter-rouge">int&amp; ref = value;</code></td><td>ref 是 value 的<strong>别名</strong>，两者是同一个东西</td><td>给 42号盒子贴了个小名”小四”</td></tr><tr><td><code class="language-plaintext highlighter-rouge">*ptr = 7;</code></td><td>解引用指针：顺着地址找到 value，改成 7</td><td>按纸条找到盒子，把内容换成 7</td></tr><tr><td><code class="language-plaintext highlighter-rouge">ref += 1;</code></td><td>通过别名修改原变量</td><td>叫”小四”把内容 +1</td></tr></tbody></table><h3 id="12-指针-vs-引用选哪个">1.2 指针 vs 引用——选哪个？</h3><table><thead><tr><th>概念</th><th>能否为空</th><th>能否改指向</th><th>声明时必须初始化</th><th>常见用途</th></tr></thead><tbody><tr><td><strong>值 <code class="language-plaintext highlighter-rouge">T</code></strong></td><td>否</td><td>不适用</td><td>是</td><td>拥有一个独立对象</td></tr><tr><td><strong>指针 <code class="language-plaintext highlighter-rouge">T*</code></strong></td><td>可以是 <code class="language-plaintext highlighter-rouge">nullptr</code></td><td><strong>可以</strong></td><td>否（但建议初始化）</td><td>可选对象、数组、底层接口</td></tr><tr><td><strong>引用 <code class="language-plaintext highlighter-rouge">T&amp;</code></strong></td><td><strong>不能为空</strong></td><td><strong>不能改指向</strong></td><td><strong>必须</strong></td><td>必须存在的别名、函数参数</td></tr><tr><td><strong>常量引用 <code class="language-plaintext highlighter-rouge">const T&amp;</code></strong></td><td>不能为空</td><td>不能改指向</td><td>必须</td><td>只读借用，避免复制</td></tr></tbody></table><p><strong>关键区别</strong>：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+
+<span class="c1">// 指针可以改指向</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">;</span>
+<span class="n">ptr</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">;</span>        <span class="c1">// ✅ ptr 现在指向 b</span>
+
+<span class="c1">// 引用不能改指向</span>
+<span class="kt">int</span><span class="o">&amp;</span> <span class="n">ref</span> <span class="o">=</span> <span class="n">a</span><span class="p">;</span>
+<span class="n">ref</span> <span class="o">=</span> <span class="n">b</span><span class="p">;</span>         <span class="c1">// ⚠️ 这不是"让 ref 引用 b"！</span>
+                 <span class="c1">// 这是把 b 的值赋给 a，结果是 a=2, b=2</span>
+                 <span class="c1">// ref 仍然引用 a</span>
+</code></pre></div></div><h3 id="13-函数参数怎么传接口意图">1.3 函数参数怎么传？——接口意图</h3><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">consume</span><span class="p">(</span><span class="n">T</span> <span class="n">value</span><span class="p">);</span>          <span class="c1">// 按值传递：函数获得自己的副本（复制一份进去）</span>
+<span class="kt">void</span> <span class="nf">update</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">);</span>          <span class="c1">// 引用传递：函数会修改调用方的原始对象</span>
+<span class="kt">void</span> <span class="nf">inspect</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">);</span>   <span class="c1">// const 引用：只读，不复制，不改</span>
+<span class="kt">void</span> <span class="nf">optional</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">value</span><span class="p">);</span>        <span class="c1">// 指针：可能传 nullptr（"没有"）</span>
+</code></pre></div></div><p><strong>完整示例</strong>：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
+</span>
+<span class="c1">// 按值：函数内部修改不影响外部</span>
+<span class="kt">void</span> <span class="nf">consume</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">s</span> <span class="o">+=</span> <span class="s">" (modified)"</span><span class="p">;</span>  <span class="c1">// 修改的是副本</span>
+<span class="p">}</span>
+
+<span class="c1">// 可变引用：函数内部修改直接影响外部</span>
+<span class="kt">void</span> <span class="n">update</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">s</span> <span class="o">+=</span> <span class="s">" (modified)"</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// const 引用：只读，不复制</span>
+<span class="kt">void</span> <span class="n">inspect</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"内容: "</span> <span class="o">&lt;&lt;</span> <span class="n">s</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>
+    <span class="c1">// s += "x";  // ❌ 编译错误：const 不能修改</span>
+<span class="p">}</span>
+
+<span class="c1">// 指针：可能为空，调用时要判断</span>
+<span class="kt">void</span> <span class="n">optional</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">*</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">s</span> <span class="o">==</span> <span class="nb">nullptr</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"没有传入字符串</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"内容: "</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">s</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span> <span class="o">=</span> <span class="s">"hello"</span><span class="p">;</span>
+
+    <span class="n">consume</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"consume 后: "</span> <span class="o">&lt;&lt;</span> <span class="n">name</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>        <span class="c1">// hello（没变）</span>
+
+    <span class="n">update</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"update 后: "</span> <span class="o">&lt;&lt;</span> <span class="n">name</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>          <span class="c1">// hello (modified)</span>
+
+    <span class="n">inspect</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>                                        <span class="c1">// 内容: hello (modified)</span>
+    <span class="n">optional</span><span class="p">(</span><span class="o">&amp;</span><span class="n">name</span><span class="p">);</span>                                      <span class="c1">// 内容: hello (modified)</span>
+    <span class="n">optional</span><span class="p">(</span><span class="nb">nullptr</span><span class="p">);</span>                                    <span class="c1">// 没有传入字符串</span>
+<span class="p">}</span>
+</code></pre></div></div><p><strong>什么时候用哪个？</strong>（决策树）</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>参数需要修改调用方的对象吗？
+│
+├─ 是 → 用 T&amp;（引用）
+│
+├─ 否 → 对象小吗？（int, float, 指针等 ≤ 8 字节）
+│       │
+│       ├─ 小 → 按值传 T（最简单，复制成本可忽略）
+│       │
+│       └─ 大（string, vector, 自定义类）→ 用 const T&amp;（避免复制）
+│
+└─ 可能不传（可选参数）→ 用 T*（指针，可能为 nullptr）
+</code></pre></div></div><blockquote><p><strong>新手原则</strong>：小型标量（int、float）按值传；大对象用 <code class="language-plaintext highlighter-rouge">const T&amp;</code>；需要修改用 <code class="language-plaintext highlighter-rouge">T&amp;</code>；可能为空用 <code class="language-plaintext highlighter-rouge">T*</code>。不要机械地把所有参数都改成引用。</p></blockquote><hr /><h2 id="二数组指针与连续内存">二、数组、指针与连续内存</h2><h3 id="21-原生数组为什么会退化">2.1 原生数组为什么会”退化”</h3><p>在 C++ 中，原生数组在大多数情况下会自动变成”指向首元素的指针”：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">print_first</span><span class="p">(</span><span class="kt">int</span> <span class="n">arr</span><span class="p">[])</span> <span class="p">{</span>
+    <span class="c1">// ⚠️ 在这里，arr 不再是数组，而是 int* 指针</span>
+    <span class="c1">// 你完全不知道 arr 有多少个元素！</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">arr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span> <span class="c1">// sizeof(arr) 在这里是 sizeof(int*) = 8（64位系统），不是数组大小</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">data</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">};</span>
+    <span class="c1">// sizeof(data) = 20（5个int × 4字节）</span>
+    <span class="n">print_first</span><span class="p">(</span><span class="n">data</span><span class="p">);</span>  <span class="c1">// 数组退化为指针，长度信息丢失</span>
+<span class="p">}</span>
+</code></pre></div></div><p><strong>为什么会这样</strong>：C 语言时代的历史遗留设计。数组传参时只传首地址，不传长度，所以函数内部不知道数组有多大。</p><h3 id="22-解决方案用能表达长度的类型">2.2 解决方案：用能表达长度的类型</h3><p><strong>方法一：传长度参数（C 风格）</strong></p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">scale</span><span class="p">(</span><span class="kt">float</span><span class="o">*</span> <span class="n">data</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">size</span><span class="p">,</span> <span class="kt">float</span> <span class="n">factor</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*=</span> <span class="n">factor</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">float</span> <span class="n">data</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mf">1.0</span><span class="n">f</span><span class="p">,</span> <span class="mf">2.0</span><span class="n">f</span><span class="p">,</span> <span class="mf">3.0</span><span class="n">f</span><span class="p">,</span> <span class="mf">4.0</span><span class="n">f</span><span class="p">};</span>
+    <span class="n">scale</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mf">2.0</span><span class="n">f</span><span class="p">);</span>  <span class="c1">// 每个元素乘 2</span>
+    <span class="c1">// data 现在是 {2.0, 4.0, 6.0, 8.0}</span>
+<span class="p">}</span>
+</code></pre></div></div><p><strong>方法二：用 <code class="language-plaintext highlighter-rouge">std::span</code>（C++20，推荐）</strong></p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;span&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;array&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span>
+<span class="c1">// std::span = 指针 + 长度，但封装好了，不用手动传 size</span>
+<span class="kt">void</span> <span class="nf">scale</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">span</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">values</span><span class="p">,</span> <span class="kt">float</span> <span class="n">factor</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">float</span><span class="o">&amp;</span> <span class="n">value</span> <span class="o">:</span> <span class="n">values</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// 可以用范围 for 循环</span>
+        <span class="n">value</span> <span class="o">*=</span> <span class="n">factor</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">print</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">span</span><span class="o">&lt;</span><span class="k">const</span> <span class="kt">float</span><span class="o">&gt;</span> <span class="n">values</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">float</span> <span class="n">v</span> <span class="o">:</span> <span class="n">values</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">v</span> <span class="o">&lt;&lt;</span> <span class="sc">' '</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// span 可以接受多种来源：原生数组、vector、array</span>
+    <span class="kt">float</span> <span class="n">raw</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mf">1.0</span><span class="n">f</span><span class="p">,</span> <span class="mf">2.0</span><span class="n">f</span><span class="p">,</span> <span class="mf">3.0</span><span class="n">f</span><span class="p">};</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">vec</span> <span class="o">=</span> <span class="p">{</span><span class="mf">4.0</span><span class="n">f</span><span class="p">,</span> <span class="mf">5.0</span><span class="n">f</span><span class="p">,</span> <span class="mf">6.0</span><span class="n">f</span><span class="p">,</span> <span class="mf">7.0</span><span class="n">f</span><span class="p">};</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">float</span><span class="p">,</span> <span class="mi">2</span><span class="o">&gt;</span> <span class="n">arr</span> <span class="o">=</span> <span class="p">{</span><span class="mf">8.0</span><span class="n">f</span><span class="p">,</span> <span class="mf">9.0</span><span class="n">f</span><span class="p">};</span>
+
+    <span class="n">scale</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="mf">2.0</span><span class="n">f</span><span class="p">);</span>   <span class="c1">// 原生数组也能用</span>
+    <span class="n">scale</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="mf">2.0</span><span class="n">f</span><span class="p">);</span>   <span class="c1">// vector 也能用</span>
+    <span class="n">scale</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="mf">2.0</span><span class="n">f</span><span class="p">);</span>   <span class="c1">// array 也能用</span>
+
+    <span class="n">print</span><span class="p">(</span><span class="n">raw</span><span class="p">);</span>  <span class="c1">// 2 4 6</span>
+    <span class="n">print</span><span class="p">(</span><span class="n">vec</span><span class="p">);</span>  <span class="c1">// 8 10 12 14</span>
+    <span class="n">print</span><span class="p">(</span><span class="n">arr</span><span class="p">);</span>  <span class="c1">// 16 18</span>
+<span class="p">}</span>
+</code></pre></div></div><blockquote><p><strong>新人疑问：<code class="language-plaintext highlighter-rouge">std::array&lt;float, 2&gt;</code> 中的 <code class="language-plaintext highlighter-rouge">2</code> 是什么意思？</strong></p><p><code class="language-plaintext highlighter-rouge">std::array</code> 是 C++ 的<strong>固定大小数组</strong>，模板参数有两个：<code class="language-plaintext highlighter-rouge">std::array&lt;元素类型, 大小&gt;</code>。</p><ul><li><code class="language-plaintext highlighter-rouge">float</code> = 元素类型</li><li><code class="language-plaintext highlighter-rouge">2</code> = 数组大小（<strong>编译期常量，运行时不能改</strong>）</li></ul><p>所以 <code class="language-plaintext highlighter-rouge">std::array&lt;float, 2&gt; arr = {8.0f, 9.0f};</code> 表示”创建一个有 2 个 float 的固定数组”。</p><p>对比三种数组：</p><table><thead><tr><th>类型</th><th>大小</th><th>大小何时确定</th><th>内存位置</th><th>示例</th></tr></thead><tbody><tr><td>原生数组 <code class="language-plaintext highlighter-rouge">float[]</code></td><td>固定</td><td>编译期</td><td>栈</td><td><code class="language-plaintext highlighter-rouge">float arr[] = {1,2,3};</code></td></tr><tr><td><code class="language-plaintext highlighter-rouge">std::array&lt;T,N&gt;</code></td><td>固定</td><td>编译期</td><td>栈</td><td><code class="language-plaintext highlighter-rouge">std::array&lt;float,2&gt; arr = {8,9};</code></td></tr><tr><td><code class="language-plaintext highlighter-rouge">std::vector&lt;T&gt;</code></td><td>可变</td><td>运行期</td><td>堆</td><td><code class="language-plaintext highlighter-rouge">std::vector&lt;float&gt; v = {1,2,3};</code></td></tr></tbody></table><p><code class="language-plaintext highlighter-rouge">std::array</code> 相比原生数组的好处：知道自己大小、能用范围 for、不会退化为指针。<code class="language-plaintext highlighter-rouge">N</code> 必须是编译期常量（字面量、<code class="language-plaintext highlighter-rouge">constexpr</code> 变量等）。</p></blockquote><blockquote><p><strong>常见报错：<code class="language-plaintext highlighter-rouge">fatal error: span: No such file or directory</code></strong></p><p><code class="language-plaintext highlighter-rouge">&lt;span&gt;</code> 是 <strong>C++20</strong> 才引入的头文件。如果编译器太老或没用 C++20 标准，就会报这个错。</p><p><strong>解决方法</strong>：</p><ol><li><strong>编译时指定 C++20 标准</strong>：<code class="language-plaintext highlighter-rouge">g++ -std=c++20 main.cpp -o main</code></li><li><strong>用足够新的编译器</strong>：GCC ≥ 10、Clang ≥ 10、MSVC ≥ 19.28</li><li><strong>在线编译器推荐</strong>：<a href="https://godbolt.org/">Godbolt</a>（选 GCC 12+，加 <code class="language-plaintext highlighter-rouge">-std=c++20</code>） 或者 [<a href="https://wandbox.org/">C++] gcc 13.2.0 - Wandbox</a></li></ol><p><strong>如果编译器不支持 C++20</strong>，用 C++17 的替代写法：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// C++17 替代方案一：传 vector 引用</span>
+<span class="kt">void</span> <span class="nf">scale</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;&amp;</span> <span class="n">values</span><span class="p">,</span> <span class="kt">float</span> <span class="n">factor</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">float</span><span class="o">&amp;</span> <span class="n">value</span> <span class="o">:</span> <span class="n">values</span><span class="p">)</span> <span class="p">{</span> <span class="n">value</span> <span class="o">*=</span> <span class="n">factor</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// C++17 替代方案二：指针 + 长度（最通用）</span>
+<span class="kt">void</span> <span class="n">scale_raw</span><span class="p">(</span><span class="kt">float</span><span class="o">*</span> <span class="n">values</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">size</span><span class="p">,</span> <span class="kt">float</span> <span class="n">factor</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span> <span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*=</span> <span class="n">factor</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div></blockquote><p><strong><code class="language-plaintext highlighter-rouge">std::span</code> 的核心特点</strong>：</p><ul><li><strong>不拥有数据</strong>：它只是一个”视图”，像 Python 的 slice，但底层不复制</li><li><strong>携带长度</strong>：不用额外传 size 参数</li><li><strong>轻量</strong>：内部就是 <code class="language-plaintext highlighter-rouge">指针 + 长度</code>，sizeof = 16 字节（64位系统）</li><li><strong>注意</strong>：调用期间底层内存必须仍然有效（不能传一个已销毁的局部数组给 span）</li></ul><blockquote><p><strong><code class="language-plaintext highlighter-rouge">sizeof = 16 字节</code> 是怎么算出来的？</strong></p><p><code class="language-plaintext highlighter-rouge">std::span</code> 内部只有两个成员：</p><table><thead><tr><th>成员</th><th>类型</th><th>64 位系统大小</th><th>作用</th></tr></thead><tbody><tr><td>指针</td><td><code class="language-plaintext highlighter-rouge">T*</code></td><td><strong>8 字节</strong></td><td>指向数据首地址</td></tr><tr><td>长度</td><td><code class="language-plaintext highlighter-rouge">size_t</code></td><td><strong>8 字节</strong></td><td>元素个数</td></tr></tbody></table><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>8 字节（指针）+ 8 字节（长度）= 16 字节
+</code></pre></div></div><p><strong>为什么都是 8 字节</strong>：64 位系统中地址总线是 64 位的，所以任何指针（<code class="language-plaintext highlighter-rouge">int*</code>、<code class="language-plaintext highlighter-rouge">float*</code>、<code class="language-plaintext highlighter-rouge">T*</code>）都是 8 字节（要存 64 位地址）；<code class="language-plaintext highlighter-rouge">size_t</code> 是表示大小的无符号整数，在 64 位系统上定义为 <code class="language-plaintext highlighter-rouge">uint64_t</code>，也是 8 字节。</p><p><strong>验证</strong>：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">span</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">);</span>   <span class="c1">// 16</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="o">*</span><span class="p">);</span>             <span class="c1">// 8</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="p">);</span>        <span class="c1">// 8</span>
+</code></pre></div></div><p><strong>32 位系统对比</strong>：指针和 <code class="language-plaintext highlighter-rouge">size_t</code> 都是 4 字节，所以 <code class="language-plaintext highlighter-rouge">sizeof(std::span&lt;float&gt;) = 8</code>。</p><p><strong>为什么不存 <code class="language-plaintext highlighter-rouge">end</code> 指针而存 <code class="language-plaintext highlighter-rouge">size</code>？</strong></p><ul><li>存 <code class="language-plaintext highlighter-rouge">size</code> 的好处：想知道长度时 O(1) 直接读，不用算 <code class="language-plaintext highlighter-rouge">end - begin</code></li><li>存 <code class="language-plaintext highlighter-rouge">end</code> 的好处：切片操作稍微方便</li><li>标准库选择了存 <code class="language-plaintext highlighter-rouge">size</code>，所以是 <code class="language-plaintext highlighter-rouge">指针 + size_t = 16 字节</code></li></ul></blockquote><h3 id="23-二维矩阵的线性存储">2.3 二维矩阵的线性存储</h3><p>在内存中，二维矩阵是<strong>一维线性存储</strong>的。行主序（Row-major）矩阵 <code class="language-plaintext highlighter-rouge">A[M][N]</code> 的 <code class="language-plaintext highlighter-rouge">(row, col)</code> 对应一维偏移：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>offset = row × N + col
+</code></pre></div></div><p><strong>图解</strong>（3行4列矩阵）：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>逻辑视角：              物理存储（连续内存）：
+  col:  0   1   2   3   
+row 0: [A] [B] [C] [D]    →  [A][B][C][D][E][F][G][H][I][J][K][L]
+row 1: [E] [F] [G] [H]         ↑              ↑              ↑
+row 2: [I] [J] [K] [L]         offset=0       offset=4       offset=8
+
+访问 A[1][2]（第2行第3列，即 G）：
+offset = 1 × 4 + 2 = 6  →  内存第7个位置 = G ✅
+</code></pre></div></div><p><strong>代码实现</strong>：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span>
+<span class="k">class</span> <span class="nc">Matrix</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="n">Matrix</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">rows</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">cols</span><span class="p">)</span>
+        <span class="o">:</span> <span class="n">rows_</span><span class="p">(</span><span class="n">rows</span><span class="p">),</span> <span class="n">cols_</span><span class="p">(</span><span class="n">cols</span><span class="p">),</span> <span class="n">data_</span><span class="p">(</span><span class="n">rows</span> <span class="o">*</span> <span class="n">cols</span><span class="p">,</span> <span class="mf">0.0</span><span class="n">f</span><span class="p">)</span> <span class="p">{}</span>
+
+    <span class="c1">// 访问元素</span>
+    <span class="kt">float</span><span class="o">&amp;</span> <span class="k">operator</span><span class="p">()(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">row</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">col</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">data_</span><span class="p">[</span><span class="n">row</span> <span class="o">*</span> <span class="n">cols_</span> <span class="o">+</span> <span class="n">col</span><span class="p">];</span>  <span class="c1">// 核心公式</span>
+    <span class="p">}</span>
+
+    <span class="kt">float</span> <span class="k">operator</span><span class="p">()(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">row</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">col</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">data_</span><span class="p">[</span><span class="n">row</span> <span class="o">*</span> <span class="n">cols_</span> <span class="o">+</span> <span class="n">col</span><span class="p">];</span>
+    <span class="p">}</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">rows</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">rows_</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">cols</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">cols_</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="nl">private:</span>
+    <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">rows_</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">cols_</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">data_</span><span class="p">;</span>  <span class="c1">// 一维存储</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">Matrix</span> <span class="n">m</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>
+    <span class="n">m</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="mf">1.0</span><span class="n">f</span><span class="p">;</span>
+    <span class="n">m</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="mf">5.0</span><span class="n">f</span><span class="p">;</span>
+    <span class="n">m</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">=</span> <span class="mf">9.0</span><span class="n">f</span><span class="p">;</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">m</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>  <span class="c1">// 1</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">m</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>  <span class="c1">// 5</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">m</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>  <span class="c1">// 9</span>
+<span class="p">}</span>
+</code></pre></div></div><blockquote><p><strong>新人疑问：为什么有两个 <code class="language-plaintext highlighter-rouge">operator()</code>？<code class="language-plaintext highlighter-rouge">&amp;</code> 和 <code class="language-plaintext highlighter-rouge">const</code> 各是什么意思？</strong></p><p>这叫 <strong>const 重载</strong>——两个函数同名同参数，但一个用于”可修改”场景，一个用于”只读”场景。</p><p><strong>逐个拆解</strong>：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 版本一：可变版本（用于非 const 对象）</span>
+<span class="kt">float</span><span class="o">&amp;</span> <span class="k">operator</span><span class="p">()(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">row</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">col</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">data_</span><span class="p">[</span><span class="n">row</span> <span class="o">*</span> <span class="n">cols_</span> <span class="o">+</span> <span class="n">col</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="c1">//       ^ 返回 float 的引用</span>
+<span class="c1">//  ↑ 没有const → 可以修改对象</span>
+</code></pre></div></div><ul><li>返回类型是 <code class="language-plaintext highlighter-rouge">float&amp;</code>（引用），意味着返回的是<strong>元素本身的别名</strong></li><li>调用者可以通过这个引用<strong>修改</strong>矩阵里的值：<code class="language-plaintext highlighter-rouge">m(0,0) = 1.0f;</code></li><li>没有 <code class="language-plaintext highlighter-rouge">const</code> 修饰 → 只能对<strong>非 const 对象</strong>调用</li></ul><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 版本二：只读版本（用于 const 对象）</span>
+<span class="kt">float</span> <span class="k">operator</span><span class="p">()(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">row</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">col</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">data_</span><span class="p">[</span><span class="n">row</span> <span class="o">*</span> <span class="n">cols_</span> <span class="o">+</span> <span class="n">col</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="c1">//      ^ 返回 float 的值（拷贝）</span>
+<span class="c1">//                                   ^^^^^ const 成员函数</span>
+</code></pre></div></div><ul><li>返回类型是 <code class="language-plaintext highlighter-rouge">float</code>（值），返回的是<strong>元素的拷贝</strong>，调用者不能通过它修改矩阵</li><li>末尾的 <code class="language-plaintext highlighter-rouge">const</code> 表示”这个函数不会修改对象状态” → 可以对 <strong>const 对象</strong>调用</li></ul><p><strong>编译器怎么选</strong>：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Matrix</span> <span class="nf">m</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>          <span class="c1">// 非 const 对象</span>
+<span class="k">const</span> <span class="n">Matrix</span> <span class="nf">cm</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>   <span class="c1">// const 对象</span>
+
+<span class="n">m</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="mf">1.0</span><span class="n">f</span><span class="p">;</span>          <span class="c1">// 选版本一（非const对象 → 调非const版本）✅</span>
+                          <span class="c1">// 返回引用，可以赋值</span>
+
+<span class="kt">float</span> <span class="n">v</span> <span class="o">=</span> <span class="n">cm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>      <span class="c1">// 选版本二（const对象 → 只能调const版本）✅</span>
+                          <span class="c1">// 返回值，不能写 cm(0,0) = 1.0f</span>
+<span class="c1">// cm(0, 0) = 1.0f;      // ❌ 编译错误！const 对象不能修改</span>
+</code></pre></div></div><p><strong>为什么不能只写一个 <code class="language-plaintext highlighter-rouge">float&amp;</code> 版本？</strong></p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 假设只有这一个版本：</span>
+<span class="kt">float</span><span class="o">&amp;</span> <span class="k">operator</span><span class="p">()(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">row</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">col</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">data_</span><span class="p">[</span><span class="n">row</span> <span class="o">*</span> <span class="n">cols_</span> <span class="o">+</span> <span class="n">col</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="k">const</span> <span class="n">Matrix</span> <span class="n">cm</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>
+<span class="n">cm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>  <span class="c1">// ❌ 编译错误！</span>
+<span class="c1">// 原因：非 const 成员函数不能在 const 对象上调用</span>
+<span class="c1">// 编译器担心你会通过返回的引用修改 const 对象</span>
+</code></pre></div></div><p><strong>为什么不能只写一个返回值的版本？</strong></p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 假设只有这一个版本：</span>
+<span class="kt">float</span> <span class="k">operator</span><span class="p">()(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">row</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">col</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">data_</span><span class="p">[</span><span class="n">row</span> <span class="o">*</span> <span class="n">cols_</span> <span class="o">+</span> <span class="n">col</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="n">Matrix</span> <span class="n">m</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>
+<span class="n">m</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="mf">1.0</span><span class="n">f</span><span class="p">;</span>  <span class="c1">// ❌ 语法错误！</span>
+<span class="c1">// 原因：返回的是值的拷贝，给拷贝赋值没有意义</span>
+<span class="c1">// 等价于：float temp = data_[...]; temp = 1.0f; ← 没改到矩阵</span>
+</code></pre></div></div><p><strong>总结：两个版本缺一不可</strong></p><table><thead><tr><th>版本</th><th>返回类型</th><th>const 修饰</th><th>何时用</th><th>能否赋值</th></tr></thead><tbody><tr><td>可变版本</td><td><code class="language-plaintext highlighter-rouge">float&amp;</code>（引用）</td><td>无</td><td>非 const 对象</td><td>✅ <code class="language-plaintext highlighter-rouge">m(0,0)=1</code></td></tr><tr><td>只读版本</td><td><code class="language-plaintext highlighter-rouge">float</code>（值）</td><td>有</td><td>const 对象</td><td>❌ 只能读</td></tr></tbody></table><p><strong>记忆口诀</strong>：</p><ul><li><code class="language-plaintext highlighter-rouge">&amp;</code> 在返回类型前面 → 返回引用 → 能改（像 Python 的 <code class="language-plaintext highlighter-rouge">__setitem__</code>）</li><li><code class="language-plaintext highlighter-rouge">const</code> 在函数后面 → 只读 → 不能改（像 Python 的 <code class="language-plaintext highlighter-rouge">@property</code>）</li></ul></blockquote><blockquote><p><strong>为什么要知道这个</strong>：CUDA 编程中 GPU 显存的访问模式直接依赖这个公式。连续访问（按行顺序）比跳着访问（按列顺序）快很多倍，因为 CPU 缓存和 GPU 合并访存（coalesced access）都依赖访问的连续性。</p></blockquote><hr /><h2 id="三对象存储期与生命周期">三、对象存储期与生命周期</h2><h3 id="31-栈和堆先用通俗说法">3.1 “栈”和”堆”——先用通俗说法</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>栈（Stack）                     堆（Heap）
+┌──────────────┐               ┌──────────────┐
+│ 局部变量      │               │ new 出来的    │
+│ 函数参数      │               │ 动态分配的    │
+│ 离开作用域    │               │ 必须手动 delete│
+│ 自动销毁      │               │ 否则泄漏！    │
+└──────────────┘               └──────────────┘
+   快（移动指针）                 慢（找空闲块）
+   小（默认 1-8MB）               大（几乎全部物理内存）
+   自动管理                       手动管理
+</code></pre></div></div><h3 id="32-代码示例">3.2 代码示例</h3><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span>
+<span class="kt">void</span> <span class="nf">example</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// ① 自动存储期（栈）：离开 {} 就自动销毁</span>
+    <span class="kt">int</span> <span class="n">local</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">inner</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="c1">// inner 在这里有效</span>
+    <span class="p">}</span>  <span class="c1">// ← inner 在这里自动销毁</span>
+    <span class="c1">// inner 已经不存在了</span>
+
+    <span class="c1">// ② 动态存储期（堆）：必须手动 delete</span>
+    <span class="k">auto</span> <span class="n">buffer</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">float</span><span class="p">[</span><span class="mi">1024</span><span class="p">];</span>  <span class="c1">// 在堆上分配 1024 个 float</span>
+    <span class="n">buffer</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">3.14</span><span class="n">f</span><span class="p">;</span>
+
+    <span class="c1">// ③ 如果忘记 delete 就返回 → 内存泄漏！</span>
+    <span class="k">delete</span><span class="p">[]</span> <span class="n">buffer</span><span class="p">;</span>  <span class="c1">// 必须手动释放</span>
+
+    <span class="c1">// ④ 如果 delete 后还用 buffer → 悬空指针（未定义行为）！</span>
+    <span class="c1">// buffer[0] = 0.0f;  // ❌ 危险！buffer 已被释放</span>
+
+    <span class="c1">// ⑤ 如果 delete 两次 → 重复释放（可能崩溃）！</span>
+    <span class="c1">// delete[] buffer;   // ❌ 危险！</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">example</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div><h3 id="33-手动-newdelete-的五大陷阱">3.3 手动 new/delete 的五大陷阱</h3><table><thead><tr><th>陷阱</th><th>代码示例</th><th>后果</th></tr></thead><tbody><tr><td><strong>内存泄漏</strong></td><td><code class="language-plaintext highlighter-rouge">new int</code> 后忘记 <code class="language-plaintext highlighter-rouge">delete</code></td><td>内存永远不释放，程序越跑越占</td></tr><tr><td><strong>重复释放</strong></td><td><code class="language-plaintext highlighter-rouge">delete p; delete p;</code></td><td>可能崩溃（堆被破坏）</td></tr><tr><td><strong>悬空指针</strong></td><td><code class="language-plaintext highlighter-rouge">delete p; *p = 5;</code></td><td>未定义行为，可能静默出错</td></tr><tr><td><strong>形式不匹配</strong></td><td><code class="language-plaintext highlighter-rouge">new int[10]</code> 但用 <code class="language-plaintext highlighter-rouge">delete</code>（不是 <code class="language-plaintext highlighter-rouge">delete[]</code>）</td><td>未定义行为</td></tr><tr><td><strong>异常路径泄漏</strong></td><td><code class="language-plaintext highlighter-rouge">new</code> 后函数中途抛异常，没走到 <code class="language-plaintext highlighter-rouge">delete</code></td><td>内存泄漏</td></tr></tbody></table><p><strong>异常路径泄漏示例</strong>：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">dangerous</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">data</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">float</span><span class="p">[</span><span class="mi">1024</span><span class="p">];</span>  <span class="c1">// 分配内存</span>
+
+    <span class="n">do_something</span><span class="p">();</span>  <span class="c1">// ⚠️ 如果这里抛异常？</span>
+    <span class="c1">// 后面的 delete[] 永远不会执行 → 内存泄漏！</span>
+
+    <span class="k">delete</span><span class="p">[]</span> <span class="n">data</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// 正确做法：用 RAII（下一节讲）</span>
+<span class="kt">void</span> <span class="n">safe</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">data</span><span class="p">(</span><span class="mi">1024</span><span class="p">);</span>  <span class="c1">// vector 在析构时自动释放</span>
+
+    <span class="n">do_something</span><span class="p">();</span>  <span class="c1">// 即使抛异常，data 的析构也会执行 → 自动释放</span>
+<span class="p">}</span>
+</code></pre></div></div><blockquote><p><strong>核心认知</strong>：手动 <code class="language-plaintext highlighter-rouge">new/delete</code> 的问题不是”难写”，而是<strong>异常安全</strong>——你很难保证每条退出路径都正确释放。现代 C++ 的解法是 RAII。</p></blockquote><hr /><h2 id="四raii把资源绑定到对象生命周期">四、RAII：把资源绑定到对象生命周期</h2><h3 id="41-什么是-raii">4.1 什么是 RAII</h3><p><strong>RAII（Resource Acquisition Is Initialization）</strong>：</p><ul><li><strong>资源获取即初始化</strong>：在构造函数中获取资源</li><li><strong>资源释放即析构</strong>：在析构函数中释放资源</li><li>核心思想：<strong>让资源由对象管理，让对象由作用域管理</strong></li></ul><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>                    对象的构造函数
+                    ┌─────────────┐
+                    │ 获取资源     │ ← new / fopen / malloc / cudaMalloc
+                    └──────┬──────┘
+                           │
+                    对象在使用中
+                           │
+                    对象离开作用域（或被析构）
+                    ┌─────────────┐
+                    │ 释放资源     │ ← delete / fclose / free / cudaFree
+                    └─────────────┘
+                    ↑
+              无论正常返回还是抛异常，析构都会执行
+</code></pre></div></div><p><strong>对比 Python</strong>：</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Python 的 with 语句就是 RAII 的精神
+</span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">"file.txt"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>    <span class="c1"># 获取资源
+</span>    <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="n">read</span><span class="p">()</span>
+<span class="c1"># 离开 with 块，f.close() 自动调用  ← 释放资源
+</span>
+<span class="c1"># C++ 的 RAII 更彻底：所有局部对象都自动这样做
+</span><span class="p">{</span>
+    <span class="n">std</span><span class="p">::</span><span class="n">ifstream</span> <span class="n">f</span><span class="p">(</span><span class="s">"file.txt"</span><span class="p">);</span>  <span class="o">//</span> <span class="n">构造时打开文件</span>
+    <span class="n">std</span><span class="p">::</span><span class="n">string</span> <span class="n">line</span><span class="p">;</span>
+    <span class="n">std</span><span class="p">::</span><span class="n">getline</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">line</span><span class="p">);</span>
+<span class="p">}</span>  <span class="o">//</span> <span class="n">离开作用域</span><span class="err">，</span><span class="n">f</span> <span class="n">的析构自动关闭文件</span>
+</code></pre></div></div><h3 id="42-完整示例自己实现-raii-类">4.2 完整示例：自己实现 RAII 类</h3><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;stdexcept&gt;</span><span class="cp">
+</span>
+<span class="k">class</span> <span class="nc">File</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="c1">// 构造函数：获取资源（打开文件）</span>
+    <span class="k">explicit</span> <span class="n">File</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">path</span><span class="p">)</span>
+        <span class="o">:</span> <span class="n">handle_</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">fopen</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s">"rb"</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">handle_</span> <span class="o">==</span> <span class="nb">nullptr</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">"无法打开文件: "</span><span class="p">)</span> <span class="o">+</span> <span class="n">path</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"文件已打开</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 析构函数：释放资源（关闭文件）</span>
+    <span class="o">~</span><span class="n">File</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">handle_</span> <span class="o">!=</span> <span class="nb">nullptr</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">std</span><span class="o">::</span><span class="n">fclose</span><span class="p">(</span><span class="n">handle_</span><span class="p">);</span>
+            <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"文件已关闭</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 删除拷贝（防止两个对象指向同一个文件句柄）</span>
+    <span class="n">File</span><span class="p">(</span><span class="k">const</span> <span class="n">File</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">delete</span><span class="p">;</span>
+    <span class="n">File</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">File</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">delete</span><span class="p">;</span>
+
+    <span class="c1">// 提供使用接口</span>
+    <span class="kt">int</span> <span class="n">read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">fgetc</span><span class="p">(</span><span class="n">handle_</span><span class="p">);</span>
+    <span class="p">}</span>
+
+<span class="nl">private:</span>
+    <span class="n">std</span><span class="o">::</span><span class="kt">FILE</span><span class="o">*</span> <span class="n">handle_</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="p">{</span>
+        <span class="n">File</span> <span class="n">f</span><span class="p">(</span><span class="s">"test.txt"</span><span class="p">);</span>  <span class="c1">// 构造：打开文件</span>
+        <span class="kt">int</span> <span class="n">ch</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="n">read</span><span class="p">();</span>   <span class="c1">// 使用</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"读到: "</span> <span class="o">&lt;&lt;</span> <span class="n">ch</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>
+    <span class="p">}</span>  <span class="c1">// 离开作用域 → 析构自动关闭文件</span>
+    <span class="c1">// 即使上面 read() 抛异常，析构也会执行 ✅</span>
+<span class="p">}</span>
+</code></pre></div></div><blockquote><p><strong>新人疑问：<code class="language-plaintext highlighter-rouge">std::FILE</code> 是哪来的？和我们自定义的 <code class="language-plaintext highlighter-rouge">File</code> 类有关系吗？</strong></p><p><strong>完全没关系</strong>，只是名字看起来像。区分一下：</p><table><thead><tr><th>名字</th><th>来源</th><th>是什么</th><th>用法</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">File</code></td><td><strong>我们自己定义的类</strong>（本笔记里的 RAII 示例）</td><td>C++ 类</td><td><code class="language-plaintext highlighter-rouge">File f("test.txt");</code></td></tr><tr><td><code class="language-plaintext highlighter-rouge">FILE</code></td><td><strong>C 标准库</strong> <code class="language-plaintext highlighter-rouge">&lt;cstdio&gt;</code> 里定义的结构体类型</td><td>C 语言时代的文件句柄</td><td><code class="language-plaintext highlighter-rouge">std::FILE* handle = std::fopen(...);</code></td></tr></tbody></table><p><strong><code class="language-plaintext highlighter-rouge">std::FILE</code> 是什么</strong>：</p><ul><li>C 标准库 <code class="language-plaintext highlighter-rouge">&lt;stdio.h&gt;</code> 里有一个 <code class="language-plaintext highlighter-rouge">FILE</code> 结构体，代表”打开的文件”</li><li>C++ 把 C 标准库搬进 <code class="language-plaintext highlighter-rouge">std</code> 命名空间，所以 <code class="language-plaintext highlighter-rouge">&lt;cstdio&gt;</code> 里的 <code class="language-plaintext highlighter-rouge">FILE</code> 在 C++ 中写成 <code class="language-plaintext highlighter-rouge">std::FILE</code></li><li><code class="language-plaintext highlighter-rouge">std::FILE*</code> 就是”指向 FILE 结构体的指针”，是 C 语言操作文件的句柄</li></ul><p><strong>C++ 包裹 C 头文件的惯例</strong>：</p><table><thead><tr><th>C 头文件</th><th>C++ 头文件</th><th>类型/函数</th><th>说明</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">&lt;stdio.h&gt;</code></td><td><code class="language-plaintext highlighter-rouge">&lt;cstdio&gt;</code></td><td><code class="language-plaintext highlighter-rouge">FILE</code> → <code class="language-plaintext highlighter-rouge">std::FILE</code>、<code class="language-plaintext highlighter-rouge">fopen</code> → <code class="language-plaintext highlighter-rouge">std::fopen</code></td><td>去掉 .h，加 c 前缀，放进 std</td></tr><tr><td><code class="language-plaintext highlighter-rouge">&lt;stdlib.h&gt;</code></td><td><code class="language-plaintext highlighter-rouge">&lt;cstdlib&gt;</code></td><td><code class="language-plaintext highlighter-rouge">malloc</code> → <code class="language-plaintext highlighter-rouge">std::malloc</code></td><td>同上</td></tr><tr><td><code class="language-plaintext highlighter-rouge">&lt;string.h&gt;</code></td><td><code class="language-plaintext highlighter-rouge">&lt;cstring&gt;</code></td><td><code class="language-plaintext highlighter-rouge">strlen</code> → <code class="language-plaintext highlighter-rouge">std::strlen</code></td><td>同上</td></tr><tr><td><code class="language-plaintext highlighter-rouge">&lt;math.h&gt;</code></td><td><code class="language-plaintext highlighter-rouge">&lt;cmath&gt;</code></td><td><code class="language-plaintext highlighter-rouge">sqrt</code> → <code class="language-plaintext highlighter-rouge">std::sqrt</code></td><td>同上</td></tr></tbody></table><p>规则：C 的 <code class="language-plaintext highlighter-rouge">&lt;xxx.h&gt;</code> → C++ 的 <code class="language-plaintext highlighter-rouge">&lt;cxxx&gt;</code>，内容放进 <code class="language-plaintext highlighter-rouge">std</code> 命名空间。两种写法都能用，但 C++ 推荐用 <code class="language-plaintext highlighter-rouge">&lt;cxxx&gt;</code> + <code class="language-plaintext highlighter-rouge">std::</code> 前缀。</p><p><strong>本例的关系</strong>：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">File</span> <span class="p">{</span>                  <span class="c1">// ← 我们写的 C++ RAII 类</span>
+<span class="nl">private:</span>
+    <span class="n">std</span><span class="o">::</span><span class="kt">FILE</span><span class="o">*</span> <span class="n">handle_</span><span class="p">;</span>       <span class="c1">// ← C 标准库的文件句柄，被我们包装起来</span>
+<span class="p">};</span>
+<span class="c1">// File 是 C++ 类，内部用 std::FILE* 这个 C 类型干活</span>
+<span class="c1">// 相当于给 C 的 FILE 加了一层 RAII 外壳</span>
+</code></pre></div></div><p><strong>记忆口诀</strong>：<code class="language-plaintext highlighter-rouge">File</code> 是我们写的”盒子”，<code class="language-plaintext highlighter-rouge">std::FILE*</code> 是盒子里装的”C 语言零件”。</p></blockquote><blockquote><p><strong>新人疑问一：哪里体现了 RAII？</strong></p><p>RAII 的核心是”<strong>资源获取即初始化，资源释放即析构</strong>“。对照代码看：</p><table><thead><tr><th>RAII 原则</th><th>对应代码</th><th>说明</th></tr></thead><tbody><tr><td>资源获取即初始化</td><td>构造函数里 <code class="language-plaintext highlighter-rouge">std::fopen(path, "rb")</code></td><td>对象<strong>创建时</strong>就打开文件</td></tr><tr><td>资源释放即析构</td><td>析构函数里 <code class="language-plaintext highlighter-rouge">std::fclose(handle_)</code></td><td>对象<strong>销毁时</strong>就关闭文件</td></tr><tr><td>作用域管理生命周期</td><td><code class="language-plaintext highlighter-rouge">File f("test.txt")</code> 在 <code class="language-plaintext highlighter-rouge">{}</code> 内</td><td>离开 <code class="language-plaintext highlighter-rouge">{}</code> 自动调用析构</td></tr></tbody></table><p><strong>为什么这就是 RAII</strong>：你不需要手动调 <code class="language-plaintext highlighter-rouge">f.close()</code>，只要 <code class="language-plaintext highlighter-rouge">f</code> 离开作用域（<code class="language-plaintext highlighter-rouge">}</code>），C++ 保证析构函数一定执行，文件一定被关闭。即使中间抛异常也不会漏掉。</p><p>对比非 RAII 的写法（手动管理）：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// ❌ 非 RAII：手动打开/关闭，容易漏</span>
+<span class="kt">FILE</span><span class="o">*</span> <span class="n">handle</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">fopen</span><span class="p">(</span><span class="s">"test.txt"</span><span class="p">,</span> <span class="s">"rb"</span><span class="p">);</span>
+<span class="n">do_something</span><span class="p">();</span>       <span class="c1">// 如果这里抛异常...</span>
+<span class="n">std</span><span class="o">::</span><span class="n">fclose</span><span class="p">(</span><span class="n">handle</span><span class="p">);</span>  <span class="c1">// ← 这行不会执行！文件句柄泄漏</span>
+
+<span class="c1">// ✅ RAII：构造打开，析构关闭</span>
+<span class="p">{</span>
+    <span class="n">File</span> <span class="n">f</span><span class="p">(</span><span class="s">"test.txt"</span><span class="p">);</span>  <span class="c1">// 打开</span>
+    <span class="n">do_something</span><span class="p">();</span>      <span class="c1">// 即使抛异常...</span>
+<span class="p">}</span>                        <span class="c1">// 析构仍执行，自动关闭 ✅</span>
+</code></pre></div></div><p><strong>RAII 的本质</strong>：把”资源”绑定到”对象的生命周期”上，让 C++ 的作用域规则替你自动管理资源。这种思想可以推广到任何资源——文件、锁、内存、GPU 显存、CUDA Stream。</p></blockquote><blockquote><p><strong>新人疑问二：<code class="language-plaintext highlighter-rouge">explicit</code> 是什么意思？</strong></p><p><code class="language-plaintext highlighter-rouge">explicit</code> 修饰构造函数，<strong>禁止编译器做隐式类型转换</strong>。</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">explicit</span> <span class="n">File</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">path</span><span class="p">)</span>
+</code></pre></div></div><p><strong>没有 <code class="language-plaintext highlighter-rouge">explicit</code> 会发生什么</strong>：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">File</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="n">File</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">path</span><span class="p">);</span>  <span class="c1">// 没有 explicit</span>
+    <span class="c1">// ...</span>
+<span class="p">};</span>
+
+<span class="kt">void</span> <span class="n">process</span><span class="p">(</span><span class="n">File</span> <span class="n">f</span><span class="p">)</span> <span class="p">{</span>      <span class="c1">// 函数参数是 File 类型</span>
+    <span class="c1">// ...</span>
+<span class="p">}</span>
+
+<span class="n">process</span><span class="p">(</span><span class="s">"test.txt"</span><span class="p">);</span>  <span class="c1">// ⚠️ 编译器会隐式转换！</span>
+<span class="c1">// 等价于：process(File("test.txt"))</span>
+<span class="c1">// 你可能根本不想打开文件，但编译器"好心"帮你开了一个</span>
+</code></pre></div></div><p><strong>加了 <code class="language-plaintext highlighter-rouge">explicit</code> 后</strong>：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">File</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">explicit</span> <span class="n">File</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">path</span><span class="p">);</span>  <span class="c1">// 加了 explicit</span>
+    <span class="c1">// ...</span>
+<span class="p">};</span>
+
+<span class="n">process</span><span class="p">(</span><span class="s">"test.txt"</span><span class="p">);</span>        <span class="c1">// ❌ 编译错误！不能隐式转换</span>
+<span class="n">process</span><span class="p">(</span><span class="n">File</span><span class="p">(</span><span class="s">"test.txt"</span><span class="p">));</span>  <span class="c1">// ✅ 必须显式构造</span>
+</code></pre></div></div><p><strong>什么时候用 <code class="language-plaintext highlighter-rouge">explicit</code></strong>：</p><ul><li>构造函数<strong>只有一个参数</strong>时，建议加 <code class="language-plaintext highlighter-rouge">explicit</code></li><li>防止意外的隐式转换导致 bug</li><li>多参数构造函数一般不需要（C++11 后多参数也能隐式转换，但少见）</li></ul><p><strong>记忆口诀</strong>：<code class="language-plaintext highlighter-rouge">explicit</code> = “<strong>别替我自作主张</strong>“。强迫调用者明确写出构造，避免编译器偷偷帮你转换。</p></blockquote><h3 id="43-raii-的优势">4.3 RAII 的优势</h3><table><thead><tr><th>手动管理</th><th>RAII</th></tr></thead><tbody><tr><td>忘记 delete → 泄漏</td><td>离开作用域自动释放</td></tr><tr><td>异常路径忘记 delete → 泄漏</td><td>异常时析构自动执行</td></tr><tr><td>重复 delete → 崩溃</td><td>一个对象只析构一次</td></tr><tr><td>心智负担重</td><td>像写 Python 一样省心</td></tr></tbody></table><h3 id="44-标准库已有的-raii-类型">4.4 标准库已有的 RAII 类型</h3><blockquote><p><strong>原则：优先用标准库已有的，不要重复造轮子。</strong></p></blockquote><table><thead><tr><th>标准库类型</th><th>管理的资源</th><th>用途</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">std::vector</code></td><td>动态数组</td><td>替代 <code class="language-plaintext highlighter-rouge">new[]</code> / <code class="language-plaintext highlighter-rouge">delete[]</code></td></tr><tr><td><code class="language-plaintext highlighter-rouge">std::string</code></td><td>字符串</td><td>替代 <code class="language-plaintext highlighter-rouge">char*</code></td></tr><tr><td><code class="language-plaintext highlighter-rouge">std::fstream</code></td><td>文件</td><td>替代 <code class="language-plaintext highlighter-rouge">fopen</code> / <code class="language-plaintext highlighter-rouge">fclose</code></td></tr><tr><td><code class="language-plaintext highlighter-rouge">std::lock_guard</code></td><td>互斥锁</td><td>替代 <code class="language-plaintext highlighter-rouge">lock()</code> / <code class="language-plaintext highlighter-rouge">unlock()</code></td></tr><tr><td><code class="language-plaintext highlighter-rouge">std::unique_ptr</code></td><td>堆对象（唯一）</td><td>替代 <code class="language-plaintext highlighter-rouge">new</code> / <code class="language-plaintext highlighter-rouge">delete</code></td></tr><tr><td><code class="language-plaintext highlighter-rouge">std::shared_ptr</code></td><td>堆对象（共享）</td><td>引用计数管理</td></tr></tbody></table><hr /><h2 id="五智能指针与所有权">五、智能指针与所有权</h2><h3 id="51-为什么要智能指针">5.1 为什么要智能指针</h3><p>裸指针的问题：你不知道谁负责 <code class="language-plaintext highlighter-rouge">delete</code>。</p><blockquote><p><strong>什么是裸指针？</strong></p><p><strong>裸指针（raw pointer）</strong> 就是直接用 <code class="language-plaintext highlighter-rouge">*</code> 声明的普通指针，比如 <code class="language-plaintext highlighter-rouge">int*</code>、<code class="language-plaintext highlighter-rouge">float*</code>、<code class="language-plaintext highlighter-rouge">FILE*</code>。它<strong>只是存一个地址</strong>，不附带任何额外信息——不知道指向的对象多大、不知道该不该释放、不知道谁来释放。</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span><span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">int</span><span class="p">(</span><span class="mi">42</span><span class="p">);</span>     <span class="c1">// p 是裸指针，指向堆上的 int</span>
+<span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">q</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">x</span><span class="p">;</span>              <span class="c1">// q 是裸指针，指向栈上的 int</span>
+</code></pre></div></div><p><strong>裸指针 vs 智能指针对比</strong>：</p><table><thead><tr><th>特性</th><th>裸指针 <code class="language-plaintext highlighter-rouge">int*</code></th><th>智能指针 <code class="language-plaintext highlighter-rouge">unique_ptr&lt;int&gt;</code></th></tr></thead><tbody><tr><td>存什么</td><td>只存地址</td><td>存地址 + 所有权信息</td></tr><tr><td>谁负责 delete</td><td><strong>不知道！</strong> 要靠人记</td><td>自动 delete（离开作用域）</td></tr><tr><td>会不会忘记 delete</td><td>很容易忘</td><td>不会（RAII 自动处理）</td></tr><tr><td>能不能知道是否有效</td><td>不能（可能悬空）</td><td>能（unique_ptr 为空就是没有）</td></tr><tr><td>内存开销</td><td>零（就是一个地址）</td><td>几乎零（unique_ptr 和裸指针一样大）</td></tr></tbody></table><p><strong>裸指针的典型用法</strong>（仍然合理的场景）：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// ① 函数参数：只借用，不拥有（这种用法 OK）</span>
+<span class="kt">void</span> <span class="nf">print</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span> <span class="n">p</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">p</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>  <span class="c1">// 只是读一下，不管 delete</span>
+<span class="p">}</span>
+
+<span class="c1">// ② 指向栈变量的指针（不需要 delete）</span>
+<span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">x</span><span class="p">;</span>  <span class="c1">// p 指向栈变量，栈变量离开作用域自动销毁，不用 delete</span>
+
+<span class="c1">// ③ C 风格 API 返回的指针（如 malloc 的结果，要用 free 释放）</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">arr</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
+<span class="n">free</span><span class="p">(</span><span class="n">arr</span><span class="p">);</span>  <span class="c1">// C 风格，用 free 不是 delete</span>
+</code></pre></div></div><p><strong>裸指针出问题的场景</strong>（智能指针要解决的）：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 问题 1：忘记 delete → 内存泄漏</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">int</span><span class="p">(</span><span class="mi">42</span><span class="p">);</span>
+<span class="c1">// ... 用完忘了 delete</span>
+<span class="c1">// 这块内存永远不释放</span>
+
+<span class="c1">// 问题 2：delete 后继续使用 → 悬空指针</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">int</span><span class="p">(</span><span class="mi">42</span><span class="p">);</span>
+<span class="k">delete</span> <span class="n">p</span><span class="p">;</span>
+<span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>  <span class="c1">// ❌ UB！p 指向的内存已释放</span>
+
+<span class="c1">// 问题 3：delete 两次 → 崩溃</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">int</span><span class="p">(</span><span class="mi">42</span><span class="p">);</span>
+<span class="k">delete</span> <span class="n">p</span><span class="p">;</span>
+<span class="k">delete</span> <span class="n">p</span><span class="p">;</span>  <span class="c1">// ❌ 重复释放</span>
+
+<span class="c1">// 问题 4：所有权不明（最核心问题）</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">int</span><span class="p">(</span><span class="mi">42</span><span class="p">);</span>
+<span class="n">process</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>  <span class="c1">// process 会 delete 吗？不知道！</span>
+<span class="c1">// 如果 process delete 了，这里再用 p 就崩</span>
+<span class="c1">// 如果 process 没 delete，这里不 delete 就泄漏</span>
+</code></pre></div></div></blockquote><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 谁该 delete p？调用者还是函数？</span>
+<span class="kt">void</span> <span class="nf">process</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span> <span class="n">p</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">p</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>
+    <span class="c1">// delete p;  ← 该不该在这里 delete？</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">int</span><span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">(</span><span class="mi">42</span><span class="p">);</span>
+    <span class="n">process</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+    <span class="c1">// delete p;  ← 还是该在这里 delete？</span>
+    <span class="c1">// 如果 process 里删了，这里再删就崩了</span>
+<span class="p">}</span>
+</code></pre></div></div><p>智能指针解决了这个问题：<strong>类型即文档</strong>——看到 <code class="language-plaintext highlighter-rouge">unique_ptr</code> 就知道所有权在它手里，看到 <code class="language-plaintext highlighter-rouge">shared_ptr</code> 就知道多个地方共享。</p><h3 id="52-三种智能指针">5.2 三种智能指针</h3><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;memory&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;vector&gt;</span><span class="c1">   // 修复1：补充vector头文件</span><span class="cp">
+</span>
+<span class="k">struct</span> <span class="nc">Buffer</span> <span class="p">{</span>
+    <span class="n">Buffer</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">n</span><span class="p">)</span> <span class="o">:</span> <span class="n">data</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Buffer 创建</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span> <span class="p">}</span>
+    <span class="o">~</span><span class="n">Buffer</span><span class="p">()</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Buffer 销毁</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">data</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div><blockquote><p><strong>新人疑问：为什么用 <code class="language-plaintext highlighter-rouge">std::size_t</code> 而不是 <code class="language-plaintext highlighter-rouge">int</code>？</strong></p><p><strong>核心原因</strong>：<code class="language-plaintext highlighter-rouge">std::size_t</code> 是专门用来表示”大小/个数/索引”的<strong>无符号整数</strong>类型，比 <code class="language-plaintext highlighter-rouge">int</code> 更安全也更准确。</p><p><strong>① 容量匹配——能表示更大的范围</strong></p><table><thead><tr><th>类型</th><th>64 位系统大小</th><th>范围</th><th>能表示的最大数组大小</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">int</code></td><td>4 字节</td><td>-21 亿 ~ 21 亿</td><td>21 亿</td></tr><tr><td><code class="language-plaintext highlighter-rouge">std::size_t</code></td><td><strong>8 字节</strong></td><td>0 ~ 1844 京</td><td>1844 京</td></tr></tbody></table><p><code class="language-plaintext highlighter-rouge">std::vector::size()</code> 返回的就是 <code class="language-plaintext highlighter-rouge">std::size_t</code>。如果要存 30 亿个 <code class="language-plaintext highlighter-rouge">float</code>（约 12GB），<code class="language-plaintext highlighter-rouge">int</code> 装不下，<code class="language-plaintext highlighter-rouge">std::size_t</code> 可以。</p><p><strong>② 语义匹配——”大小”不可能是负数</strong></p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Buffer</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">n</span><span class="p">);</span>   <span class="c1">// n 是元素个数，永远 ≥ 0，用无符号类型 ✅</span>
+<span class="n">Buffer</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">);</span>           <span class="c1">// n 理论上可能是 -5？毫无意义 ❌</span>
+</code></pre></div></div><p><code class="language-plaintext highlighter-rouge">std::size_t</code> 是<strong>无符号</strong>的，类型本身就在声明”这个值不可能是负数”。</p><p><strong>③ 避免警告——和标准库 API 对齐</strong></p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">data</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>   <span class="c1">// ⚠️ 编译器警告：int → size_t 隐式转换</span>
+                            <span class="c1">// 如果 n 是负数，会变成巨大的无符号数！</span>
+
+<span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">data</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>   <span class="c1">// ✅ 类型完全匹配，无警告</span>
+</code></pre></div></div><p><strong>④ 避免比较时的坑</strong></p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
+
+<span class="c1">// ❌ 危险：int 和 size_t 比较</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">v</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// 警告：有符号/无符号比较</span>
+ <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="c1">// ✅ 正确</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">v</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// 类型一致</span>
+ <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div></div><p><strong>最坑的场景——无符号下溢</strong>：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>       <span class="c1">// 空数组</span>
+<span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">v</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>     <span class="c1">// ⚠️ 灾难！</span>
+<span class="c1">// v.size() = 0（size_t 无符号）</span>
+<span class="c1">// 0 - 1 = 18446744073709551615（无符号下溢）</span>
+<span class="c1">// 赋给 int 后变成 -1（如果幸运）</span>
+</code></pre></div></div><p><strong>选择决策表</strong>：</p><table><thead><tr><th>场景</th><th>推荐</th><th>原因</th></tr></thead><tbody><tr><td>数组/容器大小</td><td><code class="language-plaintext highlighter-rouge">std::size_t</code></td><td>和标准库对齐</td></tr><tr><td>数组索引</td><td><code class="language-plaintext highlighter-rouge">std::size_t</code></td><td>和 <code class="language-plaintext highlighter-rouge">.size()</code> 类型一致</td></tr><tr><td>内存字节数</td><td><code class="language-plaintext highlighter-rouge">std::size_t</code></td><td><code class="language-plaintext highlighter-rouge">malloc</code>/<code class="language-plaintext highlighter-rouge">sizeof</code> 都返回 <code class="language-plaintext highlighter-rouge">size_t</code></td></tr><tr><td>可能是负数的值</td><td><code class="language-plaintext highlighter-rouge">int</code></td><td>比如温度、坐标差</td></tr></tbody></table><p><strong>记忆口诀</strong>：<strong>“大小用 size_t，正负用 int”</strong>——凡是表示”多少个”“多大”的用 <code class="language-plaintext highlighter-rouge">std::size_t</code>，可能为负的用 <code class="language-plaintext highlighter-rouge">int</code>。</p></blockquote><p><strong>① <code class="language-plaintext highlighter-rouge">std::unique_ptr</code>——唯一所有权（默认首选）</strong></p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">use_unique</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// 创建</span>
+    <span class="k">auto</span> <span class="n">buf</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">Buffer</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">1024</span><span class="p">);</span>  <span class="c1">// buf 独占这个 Buffer</span>
+
+    <span class="c1">// 使用</span>
+    <span class="n">buf</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span><span class="n">f</span><span class="p">;</span>
+
+    <span class="c1">// 不能复制</span>
+    <span class="c1">// auto buf2 = buf;  // ❌ 编译错误！unique_ptr 不能复制</span>
+
+    <span class="c1">// 可以移动（转移所有权）</span>
+    <span class="k">auto</span> <span class="n">buf2</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">buf</span><span class="p">);</span>  <span class="c1">// buf2 接管，buf 变成 nullptr</span>
+
+    <span class="c1">// buf 现在是空的</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">buf</span> <span class="o">==</span> <span class="nb">nullptr</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"buf 已经转移了</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>  <span class="c1">// buf2 离开作用域 → 自动 delete Buffer ✅</span>
+</code></pre></div></div><p><strong>② <code class="language-plaintext highlighter-rouge">std::shared_ptr</code>——共享所有权</strong></p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">use_shared</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">a</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">Buffer</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">512</span><span class="p">);</span>  <span class="c1">// 引用计数 = 1</span>
+
+    <span class="p">{</span>
+        <span class="k">auto</span> <span class="n">b</span> <span class="o">=</span> <span class="n">a</span><span class="p">;</span>  <span class="c1">// 复制，引用计数 = 2</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"引用计数: "</span> <span class="o">&lt;&lt;</span> <span class="n">a</span><span class="p">.</span><span class="n">use_count</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>  <span class="c1">// 2</span>
+    <span class="p">}</span>  <span class="c1">// b 离开作用域，引用计数 = 1，不销毁</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"引用计数: "</span> <span class="o">&lt;&lt;</span> <span class="n">a</span><span class="p">.</span><span class="n">use_count</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>  <span class="c1">// 1</span>
+<span class="p">}</span>  <span class="c1">// a 离开作用域，引用计数 = 0 → 自动 delete Buffer ✅</span>
+</code></pre></div></div><p><strong>③ <code class="language-plaintext highlighter-rouge">std::weak_ptr</code>——不增加引用计数的观察者</strong></p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">use_weak</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">shared</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">Buffer</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">256</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">weak_ptr</span><span class="o">&lt;</span><span class="n">Buffer</span><span class="o">&gt;</span> <span class="n">weak</span> <span class="o">=</span> <span class="n">shared</span><span class="p">;</span>  <span class="c1">// 不增加引用计数</span>
+
+    <span class="c1">// 使用前要 lock() 检查是否还有效</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">auto</span> <span class="n">locked</span> <span class="o">=</span> <span class="n">weak</span><span class="p">.</span><span class="n">lock</span><span class="p">())</span> <span class="p">{</span>  <span class="c1">// locked 是 shared_ptr</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Buffer 还活着，大小: "</span> <span class="o">&lt;&lt;</span> <span class="n">locked</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Buffer 已被销毁</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">shared</span><span class="p">.</span><span class="n">reset</span><span class="p">();</span>  <span class="c1">// 手动释放 shared_ptr，引用计数 = 0 → Buffer 销毁</span>
+
+    <span class="c1">// 再检查</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">auto</span> <span class="n">locked</span> <span class="o">=</span> <span class="n">weak</span><span class="p">.</span><span class="n">lock</span><span class="p">())</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"还活着</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Buffer 已被销毁</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>  <span class="c1">// ← 走这里</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div><h3 id="53-智能指针对比表">5.3 智能指针对比表</h3><table><thead><tr><th>类型</th><th>语义</th><th>能复制吗</th><th>成本</th><th>适用场景</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">unique_ptr&lt;T&gt;</code></td><td>唯一拥有</td><td>❌ 只能移动</td><td>接近裸指针（零开销）</td><td><strong>默认首选</strong></td></tr><tr><td><code class="language-plaintext highlighter-rouge">shared_ptr&lt;T&gt;</code></td><td>共享拥有</td><td>✅</td><td>有引用计数+控制块开销</td><td>多处需要持有同一对象</td></tr><tr><td><code class="language-plaintext highlighter-rouge">weak_ptr&lt;T&gt;</code></td><td>不拥有的观察者</td><td>✅</td><td>轻，配合 shared_ptr 使用</td><td>打破循环引用、缓存</td></tr><tr><td><code class="language-plaintext highlighter-rouge">T*</code></td><td>通常不拥有</td><td>✅</td><td>零</td><td>函数参数（只读/借用）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">T&amp;</code></td><td>不拥有的别名</td><td>❌</td><td>零</td><td>函数参数（必须存在）</td></tr></tbody></table><h3 id="54-循环引用问题">5.4 循环引用问题</h3><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;memory&gt;</span><span class="cp">
+</span>
+<span class="k">struct</span> <span class="nc">Node</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Node</span><span class="o">&gt;</span> <span class="n">next</span><span class="p">;</span>  <span class="c1">// 如果两个 Node 互相引用...</span>
+    <span class="o">~</span><span class="n">Node</span><span class="p">()</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Node 销毁</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kt">void</span> <span class="n">memory_leak</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">a</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">Node</span><span class="o">&gt;</span><span class="p">();</span>  <span class="c1">// a 引用计数 = 1</span>
+    <span class="k">auto</span> <span class="n">b</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">Node</span><span class="o">&gt;</span><span class="p">();</span>  <span class="c1">// b 引用计数 = 1</span>
+
+    <span class="n">a</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">b</span><span class="p">;</span>  <span class="c1">// b 引用计数 = 2</span>
+    <span class="n">b</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">a</span><span class="p">;</span>  <span class="c1">// a 引用计数 = 2  ← 循环引用！</span>
+<span class="p">}</span>
+<span class="c1">// a 离开作用域 → a 引用计数 = 1（b-&gt;next 还指着 a）</span>
+<span class="c1">// b 离开作用域 → b 引用计数 = 1（a-&gt;next 还指着 b）</span>
+<span class="c1">// 两个都不会被销毁 → 内存泄漏！</span>
+
+<span class="c1">// 解决方案：用 weak_ptr 打破循环</span>
+<span class="k">struct</span> <span class="nc">NodeFixed</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">NodeFixed</span><span class="o">&gt;</span> <span class="n">next</span><span class="p">;</span>       <span class="c1">// 强引用</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">weak_ptr</span><span class="o">&lt;</span><span class="n">NodeFixed</span><span class="o">&gt;</span> <span class="n">prev</span><span class="p">;</span>         <span class="c1">// 弱引用（不增加计数）</span>
+<span class="p">};</span>
+</code></pre></div></div><blockquote><p><strong>常见误区：定义了 <code class="language-plaintext highlighter-rouge">weak_ptr</code> 但还是泄漏？</strong></p><p>新手常犯的错误：以为”只要结构体里有 <code class="language-plaintext highlighter-rouge">weak_ptr</code> 成员就自动防泄漏”，但实际还是用 <code class="language-plaintext highlighter-rouge">shared_ptr</code> 互相引用。</p><p><strong>❌ 错误用法（还是泄漏）</strong>：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="nc">NodeFixed</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">NodeFixed</span><span class="o">&gt;</span> <span class="n">next</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">weak_ptr</span><span class="o">&lt;</span><span class="n">NodeFixed</span><span class="o">&gt;</span> <span class="n">prev</span><span class="p">;</span>  <span class="c1">// 定义了但没用！</span>
+<span class="p">};</span>
+
+<span class="kt">void</span> <span class="n">memory_no_leak_wrong</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">a</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">NodeFixed</span><span class="o">&gt;</span><span class="p">();</span>
+    <span class="k">auto</span> <span class="n">b</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">NodeFixed</span><span class="o">&gt;</span><span class="p">();</span>
+
+    <span class="n">a</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">b</span><span class="p">;</span>   <span class="c1">// shared_ptr：b 计数 = 2</span>
+    <span class="n">b</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">a</span><span class="p">;</span>   <span class="c1">// ⚠️ 还是 shared_ptr！和 Node 一模一样，循环引用！</span>
+                    <span class="c1">// prev 根本没用，还是泄漏</span>
+<span class="p">}</span>
+</code></pre></div></div><p><strong>✅ 正确用法（一个方向用 shared，另一个方向用 weak）</strong>：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">memory_no_leak_fixed</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">a</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">NodeFixed</span><span class="o">&gt;</span><span class="p">();</span>  <span class="c1">// a 计数 = 1</span>
+    <span class="k">auto</span> <span class="n">b</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">NodeFixed</span><span class="o">&gt;</span><span class="p">();</span>  <span class="c1">// b 计数 = 1</span>
+
+    <span class="n">a</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">b</span><span class="p">;</span>   <span class="c1">// shared_ptr：a 持有 b → b 计数 = 2</span>
+    <span class="n">b</span><span class="o">-&gt;</span><span class="n">prev</span> <span class="o">=</span> <span class="n">a</span><span class="p">;</span>   <span class="c1">// weak_ptr：b 弱引用 a → a 计数不变 = 1 ✅</span>
+                    <span class="c1">// weak_ptr 不增加引用计数！</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">a</span><span class="p">.</span><span class="n">use_count</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>  <span class="c1">// 1（只有局部变量 a）</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">b</span><span class="p">.</span><span class="n">use_count</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>  <span class="c1">// 2（局部变量 b + a-&gt;next）</span>
+<span class="p">}</span>
+<span class="c1">// 函数结束：</span>
+<span class="c1">// 局部 a 销毁 → a 计数 1→0 → a 销毁 ✅ → a-&gt;next 释放 → b 计数 2→1</span>
+<span class="c1">// 局部 b 销毁 → b 计数 1→0 → b 销毁 ✅</span>
+<span class="c1">// 两个都销毁，无泄漏！</span>
+</code></pre></div></div><p><strong>核心认知</strong>：<code class="language-plaintext highlighter-rouge">weak_ptr</code> 不是”定义了就自动防泄漏”，而是<strong>需要你正确使用</strong>——把循环中的一条边改成 <code class="language-plaintext highlighter-rouge">weak_ptr</code>，而不是继续用 <code class="language-plaintext highlighter-rouge">shared_ptr</code>。</p><table><thead><tr><th>用法</th><th>结果</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">a-&gt;next = b; b-&gt;next = a;</code>（两都用 shared）</td><td>❌ 循环引用，泄漏</td></tr><tr><td><code class="language-plaintext highlighter-rouge">a-&gt;next = b; b-&gt;prev = a;</code>（一强一弱）</td><td>✅ 打破循环，无泄漏</td></tr></tbody></table><p><strong>典型场景</strong>：双向链表、树结构的父指针。规则是”父→子用 <code class="language-plaintext highlighter-rouge">shared_ptr</code>，子→父用 <code class="language-plaintext highlighter-rouge">weak_ptr</code>“。</p></blockquote><blockquote><p><strong>原则</strong>：如果所有权没有共享需求，不要使用 <code class="language-plaintext highlighter-rouge">shared_ptr</code>。”避免思考所有权”不是共享所有权的合理理由。</p></blockquote><hr /><h2 id="六拷贝移动与-rule-of-zero">六、拷贝、移动与 Rule of Zero</h2><h3 id="61-拷贝-vs-移动">6.1 拷贝 vs 移动</h3><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">make_buffer</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">values</span><span class="p">(</span><span class="mi">1'000'000</span><span class="p">,</span> <span class="mf">0.0</span><span class="n">f</span><span class="p">);</span>  <span class="c1">// 100万个 float</span>
+    <span class="k">return</span> <span class="n">values</span><span class="p">;</span>  <span class="c1">// 编译器通常消除复制（RVO），必要时可移动</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">a</span> <span class="o">=</span> <span class="n">make_buffer</span><span class="p">();</span>  <span class="c1">// a 拥有这 100万个 float</span>
+
+    <span class="k">auto</span> <span class="n">b</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>   <span class="c1">// 移动：b 接管内部数据，a 变成空壳</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"a.size() = "</span> <span class="o">&lt;&lt;</span> <span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>   <span class="c1">// 0（a 被掏空了）</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"b.size() = "</span> <span class="o">&lt;&lt;</span> <span class="n">b</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>   <span class="c1">// 1000000</span>
+<span class="p">}</span>
+</code></pre></div></div><p><strong>图解拷贝 vs 移动</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>拷贝（copy）：                 移动（move）：
+  a: [1,2,3,4,...]              a: [1,2,3,4,...]
+         │                            │
+         ▼ 复制所有数据                ▼ 只改指针指向
+  b: [1,2,3,4,...]              b: [1,2,3,4,...]
+                                a: []  ← a 被掏空
+  成本：O(n)                    成本：O(1)
+</code></pre></div></div><h3 id="62-rule-of-zero">6.2 Rule of Zero</h3><blockquote><p><strong>如果你只使用标准库的 RAII 类型（vector, string, unique_ptr 等）作为成员变量，就不需要手写析构函数、拷贝构造、移动构造——编译器会自动生成正确的版本。这就是 Rule of Zero。</strong></p></blockquote><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;memory&gt;</span><span class="cp">
+</span>
+<span class="c1">// ✅ Rule of Zero：不需要手写任何特殊函数</span>
+<span class="k">class</span> <span class="nc">GoodClass</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="n">GoodClass</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">n</span><span class="p">)</span> <span class="o">:</span> <span class="n">data_</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">name_</span><span class="p">(</span><span class="s">"default"</span><span class="p">)</span> <span class="p">{}</span>
+
+<span class="nl">private:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">data_</span><span class="p">;</span>     <span class="c1">// vector 自己管内存</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name_</span><span class="p">;</span>            <span class="c1">// string 自己管内存</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">extra_</span><span class="p">;</span>  <span class="c1">// unique_ptr 自己管堆对象</span>
+<span class="p">};</span>
+<span class="c1">// 析构？编译器自动调用 data_、name_、extra_ 的析构</span>
+<span class="c1">// 拷贝？编译器自动逐成员拷贝</span>
+<span class="c1">// 移动？编译器自动逐成员移动</span>
+<span class="c1">// 完美！</span>
+
+<span class="c1">// ❌ 需要手写的场景：直接管理了原始资源</span>
+<span class="k">class</span> <span class="nc">RawClass</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="n">RawClass</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">n</span><span class="p">)</span> <span class="o">:</span> <span class="n">data_</span><span class="p">(</span><span class="k">new</span> <span class="kt">float</span><span class="p">[</span><span class="n">n</span><span class="p">]),</span> <span class="n">size_</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="p">{}</span>
+    <span class="o">~</span><span class="n">RawClass</span><span class="p">()</span> <span class="p">{</span> <span class="k">delete</span><span class="p">[]</span> <span class="n">data_</span><span class="p">;</span> <span class="p">}</span>  <span class="c1">// 必须手写析构</span>
+
+    <span class="c1">// 还需要手写：拷贝构造、拷贝赋值、移动构造、移动赋值</span>
+    <span class="c1">// 因为编译器不知道怎么正确复制/移动你的裸指针</span>
+
+<span class="nl">private:</span>
+    <span class="kt">float</span><span class="o">*</span> <span class="n">data_</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">size_</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div><h3 id="63-不要乱用-stdmove">6.3 不要乱用 std::move</h3><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// ❌ 不要对返回值写 std::move</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">make</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
+    <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>  <span class="c1">// 反而可能阻止返回值优化（RVO）！</span>
+<span class="p">}</span>
+<span class="c1">// ✅ 直接 return</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">make</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
+    <span class="k">return</span> <span class="n">v</span><span class="p">;</span>  <span class="c1">// 编译器自动 RVO 或移动</span>
+<span class="p">}</span>
+
+<span class="c1">// ⚠️ 移动后不要假设源对象还有原内容</span>
+<span class="k">auto</span> <span class="n">a</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">42</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">b</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
+<span class="c1">// a 现在是 nullptr，不要再用 *a</span>
+</code></pre></div></div><hr /><h2 id="七const把不可修改写进接口">七、const：把不可修改写进接口</h2><h3 id="71-const-与指针的三种组合">7.1 const 与指针的三种组合</h3><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">value</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">another</span> <span class="o">=</span> <span class="mi">99</span><span class="p">;</span>
+
+<span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">p1</span><span class="p">;</span>          <span class="c1">// 指向 const float：不能通过 p1 改值</span>
+                          <span class="c1">// ✅ p1 = &amp;another;  ← 可以改指向</span>
+                          <span class="c1">// ❌ *p1 = 3.14;     ← 不能改值</span>
+
+<span class="kt">float</span><span class="o">*</span> <span class="k">const</span> <span class="n">p2</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span> <span class="c1">// const 指针：不能让 p2 改指向</span>
+                          <span class="c1">// ❌ p2 = &amp;another;  ← 不能改指向</span>
+                          <span class="c1">// ✅ *p2 = 3.14;     ← 可以改值（如果 p2 有效）</span>
+
+<span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="k">const</span> <span class="n">p3</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>  <span class="c1">// 两个都 const：都不能改</span>
+                          <span class="c1">// ❌ p3 = &amp;another;</span>
+                          <span class="c1">// ❌ *p3 = 3.14;</span>
+</code></pre></div></div><p><strong>记忆口诀</strong>：<strong>const 在 <code class="language-plaintext highlighter-rouge">*</code> 左边修饰值，在 <code class="language-plaintext highlighter-rouge">*</code> 右边修饰指针</strong>。</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>const float* p1;    // const 在 * 左边 → 不能改 *p1 的值
+float* const p2;    // const 在 * 右边 → 不能改 p2 的指向
+</code></pre></div></div><h3 id="72-const-与成员函数">7.2 const 与成员函数</h3><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">TensorView</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="n">TensorView</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">n</span><span class="p">)</span> <span class="o">:</span> <span class="n">size_</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="p">{}</span>
+
+    <span class="c1">// const 成员函数：承诺不修改对象状态</span>
+    <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">size_</span><span class="p">;</span> <span class="p">}</span>
+    <span class="c1">//                    ^^^^^ 这个 const 表示"这个函数不会修改对象"</span>
+
+    <span class="c1">// 非 const 成员函数：可以修改对象状态</span>
+    <span class="kt">void</span> <span class="n">resize</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span> <span class="n">size_</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="nl">private:</span>
+    <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">size_</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="n">TensorView</span> <span class="n">tv</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>     <span class="c1">// const 对象</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">tv</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>  <span class="c1">// ✅ 可以调用 const 成员函数</span>
+    <span class="c1">// tv.resize(20);            // ❌ 不能调用非 const 成员函数</span>
+
+    <span class="n">TensorView</span> <span class="n">tv2</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>          <span class="c1">// 非 const 对象</span>
+    <span class="n">tv2</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">20</span><span class="p">);</span>              <span class="c1">// ✅ 可以调用</span>
+<span class="p">}</span>
+</code></pre></div></div><h3 id="73-const-的价值">7.3 const 的价值</h3><table><thead><tr><th>价值</th><th>说明</th></tr></thead><tbody><tr><td><strong>编译器帮你检查</strong></td><td>如果 const 函数里不小心改了成员变量，编译器报错</td></tr><tr><td><strong>接口意图清晰</strong></td><td><code class="language-plaintext highlighter-rouge">const T&amp;</code> 参数告诉调用方”我不会改你的数据”</td></tr><tr><td><strong>性能提示</strong></td><td>某些场景编译器可以更好优化 const 代码</td></tr></tbody></table><blockquote><p><strong>注意</strong>：const 有助于编译器和读者验证接口，但<strong>不能自动解决并发安全</strong>与底层别名问题。多线程下即使都是 const 也需要加锁。</p></blockquote><hr /><h2 id="八未定义行为ub为什么危险">八、未定义行为（UB）为什么危险</h2><h3 id="81-什么是未定义行为">8.1 什么是未定义行为</h3><p><strong>未定义行为（Undefined Behavior，UB）</strong>：C++ 标准说”这种情况的行为没有定义”，编译器可以做任何事情——包括不做任何事。</p><p>常见 UB：</p><table><thead><tr><th>UB 类型</th><th>代码示例</th><th>为什么危险</th></tr></thead><tbody><tr><td>数组越界</td><td><code class="language-plaintext highlighter-rouge">values[4]</code> 当 values 只有 4 个元素</td><td>可能不报错，但读到垃圾数据</td></tr><tr><td>悬空引用</td><td>引用了已销毁的局部变量</td><td>可能读到旧数据或垃圾</td></tr><tr><td>有符号整数溢出</td><td><code class="language-plaintext highlighter-rouge">INT_MAX + 1</code></td><td>编译器可能假设不溢出，据此优化出错误结果</td></tr><tr><td>数据竞争</td><td>多线程不加锁读写同一变量</td><td>结果不可预测</td></tr><tr><td>使用未初始化变量</td><td><code class="language-plaintext highlighter-rouge">int x; std::cout &lt;&lt; x;</code></td><td>读到任意值</td></tr><tr><td><code class="language-plaintext highlighter-rouge">delete</code> 后使用</td><td><code class="language-plaintext highlighter-rouge">delete p; *p = 5;</code></td><td>可能崩溃，可能静默出错</td></tr></tbody></table><h3 id="82-ub-为什么不是报错那么简单">8.2 UB 为什么不是”报错”那么简单</h3><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">values</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>  <span class="c1">// 4 个元素，下标 0-3</span>
+    <span class="n">values</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>               <span class="c1">// ❌ 越界！UB！</span>
+
+    <span class="c1">// 可能的结果：</span>
+    <span class="c1">// 1. 程序正常继续运行（静默写入了不该写的内存）</span>
+    <span class="c1">// 2. 程序崩溃（Segmentation Fault）</span>
+    <span class="c1">// 3. 调试版正常，Release 版悄悄算错（编译器优化后行为不同）</span>
+<span class="p">}</span>
+</code></pre></div></div><p><strong>为什么调试版和 Release 版行为不同</strong>：</p><p>编译器可以假设”UB 永远不会发生”，并据此做优化。例如：</p><p>调试版本：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span><span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="o">!=</span> <span class="nb">nullptr</span><span class="p">)</span> <span class="p">{</span>
+    <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span> 
+<span class="p">}</span>
+</code></pre></div></div><p>然后编译器就会认为：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span><span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="o">!=</span> <span class="nb">nullptr</span><span class="p">)</span> <span class="p">{</span>
+    <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>  <span class="c1">// 编译器看到这行，认为 p 不会是 nullptr（否则是 UB）</span>
+<span class="p">}</span>
+<span class="c1">// 优化后：编译器可能直接删除 if 判断，认为"p 肯定不是 nullptr"</span>
+</code></pre></div></div><p>然后会导致Release版本是这样的：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span><span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
+<span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+</code></pre></div></div><p>就会导致错误！</p><blockquote><p><strong>新人疑问：编译器会删掉正确的代码？这不是制造 bug 吗？</strong></p><p>不是”删掉正确的代码”，而是<strong>编译器认为你写的代码不可能执行到 UB 分支</strong>，所以把检查那个分支的判断删掉。问题在于：你的代码<strong>本来就有 UB</strong>，编译器的优化让 UB 的后果更明显了。</p><p><strong>核心逻辑</strong>（编译器的推理过程）：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>① 你的代码里有 *p（解引用 p）
+② 解引用 nullptr 是 UB
+③ C++ 标准说："UB 不会发生"（程序员保证）
+④ 所以 p 肯定不是 nullptr
+⑤ 那 if (p != nullptr) 这个判断永远为 true
+⑥ 永远为 true 的判断是多余的 → 删掉
+</code></pre></div></div><p><strong>具体示例一：空指针检查被删</strong></p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span><span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="n">get_pointer</span><span class="p">();</span>  <span class="c1">// 可能返回 nullptr</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="o">!=</span> <span class="nb">nullptr</span><span class="p">)</span> <span class="p">{</span>      <span class="c1">// 你写的安全检查</span>
+    <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c1">// 你以为：p 是 nullptr 时跳过赋值，安全</span>
+<span class="c1">// 编译器想：*p 不会是 UB → p 肯定不是 nullptr → if 没用 → 删掉</span>
+<span class="c1">// 优化后：*p = 42;  // 直接赋值！</span>
+<span class="c1">// 如果 p 实际是 nullptr → 崩溃！</span>
+</code></pre></div></div><p>Debug 版可能保留 if 判断（不优化），所以能正常跳过；Release 版优化后删掉 if，直接崩。</p><p><strong>具体示例二：数组越界检查被删</strong></p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">arr</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">get_index</span><span class="p">();</span>           <span class="c1">// 可能返回 100</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">)</span> <span class="p">{</span>        <span class="c1">// 你写的越界检查</span>
+    <span class="n">arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>               <span class="c1">// 如果越界，arr[i] 是 UB</span>
+<span class="p">}</span>
+<span class="c1">// 编译器想：arr[i] 不会是 UB → i 肯定在 [0,10) → if 没用 → 删掉</span>
+<span class="c1">// 优化后：arr[i] = 42;  // 直接访问！</span>
+<span class="c1">// 如果 i 实际是 100 → 越界写入，可能崩或损坏其他内存</span>
+</code></pre></div></div><p><strong>具体示例三：有符号整数溢出</strong></p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">INT_MAX</span><span class="p">;</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>        <span class="c1">// 你以为溢出后会变小，检查溢出</span>
+    <span class="n">handle_overflow</span><span class="p">();</span>   <span class="c1">// 处理溢出</span>
+<span class="p">}</span>
+<span class="c1">// 编译器想：有符号溢出是 UB → 不会发生 → x+1 永远 &gt;= x</span>
+<span class="c1">// 所以 if 永远为 false → 整个 if 块删掉</span>
+<span class="c1">// 优化后：什么都不做，溢出处理代码被删了！</span>
+</code></pre></div></div><p><strong>Debug 版 vs Release 版为什么行为不同</strong>：</p><table><thead><tr><th>版本</th><th>优化级别</th><th>if 判断</th><th>行为</th></tr></thead><tbody><tr><td>Debug (<code class="language-plaintext highlighter-rouge">-O0</code>)</td><td>不优化</td><td>保留</td><td>按你写的执行，if 起作用</td></tr><tr><td>Release (<code class="language-plaintext highlighter-rouge">-O2</code>/<code class="language-plaintext highlighter-rouge">-O3</code>)</td><td>优化</td><td>删掉</td><td>直接执行，UB 后果暴露</td></tr></tbody></table><p><strong>总结</strong>：</p><ul><li>编译器<strong>不是在制造 bug</strong>，而是<strong>暴露你代码里本来就有的 bug</strong></li><li>你的代码有 UB，Debug 版碰巧”看起来正常”，Release 版优化后崩溃</li><li>解决方案：<strong>不要写 UB 代码</strong>，用 Sanitizer 检测</li></ul></blockquote><h3 id="83-用-sanitizer-检测-ub">8.3 用 Sanitizer 检测 UB</h3><p>编译时加 <code class="language-plaintext highlighter-rouge">-fsanitize</code> 选项，运行时自动检测 UB：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 编译时启用 AddressSanitizer + UndefinedBehaviorSanitizer</span>
+g++ <span class="nt">-std</span><span class="o">=</span>c++20 <span class="nt">-Wall</span> <span class="nt">-Wextra</span> <span class="nt">-Wpedantic</span> <span class="se">\</span>
+    <span class="nt">-fsanitize</span><span class="o">=</span>address,undefined <span class="nt">-g</span> main.cpp <span class="nt">-o</span> app
+
+./app
+<span class="c"># 如果有越界/UB，会输出详细错误信息</span>
+</code></pre></div></div><table><thead><tr><th>Sanitizer</th><th>检测什么</th><th>用法</th></tr></thead><tbody><tr><td>AddressSanitizer (ASan)</td><td>越界、use-after-free、双重释放</td><td><code class="language-plaintext highlighter-rouge">-fsanitize=address</code></td></tr><tr><td>UndefinedBehaviorSanitizer (UBSan)</td><td>有符号溢出、空指针解引用、整数除零</td><td><code class="language-plaintext highlighter-rouge">-fsanitize=undefined</code></td></tr><tr><td>ThreadSanitizer (TSan)</td><td>数据竞争（多线程不加锁）</td><td><code class="language-plaintext highlighter-rouge">-fsanitize=thread</code></td></tr></tbody></table><blockquote><p><strong>注意</strong>：ASan 和 TSan <strong>不能同时启用</strong>（冲突）。调试时先用 ASan+UBSan，再单独用 TSan 测多线程。</p></blockquote><h3 id="84-完整调试示例">8.4 完整调试示例</h3><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// bug.cpp —— 故意制造 UB 来测试 Sanitizer</span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// Bug 1: 数组越界</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+    <span class="n">v</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>  <span class="c1">// 越界！下标 0-3 才有效</span>
+
+    <span class="c1">// Bug 2: use-after-free</span>
+    <span class="kt">int</span><span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+    <span class="k">delete</span> <span class="n">p</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">p</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>  <span class="c1">// 使用已释放的内存</span>
+
+    <span class="c1">// Bug 3: 有符号整数溢出</span>
+    <span class="kt">int</span> <span class="n">max_val</span> <span class="o">=</span> <span class="mi">2147483647</span><span class="p">;</span>  <span class="c1">// INT_MAX</span>
+    <span class="kt">int</span> <span class="n">overflow</span> <span class="o">=</span> <span class="n">max_val</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>  <span class="c1">// UB！</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">overflow</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 正常编译运行——可能不报错</span>
+g++ <span class="nt">-std</span><span class="o">=</span>c++20 bug.cpp <span class="nt">-o</span> bug
+./bug   <span class="c"># 可能"正常"输出一些垃圾值</span>
+
+<span class="c"># 用 Sanitizer 编译运行——立即报告错误</span>
+g++ <span class="nt">-std</span><span class="o">=</span>c++20 <span class="nt">-fsanitize</span><span class="o">=</span>address,undefined <span class="nt">-g</span> bug.cpp <span class="nt">-o</span> bug_san
+./bug_san
+</code></pre></div></div><p>实际运行 <code class="language-plaintext highlighter-rouge">./bug_san</code> 的完整输出（<strong>注意：ASan 在第一个错误就 abort 了，所以 Bug 2 和 Bug 3 根本没机会执行，下面只看到 Bug 1 的报告</strong>）：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>=================================================================
+==3794==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x502000000020 at pc 0x5bccfe407597 bp 0x7ffd3f620310 sp 0x7ffd3f620300
+WRITE of size 4 at 0x502000000020 thread T0
+    #0 0x5bccfe407596 in main /home/lenck/test/bug.cpp:8
+    #1 0x78875dc2a1c9 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+    #2 0x78875dc2a28a in __libc_start_main_impl ../csu/libc-start.c:360
+    #3 0x5bccfe407384 in _start (/home/lenck/test/bug_san+0x5384) (BuildId: a619cc5344a1bbcfb37eff2742faa578bc8f3f46)
+
+0x502000000020 is located 0 bytes after 16-byte region [0x502000000010,0x502000000020)
+allocated by thread T0 here:
+    #0 0x78875ecfe548 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:95
+    #1 0x5bccfe408c9c in std::__new_allocator&lt;int&gt;::allocate(unsigned long, void const*) /usr/include/c++/13/bits/new_allocator.h:151
+    #2 0x5bccfe408885 in std::allocator&lt;int&gt;::allocate(unsigned long) /usr/include/c++/13/bits/allocator.h:198
+    #3 0x5bccfe408885 in std::allocator_traits&lt;std::allocator&lt;int&gt; &gt;::allocate(std::allocator&lt;int&gt;&amp;, unsigned long) /usr/include/c++/13/bits/alloc_traits.h:482
+    #4 0x5bccfe408885 in std::_Vector_base&lt;int, std::allocator&lt;int&gt; &gt;::_M_allocate(unsigned long) /usr/include/c++/13/bits/stl_vector.h:381
+    #5 0x5bccfe408427 in std::_Vector_base&lt;int, std::allocator&lt;int&gt; &gt;::_M_create_storage(unsigned long) /usr/include/c++/13/bits/stl_vector.h:398
+    #6 0x5bccfe4080f4 in std::_Vector_base&lt;int, std::allocator&lt;int&gt; &gt;::_Vector_base(unsigned long, std::allocator&lt;int&gt; const&amp;) /usr/include/c++/13/bits/stl_vector.h:335
+    #7 0x5bccfe407ab4 in std::vector&lt;int, std::allocator&lt;int&gt; &gt;::vector(unsigned long, std::allocator&lt;int&gt; const&amp;) /usr/include/c++/13/bits/stl_vector.h:557
+    #8 0x5bccfe407513 in main /home/lenck/test/bug.cpp:7
+    #9 0x78875dc2a1c9 in __libc_start_call_main ../sysdeps/nptl/libc-start.c:360
+    ...
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow /home/lenck/test/bug.cpp:8 in main
+Shadow bytes around the buggy address:
+  0x501ffffffd80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x501ffffffe00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  ...
+=&gt;0x502000000000: fa fa 00 00[fa]fa fa fa fa fa fa fa fa fa fa fa
+  0x502000000080: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  ...
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  ...
+==3794==ABORTING
+</code></pre></div></div><blockquote><p>📖 <strong>这份报告怎么读？</strong> 上面这一大堆看起来吓人，但其实有固定结构。<strong>新手不用管那些 <code class="language-plaintext highlighter-rouge">0x5bccfe...</code> 之类的十六进制地址和 <code class="language-plaintext highlighter-rouge">pc/bp/sp</code> 寄存器名</strong>——它们是底层细节，对你定位 bug 没用。你真正需要看的就是 <strong><code class="language-plaintext highlighter-rouge">#0 ... in main /home/lenck/test/bug.cpp:8</code></strong> 这种”文件名:行号”。</p><p>完整的逐块解读（每一行是什么意思、为什么有一大堆 std::vector 内部调用、Shadow bytes 影子内存怎么看、为什么只报了 Bug 1 而 Bug 2/Bug 3 没出现）见 <strong><a href="#附录-aaddresssanitizer-报告详解">附录 A：AddressSanitizer 报告详解</a></strong>。</p></blockquote><hr /><h2 id="九概念速查表">九、概念速查表</h2><table><thead><tr><th>概念</th><th>一句话记忆</th></tr></thead><tbody><tr><td>指针 <code class="language-plaintext highlighter-rouge">T*</code></td><td>存地址，可以为空，可以改指向</td></tr><tr><td>引用 <code class="language-plaintext highlighter-rouge">T&amp;</code></td><td>别名，不能为空，不能改指向</td></tr><tr><td><code class="language-plaintext highlighter-rouge">const T&amp;</code></td><td>只读别名，避免复制，函数参数最常用</td></tr><tr><td>数组退化</td><td>数组传参会退化为指针，丢失长度</td></tr><tr><td><code class="language-plaintext highlighter-rouge">std::span</code></td><td>指针+长度的轻量视图（C++20）</td></tr><tr><td>栈</td><td>自动管理，快，小，离开作用域自动销毁</td></tr><tr><td>堆</td><td>手动管理，慢，大，必须 delete</td></tr><tr><td>RAII</td><td>构造获取资源，析构释放资源，异常安全</td></tr><tr><td><code class="language-plaintext highlighter-rouge">unique_ptr</code></td><td>唯一所有权，默认首选，零开销</td></tr><tr><td><code class="language-plaintext highlighter-rouge">shared_ptr</code></td><td>共享所有权，引用计数，有开销</td></tr><tr><td><code class="language-plaintext highlighter-rouge">weak_ptr</code></td><td>不增加计数的观察者，打破循环引用</td></tr><tr><td>拷贝</td><td>复制数据，O(n)</td></tr><tr><td>移动 <code class="language-plaintext highlighter-rouge">std::move</code></td><td>转移所有权，O(1)，源对象被掏空</td></tr><tr><td>Rule of Zero</td><td>只用 RAII 成员就不需要手写析构/拷贝/移动</td></tr><tr><td><code class="language-plaintext highlighter-rouge">const</code> 成员函数</td><td>承诺不修改对象状态</td></tr><tr><td>UB（未定义行为）</td><td>越界、悬空指针、溢出等，编译器可假设不发生</td></tr><tr><td>AddressSanitizer</td><td>检测越界、use-after-free</td></tr><tr><td>UBSan</td><td>检测整数溢出等未定义行为</td></tr></tbody></table><hr /><h2 id="十现代-c-内存管理决策树">十、现代 C++ 内存管理决策树</h2><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>你需要一个对象/数据
+│
+├─ 大小固定且小（int, float 等）→ 直接用值，按值传递
+│
+├─ 动态数组 → std::vector（RAII，自动管理）
+│
+├─ 字符串 → std::string（RAII，自动管理）
+│
+├─ 单个堆对象
+│   ├─ 只有一个拥有者 → std::unique_ptr
+│   └─ 多个拥有者 → std::shared_ptr + std::weak_ptr 打破循环
+│
+├─ 函数参数（不拥有）
+│   ├─ 必须存在且只读 → const T&amp;
+│   ├─ 必须存在且要修改 → T&amp;
+│   ├─ 可能为空 → const T*（或 T*）
+│   └─ 连续数组 → std::span&lt;T&gt;（C++20）
+│
+└─ 管理外部资源（文件、锁、GPU内存）
+    └─ 自己写 RAII 类，或用标准库的（fstream, lock_guard 等）
+</code></pre></div></div><hr /><h2 id="附录-aaddresssanitizer-报告详解">附录 A：AddressSanitizer 报告详解</h2><blockquote><p>本附录以 8.4 节 <code class="language-plaintext highlighter-rouge">bug.cpp</code> 的真实运行输出为例，逐块拆解 ASan 报告。<strong>读者不需要懂汇编、不需要懂寄存器</strong>，只需要会读”文件名:行号”。</p><p>先把那份输出贴一遍，然后分块讲。为了节省篇幅，部分冗余行用 <code class="language-plaintext highlighter-rouge">...</code> 省略，但<strong>关键字段一字不动</strong>。</p></blockquote><h3 id="a1-报告长什么样完整原文">A.1 报告长什么样（完整原文）</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>=================================================================
+==3794==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x502000000020 at pc 0x5bccfe407597 bp 0x7ffd3f620310 sp 0x7ffd3f620300
+WRITE of size 4 at 0x502000000020 thread T0
+    #0 0x5bccfe407596 in main /home/lenck/test/bug.cpp:8
+    #1 0x78875dc2a1c9 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+    #2 0x78875dc2a28a in __libc_start_main_impl ../csu/libc-start.c:360
+    #3 0x5bccfe407384 in _start (/home/lenck/test/bug_san+0x5384) (BuildId: a619cc5344a1bbcfb37eff2742faa578bc8f3f46)
+
+0x502000000020 is located 0 bytes after 16-byte region [0x502000000010,0x502000000020)
+allocated by thread T0 here:
+    #0 0x78875ecfe548 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:95
+    #1 0x5bccfe408c9c in std::__new_allocator&lt;int&gt;::allocate(unsigned long, void const*) /usr/include/c++/13/bits/new_allocator.h:151
+    #2 0x5bccfe408885 in std::allocator&lt;int&gt;::allocate(unsigned long) /usr/include/c++/13/bits/allocator.h:198
+    #3 0x5bccfe408885 in std::allocator_traits&lt;std::allocator&lt;int&gt; &gt;::allocate(std::allocator&lt;int&gt;&amp;, unsigned long) /usr/include/c++/13/bits/alloc_traits.h:482
+    #4 0x5bccfe408885 in std::_Vector_base&lt;int, std::allocator&lt;int&gt; &gt;::_M_allocate(unsigned long) /usr/include/c++/13/bits/stl_vector.h:381
+    #5 0x5bccfe408427 in std::_Vector_base&lt;int, std::allocator&lt;int&gt; &gt;::_M_create_storage(unsigned long) /usr/include/c++/13/bits/stl_vector.h:398
+    #6 0x5bccfe4080f4 in std::_Vector_base&lt;int, std::allocator&lt;int&gt; &gt;::_Vector_base(unsigned long, std::allocator&lt;int&gt; const&amp;) /usr/include/c++/13/bits/stl_vector.h:335
+    #7 0x5bccfe407ab4 in std::vector&lt;int, std::allocator&lt;int&gt; &gt;::vector(unsigned long, std::allocator&lt;int&gt; const&amp;) /usr/include/c++/13/bits/stl_vector.h:557
+    #8 0x5bccfe407513 in main /home/lenck/test/bug.cpp:7
+    #9 0x78875dc2a1c9 in __libc_start_call_main ../sysdeps/nptl/libc-start.c:360
+    ...
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow /home/lenck/test/bug.cpp:8 in main
+Shadow bytes around the buggy address:
+  0x501ffffffd80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x501ffffffe00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x501ffffffe80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x501fffffff00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x501fffffff80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=&gt;0x502000000000: fa fa 00 00[fa]fa fa fa fa fa fa fa fa fa fa fa
+  0x502000000080: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x502000000100: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x502000000180: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x502000000200: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x502000000280: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==3794==ABORTING
+</code></pre></div></div><h3 id="a2-报告的八大块先看全景">A.2 报告的八大块（先看全景）</h3><p>整份报告其实就八个部分，按顺序：</p><table><thead><tr><th>#</th><th>部分</th><th>大概内容</th><th>你需要看吗</th></tr></thead><tbody><tr><td>1</td><td>错误概述行</td><td><code class="language-plaintext highlighter-rouge">==3794==ERROR: ... heap-buffer-overflow on address 0x...</code></td><td>✅ 看错误类型</td></tr><tr><td>2</td><td>访问详情</td><td><code class="language-plaintext highlighter-rouge">WRITE of size 4 at 0x... thread T0</code></td><td>✅ 看是读还是写、多大</td></tr><tr><td>3</td><td><strong>出错调用栈</strong></td><td><code class="language-plaintext highlighter-rouge">#0 ... in main bug.cpp:8</code></td><td>✅✅ <strong>最重要！直接定位到行号</strong></td></tr><tr><td>4</td><td>内存位置关系</td><td><code class="language-plaintext highlighter-rouge">0x... is located 0 bytes after 16-byte region [...]</code></td><td>✅ 看越界多少字节</td></tr><tr><td>5</td><td>分配调用栈</td><td><code class="language-plaintext highlighter-rouge">allocated by thread T0 here: #0 ... #8 in main bug.cpp:7</code></td><td>✅ 看这块内存是谁分配的</td></tr><tr><td>6</td><td>SUMMARY</td><td><code class="language-plaintext highlighter-rouge">SUMMARY: AddressSanitizer: heap-buffer-overflow bug.cpp:8 in main</code></td><td>✅ 一句话总结</td></tr><tr><td>7</td><td>Shadow bytes</td><td><code class="language-plaintext highlighter-rouge">=&gt;0x...: fa fa 00 00[fa]fa ...</code></td><td>⚠️ 进阶，能看懂更好</td></tr><tr><td>8</td><td>图例 + ABORTING</td><td><code class="language-plaintext highlighter-rouge">Shadow byte legend: ...</code> / <code class="language-plaintext highlighter-rouge">==3794==ABORTING</code></td><td>📖 查表用</td></tr></tbody></table><p><strong>新手三步法</strong>（90% 的 bug 靠这三步就能定位）：</p><ol><li>看 <strong>第 1 行</strong> 的错误类型（<code class="language-plaintext highlighter-rouge">heap-buffer-overflow</code>？<code class="language-plaintext highlighter-rouge">heap-use-after-free</code>？）</li><li>看 <strong>第 3 块的 <code class="language-plaintext highlighter-rouge">#0</code></strong> 行末尾的 <code class="language-plaintext highlighter-rouge">文件名:行号</code>（这就是出错位置）</li><li>看 <strong>第 4 块</strong> 的 <code class="language-plaintext highlighter-rouge">located X bytes after</code>（越界了多少）</li></ol><p>剩下的 pc/bp/sp 寄存器、十六进制地址、Shadow bytes 都是底层细节，新手可以跳过。</p><h3 id="a3-逐块拆解">A.3 逐块拆解</h3><h4 id="第-1-块错误概述行">第 1 块：错误概述行</h4><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>=================================================================
+==3794==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x502000000020 at pc 0x5bccfe407597 bp 0x7ffd3f620310 sp 0x7ffd3f620310
+</code></pre></div></div><p><strong>逐字段翻译</strong>：</p><table><thead><tr><th>字段</th><th>含义</th><th>你要管吗</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">=================================================================</code></td><td>分隔线，纯装饰</td><td>❌</td></tr><tr><td><code class="language-plaintext highlighter-rouge">==3794==</code></td><td>进程 ID（PID），每次运行都不一样</td><td>❌（除非要 attach 调试器）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">ERROR</code></td><td>错误级别（还有 <code class="language-plaintext highlighter-rouge">WARNING</code> 等）</td><td>✅</td></tr><tr><td><code class="language-plaintext highlighter-rouge">AddressSanitizer</code></td><td>检测工具名（ASan）</td><td>✅</td></tr><tr><td><code class="language-plaintext highlighter-rouge">heap-buffer-overflow</code></td><td><strong>错误类型</strong>：堆缓冲区越界</td><td>✅✅✅</td></tr><tr><td><code class="language-plaintext highlighter-rouge">on address 0x502000000020</code></td><td>越界访问的目标地址</td><td>⚠️ 进阶</td></tr><tr><td><code class="language-plaintext highlighter-rouge">at pc 0x5bccfe407597</code></td><td>程序计数器（CPU 下一条要执行的指令地址）</td><td>❌</td></tr><tr><td><code class="language-plaintext highlighter-rouge">bp 0x7ffd3f620310</code></td><td>基址指针（栈帧相关寄存器）</td><td>❌</td></tr><tr><td><code class="language-plaintext highlighter-rouge">sp 0x7ffd3f620300</code></td><td>栈指针（当前栈顶地址）</td><td>❌</td></tr></tbody></table><blockquote><p><strong>关于 <code class="language-plaintext highlighter-rouge">pc/bp/sp</code></strong>：这是 x86-64 CPU 的三个寄存器名（Program Counter / Base Pointer / Stack Pointer），存的是指令地址和栈位置。<strong>对新手完全没用</strong>——你定位 bug 靠的是下面的 <code class="language-plaintext highlighter-rouge">文件名:行号</code>，不是这些寄存器值。它们出现在这里只是因为 ASan 顺手把寄存器状态也 dump 出来了，方便高级用户用 gdb 附件调试。</p></blockquote><p><strong>这一行你要记住的</strong>：<strong>错误类型是 <code class="language-plaintext highlighter-rouge">heap-buffer-overflow</code>（堆缓冲区越界）</strong>。</p><h4 id="第-2-块访问详情">第 2 块：访问详情</h4><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>WRITE of size 4 at 0x502000000020 thread T0
+</code></pre></div></div><table><thead><tr><th>字段</th><th>含义</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">WRITE</code></td><td>是<strong>写</strong>操作（不是读）。对应代码 <code class="language-plaintext highlighter-rouge">v[4] = 42;</code> 中的赋值</td></tr><tr><td><code class="language-plaintext highlighter-rouge">of size 4</code></td><td>写入 4 字节（正好是一个 <code class="language-plaintext highlighter-rouge">int</code> 的大小）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">at 0x502000000020</code></td><td>写入的目标地址</td></tr><tr><td><code class="language-plaintext highlighter-rouge">thread T0</code></td><td>主线程（<code class="language-plaintext highlighter-rouge">T0</code> = thread 0，主线程）</td></tr></tbody></table><p><strong>这一行告诉你</strong>：程序试图往一个地址<strong>写入 4 字节</strong>（一个 int），而这个地址是越界的。</p><blockquote><p><strong>怎么判断是读还是写？</strong></p><ul><li><code class="language-plaintext highlighter-rouge">WRITE of size N</code> → 写越界（比如 <code class="language-plaintext highlighter-rouge">v[4] = 42;</code>）</li><li><code class="language-plaintext highlighter-rouge">READ of size N</code> → 读越界（比如 <code class="language-plaintext highlighter-rouge">int x = v[4];</code>） 知道是读还是写，能帮你快速在代码里找到出错的那一行。</li></ul></blockquote><h4 id="第-3-块出错调用栈最关键">第 3 块：出错调用栈（最关键！）</h4><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    #0 0x5bccfe407596 in main /home/lenck/test/bug.cpp:8
+    #1 0x78875dc2a1c9 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+    #2 0x78875dc2a28a in __libc_start_main_impl ../csu/libc-start.c:360
+    #3 0x5bccfe407384 in _start (/home/lenck/test/bug_san+0x5384) (BuildId: a619cc5344a1bbcfb37eff2742faa578bc8f3f46)
+</code></pre></div></div><p><strong>调用栈（stack trace）怎么看</strong>：</p><ul><li><code class="language-plaintext highlighter-rouge">#0</code> 是<strong>最内层</strong>（出错的直接位置），<code class="language-plaintext highlighter-rouge">#1</code> 是调用 <code class="language-plaintext highlighter-rouge">#0</code> 的函数，<code class="language-plaintext highlighter-rouge">#2</code> 是调用 <code class="language-plaintext highlighter-rouge">#1</code> 的函数……</li><li>越往下越底层。<code class="language-plaintext highlighter-rouge">#0</code> 是你的代码，<code class="language-plaintext highlighter-rouge">#1</code>、<code class="language-plaintext highlighter-rouge">#2</code>、<code class="language-plaintext highlighter-rouge">#3</code> 是 C 运行时启动代码（<code class="language-plaintext highlighter-rouge">__libc_start_call_main</code> / <code class="language-plaintext highlighter-rouge">__libc_start_main_impl</code> / <code class="language-plaintext highlighter-rouge">_start</code>），<strong>这些是每个 C/C++ 程序启动时都会经过的标准流程，跟你的 bug 无关，直接忽略</strong>。</li></ul><p><strong><code class="language-plaintext highlighter-rouge">#0</code> 行的字段拆解</strong>：</p><table><thead><tr><th>字段</th><th>含义</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">#0</code></td><td>栈帧编号（最内层）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">0x5bccfe407596</code></td><td>这条指令的内存地址（运行时 ASLR 后的地址，每次运行都不一样）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">in main</code></td><td>在 <code class="language-plaintext highlighter-rouge">main</code> 函数里</td></tr><tr><td><code class="language-plaintext highlighter-rouge">/home/lenck/test/bug.cpp:8</code></td><td><strong>bug.cpp 第 8 行</strong> ← 这就是你要找的！</td></tr></tbody></table><p><strong>对照源码</strong>：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+    <span class="n">v</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>  <span class="c1">// ← 第 8 行！这就是越界写入</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+</code></pre></div></div><p>✅ <strong>完美对应</strong>：ASan 说”第 8 行有问题”，你打开第 8 行一看，果然是 <code class="language-plaintext highlighter-rouge">v[4] = 42;</code> 越界了。</p><blockquote><p><strong>为什么需要 <code class="language-plaintext highlighter-rouge">-g</code> 编译选项？</strong></p><p>上面的 <code class="language-plaintext highlighter-rouge">bug.cpp:8</code> 这种”文件名:行号”信息，只有在你编译时加了 <code class="language-plaintext highlighter-rouge">-g</code>（生成调试信息）才会出现。如果不加 <code class="language-plaintext highlighter-rouge">-g</code>，ASan 只能告诉你”在 <code class="language-plaintext highlighter-rouge">bug_san+0x5384</code> 这个二进制偏移位置出错”，你根本不知道对应源码哪一行。</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>g++ <span class="nt">-std</span><span class="o">=</span>c++20 <span class="nt">-fsanitize</span><span class="o">=</span>address,undefined <span class="nt">-g</span> bug.cpp <span class="nt">-o</span> bug_san
+<span class="c">#                                            ^^ 这个 -g 是关键！</span>
+</code></pre></div></div><p>没加 <code class="language-plaintext highlighter-rouge">-g</code> 的输出长这样（无法定位到源码行）：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#0 0x5bccfe407596 in main (/home/lenck/test/bug_san+0x5384)
+</code></pre></div></div><p>加了 <code class="language-plaintext highlighter-rouge">-g</code> 的输出长这样（能定位到行号）：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#0 0x5bccfe407596 in main /home/lenck/test/bug.cpp:8
+</code></pre></div></div></blockquote><h4 id="第-4-块内存位置关系越界多少">第 4 块：内存位置关系（越界多少）</h4><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0x502000000020 is located 0 bytes after 16-byte region [0x502000000010,0x502000000020)
+</code></pre></div></div><p>这一行信息量很大，逐段拆：</p><p><strong>① <code class="language-plaintext highlighter-rouge">0x502000000020</code></strong>：被越界访问的地址（和第 1、2 块里的地址一致）。</p><p><strong>② <code class="language-plaintext highlighter-rouge">is located 0 bytes after</code></strong>：位于……之后 0 字节。<strong>“0 bytes after”</strong> 的意思是——<strong>紧挨着有效区域的末尾，第 0 字节</strong>（即第一个越界字节）。</p><table><thead><tr><th>越界字节数</th><th>报告怎么说</th><th>含义</th></tr></thead><tbody><tr><td>0 bytes after</td><td>紧挨着末尾，第 1 个越界字节</td><td><code class="language-plaintext highlighter-rouge">v[4]</code>（越界 1 个元素）</td></tr><tr><td>4 bytes after</td><td>末尾之后第 4 字节</td><td><code class="language-plaintext highlighter-rouge">v[5]</code>（越界 2 个元素）</td></tr><tr><td>8 bytes after</td><td>末尾之后第 8 字节</td><td><code class="language-plaintext highlighter-rouge">v[6]</code>（越界 3 个元素）</td></tr></tbody></table><p><strong>③ <code class="language-plaintext highlighter-rouge">16-byte region</code></strong>：分配了 16 字节的合法内存。</p><p><strong>为什么是 16 字节？</strong> 因为 <code class="language-plaintext highlighter-rouge">std::vector&lt;int&gt; v(4);</code> 分配了 4 个 <code class="language-plaintext highlighter-rouge">int</code>，每个 <code class="language-plaintext highlighter-rouge">int</code> 4 字节，<code class="language-plaintext highlighter-rouge">4 × 4 = 16</code> 字节。</p><p><strong>④ <code class="language-plaintext highlighter-rouge">[0x502000000010, 0x502000000020)</code></strong>：合法内存的地址区间，<strong>左闭右开</strong>。</p><ul><li>起始地址 <code class="language-plaintext highlighter-rouge">0x502000000010</code>（<code class="language-plaintext highlighter-rouge">v[0]</code> 的地址）</li><li>结束地址 <code class="language-plaintext highlighter-rouge">0x502000000020</code>（<code class="language-plaintext highlighter-rouge">v[4]</code> 的地址，但这个地址已经越界了）</li><li>区间是左闭右开 <code class="language-plaintext highlighter-rouge">[)</code>，所以合法地址是 <code class="language-plaintext highlighter-rouge">0x010</code> ~ <code class="language-plaintext highlighter-rouge">0x01C</code>（<code class="language-plaintext highlighter-rouge">v[0]</code>~<code class="language-plaintext highlighter-rouge">v[3]</code>），<code class="language-plaintext highlighter-rouge">0x020</code> 不在合法范围内</li></ul><p><strong>画个图</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>地址:    0x010  0x014  0x018  0x01C  | 0x020
+         v[0]   v[1]   v[2]   v[3]   | v[4] ← 越界！
+         └──── 合法 16 字节 ────────┘ ↑
+                                     被访问的就是这个地址
+                                     (0x502000000020)
+</code></pre></div></div><p><code class="language-plaintext highlighter-rouge">v[4]</code> 的地址正好是 <code class="language-plaintext highlighter-rouge">0x502000000020</code>，它<strong>紧挨在合法区域末尾之后</strong>（<code class="language-plaintext highlighter-rouge">0 bytes after</code>），所以 ASan 立刻报错。</p><blockquote><p><strong>ASan 怎么知道 <code class="language-plaintext highlighter-rouge">0x020</code> 是越界的？</strong></p><p>ASan 在你每块分配的内存周围，会偷偷插入一些”陷阱字节”（叫 redzone，红区）。任何对红区的访问都会被立刻抓住。这就像图书馆在每本书前后各放一张”禁止触碰”的红标签，谁碰到红标签就报警。</p><p>也就是这里蓝色[fa]，可以推算出 箭头指向的 第一个 fa的地址是 0x50200000000, 第一个00的地址是0x50200000010，蓝色[fa]地址是 0x50200000020，以此类推 第二行的[fa]正好是 0x50200000080</p><p><img src="./%E5%86%85%E5%AD%98%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%B8%8E%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86.assets/image-20260701211152228.png" alt="image-20260701211152228" /></p><p>上面 <code class="language-plaintext highlighter-rouge">0x020</code> 这个地址就落在 <code class="language-plaintext highlighter-rouge">v</code> 后面的红区里，所以一写就报警。具体怎么实现的，看下面第 7 块的 Shadow bytes。</p></blockquote><h4 id="第-5-块分配调用栈这块内存是谁分配的">第 5 块：分配调用栈（这块内存是谁分配的）</h4><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>allocated by thread T0 here:
+    #0 0x78875ecfe548 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:95
+    #1 0x5bccfe408c9c in std::__new_allocator&lt;int&gt;::allocate(unsigned long, void const*) /usr/include/c++/13/bits/new_allocator.h:151
+    #2 0x5bccfe408885 in std::allocator&lt;int&gt;::allocate(unsigned long) /usr/include/c++/13/bits/allocator.h:198
+    #3 0x5bccfe408885 in std::allocator_traits&lt;std::allocator&lt;int&gt; &gt;::allocate(std::allocator&lt;int&gt;&amp;, unsigned long) /usr/include/c++/13/bits/alloc_traits.h:482
+    #4 0x5bccfe408885 in std::_Vector_base&lt;int, std::allocator&lt;int&gt; &gt;::_M_allocate(unsigned long) /usr/include/c++/13/bits/stl_vector.h:381
+    #5 0x5bccfe408427 in std::_Vector_base&lt;int, std::allocator&lt;int&gt; &gt;::_M_create_storage(unsigned long) /usr/include/c++/13/bits/stl_vector.h:398
+    #6 0x5bccfe4080f4 in std::_Vector_base&lt;int, std::allocator&lt;int&gt; &gt;::_Vector_base(unsigned long, std::allocator&lt;int&gt; const&amp;) /usr/include/c++/13/bits/stl_vector.h:335
+    #7 0x5bccfe407ab4 in std::vector&lt;int, std::allocator&lt;int&gt; &gt;::vector(unsigned long, std::allocator&lt;int&gt; const&amp;) /usr/include/c++/13/bits/stl_vector.h:557
+    #8 0x5bccfe407513 in main /home/lenck/test/bug.cpp:7
+    #9 0x78875dc2a1c9 in __libc_start_call_main ../sysdeps/nptl/libc-start.c:360
+</code></pre></div></div><p><strong>这一大堆是什么？</strong> 这是从下往上读的”分配调用链”——这块越界的内存当初是谁分配的。</p><p><strong>关键看 <code class="language-plaintext highlighter-rouge">#8</code></strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#8 0x5bccfe407513 in main /home/lenck/test/bug.cpp:7
+</code></pre></div></div><p>对照源码第 7 行：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>  <span class="c1">// ← 第 7 行，这里分配了 16 字节</span>
+</code></pre></div></div><p>✅ 对上了。<code class="language-plaintext highlighter-rouge">v(4)</code> 在第 7 行分配了 4 个 int = 16 字节，这就是 ASan 报告里那块”16-byte region”的来源。</p><p><strong>中间 <code class="language-plaintext highlighter-rouge">#0</code>~<code class="language-plaintext highlighter-rouge">#7</code> 那一大堆是什么？</strong> 是 <code class="language-plaintext highlighter-rouge">std::vector</code> 内部的调用链：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>你的代码 (#8: main bug.cpp:7)
+   ↓ 调用
+std::vector 的构造函数 (#7)
+   ↓ 调用
+std::_Vector_base 的构造函数 (#6)
+   ↓ 调用
+_M_create_storage (#5)
+   ↓ 调用
+_M_allocate (#4)
+   ↓ 调用
+std::allocator_traits::allocate (#3)
+   ↓ 调用
+std::allocator::allocate (#2)
+   ↓ 调用
+std::__new_allocator::allocate (#1)
+   ↓ 调用
+operator new (#0)  ← 真正分配内存的函数
+</code></pre></div></div><p><strong>为什么这么多层？</strong> 因为 C++ 标准库设计成”可定制分配器”——<code class="language-plaintext highlighter-rouge">vector</code> 不直接调 <code class="language-plaintext highlighter-rouge">new</code>，而是通过 allocator 一层层委托，最后才到 <code class="language-plaintext highlighter-rouge">operator new</code>。<strong>这些中间层跟你无关</strong>，你只需要看链路两端：</p><ul><li><strong>最底层 <code class="language-plaintext highlighter-rouge">#0</code></strong>：<code class="language-plaintext highlighter-rouge">operator new</code> 真正分配了内存</li><li><strong>最顶层（你的代码）<code class="language-plaintext highlighter-rouge">#8</code></strong>：<code class="language-plaintext highlighter-rouge">main bug.cpp:7</code> 触发了这次分配</li></ul><blockquote><p><strong>小技巧</strong>：在分配栈里找你的代码，<strong>从下往上扫</strong>，找第一个含 <code class="language-plaintext highlighter-rouge">你的文件名</code> 的行。中间那些 <code class="language-plaintext highlighter-rouge">std::...</code> 全是标准库内部调用，跳过即可。</p></blockquote><h4 id="第-6-块summary一句话总结">第 6 块：SUMMARY（一句话总结）</h4><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SUMMARY: AddressSanitizer: heap-buffer-overflow /home/lenck/test/bug.cpp:8 in main
+</code></pre></div></div><p>把整份报告压缩成一句话：<strong><code class="language-plaintext highlighter-rouge">bug.cpp</code> 第 8 行发生了堆缓冲区越界</strong>。</p><p>如果报告很长，你滚到最上面扫一眼 SUMMARY 就知道是什么错、在哪一行。<strong>这是最快定位 bug 的入口</strong>。</p><h4 id="第-7-块shadow-bytes影子内存进阶">第 7 块：Shadow bytes（影子内存，进阶）</h4><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Shadow bytes around the buggy address:
+  0x501ffffffd80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x501ffffffe00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x501ffffffe80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x501fffffff00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x501fffffff80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=&gt;0x502000000000: fa fa 00 00[fa]fa fa fa fa fa fa fa fa fa fa fa
+  0x502000000080: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  ...
+</code></pre></div></div><p><strong>这一块是 ASan 的核心机制</strong>。看不懂不影响定位 bug，但看懂了能更明白 ASan 是怎么工作的。</p><p><strong>什么是 Shadow bytes（影子内存）？</strong></p><p>ASan 把你的程序内存<strong>按 8 字节一组</strong>映射到一张”影子表”上。每个应用字节对应 1/8 个影子字节，或者反过来说：<strong>1 个影子字节描述 8 个应用字节的状态</strong>。</p><p><strong>类比</strong>：想象图书馆每 8 本书一组，门口贴一张小标签：</p><ul><li>标签写 <code class="language-plaintext highlighter-rouge">00</code> → 这 8 本都是合法的，可以借</li><li>标签写 <code class="language-plaintext highlighter-rouge">fa</code> → 这 8 本是”红区”（陷阱），碰了就报警</li><li>标签写 <code class="language-plaintext highlighter-rouge">fd</code> → 这 8 本已经销毁了（被 delete 了），不能再碰</li></ul><p><strong>怎么读上面那张表</strong>：</p><ol><li>每行前面是<strong>应用内存的起始地址</strong>（如 <code class="language-plaintext highlighter-rouge">0x502000000000</code>）</li><li>后面 16 个两字符就是<strong>影子字节</strong>，每个描述 8 字节应用内存</li><li>所以一行描述 <code class="language-plaintext highlighter-rouge">16 × 8 = 128 字节</code>的应用内存</li><li><strong><code class="language-plaintext highlighter-rouge">=&gt;</code> 箭头</strong>指向出错地址所在的那一行</li><li><strong><code class="language-plaintext highlighter-rouge">[fa]</code> 加方括号</strong>的就是出错位置对应的影子字节</li></ol><p><strong>重点看 <code class="language-plaintext highlighter-rouge">=&gt;</code> 那一行</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>=&gt;0x502000000000: fa fa 00 00[fa]fa fa fa fa fa fa fa fa fa fa fa
+</code></pre></div></div><p>把这 16 个影子字节和它描述的应用内存对应起来：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>影子字节:   fa    fa    00    00    [fa]   fa    fa    ...
+应用地址:   0x000 0x008 0x010 0x018  0x020  0x028 0x030 ...
+含义:       红区  红区  合法  合法   红区!  红区  红区
+对应 v:                 v[0..1] v[2..3]  ↑
+                                  v[4] 越界写这里
+</code></pre></div></div><p><strong>解读</strong>：</p><ul><li><code class="language-plaintext highlighter-rouge">0x010</code>~<code class="language-plaintext highlighter-rouge">0x01F</code>（影子字节 <code class="language-plaintext highlighter-rouge">00 00</code>）：合法区域，就是 <code class="language-plaintext highlighter-rouge">v[0]</code>~<code class="language-plaintext highlighter-rouge">v[3]</code> 所在的 16 字节</li><li><code class="language-plaintext highlighter-rouge">0x000</code>~<code class="language-plaintext highlighter-rouge">0x00F</code>（影子字节 <code class="language-plaintext highlighter-rouge">fa fa</code>）：<strong>左侧红区</strong>，分配内存时 ASan 在前面留的陷阱</li><li><code class="language-plaintext highlighter-rouge">0x020</code>~<code class="language-plaintext highlighter-rouge">0x027</code>（影子字节 <code class="language-plaintext highlighter-rouge">[fa]</code>）：<strong>右侧红区</strong>，<code class="language-plaintext highlighter-rouge">v[4]</code> 越界写到的就是这个红区 → 报警！</li></ul><p><strong>所以 ASan 的工作原理</strong>：</p><ol><li>每次 <code class="language-plaintext highlighter-rouge">new</code> 分配内存时，ASan 在前后各加一段红区（标记为 <code class="language-plaintext highlighter-rouge">fa</code>）</li><li>同时建立影子表，记录每个 8 字节组的状态</li><li>程序每次访问内存，ASan 先查影子表，如果对应影子字节是 <code class="language-plaintext highlighter-rouge">fa</code>/<code class="language-plaintext highlighter-rouge">fd</code> 等非法标记，立刻报错</li><li>这样越界、use-after-free 都能被当场抓住，不用等程序崩溃</li></ol><blockquote><p><strong>为什么 <code class="language-plaintext highlighter-rouge">00</code> 表示合法、<code class="language-plaintext highlighter-rouge">fa</code> 表示红区？</strong></p><p>没有特别的原因，就是 ASan 设计者选的编码。<code class="language-plaintext highlighter-rouge">fa</code> 是 “fence”（栅栏）的缩写，<code class="language-plaintext highlighter-rouge">fd</code> 是 “freed”（已释放），<code class="language-plaintext highlighter-rouge">f1</code>/<code class="language-plaintext highlighter-rouge">f2</code>/<code class="language-plaintext highlighter-rouge">f3</code> 是栈相关红区。完整的编码表就是下面第 8 块那张图例。</p></blockquote><h4 id="第-8-块图例--aborting">第 8 块：图例 + ABORTING</h4><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==3794==ABORTING
+</code></pre></div></div><p><strong>图例（legend）</strong>：把上面 Shadow bytes 表里出现的两字符编码翻译成人话。</p><p><strong>新手需要认识的几个</strong>：</p><table><thead><tr><th>编码</th><th>含义</th><th>什么时候出现</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">00</code></td><td>完全可访问</td><td>正常分配的内存</td></tr><tr><td><code class="language-plaintext highlighter-rouge">01</code>~<code class="language-plaintext highlighter-rouge">07</code></td><td>部分可访问（前 N 字节合法）</td><td>内存对齐时末尾的”边角料”</td></tr><tr><td><code class="language-plaintext highlighter-rouge">fa</code></td><td><strong>堆红区</strong>（fence）</td><td><code class="language-plaintext highlighter-rouge">new</code> 出来的内存前后 ← 本例就是这个</td></tr><tr><td><code class="language-plaintext highlighter-rouge">fd</code></td><td><strong>已释放的堆内存</strong>（freed）</td><td><code class="language-plaintext highlighter-rouge">delete</code> 后再访问 → use-after-free</td></tr><tr><td><code class="language-plaintext highlighter-rouge">f1</code>~<code class="language-plaintext highlighter-rouge">f3</code></td><td>栈红区</td><td>局部变量越界</td></tr><tr><td><code class="language-plaintext highlighter-rouge">f9</code></td><td>全局变量红区</td><td>全局/静态数组越界</td></tr></tbody></table><p><strong>最后一行</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>==3794==ABORTING
+</code></pre></div></div><p>程序被 ASan 强制中止（调用 <code class="language-plaintext highlighter-rouge">abort()</code>），进程退出码非 0。<strong>这就是为什么 Bug 2 和 Bug 3 没有被报出来</strong>——见下一节。</p><h3 id="a4-为什么只报了-bug-1bug-2-和-bug-3-哪去了">A.4 为什么只报了 Bug 1，Bug 2 和 Bug 3 哪去了？</h3><p>源码里有三个 bug：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Bug 1: 数组越界</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<span class="n">v</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>  <span class="c1">// ← 第 8 行 ← ASan 在这里就 abort 了！</span>
+
+<span class="c1">// Bug 2: use-after-free</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">int</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<span class="k">delete</span> <span class="n">p</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">p</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>  <span class="c1">// ← 第 13 行 ← 没机会执行</span>
+
+<span class="c1">// Bug 3: 有符号整数溢出</span>
+<span class="kt">int</span> <span class="n">max_val</span> <span class="o">=</span> <span class="mi">2147483647</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">overflow</span> <span class="o">=</span> <span class="n">max_val</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>  <span class="c1">// ← 第 16 行 ← 没机会执行</span>
+</code></pre></div></div><p><strong>ASan 默认行为</strong>：发现第一个错误就立刻 <code class="language-plaintext highlighter-rouge">abort()</code>，<strong>不继续往下执行</strong>。所以 Bug 2 和 Bug 3 根本没运行到，自然也不会被报告。</p><p><strong>怎么把所有 bug 都报出来？</strong> 有两个办法：</p><p><strong>方法一：修一个跑一次</strong></p><p>最朴素——把 Bug 1 修掉（<code class="language-plaintext highlighter-rouge">v[4]</code> 改成 <code class="language-plaintext highlighter-rouge">v[3]</code>），重新编译运行，这次会报 Bug 2；再修 Bug 2，再跑，这次报 Bug 3。</p><p><strong>方法二：开启 <code class="language-plaintext highlighter-rouge">halt_on_error=0</code></strong></p><p>让 ASan 报错但<strong>不退出</strong>，继续往下跑，把所有错误一次性全报出来：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 编译时加 ASAN_OPTIONS 环境变量</span>
+<span class="nv">ASAN_OPTIONS</span><span class="o">=</span><span class="nv">halt_on_error</span><span class="o">=</span>0:abort_on_error<span class="o">=</span>0 ./bug_san
+</code></pre></div></div><table><thead><tr><th>选项</th><th>含义</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">halt_on_error=0</code></td><td>发现错误不停止，继续执行</td></tr><tr><td><code class="language-plaintext highlighter-rouge">abort_on_error=0</code></td><td>不调用 <code class="language-plaintext highlighter-rouge">abort()</code>（否则即使 halt_on_error=0 也会退出）</td></tr></tbody></table><blockquote><p>⚠️ 注意：<code class="language-plaintext highlighter-rouge">halt_on_error=0</code> 时，Bug 2（use-after-free）这种错误继续执行可能引发更奇怪的崩溃，因为内存已经被破坏了。<strong>推荐还是用方法一</strong>——修一个跑一次，最稳。</p></blockquote><h3 id="a5-阅读报告的三步法总结">A.5 阅读报告的”三步法”（总结）</h3><p>拿到一份 ASan 报告，按这三步走：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>第 1 步：找 SUMMARY 行（最快）
+    SUMMARY: AddressSanitizer: heap-buffer-overflow /home/lenck/test/bug.cpp:8 in main
+    ──────────────────────────  ────────────────────────  ────────────────────
+    错误类型                    文件名:行号              函数名
+
+第 2 步：看 ERROR 行的细节
+    ==3794==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x...
+    WRITE of size 4 at 0x... thread T0
+    ─────                ─────
+    是写还是读           多大（4 字节 = 1 个 int）
+
+第 3 步：看 located X bytes after
+    0x... is located 0 bytes after 16-byte region [..., ...)
+    ──────────────  ──────────────
+    越界多少        合法区域多大
+</code></pre></div></div><p><strong>三步走完，你已经知道</strong>：</p><ul><li>什么错误（heap-buffer-overflow）</li><li>在哪一行（bug.cpp:8）</li><li>是读还是写、多大（WRITE 4 字节）</li><li>越界多少（0 bytes after = 紧挨着末尾第 1 个字节）</li></ul><p>足够你去源码里定位并修复了。</p><h3 id="a6-常见-asan-错误类型速查">A.6 常见 ASan 错误类型速查</h3><table><thead><tr><th>错误类型</th><th>中文</th><th>典型代码</th><th>报告关键字</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">heap-buffer-overflow</code></td><td>堆越界</td><td><code class="language-plaintext highlighter-rouge">v[v.size()]</code></td><td><code class="language-plaintext highlighter-rouge">located X bytes after ... region</code></td></tr><tr><td><code class="language-plaintext highlighter-rouge">stack-buffer-overflow</code></td><td>栈越界</td><td><code class="language-plaintext highlighter-rouge">int a[4]; a[4]=0;</code></td><td><code class="language-plaintext highlighter-rouge">located X bytes after ... stack</code></td></tr><tr><td><code class="language-plaintext highlighter-rouge">heap-use-after-free</code></td><td>用了已释放内存</td><td><code class="language-plaintext highlighter-rouge">delete p; *p;</code></td><td><code class="language-plaintext highlighter-rouge">located X bytes inside of ... byte region [已释放]</code></td></tr><tr><td><code class="language-plaintext highlighter-rouge">stack-use-after-return</code></td><td>用了已返回函数的栈变量</td><td>返回局部变量引用</td><td><code class="language-plaintext highlighter-rouge">Shadow bytes: ... f5 ...</code></td></tr><tr><td><code class="language-plaintext highlighter-rouge">double-free</code></td><td>重复释放</td><td><code class="language-plaintext highlighter-rouge">delete p; delete p;</code></td><td><code class="language-plaintext highlighter-rouge">ERROR: AddressSanitizer: attempting double-free</code></td></tr><tr><td><code class="language-plaintext highlighter-rouge">alloc-dealloc-mismatch</code></td><td>分配释放不匹配</td><td><code class="language-plaintext highlighter-rouge">new[]</code> 但用 <code class="language-plaintext highlighter-rouge">delete</code></td><td><code class="language-plaintext highlighter-rouge">ERROR: AddressSanitizer: alloc-dealloc-mismatch</code></td></tr><tr><td><code class="language-plaintext highlighter-rouge">initialization-order-fiasco</code></td><td>全局对象初始化顺序问题</td><td>全局变量互相依赖</td><td><code class="language-plaintext highlighter-rouge">ERROR: AddressSanitizer: initialization-order-fiasco</code></td></tr></tbody></table><blockquote><p><strong>UBSan 的报告格式不同</strong>：UBSan 报错是 <code class="language-plaintext highlighter-rouge">runtime error: signed integer overflow: 2147483647 + 1 cannot be represented in type 'int'</code> 这种一行式描述，没有调用栈和 Shadow bytes。如果同时开了 ASan+UBSan，会先看到 UBSan 的简单报告，再看到 ASan 的详细报告。</p></blockquote><h3 id="a7-给新手的最后建议">A.7 给新手的最后建议</h3><ol><li><strong>永远加 <code class="language-plaintext highlighter-rouge">-g</code></strong>：没有调试信息，ASan 报告里的行号全是 <code class="language-plaintext highlighter-rouge">??:0</code>，等于白报。</li><li><strong>先看 SUMMARY</strong>：一句话就知道是什么错、在哪一行，比从上往下读快得多。</li><li><strong>忽略 <code class="language-plaintext highlighter-rouge">#1</code> 以后的运行时栈</strong>：<code class="language-plaintext highlighter-rouge">__libc_start_call_main</code> / <code class="language-plaintext highlighter-rouge">_start</code> 这些是 C 运行时启动代码，跟你无关。</li><li><strong>分配栈从下往上找你的代码</strong>：那一堆 <code class="language-plaintext highlighter-rouge">std::...</code> 中间层是标准库内部，跳过即可。</li><li><strong>Shadow bytes 看不懂没关系</strong>：那是 ASan 的内部机制，新手能定位到行号就够用了。</li><li><strong>一次只修一个 bug</strong>：ASan 默认第一个错误就 abort，别期望一次报完所有问题。</li></ol><hr /><h2 id="十一关联笔记">十一、关联笔记</h2><ul><li><code class="language-plaintext highlighter-rouge">pytorch/PyTorch常见操作速查.md</code>（GPU 内存管理，CUDA malloc/free）</li><li><code class="language-plaintext highlighter-rouge">backend/Redis学习笔记.md</code>（资源池管理思想相通）</li><li><code class="language-plaintext highlighter-rouge">python/Python进阶笔记3_并发与性能分析.md</code>（GIL vs C++ 线程对比）</li></ul></section><!-- Previous / Next navigation --><nav class="notes-pager"><div class="notes-pager-links"> <a href="/notes/Python%E4%B8%8EC-%E4%BA%92%E6%93%8D%E4%BD%9C/" class="notes-pager-prev"> <span class="notes-pager-label">← 上一章</span> <span class="notes-pager-title">Python与C++互操作</span> </a> <a href="/notes/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%95%99%E7%A8%8B/" class="notes-pager-next"> <span class="notes-pager-label">下一章 →</span> <span class="notes-pager-title">环境配置教程</span> </a></div></nav></div></article><!-- Right Sidebar: Table of Contents (built by JS from DOM) --><aside class="notes-toc" id="notes-toc"><div class="notes-toc-inner"><h4 class="notes-toc-title">目录</h4><nav class="notes-toc-nav"><ul class="notes-toc-list" id="notes-toc-list"> <!-- Populated by notes-toc.js --></ul></nav></div></aside></div><script src="https://1571859588.github.io/assets/js/notes-toc.js"></script> <script> (function() { var q = new URLSearchParams(location.search).get('q'); if (!q || q.length < 2) return; var body = document.querySelector('.notes-body'); if (!body) return; // Walk text nodes, find and highlight matches var walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT, null, false); var textNodes = []; while (walker.nextNode()) { var p = walker.currentNode.parentNode; // Skip script, style, code blocks, and already-marked text if (p.tagName === 'SCRIPT' || p.tagName === 'STYLE' || p.tagName === 'MARK' || p.closest('pre') || p.closest('.notes-search-hit')) continue; textNodes.push(walker.currentNode); } var first = null; var re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'); textNodes.forEach(function(node) { var text = node.textContent; if (!re.test(text)) return; re.lastIndex = 0; // reset after test var frag = document.createDocumentFragment(); var lastIdx = 0; var match; while ((match = re.exec(text)) !== null) { if (match.index > lastIdx) { frag.appendChild(document.createTextNode(text.substring(lastIdx, match.index))); } var mark = document.createElement('mark'); mark.className = 'notes-search-mark'; mark.textContent = match[0]; frag.appendChild(mark); if (!first) first = mark; lastIdx = match.index + match[0].length; } if (lastIdx < text.length) { frag.appendChild(document.createTextNode(text.substring(lastIdx))); } node.parentNode.replaceChild(frag, node); }); if (first) { setTimeout(function() { first.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300); } })(); </script><div class="page__footer"><footer> <!-- start custom footer snippets --> <a href="/sitemap/">Sitemap</a> <!-- end custom footer snippets --><div class="page__footer-follow"><ul class="social-icons"><li><strong>Follow:</strong></li><li><a href="http://github.com/1571859588"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a></li><li><a href="https://1571859588.github.io/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li></ul></div><div class="page__footer-copyright"> &copy; 2026 Yuntao Nie, Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://github.com/academicpages/academicpages.github.io">AcademicPages</a>, a fork of <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.<br /> Site last updated 2026-07-06</div></footer></div><script src="https://1571859588.github.io/assets/js/main.min.js"></script> <script src="https://1571859588.github.io/assets/js/paper-details.js"></script> <!-- Fix kramdown stripping backslashes before _ in math spans. kramdown treats \_ as a markdown escape, converting $seq\_len$ to $seq_len$. MathJax then interprets _ as subscript instead of a literal underscore. This runs synchronously before MathJax (async) processes the page. --> <script> (function() { var content = document.querySelector('.page__content'); if (!content) return; var walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT, null, false); var nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode); nodes.forEach(function(node) { var text = node.textContent; var fixed = text.replace(/\$([^$\n]+?)\$/g, function(match, math) { // Inside $...$, add \ before _ followed by 2+ lowercase letters. // Safe: legitimate subscripts use single chars ($d_k$) or braces ($x_{ij}$). var fixedMath = math.replace(/_([a-z]{2,})/g, '\\_$1'); return fixedMath !== math ? '$' + fixedMath + '$' : match; }); if (fixed !== text) node.textContent = fixed; }); })(); </script> <script> var SERIES_INDEX = [ {t:"Python与C++互操作", u:"/notes/Python%E4%B8%8EC-%E4%BA%92%E6%93%8D%E4%BD%9C/"}, {t:"内存生命周期与资源管理", u:"/notes/%E5%86%85%E5%AD%98%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%B8%8E%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/"}, {t:"环境配置教程", u:"/notes/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%95%99%E7%A8%8B/"}, {t:"编译链接模板与构建系统", u:"/notes/%E7%BC%96%E8%AF%91%E9%93%BE%E6%8E%A5%E6%A8%A1%E6%9D%BF%E4%B8%8E%E6%9E%84%E5%BB%BA%E7%B3%BB%E7%BB%9F/"} ]; (function() { if (!SERIES_INDEX.length) return; var inp = document.getElementById('notes-sidebar-search-input'); var box = document.getElementById('notes-sidebar-search-results'); if (!inp || !box) return; function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; } function hl(t, q) { var o = '', L = 0, lo = t.toLowerCase(), ql = q.toLowerCase(), i; while ((i = lo.indexOf(ql, L)) !== -1) { o += esc(t.substring(L, i)) + '<mark class="notes-search-highlight">' + esc(t.substring(i, i + q.length)) + '</mark>'; L = i + q.length; } return o + esc(t.substring(L)); } inp.addEventListener('input', function() { var q = this.value.trim(); if (!q) { box.style.display = 'none'; box.innerHTML = ''; return; } var ql = q.toLowerCase(), hits = []; for (var i = 0; i < SERIES_INDEX.length; i++) { if (SERIES_INDEX[i].t.toLowerCase().indexOf(ql) !== -1) hits.push(SERIES_INDEX[i]); } if (!hits.length) { box.innerHTML = '<div class="notes-sidebar-search-empty">无匹配</div>'; } else { var h = ''; for (var j = 0; j < Math.min(hits.length, 15); j++) { h += '<a href="' + hits[j].u + '" class="notes-sidebar-search-hit" data-q="' + esc(q) + '">' + '<span class="notes-sidebar-search-hit-title">' + hl(hits[j].t, q) + '</span></a>'; } box.innerHTML = h; } box.style.display = 'block'; }); inp.addEventListener('keydown', function(e) { if (e.key === 'Escape') { box.style.display = 'none'; box.innerHTML = ''; this.blur(); } }); box.addEventListener('click', function(e) { var a = e.target.closest('.notes-sidebar-search-hit'); if (a && a.dataset.q) sessionStorage.setItem('notes-search-q', a.dataset.q); }); document.addEventListener('click', function(e) { if (!e.target.closest('#notes-sidebar-search')) { box.style.display = 'none'; box.innerHTML = ''; } }); })(); </script></body></html>

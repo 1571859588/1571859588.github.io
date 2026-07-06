@@ -1,0 +1,250 @@
+<!doctype html><html lang="en" class="no-js"><head><meta charset="utf-8"> <!-- begin SEO --><title>Git协作与问题定位方法 - Yuntao Nie</title><meta property="og:locale" content="en-US"><meta property="og:site_name" content="Yuntao Nie"><meta property="og:title" content="Git协作与问题定位方法"><link rel="canonical" href="https://1571859588.github.io/notes/Git%E5%8D%8F%E4%BD%9C%E4%B8%8E%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D%E6%96%B9%E6%B3%95/"><meta property="og:url" content="https://1571859588.github.io/notes/Git%E5%8D%8F%E4%BD%9C%E4%B8%8E%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D%E6%96%B9%E6%B3%95/"><meta property="og:description" content="Git 协作与问题定位方法"> <script type="application/ld+json"> { "@context" : "http://schema.org", "@type" : "Person", "name" : "Yuntao Nie", "url" : "https://1571859588.github.io", "sameAs" : null } </script> <!-- end SEO --><link href="https://1571859588.github.io/feed.xml" type="application/atom+xml" rel="alternate" title="Yuntao Nie Feed"> <!-- http://t.co/dKP3o1e --><meta name="HandheldFriendly" content="True"><meta name="MobileOptimized" content="320"><meta name="viewport" content="width=device-width, initial-scale=1.0"> <script> document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js '; </script> <!-- For all browsers --><link rel="stylesheet" href="https://1571859588.github.io/assets/css/main.css"><meta http-equiv="cleartype" content="on"> <!-- start custom head snippets --><link rel="apple-touch-icon" sizes="57x57" href="https://1571859588.github.io/images/apple-touch-icon-57x57.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="60x60" href="https://1571859588.github.io/images/apple-touch-icon-60x60.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="72x72" href="https://1571859588.github.io/images/apple-touch-icon-72x72.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="76x76" href="https://1571859588.github.io/images/apple-touch-icon-76x76.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="114x114" href="https://1571859588.github.io/images/apple-touch-icon-114x114.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="120x120" href="https://1571859588.github.io/images/apple-touch-icon-120x120.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="144x144" href="https://1571859588.github.io/images/apple-touch-icon-144x144.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="152x152" href="https://1571859588.github.io/images/apple-touch-icon-152x152.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="180x180" href="https://1571859588.github.io/images/apple-touch-icon-180x180.png?v=M44lzPylqQ"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-32x32.png?v=M44lzPylqQ" sizes="32x32"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/android-chrome-192x192.png?v=M44lzPylqQ" sizes="192x192"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-96x96.png?v=M44lzPylqQ" sizes="96x96"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-16x16.png?v=M44lzPylqQ" sizes="16x16"><link rel="manifest" href="https://1571859588.github.io/images/manifest.json?v=M44lzPylqQ"><link rel="mask-icon" href="https://1571859588.github.io/images/safari-pinned-tab.svg?v=M44lzPylqQ" color="#000000"><link rel="shortcut icon" href="/images/favicon.ico?v=M44lzPylqQ"><meta name="msapplication-TileColor" content="#000000"><meta name="msapplication-TileImage" content="https://1571859588.github.io/images/mstile-144x144.png?v=M44lzPylqQ"><meta name="msapplication-config" content="https://1571859588.github.io/images/browserconfig.xml?v=M44lzPylqQ"><meta name="theme-color" content="#ffffff"><link rel="stylesheet" href="https://1571859588.github.io/assets/css/academicons.css"/> <!-- MathJax for math rendering --> <script> MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['\\(', '\\)']] } }; </script> <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script> <!-- end custom head snippets --></head><body> <!--[if lt IE 9]><div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div><![endif]--><div class="masthead"><div class="masthead__inner-wrap"><div class="masthead__menu"><nav id="site-nav" class="greedy-nav"> <button><div class="navicon"></div></button><ul class="visible-links"><li class="masthead__menu-item masthead__menu-item--lg"><a href="https://1571859588.github.io/">Yuntao Nie</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/publications/">Publications</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/cv/">CV</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/notes/">Notes</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/year-archive/">Blog</a></li></ul><ul class="hidden-links hidden"></ul></nav></div></div></div><div id="main" role="main" class="notes-layout"> <!-- Left Sidebar: Series Chapter Navigation --><aside class="notes-sidebar" id="notes-sidebar"><div class="notes-sidebar-inner"><div class="notes-series-header"><h3 class="notes-series-title">git</h3></div><div class="notes-sidebar-search" id="notes-sidebar-search"> <input type="text" class="notes-sidebar-search-input" id="notes-sidebar-search-input" placeholder="搜索本专题…" autocomplete="off"><div class="notes-sidebar-search-results" id="notes-sidebar-search-results" style="display:none"></div></div><nav class="notes-chapter-nav"><ul class="notes-chapter-list"><li class="notes-chapter-item active"> <a href="/notes/Git%E5%8D%8F%E4%BD%9C%E4%B8%8E%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D%E6%96%B9%E6%B3%95/" class="notes-chapter-link"> <span class="notes-chapter-num">1</span> <span class="notes-chapter-title">Git协作与问题定位方法</span> </a></li></ul></nav><div class="notes-sidebar-footer"> <a href="/notes/" class="notes-back-link">← 所有笔记系列</a></div></div></aside><!-- Mobile sidebar toggle --> <button class="notes-sidebar-toggle" id="notes-sidebar-toggle" aria-label="Toggle sidebar"> <span class="notes-sidebar-toggle-icon"></span> </button> <!-- Main Content --><article class="notes-content" itemscope itemtype="http://schema.org/CreativeWork"><meta itemprop="headline" content="Git协作与问题定位方法"><div class="notes-content-inner"><header class="notes-header"><div class="notes-breadcrumb"> <a href="/notes/">Notes</a> <span class="notes-sep">›</span> <span>git</span> <span class="notes-sep">›</span> <span>Git协作与问题定位方法</span></div><h1 class="notes-page-title" itemprop="headline">Git协作与问题定位方法</h1></header><section class="notes-body" itemprop="text"><h1 id="git-协作与问题定位方法">Git 协作与问题定位方法</h1><blockquote><p>来源：AI Infra 前置基础 → 第 9 章 Git 协作与问题定位方法 笔记类型：学习笔记 目标：从零开始，用完整示例讲清楚”贡献流程怎么走干净、工作区三层怎么看、merge/rebase 怎么选、问题怎么定位” 更新时间：2026-07-02 关联：<code class="language-plaintext highlighter-rouge">linux/Linux开发基本功_新人入门版.md</code>（命令行基础）、<code class="language-plaintext highlighter-rouge">ai-infra/环境隔离与GPU环境诊断.md</code>（问题定位链路）</p></blockquote><hr /><h2 id="一句话结论">一句话结论</h2><p>Git 协作的核心是<strong>原子提交</strong>（一个 commit 只做一件事）和<strong>提交前看清 diff</strong>（同时看 <code class="language-plaintext highlighter-rouge">git diff</code> 和 <code class="language-plaintext highlighter-rouge">git diff --staged</code>）。问题定位的核心是<strong>把”偶尔 OOM”变成”提交 abc123、batch 8、seq 4096、第 23 step 分配 1.2GiB 时 OOM”</strong>——可复现的最小描述才是可执行的问题。</p><hr /><h2 id="一一条干净的贡献流程">一、一条干净的贡献流程</h2><h3 id="11-完整端到端示例">1.1 完整端到端示例</h3><p>从 clone 到提 PR，每一步都验证，不跳步：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ========== 1. 克隆仓库 ==========</span>
+git clone https://github.com/owner/project.git
+<span class="nb">cd </span>project
+<span class="c"># clone 后默认在 main/master 分支，这是公共分支，不要直接在上面改</span>
+
+<span class="c"># ========== 2. 拉取最新代码（如果 clone 是几天前的事） ==========</span>
+git switch main            <span class="c"># 先切到主分支（git 2.23+ 用 switch，旧版用 checkout）</span>
+git pull <span class="nt">--ff-only</span>         <span class="c"># 拉取远程更新，--ff-only 禁止生成合并提交</span>
+<span class="c"># 如果报 "non-fast-forward"，说明本地 main 和远程分叉了，</span>
+<span class="c"># 本地 main 没有自己改的东西，直接 git reset --hard origin/main 重置</span>
+
+<span class="c"># ========== 3. 创建功能分支 ==========</span>
+git switch <span class="nt">-c</span> docs/improve-foundations
+<span class="c"># -c = create，创建并切换到新分支</span>
+<span class="c"># 分支命名规范（团队约定俗成）：</span>
+<span class="c">#   docs/xxx    文档改动</span>
+<span class="c">#   feat/xxx    新功能</span>
+<span class="c">#   fix/xxx     bug 修复</span>
+<span class="c">#   refactor/xxx 重构</span>
+<span class="c">#   test/xxx    测试相关</span>
+
+<span class="c"># ========== 4. 修改文件 ==========</span>
+<span class="c"># ...用编辑器改代码...</span>
+
+<span class="c"># ========== 5. 验证：看清自己改了什么 ==========</span>
+git status <span class="nt">--short</span>
+<span class="c"># 输出示例：</span>
+<span class="c">#  M README.md              ← M 在第二列 = 工作区改了，还没 add</span>
+<span class="c">#  M docs/foundations.md    ← 同上</span>
+<span class="c"># ?? notes.tmp.md           ← ?? = 未跟踪的新文件</span>
+
+git diff <span class="nt">--check</span>
+<span class="c"># 检查有没有行尾空白、冲突标记残留，有问题会报出来</span>
+<span class="c"># 干净的话什么都不输出</span>
+
+git diff
+<span class="c"># 看工作区相对暂存区的改动（还没 add 的改动）</span>
+<span class="c"># 逐行显示 +/-，提交前一定要过一遍</span>
+
+<span class="c"># ========== 6. 暂存（add） ==========</span>
+git add path/to/changed-file
+<span class="c"># 只 add 目标文件，不要 git add .（会把无关的改动也带进去）</span>
+
+<span class="c"># add 后再看一次暂存区 vs HEAD 的 diff</span>
+git diff <span class="nt">--staged</span>
+<span class="c"># 这是即将进入 commit 的内容，最后确认一次</span>
+
+<span class="c"># ========== 7. 提交 ==========</span>
+git commit <span class="nt">-m</span> <span class="s2">"docs: expand programming foundations"</span>
+<span class="c"># commit message 规范（Conventional Commits）：</span>
+<span class="c">#   docs:     文档改动</span>
+<span class="c">#   feat:     新功能</span>
+<span class="c">#   fix:      bug 修复</span>
+<span class="c">#   refactor: 重构（不改功能）</span>
+<span class="c">#   test:     测试</span>
+<span class="c">#   chore:    杂项（构建配置、依赖升级等）</span>
+<span class="c"># 一行写不清就用多行：</span>
+git commit <span class="nt">-m</span> <span class="s2">"feat: add AWQ quantization support"</span> <span class="se">\</span>
+           <span class="nt">-m</span> <span class="s2">"Add autoawq integration for 4-bit weight quantization. Reduces Qwen-14B memory from 28G to 10G."</span>
+
+<span class="c"># ========== 8. 推送到远程 ==========</span>
+git push <span class="nt">-u</span> origin docs/improve-foundations
+<span class="c"># -u = --set-upstream，建立本地分支和远程分支的关联</span>
+<span class="c"># 之后直接 git push 就行，不用再写分支名</span>
+
+<span class="c"># ========== 9. 在 GitHub 上开 PR ==========</span>
+<span class="c"># 推送后终端会显示一个创建 PR 的链接，点击或用 gh 命令：</span>
+gh <span class="nb">pr </span>create <span class="nt">--title</span> <span class="s2">"docs: expand programming foundations"</span> <span class="se">\</span>
+             <span class="nt">--body</span> <span class="s2">"Expand the programming foundations section with more examples."</span>
+</code></pre></div></div><h3 id="12-原子提交一个-commit-只做一件事">1.2 原子提交：一个 commit 只做一件事</h3><p><strong>反例（一个 commit 混了三件事）</strong>：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git add <span class="nt">-A</span>
+git commit <span class="nt">-m</span> <span class="s2">"fix bug + format code + update deps"</span>
+<span class="c"># ❌ 问题：</span>
+<span class="c">#   1. review 时无法聚焦，不知道主要改了什么</span>
+<span class="c">#   2. 出问题想 revert 这个 commit，会把 deps 升级也一起回滚</span>
+<span class="c">#   3. git log 看不出这次提交的目的</span>
+</code></pre></div></div><p><strong>正例（拆成三个 commit）</strong>：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 第 1 个 commit：只改 bug</span>
+git add src/model.py
+git commit <span class="nt">-m</span> <span class="s2">"fix: handle empty batch in forward pass"</span>
+
+<span class="c"># 第 2 个 commit：只格式化</span>
+git add src/utils.py src/data.py
+git commit <span class="nt">-m</span> <span class="s2">"style: apply black formatting to utils and data"</span>
+
+<span class="c"># 第 3 个 commit：只升级依赖</span>
+git add requirements.txt
+git commit <span class="nt">-m</span> <span class="s2">"chore: bump torch to 2.3.1"</span>
+</code></pre></div></div><p><strong>判断标准</strong>：如果 commit message 里出现了”和”、”同时”、”加号”，大概率该拆分。<code class="language-plaintext highlighter-rouge">git add -p</code>（交互式分块暂存）可以把一个文件的不同改动分到不同 commit。</p><h3 id="13-git-add--p一个文件拆成多个-commit">1.3 <code class="language-plaintext highlighter-rouge">git add -p</code>：一个文件拆成多个 commit</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git add <span class="nt">-p</span> model.py
+<span class="c"># Git 会把 model.py 的改动分成多个 hunk（代码块），逐个问你：</span>
+<span class="c">#   y - 暂存这个 hunk</span>
+<span class="c">#   n - 不暂存</span>
+<span class="c">#   s - 把这个 hunk 拆得更小</span>
+<span class="c">#   q - 退出</span>
+<span class="c">#   e - 手动编辑这个 hunk</span>
+<span class="c">#</span>
+<span class="c"># 场景：你在 model.py 里同时改了 bug 和加了新功能，</span>
+<span class="c">#       用 git add -p 把 bug 修复的 hunk 选 y，新功能的选 n，</span>
+<span class="c">#       先 commit bug 修复，再 add 剩下的，commit 新功能</span>
+</code></pre></div></div><hr /><h2 id="二读懂工作区状态三层模型">二、读懂工作区状态：三层模型</h2><h3 id="21-git-的三层结构">2.1 Git 的三层结构</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─────────────────────────────────────────────────┐
+│  HEAD（当前分支的最新提交）                       │
+│  ┌───────────────────────────────────────┐      │
+│  │ 提交 abc123：feat: add training        │      │
+│  └───────────────────────────────────────┘      │
+│           ↑ git commit                          │
+│  ┌───────────────────────────────────────┐      │
+│  │ 暂存区（Index）                         │      │
+│  │  (git add 进来的内容)                  │      │
+│  └───────────────────────────────────────┘      │
+│           ↑ git add                             │
+│  ┌───────────────────────────────────────┐      │
+│  │ 工作区（Working Directory）            │      │
+│  │  (你用编辑器实际改的文件)              │      │
+│  └───────────────────────────────────────┘      │
+└─────────────────────────────────────────────────┘
+</code></pre></div></div><p><strong>核心记忆</strong>：</p><ul><li><code class="language-plaintext highlighter-rouge">git add</code> 把改动从<strong>工作区</strong>搬到<strong>暂存区</strong></li><li><code class="language-plaintext highlighter-rouge">git commit</code> 把<strong>暂存区</strong>的内容固化成一个新提交，HEAD 前进一格</li><li>工作区和暂存区可以不一致，暂存区和 HEAD 也可以不一致——这就是为什么提交前要两个 diff 都看</li></ul><h3 id="22-两个-diff-命令对比的是哪两层">2.2 两个 diff 命令对比的是哪两层</h3><table><thead><tr><th>命令</th><th>对比的层</th><th>回答什么问题</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">git diff</code></td><td>工作区 vs 暂存区</td><td>“我改了但还没 add 的是什么？”</td></tr><tr><td><code class="language-plaintext highlighter-rouge">git diff --staged</code>（或 <code class="language-plaintext highlighter-rouge">--cached</code>）</td><td>暂存区 vs HEAD</td><td>“我 add 了但还没 commit 的是什么？”</td></tr><tr><td><code class="language-plaintext highlighter-rouge">git diff HEAD</code></td><td>工作区 vs HEAD</td><td>“我所有改动（add 的和没 add 的）是什么？”</td></tr></tbody></table><h3 id="23-完整示例一个文件在三层之间的流转">2.3 完整示例：一个文件在三层之间的流转</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 初始状态：工作区、暂存区、HEAD 都是 "Hello"</span>
+<span class="nb">echo</span> <span class="s2">"Hello"</span> <span class="o">&gt;</span> greet.txt
+git add greet.txt
+git commit <span class="nt">-m</span> <span class="s2">"add greet.txt"</span>
+
+<span class="c"># 第 1 步：改工作区，不 add</span>
+<span class="nb">echo</span> <span class="s2">"Hello world"</span> <span class="o">&gt;</span> greet.txt
+git status <span class="nt">--short</span>
+<span class="c">#  M greet.txt          ← M 在第二列：工作区改了，暂存区没变</span>
+
+git diff               <span class="c"># 工作区 vs 暂存区</span>
+<span class="c"># diff --git a/greet.txt b/greet.txt</span>
+<span class="c"># -Hello</span>
+<span class="c"># +Hello world</span>
+
+git diff <span class="nt">--staged</span>      <span class="c"># 暂存区 vs HEAD</span>
+<span class="c"># （空）← 暂存区和 HEAD 一致，没东西</span>
+
+<span class="c"># 第 2 步：add</span>
+git add greet.txt
+git status <span class="nt">--short</span>
+<span class="c"># M  greet.txt          ← M 在第一列：暂存区改了，工作区和暂存区一致</span>
+
+git diff               <span class="c"># 工作区 vs 暂存区</span>
+<span class="c"># （空）← 工作区和暂存区一致</span>
+
+git diff <span class="nt">--staged</span>      <span class="c"># 暂存区 vs HEAD</span>
+<span class="c"># -Hello</span>
+<span class="c"># +Hello world</span>
+
+<span class="c"># 第 3 步：再改工作区（add 之后又改了）</span>
+<span class="nb">echo</span> <span class="s2">"Hello world!"</span> <span class="o">&gt;</span> greet.txt    <span class="c"># 注意末尾加了感叹号</span>
+git status <span class="nt">--short</span>
+<span class="c"># MM greet.txt          ← 两列都有 M：暂存区改了(第一列)，工作区又改了(第二列)</span>
+
+git diff               <span class="c"># 工作区 vs 暂存区</span>
+<span class="c"># -Hello world</span>
+<span class="c"># +Hello world!        ← 工作区比暂存区多了个感叹号</span>
+
+git diff <span class="nt">--staged</span>      <span class="c"># 暂存区 vs HEAD</span>
+<span class="c"># -Hello</span>
+<span class="c"># +Hello world         ← 暂存区是 "Hello world"（没感叹号）</span>
+
+<span class="c"># 提交前要把最新的改动也 add 进去，否则 commit 的是 "Hello world" 不是 "Hello world!"</span>
+git add greet.txt
+git diff <span class="nt">--staged</span>      <span class="c"># 确认即将 commit 的是最终版本</span>
+<span class="c"># -Hello</span>
+<span class="c"># +Hello world!</span>
+git commit <span class="nt">-m</span> <span class="s2">"update greet.txt"</span>
+</code></pre></div></div><p><strong>关键习惯</strong>：提交前同时跑 <code class="language-plaintext highlighter-rouge">git diff</code> 和 <code class="language-plaintext highlighter-rouge">git diff --staged</code>。前者防止”改了忘了 add”，后者防止”add 的是旧版本”。</p><h3 id="24-查看历史">2.4 查看历史</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git log <span class="nt">--oneline</span> <span class="nt">--decorate</span> <span class="nt">-10</span>
+<span class="c"># --oneline     每个提交一行（短 hash + message）</span>
+<span class="c"># --decorate    显示分支/标签指向哪个提交</span>
+<span class="c"># -10           只看最近 10 条</span>
+<span class="c"># 输出：</span>
+<span class="c"># abc1234 (HEAD -&gt; docs/improve, origin/docs/improve) docs: expand foundations</span>
+<span class="c"># def5678 (origin/main, main) feat: add training loop</span>
+<span class="c"># ghi9012 fix: handle empty batch</span>
+<span class="c"># ...</span>
+
+<span class="c"># 看某个文件的修改历史</span>
+git log <span class="nt">--oneline</span> <span class="nt">--</span> README.md
+
+<span class="c"># 看某次提交改了什么</span>
+git show abc1234
+
+<span class="c"># 图形化看分支结构</span>
+git log <span class="nt">--oneline</span> <span class="nt">--graph</span> <span class="nt">--all</span> <span class="nt">-20</span>
+<span class="c"># * abc1234 (HEAD) docs: expand foundations</span>
+<span class="c"># * def5678 feat: add training loop</span>
+<span class="c"># *   9012def Merge branch 'feat/x'</span>
+<span class="c"># |\</span>
+<span class="c"># | * 345678 feat: x</span>
+<span class="c"># * | 789abc feat: y</span>
+<span class="c"># |/</span>
+<span class="c"># * 111111 initial</span>
+</code></pre></div></div><hr /><h2 id="三合并变基与冲突">三、合并、变基与冲突</h2><h3 id="31-merge-vs-rebase两种整合方式">3.1 merge vs rebase：两种整合方式</h3><p><strong>场景</strong>：功能分支 <code class="language-plaintext highlighter-rouge">feat/x</code> 从 <code class="language-plaintext highlighter-rouge">main</code> 分出来后，<code class="language-plaintext highlighter-rouge">main</code> 又有了新提交，现在要把 <code class="language-plaintext highlighter-rouge">feat/x</code> 的改动整合进 <code class="language-plaintext highlighter-rouge">main</code>。</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>初始状态：
+          A---B---C feat/x
+         /
+    D---E---F---G main
+</code></pre></div></div><p><strong>方式一：merge（保留两条历史，创建合并提交）</strong></p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git switch main
+git merge feat/x
+</code></pre></div></div><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>结果：
+          A---B---C feat/x
+         /         \
+    D---E---F---G---H main
+                   ↑
+              合并提交 H（有两个父提交 C 和 G）
+</code></pre></div></div><p><strong>方式二：rebase（把 feat/x 的提交重新播放到 main 顶端，历史线性）</strong></p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git switch feat/x
+git rebase main          <span class="c"># 把 feat/x 的提交重新放到 main 顶端</span>
+git switch main
+git merge <span class="nt">--ff-only</span> feat/x   <span class="c"># fast-forward 合并，不产生合并提交</span>
+</code></pre></div></div><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>结果：
+    D---E---F---G---A'---B'---C' main
+                   ↑
+              A'B'C' 是 A B C 的"副本"（提交 ID 变了）
+</code></pre></div></div><h3 id="32-两种方式的对比">3.2 两种方式的对比</h3><table><thead><tr><th>维度</th><th>merge</th><th>rebase</th></tr></thead><tbody><tr><td>历史</td><td>保留分叉，有合并提交</td><td>线性，无合并提交</td></tr><tr><td>提交 ID</td><td>不变</td><td><strong>改变</strong>（重新生成）</td></tr><tr><td>冲突</td><td>一次性解决（合并提交时）</td><td>可能在每个提交都冲突</td></tr><tr><td>适用</td><td>公共分支、想保留”何时合入”信息</td><td>个人功能分支、想要干净线性历史</td></tr><tr><td>风险</td><td>低（不改写历史）</td><td>高（改写已推送的历史会搞乱别人）</td></tr></tbody></table><h3 id="33-黄金法则什么时候能-rebase">3.3 黄金法则：什么时候能 rebase</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>这个分支已经 push 到远程、有别人在用吗？
+│
+├─ 没有（个人功能分支，本地还没 push）
+│  └─ → 可以 rebase（安全）
+│
+├─ 没有（push 了但是只有自己在用）
+│  └─ → 可以 rebase，但要 force push（git push --force-with-lease）
+│
+└─ 有（公共分支，main/develop/团队共用的 feature 分支）
+   └─ → 不要 rebase，用 merge
+       rebase 会改写提交 ID，别人的本地分支会错乱
+</code></pre></div></div><p><strong><code class="language-plaintext highlighter-rouge">--force-with-lease</code> vs <code class="language-plaintext highlighter-rouge">--force</code></strong>：前者会检查远程分支有没有被别人更新过，更安全；后者无脑覆盖，可能冲掉别人的提交。</p><h3 id="34-冲突解决不是机械删标记">3.4 冲突解决：不是机械删标记</h3><p>冲突时 Git 会在文件里留标记：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+当前分支（你正在 rebase/merge 到的目标）的内容
+=======
+另一个分支的内容
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; feat/x
+</code></pre></div></div><p><strong>错误做法</strong>：随便选一边删掉，或者两边都保留，不看语义。</p><p><strong>正确做法</strong>：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. 先看哪些文件冲突了</span>
+git status
+<span class="c"># both modified:   src/model.py</span>
+
+<span class="c"># 2. 打开冲突文件，理解双方意图</span>
+<span class="c"># 比如 HEAD 改了函数签名加了个参数，feat/x 改了函数体加了个 if</span>
+<span class="c"># 正确解决 = 保留签名改动 + 保留函数体改动（两者不冲突的组合）</span>
+
+<span class="c"># 3. 手动编辑，删掉 &lt;&lt;&lt;&lt;&lt;&lt;&lt; ======= &gt;&gt;&gt;&gt;&gt;&gt;&gt; 标记，保留正确组合</span>
+
+<span class="c"># 4. 验证能跑通</span>
+python <span class="nt">-m</span> pytest tests/test_model.py
+
+<span class="c"># 5. 标记冲突已解决</span>
+git add src/model.py
+
+<span class="c"># 6. 继续</span>
+git rebase <span class="nt">--continue</span>   <span class="c"># 如果是 rebase</span>
+<span class="c"># 或</span>
+git commit              <span class="c"># 如果是 merge（会自动生成合并提交）</span>
+</code></pre></div></div><p><strong>冲突解决后必须跑测试</strong>，因为你手动合并的代码可能有语法错误或逻辑不一致。不要 <code class="language-plaintext highlighter-rouge">--no-verify</code> 跳过 pre-commit hook。</p><h3 id="35-中途想退出-rebasemerge">3.5 中途想退出 rebase/merge</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git rebase <span class="nt">--abort</span>      <span class="c"># rebase 冲突了不想继续，回到 rebase 前的状态</span>
+git merge <span class="nt">--abort</span>       <span class="c"># merge 同理</span>
+</code></pre></div></div><hr /><h2 id="四一个可复用的问题定位框架">四、一个可复用的问题定位框架</h2><h3 id="41-六要素模板">4.1 六要素模板</h3><p>原稿给的框架，展开成可填写的模板：</p><table><thead><tr><th>要素</th><th>说明</th><th>好例子</th><th>坏例子</th></tr></thead><tbody><tr><td><strong>期望行为</strong></td><td>应该发生什么</td><td>“batch=8 时训练应该正常跑完一个 epoch”</td><td>“应该不崩”</td></tr><tr><td><strong>实际行为</strong></td><td>完整报错、退出码、错误输出</td><td>“第 23 step 报 <code class="language-plaintext highlighter-rouge">CUDA out of memory. Tried to allocate 1.20GiB</code>，退出码 137”</td><td>“偶尔 OOM”</td></tr><tr><td><strong>最小复现</strong></td><td>最短命令、最小输入</td><td><code class="language-plaintext highlighter-rouge">python train.py --batch-size 8 --seq-len 4096</code>，数据集用 wikitext-2 的前 1000 行</td><td>“跑训练就崩”</td></tr><tr><td><strong>环境</strong></td><td>代码提交、依赖版本、系统、硬件</td><td>提交 abc123、PyTorch 2.3.0+cu121、Python 3.11、Ubuntu 22.04、A10 24G、驱动 535.129</td><td>“我的环境”</td></tr><tr><td><strong>边界定位</strong></td><td>数据/Python/C++/CUDA/驱动/网络哪一层</td><td>“显存够（nvidia-smi 显示 4G 空闲），PyTorch 层 OOM，怀疑是 attention 计算的中间张量没释放”</td><td>“不知道哪的问题”</td></tr><tr><td><strong>单变量实验</strong></td><td>每次只改一项并记录结果</td><td>“batch 8 → OOM；batch 4 → 不复现；batch 8 + seq 2048 → 不复现；batch 8 + seq 4096 + <code class="language-plaintext highlighter-rouge">torch.cuda.empty_cache()</code> → 仍 OOM”</td><td>“我改了好多东西还是不行”</td></tr></tbody></table><h3 id="42-坏描述-vs-好描述">4.2 坏描述 vs 好描述</h3><p><strong>坏描述（不可执行）</strong>：</p><blockquote><p>训练偶尔会 OOM，重启就好了，不知道为什么。</p></blockquote><p>问题：没有提交、没有参数、没有报错原文、没有环境信息。别人无法复现，也无法判断方向。</p><p><strong>好描述（可执行）</strong>：</p><blockquote><p><strong>期望</strong>：batch=8、seq_len=4096 时训练应该能跑完一个 epoch（约 500 step）。</p><p><strong>实际</strong>：第 23 step 报 <code class="language-plaintext highlighter-rouge">torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 1.20GiB</code>，进程退出码 137（被 OOM Killer 杀）。</p><p><strong>最小复现</strong>：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git checkout abc123
+python train.py <span class="nt">--batch-size</span> 8 <span class="nt">--seq-len</span> 4096 <span class="nt">--dataset</span> wikitext-2 <span class="nt">--limit</span> 1000
+<span class="c"># 第 23 step 必现</span>
+</code></pre></div></div><p><strong>环境</strong>：</p><ul><li>提交：abc1234（分支 feat/flash-attn）</li><li>PyTorch 2.3.0+cu121，Python 3.11，Ubuntu 22.04</li><li>GPU：单卡 A10 24G，驱动 535.129.03</li><li>nvidia-smi 训练前显存：22G 空闲</li></ul><p><strong>边界定位</strong>：</p><ul><li>数据层：已排除（换成随机数据仍复现）</li><li>Python 层：怀疑是 attention 的中间张量没释放（<code class="language-plaintext highlighter-rouge">forward</code> 里有个 <code class="language-plaintext highlighter-rouge">attn_weights</code> 没 detach）</li><li>CUDA 层：显存确实不够，但是 22G 空闲应该够 batch=8</li></ul><p><strong>单变量实验记录</strong>： | 实验 | 结果 | |——|——| | batch=8, seq=4096（原始） | 第 23 step OOM | | batch=4, seq=4096 | 跑完，不复现 | | batch=8, seq=2048 | 跑完，不复现 | | batch=8, seq=4096 + <code class="language-plaintext highlighter-rouge">torch.cuda.empty_cache()</code> 每个 step | 仍第 23 step OOM | | batch=8, seq=4096 + 注释掉 <code class="language-plaintext highlighter-rouge">return attn_weights</code> | 跑完，不复现 ← 定位到 |</p></blockquote><p>最后一条实验直接定位到问题：<code class="language-plaintext highlighter-rouge">attn_weights</code> 被返回后保存在计算图里，导致显存不释放。这个描述让任何人都能复现、能验证、能判断修复是否有效。</p><h3 id="43-定位框架的实际用法">4.3 定位框架的实际用法</h3><p><strong>遇到问题时的固定动作</strong>：</p><ol><li><strong>先别改代码</strong>，先记录上面六要素</li><li><strong>保留原始报错</strong>，截图或复制完整 stderr，不要只记”大概报了个 OOM”</li><li><strong>找最小复现</strong>：减少数据量、减少 batch、关掉分布式，直到找到”刚好能复现”的最小配置</li><li><strong>边界定位</strong>：按 <code class="language-plaintext highlighter-rouge">数据 → Python → C++ → CUDA → 驱动 → 网络</code> 的顺序，逐层排除</li><li><strong>单变量实验</strong>：一次只改一项，记录”改了什么 → 结果是什么”。不要同时改 batch、seq_len、优化器、学习率——出问题了不知道是哪个的锅</li></ol><p><strong>为什么”偶尔”是最差的描述</strong>：偶发性问题往往和”某个未记录的变量”有关（磁盘满、别的进程占 GPU、网络抖动、数据里有脏样本）。如果只记”偶尔”，这个隐藏变量永远找不到。按六要素记录，下一次复现时就能对比”这次和上次哪里不同”。</p><hr /><h2 id="五面试回答可直接口述">五、面试回答（可直接口述）</h2><p><strong>问：git merge 和 git rebase 有什么区别？什么时候用哪个？</strong></p><p>答：merge 保留两条分支历史，创建一个合并提交，提交 ID 不变；rebase 把当前分支的提交”摘下来”重新放到目标分支顶端，历史变成线性，但提交 ID 会改变。选择标准是<strong>黄金法则</strong>：已经 push 到远程、有别人在用的公共分支不要 rebase（改写历史会让别人的本地分支错乱），用 merge；个人的、还没共享的功能分支可以 rebase，保持历史干净。rebase 后 push 需要 <code class="language-plaintext highlighter-rouge">--force-with-lease</code>（比 <code class="language-plaintext highlighter-rouge">--force</code> 安全，会检查远程有没有被别人更新过）。</p><p><strong>问：git diff 和 git diff –staged 有什么区别？</strong></p><p>答：它们对比的层不同。<code class="language-plaintext highlighter-rouge">git diff</code> 对比工作区和暂存区，显示”我改了但还没 add 的内容”；<code class="language-plaintext highlighter-rouge">git diff --staged</code> 对比暂存区和 HEAD，显示”我 add 了但还没 commit 的内容”。提交前应该两个都看：前者防止”改了忘了 add”，后者确认”即将 commit 的是最终版本”。</p><p><strong>问：怎么写一个好的 bug 报告？</strong></p><p>答：要包含六个要素：期望行为、实际行为（完整报错+退出码）、最小复现（最短命令+最小输入）、环境（代码提交+依赖版本+系统+硬件）、边界定位（哪一层的问题）、单变量实验记录。核心是把”偶尔 OOM”这种不可执行的描述，变成”提交 abc123、batch 8、seq 4096、第 23 step 分配 1.2GiB 时 OOM”这种可复现的描述。别人能复现，问题才能被解决。</p><hr /><h2 id="六深入追问">六、深入追问</h2><ol><li><p><strong><code class="language-plaintext highlighter-rouge">git pull</code> 和 <code class="language-plaintext highlighter-rouge">git pull --rebase</code> 有什么区别？</strong> <code class="language-plaintext highlighter-rouge">git pull</code> 默认是 <code class="language-plaintext highlighter-rouge">git fetch</code> + <code class="language-plaintext highlighter-rouge">git merge</code>，会生成合并提交；<code class="language-plaintext highlighter-rouge">git pull --rebase</code> 是 <code class="language-plaintext highlighter-rouge">git fetch</code> + <code class="language-plaintext highlighter-rouge">git rebase</code>，历史线性。个人功能分支同步远程时用 <code class="language-plaintext highlighter-rouge">--rebase</code> 更干净；公共分支用默认 merge。</p></li><li><strong><code class="language-plaintext highlighter-rouge">git reset</code> 的三个模式（–soft / –mixed / –hard）有什么区别？</strong><ul><li><code class="language-plaintext highlighter-rouge">--soft</code>：只移动 HEAD，暂存区和工作区不变（相当于”撤销 commit，改动还在暂存区”）</li><li><code class="language-plaintext highlighter-rouge">--mixed</code>（默认）：移动 HEAD + 重置暂存区，工作区不变（”撤销 commit + add”）</li><li><code class="language-plaintext highlighter-rouge">--hard</code>：移动 HEAD + 重置暂存区 + 重置工作区（彻底丢弃所有改动，不可恢复，危险）</li></ul></li><li><p><strong><code class="language-plaintext highlighter-rouge">git cherry-pick</code> 什么时候用？</strong> 当你只想把某个分支的<strong>某一个提交</strong>搬到当前分支，而不是整个分支合并时。比如 <code class="language-plaintext highlighter-rouge">feat/x</code> 分支上有 5 个提交，你只想要第 3 个 bug 修复，就 <code class="language-plaintext highlighter-rouge">git cherry-pick &lt;那个提交的 hash&gt;</code>。它会把这个提交的改动重新应用到当前分支，生成一个新提交。</p></li><li><p><strong>冲突标记里的 <code class="language-plaintext highlighter-rouge">|||||||</code> 是什么？</strong> 默认的冲突标记只有 <code class="language-plaintext highlighter-rouge">&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code> <code class="language-plaintext highlighter-rouge">=======</code> <code class="language-plaintext highlighter-rouge">&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>。如果配置了 <code class="language-plaintext highlighter-rouge">merge.conflictStyle = diff3</code>，会多出 <code class="language-plaintext highlighter-rouge">|||||||</code> 段，显示<strong>共同祖先</strong>的内容，让你同时看到”原来的样子、我这边的改法、他那边的改法”，更容易判断正确组合。<code class="language-plaintext highlighter-rouge">git config --global merge.conflictStyle diff3</code> 开启。</p></li><li><strong>为什么说”提交原子性”很重要？</strong> 因为 commit 是 Git 里最小的可回滚/可 revert/可 cherry-pick/可 review 单位。一个 commit 混了三件事，想用 <code class="language-plaintext highlighter-rouge">git revert</code> 回滚 bug 修复时，会把 deps 升级和格式化也一起回滚；review 时也无法聚焦”这个 commit 到底想解决什么”。原子提交让历史可读、可回滚、可追溯。</li></ol><hr /><h2 id="七易混淆点">七、易混淆点</h2><table><thead><tr><th>易混淆</th><th>正解</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">git switch</code> 和 <code class="language-plaintext highlighter-rouge">git checkout</code></td><td><code class="language-plaintext highlighter-rouge">switch</code> 是 Git 2.23+ 专门切分支的命令，<code class="language-plaintext highlighter-rouge">checkout</code> 历史更老还能恢复文件。新项目推荐用 <code class="language-plaintext highlighter-rouge">switch</code>/<code class="language-plaintext highlighter-rouge">restore</code> 替代 <code class="language-plaintext highlighter-rouge">checkout</code> 的分支和文件功能</td></tr><tr><td><code class="language-plaintext highlighter-rouge">git diff --staged</code> 和 <code class="language-plaintext highlighter-rouge">git diff --cached</code></td><td>完全等价，<code class="language-plaintext highlighter-rouge">--cached</code> 是旧名</td></tr><tr><td><code class="language-plaintext highlighter-rouge">git pull</code> 和 <code class="language-plaintext highlighter-rouge">git fetch</code></td><td><code class="language-plaintext highlighter-rouge">fetch</code> 只下载远程更新不合并，<code class="language-plaintext highlighter-rouge">pull</code> = <code class="language-plaintext highlighter-rouge">fetch</code> + <code class="language-plaintext highlighter-rouge">merge</code>（或 rebase）。想先看看远程有什么再决定怎么合并，用 <code class="language-plaintext highlighter-rouge">fetch</code></td></tr><tr><td><code class="language-plaintext highlighter-rouge">git merge --no-ff</code> 和 <code class="language-plaintext highlighter-rouge">git merge --ff-only</code></td><td><code class="language-plaintext highlighter-rouge">--no-ff</code> 强制生成合并提交（即使能 fast-forward）；<code class="language-plaintext highlighter-rouge">--ff-only</code> 只允许 fast-forward，不能就报错</td></tr><tr><td><code class="language-plaintext highlighter-rouge">--force</code> 和 <code class="language-plaintext highlighter-rouge">--force-with-lease</code></td><td><code class="language-plaintext highlighter-rouge">--force</code> 无脑覆盖远程；<code class="language-plaintext highlighter-rouge">--force-with-lease</code> 会检查远程分支有没有被别人更新过，更安全</td></tr><tr><td>暂存区和工作区”都改了”的 <code class="language-plaintext highlighter-rouge">MM</code></td><td><code class="language-plaintext highlighter-rouge">git status --short</code> 两列：第一列是暂存区 vs HEAD，第二列是工作区 vs 暂存区。<code class="language-plaintext highlighter-rouge">MM</code> = 暂存区改了，工作区又改了</td></tr></tbody></table><hr /><h2 id="八复用判断下次如何快速定位">八、复用判断（下次如何快速定位）</h2><ul><li><strong>“我应该用 merge 还是 rebase”</strong> → 分支已 push 且有别人在用？merge。个人分支？rebase。</li><li><strong>“我改了代码但 commit 后没包含进去”</strong> → 提交前没看 <code class="language-plaintext highlighter-rouge">git diff --staged</code>，add 的是旧版本，重新 add 再 commit</li><li><strong>“冲突解决后跑不过测试”</strong> → 解决冲突时没跑测试就 <code class="language-plaintext highlighter-rouge">--continue</code> 了，或者用了 <code class="language-plaintext highlighter-rouge">--no-verify</code> 跳过 hook</li><li><strong>“rebase 后 push 被拒绝”</strong> → rebase 改写了历史，需要 <code class="language-plaintext highlighter-rouge">git push --force-with-lease</code></li><li><strong>“bug 没法复现”</strong> → 检查六要素里是不是漏了”隐藏变量”（磁盘空间、其他进程、数据脏样本、网络状态）</li><li><strong>“偶尔出问题”</strong> → 偶发性问题一定有未记录的变量，下次复现时按六要素记录，对比两次的差异</li></ul><hr /><h2 id="九常用命令速查">九、常用命令速查</h2><table><thead><tr><th>场景</th><th>命令</th></tr></thead><tbody><tr><td>看工作区改了什么</td><td><code class="language-plaintext highlighter-rouge">git diff</code></td></tr><tr><td>看暂存区改了什么</td><td><code class="language-plaintext highlighter-rouge">git diff --staged</code></td></tr><tr><td>看所有改动</td><td><code class="language-plaintext highlighter-rouge">git diff HEAD</code></td></tr><tr><td>看状态（简洁）</td><td><code class="language-plaintext highlighter-rouge">git status --short</code></td></tr><tr><td>看最近 10 条提交</td><td><code class="language-plaintext highlighter-rouge">git log --oneline --decorate -10</code></td></tr><tr><td>看分支图</td><td><code class="language-plaintext highlighter-rouge">git log --oneline --graph --all -20</code></td></tr><tr><td>看某次提交改了什么</td><td><code class="language-plaintext highlighter-rouge">git show &lt;hash&gt;</code></td></tr><tr><td>交互式分块暂存</td><td><code class="language-plaintext highlighter-rouge">git add -p &lt;file&gt;</code></td></tr><tr><td>撤销工作区改动</td><td><code class="language-plaintext highlighter-rouge">git restore &lt;file&gt;</code>（旧版 <code class="language-plaintext highlighter-rouge">git checkout -- &lt;file&gt;</code>）</td></tr><tr><td>撤销暂存（unstage）</td><td><code class="language-plaintext highlighter-rouge">git restore --staged &lt;file&gt;</code></td></tr><tr><td>合并分支</td><td><code class="language-plaintext highlighter-rouge">git merge &lt;branch&gt;</code></td></tr><tr><td>变基</td><td><code class="language-plaintext highlighter-rouge">git rebase &lt;branch&gt;</code></td></tr><tr><td>继续 rebase</td><td><code class="language-plaintext highlighter-rouge">git rebase --continue</code></td></tr><tr><td>放弃 rebase</td><td><code class="language-plaintext highlighter-rouge">git rebase --abort</code></td></tr><tr><td>cherry-pick</td><td><code class="language-plaintext highlighter-rouge">git cherry-pick &lt;hash&gt;</code></td></tr><tr><td>强制推送（安全）</td><td><code class="language-plaintext highlighter-rouge">git push --force-with-lease</code></td></tr></tbody></table><hr /><h2 id="十关联笔记">十、关联笔记</h2><ul><li><code class="language-plaintext highlighter-rouge">linux/Linux开发基本功_新人入门版.md</code>（命令行基础、<code class="language-plaintext highlighter-rouge">set -euo pipefail</code>、退出码）</li><li><code class="language-plaintext highlighter-rouge">ai-infra/环境隔离与GPU环境诊断.md</code>（GPU 问题定位的固定链路，与本笔记的问题定位框架互补）</li><li><code class="language-plaintext highlighter-rouge">troubleshooting/</code>（具体排错案例）</li><li><code class="language-plaintext highlighter-rouge">技术工具学习索引.md</code></li></ul></section><!-- Previous / Next navigation --><nav class="notes-pager"><div class="notes-pager-links"> <span></span> <span></span></div></nav></div></article><!-- Right Sidebar: Table of Contents (built by JS from DOM) --><aside class="notes-toc" id="notes-toc"><div class="notes-toc-inner"><h4 class="notes-toc-title">目录</h4><nav class="notes-toc-nav"><ul class="notes-toc-list" id="notes-toc-list"> <!-- Populated by notes-toc.js --></ul></nav></div></aside></div><script src="https://1571859588.github.io/assets/js/notes-toc.js"></script> <script> (function() { var q = new URLSearchParams(location.search).get('q'); if (!q || q.length < 2) return; var body = document.querySelector('.notes-body'); if (!body) return; // Walk text nodes, find and highlight matches var walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT, null, false); var textNodes = []; while (walker.nextNode()) { var p = walker.currentNode.parentNode; // Skip script, style, code blocks, and already-marked text if (p.tagName === 'SCRIPT' || p.tagName === 'STYLE' || p.tagName === 'MARK' || p.closest('pre') || p.closest('.notes-search-hit')) continue; textNodes.push(walker.currentNode); } var first = null; var re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'); textNodes.forEach(function(node) { var text = node.textContent; if (!re.test(text)) return; re.lastIndex = 0; // reset after test var frag = document.createDocumentFragment(); var lastIdx = 0; var match; while ((match = re.exec(text)) !== null) { if (match.index > lastIdx) { frag.appendChild(document.createTextNode(text.substring(lastIdx, match.index))); } var mark = document.createElement('mark'); mark.className = 'notes-search-mark'; mark.textContent = match[0]; frag.appendChild(mark); if (!first) first = mark; lastIdx = match.index + match[0].length; } if (lastIdx < text.length) { frag.appendChild(document.createTextNode(text.substring(lastIdx))); } node.parentNode.replaceChild(frag, node); }); if (first) { setTimeout(function() { first.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300); } })(); </script><div class="page__footer"><footer> <!-- start custom footer snippets --> <a href="/sitemap/">Sitemap</a> <!-- end custom footer snippets --><div class="page__footer-follow"><ul class="social-icons"><li><strong>Follow:</strong></li><li><a href="http://github.com/1571859588"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a></li><li><a href="https://1571859588.github.io/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li></ul></div><div class="page__footer-copyright"> &copy; 2026 Yuntao Nie, Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://github.com/academicpages/academicpages.github.io">AcademicPages</a>, a fork of <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.<br /> Site last updated 2026-07-06</div></footer></div><script src="https://1571859588.github.io/assets/js/main.min.js"></script> <script src="https://1571859588.github.io/assets/js/paper-details.js"></script> <!-- Fix kramdown stripping backslashes before _ in math spans. kramdown treats \_ as a markdown escape, converting $seq\_len$ to $seq_len$. MathJax then interprets _ as subscript instead of a literal underscore. This runs synchronously before MathJax (async) processes the page. --> <script> (function() { var content = document.querySelector('.page__content'); if (!content) return; var walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT, null, false); var nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode); nodes.forEach(function(node) { var text = node.textContent; var fixed = text.replace(/\$([^$\n]+?)\$/g, function(match, math) { // Inside $...$, add \ before _ followed by 2+ lowercase letters. // Safe: legitimate subscripts use single chars ($d_k$) or braces ($x_{ij}$). var fixedMath = math.replace(/_([a-z]{2,})/g, '\\_$1'); return fixedMath !== math ? '$' + fixedMath + '$' : match; }); if (fixed !== text) node.textContent = fixed; }); })(); </script> <script> var SERIES_INDEX = [ {t:"Git协作与问题定位方法", u:"/notes/Git%E5%8D%8F%E4%BD%9C%E4%B8%8E%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D%E6%96%B9%E6%B3%95/"} ]; (function() { if (!SERIES_INDEX.length) return; var inp = document.getElementById('notes-sidebar-search-input'); var box = document.getElementById('notes-sidebar-search-results'); if (!inp || !box) return; function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; } function hl(t, q) { var o = '', L = 0, lo = t.toLowerCase(), ql = q.toLowerCase(), i; while ((i = lo.indexOf(ql, L)) !== -1) { o += esc(t.substring(L, i)) + '<mark class="notes-search-highlight">' + esc(t.substring(i, i + q.length)) + '</mark>'; L = i + q.length; } return o + esc(t.substring(L)); } inp.addEventListener('input', function() { var q = this.value.trim(); if (!q) { box.style.display = 'none'; box.innerHTML = ''; return; } var ql = q.toLowerCase(), hits = []; for (var i = 0; i < SERIES_INDEX.length; i++) { if (SERIES_INDEX[i].t.toLowerCase().indexOf(ql) !== -1) hits.push(SERIES_INDEX[i]); } if (!hits.length) { box.innerHTML = '<div class="notes-sidebar-search-empty">无匹配</div>'; } else { var h = ''; for (var j = 0; j < Math.min(hits.length, 15); j++) { h += '<a href="' + hits[j].u + '" class="notes-sidebar-search-hit" data-q="' + esc(q) + '">' + '<span class="notes-sidebar-search-hit-title">' + hl(hits[j].t, q) + '</span></a>'; } box.innerHTML = h; } box.style.display = 'block'; }); inp.addEventListener('keydown', function(e) { if (e.key === 'Escape') { box.style.display = 'none'; box.innerHTML = ''; this.blur(); } }); box.addEventListener('click', function(e) { var a = e.target.closest('.notes-sidebar-search-hit'); if (a && a.dataset.q) sessionStorage.setItem('notes-search-q', a.dataset.q); }); document.addEventListener('click', function(e) { if (!e.target.closest('#notes-sidebar-search')) { box.style.display = 'none'; box.innerHTML = ''; } }); })(); </script></body></html>

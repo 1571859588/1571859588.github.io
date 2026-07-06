@@ -1,0 +1,553 @@
+<!doctype html><html lang="en" class="no-js"><head><meta charset="utf-8"> <!-- begin SEO --><title>Vite学习笔记 - Yuntao Nie</title><meta property="og:locale" content="en-US"><meta property="og:site_name" content="Yuntao Nie"><meta property="og:title" content="Vite学习笔记"><link rel="canonical" href="https://1571859588.github.io/notes/Vite%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><meta property="og:url" content="https://1571859588.github.io/notes/Vite%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><meta property="og:description" content="Vite 学习笔记：从零搞懂现代前端构建工具"> <script type="application/ld+json"> { "@context" : "http://schema.org", "@type" : "Person", "name" : "Yuntao Nie", "url" : "https://1571859588.github.io", "sameAs" : null } </script> <!-- end SEO --><link href="https://1571859588.github.io/feed.xml" type="application/atom+xml" rel="alternate" title="Yuntao Nie Feed"> <!-- http://t.co/dKP3o1e --><meta name="HandheldFriendly" content="True"><meta name="MobileOptimized" content="320"><meta name="viewport" content="width=device-width, initial-scale=1.0"> <script> document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js '; </script> <!-- For all browsers --><link rel="stylesheet" href="https://1571859588.github.io/assets/css/main.css"><meta http-equiv="cleartype" content="on"> <!-- start custom head snippets --><link rel="apple-touch-icon" sizes="57x57" href="https://1571859588.github.io/images/apple-touch-icon-57x57.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="60x60" href="https://1571859588.github.io/images/apple-touch-icon-60x60.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="72x72" href="https://1571859588.github.io/images/apple-touch-icon-72x72.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="76x76" href="https://1571859588.github.io/images/apple-touch-icon-76x76.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="114x114" href="https://1571859588.github.io/images/apple-touch-icon-114x114.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="120x120" href="https://1571859588.github.io/images/apple-touch-icon-120x120.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="144x144" href="https://1571859588.github.io/images/apple-touch-icon-144x144.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="152x152" href="https://1571859588.github.io/images/apple-touch-icon-152x152.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="180x180" href="https://1571859588.github.io/images/apple-touch-icon-180x180.png?v=M44lzPylqQ"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-32x32.png?v=M44lzPylqQ" sizes="32x32"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/android-chrome-192x192.png?v=M44lzPylqQ" sizes="192x192"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-96x96.png?v=M44lzPylqQ" sizes="96x96"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-16x16.png?v=M44lzPylqQ" sizes="16x16"><link rel="manifest" href="https://1571859588.github.io/images/manifest.json?v=M44lzPylqQ"><link rel="mask-icon" href="https://1571859588.github.io/images/safari-pinned-tab.svg?v=M44lzPylqQ" color="#000000"><link rel="shortcut icon" href="/images/favicon.ico?v=M44lzPylqQ"><meta name="msapplication-TileColor" content="#000000"><meta name="msapplication-TileImage" content="https://1571859588.github.io/images/mstile-144x144.png?v=M44lzPylqQ"><meta name="msapplication-config" content="https://1571859588.github.io/images/browserconfig.xml?v=M44lzPylqQ"><meta name="theme-color" content="#ffffff"><link rel="stylesheet" href="https://1571859588.github.io/assets/css/academicons.css"/> <!-- MathJax for math rendering --> <script> MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['\\(', '\\)']] } }; </script> <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script> <!-- end custom head snippets --></head><body> <!--[if lt IE 9]><div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div><![endif]--><div class="masthead"><div class="masthead__inner-wrap"><div class="masthead__menu"><nav id="site-nav" class="greedy-nav"> <button><div class="navicon"></div></button><ul class="visible-links"><li class="masthead__menu-item masthead__menu-item--lg"><a href="https://1571859588.github.io/">Yuntao Nie</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/publications/">Publications</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/cv/">CV</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/notes/">Notes</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/year-archive/">Blog</a></li></ul><ul class="hidden-links hidden"></ul></nav></div></div></div><div id="main" role="main" class="notes-layout"> <!-- Left Sidebar: Series Chapter Navigation --><aside class="notes-sidebar" id="notes-sidebar"><div class="notes-sidebar-inner"><div class="notes-series-header"><h3 class="notes-series-title">frontend</h3></div><div class="notes-sidebar-search" id="notes-sidebar-search"> <input type="text" class="notes-sidebar-search-input" id="notes-sidebar-search-input" placeholder="搜索本专题…" autocomplete="off"><div class="notes-sidebar-search-results" id="notes-sidebar-search-results" style="display:none"></div></div><nav class="notes-chapter-nav"><ul class="notes-chapter-list"><li class="notes-chapter-item active"> <a href="/notes/Vite%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="notes-chapter-link"> <span class="notes-chapter-num">1</span> <span class="notes-chapter-title">Vite学习笔记</span> </a></li><li class="notes-section-group"> <button class="notes-section-toggle" aria-expanded="true"> <span class="notes-section-arrow">▾</span> <span class="notes-section-label">my-project</span> </button><ul class="notes-section-list"><li class="notes-chapter-item "> <a href="/notes/README-3/" class="notes-chapter-link"> <span class="notes-chapter-num">1</span> <span class="notes-chapter-title">README</span> </a></li></ul></li><li class="notes-section-group"> <button class="notes-section-toggle" aria-expanded="true"> <span class="notes-section-arrow">▾</span> <span class="notes-section-label">test-app-js</span> </button><ul class="notes-section-list"><li class="notes-chapter-item "> <a href="/notes/README-4/" class="notes-chapter-link"> <span class="notes-chapter-num">1</span> <span class="notes-chapter-title">README</span> </a></li></ul></li></ul></nav><div class="notes-sidebar-footer"> <a href="/notes/" class="notes-back-link">← 所有笔记系列</a></div></div></aside><!-- Mobile sidebar toggle --> <button class="notes-sidebar-toggle" id="notes-sidebar-toggle" aria-label="Toggle sidebar"> <span class="notes-sidebar-toggle-icon"></span> </button> <!-- Main Content --><article class="notes-content" itemscope itemtype="http://schema.org/CreativeWork"><meta itemprop="headline" content="Vite学习笔记"><div class="notes-content-inner"><header class="notes-header"><div class="notes-breadcrumb"> <a href="/notes/">Notes</a> <span class="notes-sep">›</span> <span>frontend</span> <span class="notes-sep">›</span> <span>Vite学习笔记</span></div><h1 class="notes-page-title" itemprop="headline">Vite学习笔记</h1></header><section class="notes-body" itemprop="text"><h1 id="vite-学习笔记从零搞懂现代前端构建工具">Vite 学习笔记：从零搞懂现代前端构建工具</h1><blockquote><table><tbody><tr><td>更新时间：2026-06-28（新增”生产构建产物 dist 与部署”章节）</td><td>适用版本：Vite 5.x</td></tr></tbody></table></blockquote><hr /><h2 id="一vite-是什么为什么需要它">一、Vite 是什么？为什么需要它？</h2><h3 id="11-一句话解释">1.1 一句话解释</h3><p>Vite（法语”快”的意思，读作 /vit/）是一个<strong>前端构建工具</strong>，由 Vue.js 的作者尤雨溪创建。它的核心目标是：<strong>开发时启动极快，生产时打包极优</strong>。</p><h3 id="12-没有-vite-之前我们经历了什么痛苦">1.2 没有 Vite 之前，我们经历了什么痛苦？</h3><p>想象你搬进一个新家，webpack 就像那种”把所有家具先全部组装好，才让你进屋”的搬家公司：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>你的项目有 500 个模块
+         ↓
+webpack 启动时：全部打包成 bundle.js（耗时 30s~几分钟）
+         ↓
+打包完成，浏览器才能看到页面
+</code></pre></div></div><p><strong>痛点：</strong></p><ul><li>项目越大，启动越慢（大型项目动辄 30 秒以上）</li><li>改一行代码，热更新也要等好几秒</li><li>开发者等启动等到怀疑人生</li></ul><h3 id="13-vite-怎么解决的按需加载思路">1.3 Vite 怎么解决的？——”按需加载”思路</h3><p>Vite 就像一个聪明的管家：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Vite 启动时：什么都不打包，直接启动服务器（毫秒级）
+         ↓
+浏览器请求哪个模块，Vite 就实时编译哪个模块
+         ↓
+页面秒开！
+</code></pre></div></div><p><strong>类比理解：</strong></p><table><thead><tr><th> </th><th>webpack 的做法</th><th>Vite 的做法</th></tr></thead><tbody><tr><td>比喻</td><td>食堂一次做好 100 份盒饭再开饭</td><td>自助餐，你点什么厨师做什么</td></tr><tr><td>启动速度</td><td>慢（要等全部做完）</td><td>快（秒开）</td></tr><tr><td>大项目</td><td>越来越慢</td><td>几乎不受影响</td></tr></tbody></table><hr /><h2 id="二核心概念必背">二、核心概念（必背）</h2><h3 id="21-三大核心机制">2.1 三大核心机制</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─────────────────────────────────────────────────────┐
+│                    Vite 架构                        │
+│                                                     │
+│  开发环境                生产环境                    │
+│  ┌──────────────┐       ┌──────────────────┐        │
+│  │ 原生 ESM     │       │ Rollup 打包       │        │
+│  │ 按需编译     │       │ 代码压缩/拆分     │        │
+│  │ esbuild 预构建│       │ Tree-shaking      │        │
+│  └──────────────┘       └──────────────────┘        │
+│                                                     │
+│  共同能力：HMR（热模块替换）                         │
+└─────────────────────────────────────────────────────┘
+</code></pre></div></div><h3 id="22-概念一原生-esmes-modules">2.2 概念一：原生 ESM（ES Modules）</h3><p><strong>是什么：</strong> 现代浏览器原生支持 <code class="language-plaintext highlighter-rouge">import/export</code>，Vite 利用这个特性，不做打包，让浏览器自己去请求模块。</p><div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 传统 webpack：先把所有 import 打包成一个文件</span>
+<span class="c1">// Vite 开发模式：浏览器直接发起请求</span>
+<span class="c1">// 你在代码里写：</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">createApp</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">vue</span><span class="dl">'</span>
+
+<span class="c1">// 浏览器实际请求的是：</span>
+<span class="c1">// GET /node_modules/.vite/deps/vue.js?v=d12e8f</span>
+</code></pre></div></div><p><strong>关键点：</strong> Vite 会预构建（pre-bundle）第三方依赖（如 vue、react），因为这些库通常不是 ESM 格式，用 <strong>esbuild</strong>（Go 语言写的，比 JS 快 10-100 倍）快速转换。</p><h3 id="23-概念二rollup-生产构建">2.3 概念二：Rollup 生产构建</h3><p>开发环境用 ESM 没问题，但生产环境不能这么玩（太多 HTTP 请求会慢）。所以 Vite 在生产构建时用 <strong>Rollup</strong> 来打包：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>生产构建流程：
+源代码 → Rollup 打包 → Tree-shaking → 代码压缩 → 拆分 chunk → 输出 dist/
+</code></pre></div></div><p><strong>为什么开发用 ESM，生产用 Rollup？</strong></p><table><thead><tr><th>阶段</th><th>目标</th><th>工具选择</th><th>原因</th></tr></thead><tbody><tr><td>开发</td><td>快启动、快更新</td><td>原生 ESM + esbuild</td><td>按需加载，不打包</td></tr><tr><td>生产</td><td>小体积、高性能</td><td>Rollup</td><td>成熟的打包优化</td></tr></tbody></table><h3 id="24-概念三hmr热模块替换">2.4 概念三：HMR（热模块替换）</h3><p><strong>是什么：</strong> 改代码后，浏览器不刷新整页，只替换改动的那个模块，页面状态保留。</p><div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 你正在调一个按钮的样式</span>
+<span class="c1">// 改了 color: red → color: blue</span>
+<span class="c1">// HMR 只替换这个 CSS 模块，不重新加载整个页面</span>
+<span class="c1">// 你在表单里填的数据还在！</span>
+</code></pre></div></div><p><strong>Vite HMR 为什么快？</strong></p><p>webpack 的 HMR：改一个模块 → 重新打包受影响的 chunk → 推给浏览器（链条长） Vite 的 HMR：改一个模块 → 直接让浏览器重新请求这个模块（链条短，精准更新）</p><hr /><h2 id="三创建你的第一个-vite-项目">三、创建你的第一个 Vite 项目</h2><h3 id="31-命令行创建">3.1 命令行创建</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 方式一：交互式创建（推荐新手）</span>
+npm create vite@latest my-project
+
+<span class="c"># 方式二：直接指定模板</span>
+npm create vite@latest my-react-app <span class="nt">--</span> <span class="nt">--template</span> react
+npm create vite@latest my-vue-app <span class="nt">--</span> <span class="nt">--template</span> vue
+
+<span class="c"># 方式三：用 yarn / pnpm</span>
+yarn create vite my-project
+pnpm create vite my-project
+</code></pre></div></div><h3 id="32-可选模板一览">3.2 可选模板一览</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vanilla         → 纯 HTML/CSS/JS（学习用）
+vanilla-ts      → 纯 TS 版本
+vue             → Vue 3
+vue-ts          → Vue 3 + TypeScript
+react           → React
+react-ts        → React + TypeScript
+preact          → Preact（轻量 React 替代）
+svelte          → Svelte
+solid           → Solid.js
+</code></pre></div></div><h3 id="33-完整的启动流程">3.3 完整的启动流程</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. 创建项目</span>
+npm create vite@latest my-app <span class="nt">--</span> <span class="nt">--template</span> react
+
+<span class="c"># 2. 进入目录</span>
+<span class="nb">cd </span>my-app
+
+<span class="c"># 3. 安装依赖</span>
+npm <span class="nb">install</span>
+
+<span class="c"># 4. 启动开发服务器</span>
+npm run dev
+<span class="c"># 输出：Local: http://localhost:5173/</span>
+
+<span class="c"># 5. 构建生产版本</span>
+npm run build
+
+<span class="c"># 6. 预览生产构建结果</span>
+npm run preview
+</code></pre></div></div><hr /><h2 id="四项目结构详解">四、项目结构详解</h2><h3 id="41-目录结构">4.1 目录结构</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>my-app/
+├── node_modules/        # 依赖包（不要提交到 git）
+├── public/              # 静态资源（不会被处理，直接复制到 dist）
+│   ├── favicon.ico
+│   └── robots.txt
+├── src/                 # 源代码（会被 Vite 处理）
+│   ├── assets/          # 图片、字体等（会被 Vite 处理和优化）
+│   ├── components/      # 组件
+│   ├── App.jsx          # 根组件
+│   ├── main.jsx         # 入口 JS
+│   └── index.css        # 全局样式
+├── index.html           # ⚡ HTML 入口文件（注意：在根目录！）
+├── vite.config.js       # Vite 配置文件
+├── package.json         # 项目配置
+└── .gitignore
+</code></pre></div></div><h3 id="42-重点文件解读">4.2 重点文件解读</h3><h4 id="indexhtml--为什么放在根目录"><code class="language-plaintext highlighter-rouge">index.html</code> —— 为什么放在根目录？</h4><div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">"en"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"UTF-8"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"icon"</span> <span class="na">type=</span><span class="s">"image/svg+xml"</span> <span class="na">href=</span><span class="s">"/vite.svg"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">"viewport"</span> <span class="na">content=</span><span class="s">"width=device-width, initial-scale=1.0"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;title&gt;</span>Vite + React<span class="nt">&lt;/title&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"root"</span><span class="nt">&gt;&lt;/div&gt;</span>
+    <span class="c">&lt;!-- 这个 script 标签是入口，Vite 从这里开始解析依赖 --&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"module"</span> <span class="na">src=</span><span class="s">"/src/main.jsx"</span><span class="nt">&gt;&lt;/script&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div><p><strong>注意 <code class="language-plaintext highlighter-rouge">type="module"</code>：</strong> 告诉浏览器这个脚本是 ESM 模块，这是 Vite 整个”原生 ESM”思路的起点。</p><p><strong>为什么在根目录而不是 public/ 里？</strong> webpack 时代 HTML 模板藏在 public/ 或 src/ 里，Vite 认为 HTML 是项目的入口，理应放在根目录，更直观。</p><h4 id="public-vs-srcassets-的区别"><code class="language-plaintext highlighter-rouge">public/</code> vs <code class="language-plaintext highlighter-rouge">src/assets/</code> 的区别</h4><table><thead><tr><th> </th><th><code class="language-plaintext highlighter-rouge">public/</code></th><th><code class="language-plaintext highlighter-rouge">src/assets/</code></th></tr></thead><tbody><tr><td>处理方式</td><td>原封不动复制到 dist</td><td>Vite 处理（hash 重命名、压缩等）</td></tr><tr><td>引用方式</td><td>绝对路径 <code class="language-plaintext highlighter-rouge">/xxx.png</code></td><td><code class="language-plaintext highlighter-rouge">import</code> 导入</td></tr><tr><td>适合放什么</td><td>favicon、robots.txt、不需要被 import 的大文件</td><td>组件里用到的图片、图标</td></tr></tbody></table><div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// ❌ public 里的文件不要 import</span>
+<span class="k">import</span> <span class="nx">logo</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">/public/logo.png</span><span class="dl">'</span> <span class="c1">// 错误用法</span>
+
+<span class="c1">// ✅ public 里直接用绝对路径引用</span>
+<span class="o">&lt;</span><span class="nx">img</span> <span class="nx">src</span><span class="o">=</span><span class="dl">"</span><span class="s2">/logo.png</span><span class="dl">"</span> <span class="o">/&gt;</span>
+
+<span class="c1">// ✅ src/assets 里的文件用 import</span>
+<span class="k">import</span> <span class="nx">logo</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./assets/logo.png</span><span class="dl">'</span>
+<span class="o">&lt;</span><span class="nx">img</span> <span class="nx">src</span><span class="o">=</span><span class="p">{</span><span class="nx">logo</span><span class="p">}</span> <span class="sr">/</span><span class="err">&gt;
+</span></code></pre></div></div><hr /><h2 id="五常用命令速查">五、常用命令速查</h2><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 创建项目</span>
+npm create vite@latest
+
+<span class="c"># 启动开发服务器（默认端口 5173）</span>
+npm run dev
+<span class="c"># 等价于：vite</span>
+
+<span class="c"># 指定端口和自动打开浏览器</span>
+npx vite <span class="nt">--port</span> 3000 <span class="nt">--open</span>
+
+<span class="c"># 生产构建（输出到 dist/）</span>
+npm run build
+<span class="c"># 等价于：vite build</span>
+
+<span class="c"># 预览生产构建（本地起个静态服务器看 dist/ 的效果）</span>
+npm run preview
+<span class="c"># 等价于：vite preview</span>
+
+<span class="c"># 构建时指定模式</span>
+npx vite build <span class="nt">--mode</span> staging
+</code></pre></div></div><p><strong>package.json 中默认脚本：</strong></p><div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"scripts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"dev"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vite"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"build"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vite build"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"preview"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vite preview"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div><hr /><h2 id="六viteconfigjs-配置详解">六、vite.config.js 配置详解</h2><h3 id="61-基础配置">6.1 基础配置</h3><div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// vite.config.js</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">defineConfig</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">vite</span><span class="dl">'</span>
+<span class="k">import</span> <span class="nx">react</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@vitejs/plugin-react</span><span class="dl">'</span>
+<span class="k">import</span> <span class="nx">path</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">path</span><span class="dl">'</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="nx">defineConfig</span><span class="p">({</span>
+  <span class="c1">// 插件</span>
+  <span class="na">plugins</span><span class="p">:</span> <span class="p">[</span><span class="nx">react</span><span class="p">()],</span>
+
+  <span class="c1">// 路径别名（超实用！）</span>
+  <span class="na">resolve</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">alias</span><span class="p">:</span> <span class="p">{</span>
+      <span class="dl">'</span><span class="s1">@</span><span class="dl">'</span><span class="p">:</span> <span class="nx">path</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">,</span> <span class="dl">'</span><span class="s1">./src</span><span class="dl">'</span><span class="p">),</span>
+      <span class="dl">'</span><span class="s1">@components</span><span class="dl">'</span><span class="p">:</span> <span class="nx">path</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">,</span> <span class="dl">'</span><span class="s1">./src/components</span><span class="dl">'</span><span class="p">),</span>
+      <span class="dl">'</span><span class="s1">@utils</span><span class="dl">'</span><span class="p">:</span> <span class="nx">path</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">,</span> <span class="dl">'</span><span class="s1">./src/utils</span><span class="dl">'</span><span class="p">),</span>
+    <span class="p">},</span>
+  <span class="p">},</span>
+
+  <span class="c1">// 开发服务器配置</span>
+  <span class="na">server</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">port</span><span class="p">:</span> <span class="mi">3000</span><span class="p">,</span>          <span class="c1">// 端口号</span>
+    <span class="na">open</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>          <span class="c1">// 启动时自动打开浏览器</span>
+    <span class="na">host</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>          <span class="c1">// 允许外网访问（局域网调试用）</span>
+
+    <span class="c1">// 代理配置（解决跨域问题！面试高频）</span>
+    <span class="na">proxy</span><span class="p">:</span> <span class="p">{</span>
+      <span class="dl">'</span><span class="s1">/api</span><span class="dl">'</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">target</span><span class="p">:</span> <span class="dl">'</span><span class="s1">http://localhost:8080</span><span class="dl">'</span><span class="p">,</span>  <span class="c1">// 后端服务地址</span>
+        <span class="na">changeOrigin</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>               <span class="c1">// 修改请求头 Origin</span>
+        <span class="na">rewrite</span><span class="p">:</span> <span class="p">(</span><span class="nx">path</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">path</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/^</span><span class="se">\/</span><span class="sr">api/</span><span class="p">,</span> <span class="dl">''</span><span class="p">),</span> <span class="c1">// 去掉 /api 前缀</span>
+      <span class="p">},</span>
+    <span class="p">},</span>
+  <span class="p">},</span>
+
+  <span class="c1">// 构建配置</span>
+  <span class="na">build</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">outDir</span><span class="p">:</span> <span class="dl">'</span><span class="s1">dist</span><span class="dl">'</span><span class="p">,</span>      <span class="c1">// 输出目录</span>
+    <span class="na">assetsDir</span><span class="p">:</span> <span class="dl">'</span><span class="s1">assets</span><span class="dl">'</span><span class="p">,</span> <span class="c1">// 静态资源目录</span>
+    <span class="na">sourcemap</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>    <span class="c1">// 生产环境关闭 sourcemap</span>
+    <span class="na">minify</span><span class="p">:</span> <span class="dl">'</span><span class="s1">terser</span><span class="dl">'</span><span class="p">,</span>    <span class="c1">// 压缩工具（可选 'esbuild' 或 'terser'）</span>
+  <span class="p">},</span>
+<span class="p">})</span>
+</code></pre></div></div><h3 id="62-路径别名示例">6.2 路径别名示例</h3><p>配置了别名之后，import 变得超清爽：</p><div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 没有别名时（地狱）</span>
+<span class="k">import</span> <span class="nx">Button</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../../../components/Button</span><span class="dl">'</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">formatDate</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../../../../utils/date</span><span class="dl">'</span>
+
+<span class="c1">// 有别名后（天堂）</span>
+<span class="k">import</span> <span class="nx">Button</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@components/Button</span><span class="dl">'</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">formatDate</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@utils/date</span><span class="dl">'</span>
+</code></pre></div></div><h3 id="63-代理配置详解解决跨域">6.3 代理配置详解（解决跨域）</h3><p><strong>问题场景：</strong> 前端在 <code class="language-plaintext highlighter-rouge">localhost:5173</code>，后端在 <code class="language-plaintext highlighter-rouge">localhost:8080</code>，直接请求会跨域。</p><div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 前端代码这样写</span>
+<span class="nx">fetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/users</span><span class="dl">'</span><span class="p">)</span>  <span class="c1">// 请求 localhost:5173/api/users</span>
+
+<span class="c1">// Vite 代理帮你转发</span>
+<span class="c1">// 实际请求变成了：localhost:8080/users</span>
+<span class="c1">// 浏览器看不到跨域，完美！</span>
+</code></pre></div></div><p><strong>多种代理写法：</strong></p><div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">proxy</span><span class="p">:</span> <span class="p">{</span>
+  <span class="c1">// 简单写法：所有 /api 开头的请求都转发</span>
+  <span class="dl">'</span><span class="s1">/api</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">http://localhost:8080</span><span class="dl">'</span><span class="p">,</span>
+
+  <span class="c1">// 完整写法：带重写</span>
+  <span class="dl">'</span><span class="s1">/api</span><span class="dl">'</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nl">target</span><span class="p">:</span> <span class="dl">'</span><span class="s1">http://localhost:8080</span><span class="dl">'</span><span class="p">,</span>
+    <span class="nx">changeOrigin</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nx">rewrite</span><span class="p">:</span> <span class="p">(</span><span class="nx">path</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">path</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/^</span><span class="se">\/</span><span class="sr">api/</span><span class="p">,</span> <span class="dl">''</span><span class="p">),</span>
+  <span class="p">},</span>
+
+  <span class="c1">// 多个后端服务</span>
+  <span class="dl">'</span><span class="s1">/user-api</span><span class="dl">'</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nl">target</span><span class="p">:</span> <span class="dl">'</span><span class="s1">http://localhost:8081</span><span class="dl">'</span><span class="p">,</span>
+    <span class="nx">changeOrigin</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="p">},</span>
+  <span class="dl">'</span><span class="s1">/order-api</span><span class="dl">'</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nl">target</span><span class="p">:</span> <span class="dl">'</span><span class="s1">http://localhost:8082</span><span class="dl">'</span><span class="p">,</span>
+    <span class="nx">changeOrigin</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="p">},</span>
+<span class="p">}</span>
+</code></pre></div></div><hr /><h2 id="七环境变量">七、环境变量</h2><h3 id="71-env-文件">7.1 .env 文件</h3><p>Vite 支持多种环境文件，按优先级从低到高：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>.env                # 所有模式都会加载
+.env.local          # 所有模式都会加载，但被 git 忽略
+.env.[mode]         # 只在指定模式下加载（如 .env.production）
+.env.[mode].local   # 只在指定模式下加载，被 git 忽略
+</code></pre></div></div><h3 id="72-定义和使用环境变量">7.2 定义和使用环境变量</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># .env.production</span>
+<span class="nv">VITE_API_URL</span><span class="o">=</span>https://api.example.com
+<span class="nv">VITE_APP_TITLE</span><span class="o">=</span>我的应用
+<span class="nv">DB_PASSWORD</span><span class="o">=</span>secret123       <span class="c"># ❌ 没有 VITE_ 前缀，不会暴露给前端！</span>
+</code></pre></div></div><div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 在代码中使用</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">import</span><span class="p">.</span><span class="nx">meta</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">VITE_API_URL</span><span class="p">)</span>
+<span class="c1">// 生产环境输出：https://api.example.com</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">import</span><span class="p">.</span><span class="nx">meta</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">VITE_APP_TITLE</span><span class="p">)</span>
+<span class="c1">// 输出：我的应用</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">import</span><span class="p">.</span><span class="nx">meta</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">DB_PASSWORD</span><span class="p">)</span>
+<span class="c1">// undefined —— 没有 VITE_ 前缀的变量不会暴露（安全！）</span>
+</code></pre></div></div><h3 id="73-内置环境变量">7.3 内置环境变量</h3><div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span><span class="p">.</span><span class="nx">meta</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">MODE</span>    <span class="c1">// 当前模式（'development' / 'production' / 自定义）</span>
+<span class="k">import</span><span class="p">.</span><span class="nx">meta</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">DEV</span>     <span class="c1">// 是否开发模式（boolean）</span>
+<span class="k">import</span><span class="p">.</span><span class="nx">meta</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">PROD</span>    <span class="c1">// 是否生产模式（boolean）</span>
+<span class="k">import</span><span class="p">.</span><span class="nx">meta</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">SSR</span>     <span class="c1">// 是否 SSR 模式</span>
+<span class="k">import</span><span class="p">.</span><span class="nx">meta</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">BASE_URL</span> <span class="c1">// vite.config.js 中配置的 base 路径</span>
+</code></pre></div></div><h3 id="74-给-typescript-用户类型声明">7.4 给 TypeScript 用户：类型声明</h3><div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// env.d.ts 或 vite-env.d.ts</span>
+<span class="c1">/// &lt;reference types="vite/client" /&gt;</span>
+
+<span class="kr">interface</span> <span class="nx">ImportMetaEnv</span> <span class="p">{</span>
+  <span class="k">readonly</span> <span class="nx">VITE_API_URL</span><span class="p">:</span> <span class="kr">string</span>
+  <span class="k">readonly</span> <span class="nx">VITE_APP_TITLE</span><span class="p">:</span> <span class="kr">string</span>
+<span class="p">}</span>
+
+<span class="kr">interface</span> <span class="nx">ImportMeta</span> <span class="p">{</span>
+  <span class="k">readonly</span> <span class="nx">env</span><span class="p">:</span> <span class="nx">ImportMetaEnv</span>
+<span class="p">}</span>
+</code></pre></div></div><p><strong>为什么要 <code class="language-plaintext highlighter-rouge">VITE_</code> 前缀？</strong></p><p>安全考虑！后端数据库密码、API 密钥等敏感信息不应该暴露到前端代码里。Vite 只把 <code class="language-plaintext highlighter-rouge">VITE_</code> 开头的变量注入到客户端代码，其他变量只在 Node.js 端（如 vite.config.js）可用。</p><hr /><h2 id="八常用插件">八、常用插件</h2><h3 id="81-插件是什么">8.1 插件是什么？</h3><p>插件就是 Vite 的”扩展包”，给 Vite 加技能点。比如支持 React JSX、支持自动导入 API、支持压缩图片等。</p><h3 id="82-常用插件清单">8.2 常用插件清单</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># React 项目必备：支持 JSX 和 Fast Refresh</span>
+npm <span class="nb">install</span> <span class="nt">-D</span> @vitejs/plugin-react
+
+<span class="c"># Vue 项目必备：支持 .vue 单文件组件</span>
+npm <span class="nb">install</span> <span class="nt">-D</span> @vitejs/plugin-vue
+
+<span class="c"># 自动导入 Vue/React API（不用手动 import ref、useState 了）</span>
+npm <span class="nb">install</span> <span class="nt">-D</span> unplugin-auto-import
+
+<span class="c"># 自动导入组件（不用手动 import 组件了）</span>
+npm <span class="nb">install</span> <span class="nt">-D</span> unplugin-vue-components
+
+<span class="c"># 图片压缩</span>
+npm <span class="nb">install</span> <span class="nt">-D</span> vite-plugin-imagemin
+
+<span class="c"># PWA 支持（离线缓存、安装到桌面）</span>
+npm <span class="nb">install</span> <span class="nt">-D</span> vite-plugin-pwa
+
+<span class="c"># 生成 gzip/brotli 压缩包</span>
+npm <span class="nb">install</span> <span class="nt">-D</span> vite-plugin-compression
+
+<span class="c"># 支持旧版浏览器（ polyfill ）</span>
+npm <span class="nb">install</span> <span class="nt">-D</span> @vitejs/plugin-legacy
+</code></pre></div></div><h3 id="83-插件使用示例">8.3 插件使用示例</h3><div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// vite.config.js</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">defineConfig</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">vite</span><span class="dl">'</span>
+<span class="k">import</span> <span class="nx">react</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@vitejs/plugin-react</span><span class="dl">'</span>
+<span class="k">import</span> <span class="nx">AutoImport</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">unplugin-auto-import/vite</span><span class="dl">'</span>
+<span class="k">import</span> <span class="nx">Components</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">unplugin-vue-components/vite</span><span class="dl">'</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="nx">defineConfig</span><span class="p">({</span>
+  <span class="na">plugins</span><span class="p">:</span> <span class="p">[</span>
+    <span class="nx">react</span><span class="p">(),</span>
+
+    <span class="c1">// 自动导入 ref、computed、watch 等 API</span>
+    <span class="nx">AutoImport</span><span class="p">({</span>
+      <span class="na">imports</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">vue</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">vue-router</span><span class="dl">'</span><span class="p">],</span>
+      <span class="na">dts</span><span class="p">:</span> <span class="dl">'</span><span class="s1">src/auto-imports.d.ts</span><span class="dl">'</span><span class="p">,</span>
+    <span class="p">}),</span>
+
+    <span class="c1">// 自动注册组件</span>
+    <span class="nx">Components</span><span class="p">({</span>
+      <span class="na">dirs</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">src/components</span><span class="dl">'</span><span class="p">],</span>
+      <span class="na">dts</span><span class="p">:</span> <span class="dl">'</span><span class="s1">src/components.d.ts</span><span class="dl">'</span><span class="p">,</span>
+    <span class="p">}),</span>
+  <span class="p">],</span>
+<span class="p">})</span>
+</code></pre></div></div><p><strong>使用了 auto-import 之后的代码对比：</strong></p><div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 使用前（手动导入）</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">ref</span><span class="p">,</span> <span class="nx">computed</span><span class="p">,</span> <span class="nx">onMounted</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">vue</span><span class="dl">'</span>
+
+<span class="kd">const</span> <span class="nx">count</span> <span class="o">=</span> <span class="nx">ref</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="kd">const</span> <span class="nx">double</span> <span class="o">=</span> <span class="nx">computed</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">count</span><span class="p">.</span><span class="nx">value</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="c1">// 使用后（自动导入，直接写就行！）</span>
+<span class="kd">const</span> <span class="nx">count</span> <span class="o">=</span> <span class="nx">ref</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="kd">const</span> <span class="nx">double</span> <span class="o">=</span> <span class="nx">computed</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">count</span><span class="p">.</span><span class="nx">value</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+</code></pre></div></div><hr /><h2 id="九构建优化">九、构建优化</h2><h3 id="91-代码分割code-splitting">9.1 代码分割（Code Splitting）</h3><p>Vite 基于 Rollup，自动做代码分割，但你可以手动优化：</p><div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// vite.config.js</span>
+<span class="k">export</span> <span class="k">default</span> <span class="nx">defineConfig</span><span class="p">({</span>
+  <span class="na">build</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">rollupOptions</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">output</span><span class="p">:</span> <span class="p">{</span>
+        <span class="c1">// 手动分 chunk</span>
+        <span class="na">manualChunks</span><span class="p">:</span> <span class="p">{</span>
+          <span class="c1">// 把 React 相关库打包成单独的 chunk</span>
+          <span class="dl">'</span><span class="s1">vendor-react</span><span class="dl">'</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">react-dom</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">react-router-dom</span><span class="dl">'</span><span class="p">],</span>
+          <span class="c1">// 把工具库打包成单独的 chunk</span>
+          <span class="dl">'</span><span class="s1">vendor-utils</span><span class="dl">'</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">lodash-es</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">dayjs</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">axios</span><span class="dl">'</span><span class="p">],</span>
+        <span class="p">},</span>
+        <span class="c1">// 资源分类存放</span>
+        <span class="na">chunkFileNames</span><span class="p">:</span> <span class="dl">'</span><span class="s1">js/[name]-[hash].js</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">entryFileNames</span><span class="p">:</span> <span class="dl">'</span><span class="s1">js/[name]-[hash].js</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">assetFileNames</span><span class="p">:</span> <span class="p">(</span><span class="nx">info</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">info</span><span class="p">.</span><span class="nx">name</span><span class="p">.</span><span class="nx">endsWith</span><span class="p">(</span><span class="dl">'</span><span class="s1">.css</span><span class="dl">'</span><span class="p">))</span> <span class="k">return</span> <span class="dl">'</span><span class="s1">css/[name]-[hash].css</span><span class="dl">'</span>
+          <span class="k">if</span> <span class="p">(</span><span class="sr">/</span><span class="se">\.(</span><span class="sr">png|jpg|svg|gif</span><span class="se">)</span><span class="sr">$/</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">info</span><span class="p">.</span><span class="nx">name</span><span class="p">))</span> <span class="k">return</span> <span class="dl">'</span><span class="s1">images/[name]-[hash][extname]</span><span class="dl">'</span>
+          <span class="k">return</span> <span class="dl">'</span><span class="s1">assets/[name]-[hash][extname]</span><span class="dl">'</span>
+        <span class="p">},</span>
+      <span class="p">},</span>
+    <span class="p">},</span>
+  <span class="p">},</span>
+<span class="p">})</span>
+</code></pre></div></div><h3 id="92-懒加载路由react-示例">9.2 懒加载路由（React 示例）</h3><div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// ❌ 全部同步导入（首屏加载所有页面）</span>
+<span class="k">import</span> <span class="nx">Home</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./pages/Home</span><span class="dl">'</span>
+<span class="k">import</span> <span class="nx">About</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./pages/About</span><span class="dl">'</span>
+<span class="k">import</span> <span class="nx">Dashboard</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./pages/Dashboard</span><span class="dl">'</span>
+
+<span class="c1">// ✅ 懒加载（用到时才加载）</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">lazy</span><span class="p">,</span> <span class="nx">Suspense</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span>
+
+<span class="kd">const</span> <span class="nx">Home</span> <span class="o">=</span> <span class="nx">lazy</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="k">import</span><span class="p">(</span><span class="dl">'</span><span class="s1">./pages/Home</span><span class="dl">'</span><span class="p">))</span>
+<span class="kd">const</span> <span class="nx">About</span> <span class="o">=</span> <span class="nx">lazy</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="k">import</span><span class="p">(</span><span class="dl">'</span><span class="s1">./pages/About</span><span class="dl">'</span><span class="p">))</span>
+<span class="kd">const</span> <span class="nx">Dashboard</span> <span class="o">=</span> <span class="nx">lazy</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="k">import</span><span class="p">(</span><span class="dl">'</span><span class="s1">./pages/Dashboard</span><span class="dl">'</span><span class="p">))</span>
+
+<span class="c1">// 使用时配合 Suspense 显示 loading</span>
+<span class="o">&lt;</span><span class="nx">Suspense</span> <span class="nx">fallback</span><span class="o">=</span><span class="p">{</span><span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span><span class="nx">加载中</span><span class="p">...</span><span class="o">&lt;</span><span class="sr">/div&gt;}</span><span class="err">&gt;
+</span>  <span class="o">&lt;</span><span class="nx">Routes</span><span class="o">&gt;</span>
+    <span class="p">&lt;</span><span class="nc">Route</span> <span class="na">path</span><span class="p">=</span><span class="s">"/"</span> <span class="na">element</span><span class="p">=</span><span class="si">{</span><span class="p">&lt;</span><span class="nc">Home</span> <span class="p">/&gt;</span><span class="si">}</span> <span class="p">/&gt;</span>
+    <span class="p">&lt;</span><span class="nc">Route</span> <span class="na">path</span><span class="p">=</span><span class="s">"/about"</span> <span class="na">element</span><span class="p">=</span><span class="si">{</span><span class="p">&lt;</span><span class="nc">About</span> <span class="p">/&gt;</span><span class="si">}</span> <span class="p">/&gt;</span>
+    <span class="p">&lt;</span><span class="nc">Route</span> <span class="na">path</span><span class="p">=</span><span class="s">"/dashboard"</span> <span class="na">element</span><span class="p">=</span><span class="si">{</span><span class="p">&lt;</span><span class="nc">Dashboard</span> <span class="p">/&gt;</span><span class="si">}</span> <span class="p">/&gt;</span>
+  <span class="p">&lt;</span><span class="err">/</span><span class="na">Routes</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nc">Suspense</span><span class="p">&gt;</span>
+</code></pre></div></div><h3 id="93-其他优化手段">9.3 其他优化手段</h3><div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="k">default</span> <span class="nx">defineConfig</span><span class="p">({</span>
+  <span class="na">build</span><span class="p">:</span> <span class="p">{</span>
+    <span class="c1">// 启用 CSS 代码分割</span>
+    <span class="na">cssCodeSplit</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+
+    <span class="c1">// 小于 4KB 的资源内联为 base64（减少 HTTP 请求）</span>
+    <span class="na">assetsInlineLimit</span><span class="p">:</span> <span class="mi">4096</span><span class="p">,</span>
+
+    <span class="c1">// 生产环境关闭 sourcemap（减小体积 + 保护代码）</span>
+    <span class="na">sourcemap</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+
+    <span class="c1">// 使用 terser 压缩（比 esbuild 更彻底，但更慢）</span>
+    <span class="na">minify</span><span class="p">:</span> <span class="dl">'</span><span class="s1">terser</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">terserOptions</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">compress</span><span class="p">:</span> <span class="p">{</span>
+        <span class="c1">// 生产环境移除 console 和 debugger</span>
+        <span class="na">drop_console</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="na">drop_debugger</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+      <span class="p">},</span>
+    <span class="p">},</span>
+  <span class="p">},</span>
+<span class="p">})</span>
+</code></pre></div></div><hr /><h2 id="十生产构建产物-dist-与部署重点">十、生产构建产物 dist 与部署（重点）</h2><blockquote><p>这一章回答三个核心问题：<code class="language-plaintext highlighter-rouge">npm run build</code> 之后生成的包在<strong>哪个路径</strong>、是<strong>什么文件</strong>、能不能<strong>单独拿出来部署</strong>、应该<strong>怎么用</strong>。</p></blockquote><h3 id="101-构建产物在哪是什么文件形式">10.1 构建产物在哪？是什么文件形式？</h3><p>执行 <code class="language-plaintext highlighter-rouge">npm run build</code> 后，Vite 会在<strong>项目根目录</strong>下生成一个 <code class="language-plaintext highlighter-rouge">dist/</code> 文件夹（默认名字，可在 <code class="language-plaintext highlighter-rouge">vite.config.js</code> 的 <code class="language-plaintext highlighter-rouge">build.outDir</code> 修改）。这就是生产环境的”包”。</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>my-app/
+├── src/              ← 源代码（开发用，部署时不需要）
+├── node_modules/     ← 依赖（开发用，部署时不需要）
+├── dist/             ← ✅ 生产构建产物，部署的就是这个！
+│   ├── index.html
+│   ├── assets/
+│   │   ├── index-a1b2c3d4.js     ← 打包压缩后的 JS（带 hash）
+│   │   ├── index-e5f6a7b8.css    ← 打包压缩后的 CSS
+│   │   ├── logo-9c8d7e6f.png     ← 图片等静态资源
+│   │   └── vendor-react-1a2b3c.js ← 拆分出的第三方库 chunk
+│   ├── favicon.ico                ← 从 public/ 原样复制过来的
+│   └── vite.svg
+├── index.html
+├── package.json
+└── vite.config.js
+</code></pre></div></div><p><strong>文件形式说明：</strong></p><table><thead><tr><th>文件</th><th>作用</th><th>特点</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">index.html</code></td><td>唯一的 HTML 入口</td><td>Vite 自动注入了 <code class="language-plaintext highlighter-rouge">&lt;script&gt;</code> 和 <code class="language-plaintext highlighter-rouge">&lt;link&gt;</code> 引用打包后的 JS/CSS</td></tr><tr><td><code class="language-plaintext highlighter-rouge">assets/*.js</code></td><td>全部业务代码 + 第三方库打包压缩后的 JavaScript</td><td>文件名带 hash（如 <code class="language-plaintext highlighter-rouge">index-a1b2c3d4.js</code>），用于缓存失效</td></tr><tr><td><code class="language-plaintext highlighter-rouge">assets/*.css</code></td><td>全部样式合并压缩后的 CSS</td><td>同样带 hash</td></tr><tr><td><code class="language-plaintext highlighter-rouge">assets/*.{png,jpg,svg,font}</code></td><td>图片、字体等资源</td><td>小于 4KB 的会被内联成 base64</td></tr><tr><td><code class="language-plaintext highlighter-rouge">favicon.ico</code> 等</td><td><code class="language-plaintext highlighter-rouge">public/</code> 目录原样复制过来的文件</td><td>不经过 Vite 处理</td></tr></tbody></table><p><strong>关键认知：</strong> <code class="language-plaintext highlighter-rouge">dist/</code> 里<strong>只有静态文件</strong>（HTML + JS + CSS + 图片），没有任何需要 Node.js 执行的东西。JS 已经是浏览器能直接跑的产物，不是源码。</p><h3 id="102-能直接单独拿出来部署吗能而且必须单独拿">10.2 能直接单独拿出来部署吗？——能，而且必须单独拿</h3><p><strong>答案是：能，而且生产环境部署的就是 <code class="language-plaintext highlighter-rouge">dist/</code> 这一个目录，不需要带着原项目的 <code class="language-plaintext highlighter-rouge">src/</code>、<code class="language-plaintext highlighter-rouge">node_modules/</code>、<code class="language-plaintext highlighter-rouge">vite.config.js</code>。</strong></p><p>对比一下：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>开发时需要的文件：              部署时需要的文件：
+├── src/                ✅      ├── dist/          ← 只要这个
+├── node_modules/       ✅      │   ├── index.html
+├── index.html          ✅      │   └── assets/
+├── vite.config.js      ✅      
+├── package.json        ✅      
+├── .env                ✅      
+└── dist/               ✅      
+</code></pre></div></div><p><strong>为什么能单独部署？</strong></p><p>Vite 用 Rollup 把所有 <code class="language-plaintext highlighter-rouge">import</code> 的模块（包括 <code class="language-plaintext highlighter-rouge">node_modules</code> 里的 React、Vue 等）<strong>全部打包进了 <code class="language-plaintext highlighter-rouge">dist/assets/*.js</code></strong> 里。部署后浏览器加载这几个 JS 文件就够用了，根本不需要再访问 <code class="language-plaintext highlighter-rouge">node_modules</code>。这就是”打包”的本质——<strong>把分散的依赖收敛成几个独立文件</strong>。</p><blockquote><p>类比：开发时像在厨房做菜（食材=源码，调料=node_modules），打包像把菜做好装盒。部署时你只需要送外卖盒（dist），不用把整个厨房搬过去。</p></blockquote><h3 id="103-怎么使用这个包三种常见部署方式">10.3 怎么使用这个包？三种常见部署方式</h3><h4 id="方式一本地快速预览验证构建是否正确">方式一：本地快速预览（验证构建是否正确）</h4><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 在项目目录下，用 Vite 内置的预览服务器跑 dist</span>
+npm run preview
+<span class="c"># 等价于：vite preview</span>
+<span class="c"># 默认地址：http://localhost:4173/</span>
+
+<span class="c"># 指定端口</span>
+npx vite preview <span class="nt">--port</span> 8080
+</code></pre></div></div><blockquote><p>注意：<code class="language-plaintext highlighter-rouge">npm run preview</code> 只是本地预览用，<strong>不能用于生产</strong>。它依赖项目目录（要能找到 dist），且性能、安全都不达标。</p></blockquote><h4 id="方式二用任意静态文件服务器最通用">方式二：用任意静态文件服务器（最通用）</h4><p>因为 <code class="language-plaintext highlighter-rouge">dist/</code> 就是纯静态文件，<strong>任何能托管静态文件的服务器都能部署</strong>。把 <code class="language-plaintext highlighter-rouge">dist/</code> 整个目录拷过去即可。</p><p><strong>用 Python 起静态服务器（临时测试最快）：</strong></p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 进入 dist 目录</span>
+<span class="nb">cd </span>dist
+
+<span class="c"># Python 3</span>
+python <span class="nt">-m</span> http.server 8080
+<span class="c"># 访问 http://localhost:8080</span>
+</code></pre></div></div><p><strong>用 Nginx（生产标配）：</strong></p><p>把 <code class="language-plaintext highlighter-rouge">dist/</code> 里的内容拷到 Nginx 的 html 根目录，例如 <code class="language-plaintext highlighter-rouge">/usr/share/nginx/html/</code>，然后配置：</p><div class="language-nginx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">server</span> <span class="p">{</span>
+    <span class="kn">listen</span> <span class="mi">80</span><span class="p">;</span>
+    <span class="kn">server_name</span> <span class="s">your-domain.com</span><span class="p">;</span>
+    <span class="kn">root</span> <span class="n">/usr/share/nginx/html</span><span class="p">;</span>     <span class="c1"># 指向 dist 内容所在目录</span>
+    <span class="kn">index</span> <span class="s">index.html</span><span class="p">;</span>
+
+    <span class="c1"># ⚠️ SPA 路由回退（关键！见 10.4 解释）</span>
+    <span class="kn">location</span> <span class="n">/</span> <span class="p">{</span>
+        <span class="kn">try_files</span> <span class="nv">$uri</span> <span class="nv">$uri</span><span class="n">/</span> <span class="n">/index.html</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1"># 静态资源长缓存（因为文件名带 hash，内容变了 hash 就变）</span>
+    <span class="kn">location</span> <span class="n">/assets/</span> <span class="p">{</span>
+        <span class="kn">expires</span> <span class="s">1y</span><span class="p">;</span>
+        <span class="kn">add_header</span> <span class="s">Cache-Control</span> <span class="s">"public,</span> <span class="s">immutable"</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div><h4 id="方式三上传到静态托管平台零配置">方式三：上传到静态托管平台（零配置）</h4><p><code class="language-plaintext highlighter-rouge">dist/</code> 可以直接上传到任何静态托管平台：</p><table><thead><tr><th>平台</th><th>做法</th></tr></thead><tbody><tr><td><strong>Vercel</strong></td><td>连接 Git 仓库，自动识别 Vite，构建后自动部署 dist</td></tr><tr><td><strong>Netlify</strong></td><td>同上，构建命令填 <code class="language-plaintext highlighter-rouge">npm run build</code>，发布目录填 <code class="language-plaintext highlighter-rouge">dist</code></td></tr><tr><td><strong>GitHub Pages</strong></td><td>把 dist 内容推到 <code class="language-plaintext highlighter-rouge">gh-pages</code> 分支</td></tr><tr><td><strong>腾讯云 COS / 阿里云 OSS</strong></td><td>开启静态网站托管，上传 dist 内全部文件</td></tr><tr><td><strong>Cloudflare Pages</strong></td><td>连接仓库，指定 <code class="language-plaintext highlighter-rouge">dist</code> 为输出目录</td></tr></tbody></table><h3 id="104-部署时的三个关键坑必看">10.4 部署时的三个关键坑（必看）</h3><h4 id="坑1spa-路由-404最常见">坑1：SPA 路由 404（最常见）</h4><p><strong>现象：</strong> 首页 <code class="language-plaintext highlighter-rouge">https://example.com/</code> 能打开，但刷新 <code class="language-plaintext highlighter-rouge">https://example.com/about</code> 就 404。</p><p><strong>原因：</strong> 你用了 React Router / Vue Router 的 history 模式，<code class="language-plaintext highlighter-rouge">/about</code> 是前端路由，但服务器收到这个请求会去找 <code class="language-plaintext highlighter-rouge">/about</code> 这个文件，找不到就 404。</p><p><strong>解决：</strong> 配置服务器把所有未知路径都回退到 <code class="language-plaintext highlighter-rouge">index.html</code>，让前端路由接管。</p><div class="language-nginx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Nginx</span>
+<span class="k">location</span> <span class="n">/</span> <span class="p">{</span>
+    <span class="kn">try_files</span> <span class="nv">$uri</span> <span class="nv">$uri</span><span class="n">/</span> <span class="n">/index.html</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div><div class="language-apache highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Apache (.htaccess 放在 dist 根目录)</span>
+<span class="p">&lt;</span><span class="nl">IfModule</span><span class="sr"> mod_rewrite.c</span><span class="p">&gt;
+</span>  <span class="nc">RewriteEngine</span> <span class="ss">On</span>
+  <span class="nc">RewriteBase</span> /
+  <span class="nc">RewriteRule</span> ^index\.html$ - [L]
+  <span class="nc">RewriteCond</span> %{REQUEST_FILENAME} !-f
+  <span class="nc">RewriteCond</span> %{REQUEST_FILENAME} !-d
+  <span class="nc">RewriteRule</span> . /index.html [L]
+<span class="p">&lt;/</span><span class="nl">IfModule</span><span class="p">&gt;
+</span></code></pre></div></div><blockquote><p>如果用 hash 路由（<code class="language-plaintext highlighter-rouge">/#/about</code>），就不会有这个问题，但 URL 不太好看。</p></blockquote><h4 id="坑2资源路径-404base-配置">坑2：资源路径 404（base 配置）</h4><p><strong>现象：</strong> 部署后页面空白，控制台报 <code class="language-plaintext highlighter-rouge">GET /assets/index-xxx.js 404</code>。</p><p><strong>原因：</strong> 默认 Vite 假设部署在域名根路径 <code class="language-plaintext highlighter-rouge">/</code>，所以 <code class="language-plaintext highlighter-rouge">index.html</code> 里引用的是 <code class="language-plaintext highlighter-rouge">/assets/xxx.js</code>（绝对路径）。如果你部署在子路径（如 <code class="language-plaintext highlighter-rouge">https://example.com/my-app/</code>），就会 404。</p><p><strong>解决：</strong> 构建前在 <code class="language-plaintext highlighter-rouge">vite.config.js</code> 配置 <code class="language-plaintext highlighter-rouge">base</code>：</p><div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="k">default</span> <span class="nx">defineConfig</span><span class="p">({</span>
+  <span class="na">base</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/my-app/</span><span class="dl">'</span><span class="p">,</span>    <span class="c1">// 末尾斜杠不能少</span>
+  <span class="c1">// ...</span>
+<span class="p">})</span>
+</code></pre></div></div><p>然后重新 <code class="language-plaintext highlighter-rouge">npm run build</code>，产出的 <code class="language-plaintext highlighter-rouge">index.html</code> 引用会变成 <code class="language-plaintext highlighter-rouge">/my-app/assets/xxx.js</code>。</p><blockquote><p>如果部署在根路径，<code class="language-plaintext highlighter-rouge">base</code> 用默认的 <code class="language-plaintext highlighter-rouge">/</code> 就行，不用配。</p></blockquote><h4 id="坑3缓存导致更新不生效">坑3：缓存导致更新不生效</h4><p><strong>现象：</strong> 发了新版本，用户看到的还是旧页面。</p><p><strong>原因：</strong> 浏览器缓存了旧的 JS/CSS。</p><p><strong>解决：</strong> Vite 默认就处理好了——打包产物文件名带 hash（<code class="language-plaintext highlighter-rouge">index-a1b2c3d4.js</code>），内容变 hash 就变，等于自动换文件名。所以<strong>静态资源可以放心长缓存</strong>，但 <code class="language-plaintext highlighter-rouge">index.html</code> 必须<strong>不缓存</strong>（因为它引用的 JS 文件名会变）。</p><div class="language-nginx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># index.html 不缓存</span>
+<span class="k">location</span> <span class="p">=</span> <span class="n">/index.html</span> <span class="p">{</span>
+    <span class="kn">add_header</span> <span class="s">Cache-Control</span> <span class="s">"no-cache,</span> <span class="s">no-store,</span> <span class="s">must-revalidate"</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1"># 带 hash 的静态资源长缓存</span>
+<span class="k">location</span> <span class="n">/assets/</span> <span class="p">{</span>
+    <span class="kn">expires</span> <span class="s">1y</span><span class="p">;</span>
+    <span class="kn">add_header</span> <span class="s">Cache-Control</span> <span class="s">"public,</span> <span class="s">immutable"</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div><h3 id="105-一句话流程总结">10.5 一句话流程总结</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>开发完代码
+    ↓
+npm run build           ← 触发 Rollup 打包
+    ↓
+生成 dist/ 目录          ← 这就是生产包，纯静态文件
+    ↓
+把 dist/ 内容拷到服务器  ← 不需要 src、node_modules、package.json
+    ↓
+用 Nginx / 静态托管服务  ← 配好 SPA 回退和缓存策略
+    ↓
+用户访问 index.html      ← 浏览器加载 assets 里的 JS/CSS，页面跑起来
+</code></pre></div></div><p><strong>核心记忆点：</strong></p><ol><li>产物路径：项目根目录下的 <code class="language-plaintext highlighter-rouge">dist/</code></li><li>文件形式：纯静态文件（HTML + JS + CSS + 资源），JS/CSS 文件名带 hash</li><li>能否单独部署：<strong>能，而且必须单独部署</strong>，不依赖原项目的任何其他文件</li><li>部署方式：任何能托管静态文件的服务都行（Nginx、Vercel、OSS、GitHub Pages 等）</li><li>三个坑：SPA 路由回退、base 路径、缓存策略</li></ol><hr /><h2 id="十一面试回答面试必背">十一、面试回答（面试必背）</h2><h3 id="问题-1vite-为什么比-webpack-快">问题 1：Vite 为什么比 webpack 快？</h3><p><strong>回答模板：</strong></p><blockquote><p>Vite 快的核心原因是<strong>开发环境和生产环境采用了不同的策略</strong>。</p><p><strong>开发环境</strong>下，Vite 不做打包，而是利用浏览器原生 ESM 支持，按需编译请求到的模块。比如页面只用到 10 个模块，Vite 就只编译这 10 个，而不是像 webpack 那样把所有模块先全部打包再启动。同时对于第三方依赖（如 React、Vue），Vite 使用 esbuild 做预构建，esbuild 用 Go 编写，速度比 JavaScript 写的打包工具快 10~100 倍。</p><p><strong>生产环境</strong>下，Vite 使用 Rollup 打包，Rollup 在 Tree-shaking 和代码优化方面非常成熟，产出的代码体积小、性能好。</p><p>另外 Vite 的 HMR 也更快，因为只需要精确更新改动的模块，不需要重新计算整个依赖图。</p></blockquote><h3 id="问题-2vite-的开发服务器和生产构建有什么区别">问题 2：Vite 的开发服务器和生产构建有什么区别？</h3><p><strong>回答模板：</strong></p><blockquote><p>这是两个完全不同的机制：</p><ul><li><p><strong>开发服务器（vite dev）</strong>：基于原生 ESM，不做打包，按需编译；用 esbuild 预构建第三方库；通过 WebSocket 实现 HMR。目标是快速启动和快速热更新。</p></li><li><p><strong>生产构建（vite build）</strong>：使用 Rollup 进行完整打包，做 Tree-shaking、代码压缩、代码分割等优化。目标是产出体积小、性能好的静态资源。</p></li></ul><p>之所以分两套，是因为开发和生产的需求不同——开发要速度，生产要优化。webpack 用一套流程同时服务两个场景，导致大项目开发体验差。</p></blockquote><h3 id="问题-3vite-中怎么配置代理解决跨域">问题 3：Vite 中怎么配置代理解决跨域？</h3><p><strong>回答模板：</strong></p><blockquote><p>在 vite.config.js 的 <code class="language-plaintext highlighter-rouge">server.proxy</code> 中配置。比如前端请求 <code class="language-plaintext highlighter-rouge">/api/users</code>，配置代理把 <code class="language-plaintext highlighter-rouge">/api</code> 前缀的请求转发到 <code class="language-plaintext highlighter-rouge">http://localhost:8080</code>，并设置 <code class="language-plaintext highlighter-rouge">changeOrigin: true</code> 修改请求头。这样浏览器发出的请求是同源的，由 Vite 服务端代理转发到真实后端，绕过了跨域限制。如果需要去掉 <code class="language-plaintext highlighter-rouge">/api</code> 前缀，还可以配置 <code class="language-plaintext highlighter-rouge">rewrite</code> 函数。</p></blockquote><h3 id="问题-4npm-run-build-之后怎么部署">问题 4：<code class="language-plaintext highlighter-rouge">npm run build</code> 之后怎么部署？</h3><p><strong>回答模板：</strong></p><blockquote><p><code class="language-plaintext highlighter-rouge">npm run build</code> 会在项目根目录生成 <code class="language-plaintext highlighter-rouge">dist/</code> 目录，里面是纯静态文件：一个 <code class="language-plaintext highlighter-rouge">index.html</code>（被 Vite 注入了打包后 JS/CSS 的引用）和 <code class="language-plaintext highlighter-rouge">assets/</code> 目录（含带 hash 的 JS、CSS、图片等）。这些文件<strong>完全独立</strong>，不依赖 <code class="language-plaintext highlighter-rouge">src/</code>、<code class="language-plaintext highlighter-rouge">node_modules/</code> 或任何 Node 环境，因为 Rollup 已经把所有依赖打包进了 <code class="language-plaintext highlighter-rouge">assets/*.js</code>。</p><p>部署时只需把 <code class="language-plaintext highlighter-rouge">dist/</code> 内容拷到任意静态文件服务器（Nginx、Vercel、OSS、GitHub Pages 等）。关键要配三点：一是 SPA 路由回退（<code class="language-plaintext highlighter-rouge">try_files $uri $uri/ /index.html</code>），避免刷新子路由 404；二是若部署在子路径要配置 <code class="language-plaintext highlighter-rouge">base</code>；三是 <code class="language-plaintext highlighter-rouge">index.html</code> 不缓存、带 hash 的静态资源长缓存。</p></blockquote><hr /><h2 id="十二深入追问进阶理解">十二、深入追问（进阶理解）</h2><h3 id="追问-1vite-的依赖预构建是什么为什么要做">追问 1：Vite 的依赖预构建是什么？为什么要做？</h3><p><strong>解答：</strong></p><p>第三方包（如 lodash、react）发布到 npm 时，可能是 CommonJS 或 UMD 格式，不是 ESM。浏览器只认 ESM，所以 Vite 在首次启动时，用 esbuild 把这些依赖转换成 ESM 格式，并合并成单个文件（减少请求数）。</p><p>预构建的结果缓存在 <code class="language-plaintext highlighter-rouge">node_modules/.vite/deps/</code> 目录下：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>node_modules/.vite/deps/
+├── _metadata.json        # 依赖信息
+├── react.js              # 预构建后的 react
+├── react-dom.js          # 预构建后的 react-dom
+└── chunk-XXXXX.js        # 共享 chunk
+</code></pre></div></div><p><strong>什么时候需要重新预构建？</strong></p><ul><li>新增/删除依赖时</li><li><code class="language-plaintext highlighter-rouge">package-lock.json</code> 变化时</li><li>手动删除 <code class="language-plaintext highlighter-rouge">node_modules/.vite</code> 后重启</li></ul><h3 id="追问-2vite-的-hmr-具体怎么工作的">追问 2：Vite 的 HMR 具体怎么工作的？</h3><p><strong>解答：</strong></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>开发者修改文件
+    ↓
+Vite 服务端检测到文件变化
+    ↓
+确定受影响的模块边界（HMR Boundary）
+    ↓
+通过 WebSocket 通知浏览器
+    ↓
+浏览器重新请求该模块（带上时间戳参数避免缓存）
+    ↓
+执行模块的 import.meta.hot.accept() 回调
+    ↓
+只更新改动部分，保留应用状态
+</code></pre></div></div><p><strong>和 webpack HMR 的核心区别：</strong></p><ul><li>webpack：修改模块 → 向上冒泡到入口 → 重新打包 chunk → 替换（链条长）</li><li>Vite：修改模块 → 直接让浏览器重新 fetch 该模块（链条短，ESM 天然支持）</li></ul><h3 id="追问-3vite-能支持-commonjs-的模块吗">追问 3：Vite 能支持 CommonJS 的模块吗？</h3><p><strong>解答：</strong> 可以。对于依赖包，Vite 在预构建阶段用 esbuild 把 CommonJS 转为 ESM。对于项目源码中的 <code class="language-plaintext highlighter-rouge">.cjs</code> 文件，Vite 也能处理。但推荐项目源码尽量用 ESM（<code class="language-plaintext highlighter-rouge">import/export</code>），因为这是未来趋势。</p><hr /><h2 id="十三易混淆点">十三、易混淆点</h2><h3 id="易混淆点-1vite-vs-webpack">易混淆点 1：Vite vs webpack</h3><table><thead><tr><th>对比项</th><th>Vite</th><th>webpack</th></tr></thead><tbody><tr><td>开发启动</td><td>毫秒级（不打包）</td><td>秒~分钟（全量打包）</td></tr><tr><td>HMR 速度</td><td>快（精准替换）</td><td>慢（链条长）</td></tr><tr><td>生产构建</td><td>Rollup</td><td>webpack 自身</td></tr><tr><td>配置量</td><td>少（开箱即用）</td><td>多（需要大量 loader/plugin）</td></tr><tr><td>生态成熟度</td><td>快速增长中</td><td>非常成熟，插件海量</td></tr><tr><td>学习曲线</td><td>低</td><td>高</td></tr><tr><td>适用场景</td><td>新项目首选</td><td>老项目维护、特殊需求</td></tr></tbody></table><p><strong>一句话总结：</strong> Vite 是”为 ESM 时代设计的”，webpack 是”为打包时代设计的”。</p><h3 id="易混淆点-2vite-dev-vs-vite-build-的差异">易混淆点 2：<code class="language-plaintext highlighter-rouge">vite dev</code> vs <code class="language-plaintext highlighter-rouge">vite build</code> 的差异</h3><table><thead><tr><th>对比项</th><th><code class="language-plaintext highlighter-rouge">vite dev</code>（开发）</th><th><code class="language-plaintext highlighter-rouge">vite build</code>（生产）</th></tr></thead><tbody><tr><td>底层工具</td><td>esbuild + 原生 ESM</td><td>Rollup</td></tr><tr><td>是否打包</td><td>不打包</td><td>打包</td></tr><tr><td>输出目录</td><td>无（实时编译）</td><td>dist/</td></tr><tr><td>HMR</td><td>有</td><td>无</td></tr><tr><td>import.meta.env.DEV</td><td>true</td><td>false</td></tr><tr><td>import.meta.env.PROD</td><td>false</td><td>true</td></tr><tr><td>CSS 处理</td><td>内联注入</td><td>提取成独立文件</td></tr></tbody></table><p><strong>面试陷阱：</strong> 有人以为 Vite 生产构建也用 ESM 不打包，这是<strong>错误</strong>的！生产环境一定打包，用的是 Rollup。</p><h3 id="易混淆点-3public-vs-srcassets">易混淆点 3：<code class="language-plaintext highlighter-rouge">public/</code> vs <code class="language-plaintext highlighter-rouge">src/assets/</code></h3><table><thead><tr><th>对比项</th><th><code class="language-plaintext highlighter-rouge">public/</code></th><th><code class="language-plaintext highlighter-rouge">src/assets/</code></th></tr></thead><tbody><tr><td>是否被 Vite 处理</td><td>不处理，原样复制</td><td>处理（hash 命名、压缩）</td></tr><tr><td>引用方式</td><td>绝对路径 <code class="language-plaintext highlighter-rouge">/xxx</code></td><td><code class="language-plaintext highlighter-rouge">import xxx from '...'</code></td></tr><tr><td>构建后位置</td><td>dist/ 根目录</td><td>dist/assets/</td></tr><tr><td>可以做 tree-shaking</td><td>不可以</td><td>不用就排除</td></tr><tr><td>典型用途</td><td>favicon、robots.txt</td><td>组件图片、图标</td></tr></tbody></table><h3 id="易混淆点-4部署时需要哪些文件dist-还是整个项目">易混淆点 4：部署时需要哪些文件？dist 还是整个项目？</h3><table><thead><tr><th>文件/目录</th><th>开发时需要</th><th>部署时需要</th><th>说明</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">dist/</code></td><td>❌（构建后才生成）</td><td>✅ <strong>只要这个</strong></td><td>生产构建产物，纯静态文件</td></tr><tr><td><code class="language-plaintext highlighter-rouge">src/</code></td><td>✅</td><td>❌</td><td>源代码，已打包进 dist</td></tr><tr><td><code class="language-plaintext highlighter-rouge">node_modules/</code></td><td>✅</td><td>❌</td><td>依赖已打包进 dist</td></tr><tr><td><code class="language-plaintext highlighter-rouge">index.html</code>（根目录）</td><td>✅</td><td>❌</td><td>模板，构建后 dist 里有处理过的版本</td></tr><tr><td><code class="language-plaintext highlighter-rouge">vite.config.js</code></td><td>✅</td><td>❌</td><td>构建配置，只在打包时用</td></tr><tr><td><code class="language-plaintext highlighter-rouge">package.json</code></td><td>✅</td><td>❌</td><td>只在构建时用（除非部署后还要跑 Node 服务）</td></tr></tbody></table><p><strong>一句话记忆：</strong> 部署 = 把 <code class="language-plaintext highlighter-rouge">dist/</code> 内容拷到服务器，完事。其他全是开发期的东西。</p><h3 id="易混淆点-5esbuild-vs-rollup-在-vite-中的角色">易混淆点 5：<code class="language-plaintext highlighter-rouge">esbuild</code> vs <code class="language-plaintext highlighter-rouge">Rollup</code> 在 Vite 中的角色</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>esbuild：
+├── 依赖预构建（把第三方包转 ESM）
+├── TypeScript 转译（开发时的 .ts → .js）
+└── 生产构建中的 CSS 和 JS 压缩（可选）
+
+Rollup：
+├── 生产环境的完整打包
+├── Tree-shaking
+├── 代码分割
+└── 产物优化
+</code></pre></div></div><p><strong>简单记：</strong> esbuild 管”快”（预构建、转译），Rollup 管”优”（生产打包）。</p><hr /><h2 id="附完整-viteconfigjs-参考模板">附：完整 vite.config.js 参考模板</h2><div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">defineConfig</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">vite</span><span class="dl">'</span>
+<span class="k">import</span> <span class="nx">react</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@vitejs/plugin-react</span><span class="dl">'</span>
+<span class="k">import</span> <span class="nx">path</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">path</span><span class="dl">'</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="nx">defineConfig</span><span class="p">({</span>
+  <span class="c1">// 插件</span>
+  <span class="na">plugins</span><span class="p">:</span> <span class="p">[</span><span class="nx">react</span><span class="p">()],</span>
+
+  <span class="c1">// 路径别名</span>
+  <span class="na">resolve</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">alias</span><span class="p">:</span> <span class="p">{</span>
+      <span class="dl">'</span><span class="s1">@</span><span class="dl">'</span><span class="p">:</span> <span class="nx">path</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">,</span> <span class="dl">'</span><span class="s1">./src</span><span class="dl">'</span><span class="p">),</span>
+      <span class="dl">'</span><span class="s1">@components</span><span class="dl">'</span><span class="p">:</span> <span class="nx">path</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">,</span> <span class="dl">'</span><span class="s1">./src/components</span><span class="dl">'</span><span class="p">),</span>
+      <span class="dl">'</span><span class="s1">@utils</span><span class="dl">'</span><span class="p">:</span> <span class="nx">path</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">,</span> <span class="dl">'</span><span class="s1">./src/utils</span><span class="dl">'</span><span class="p">),</span>
+    <span class="p">},</span>
+  <span class="p">},</span>
+
+  <span class="c1">// 开发服务器</span>
+  <span class="na">server</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">port</span><span class="p">:</span> <span class="mi">3000</span><span class="p">,</span>
+    <span class="na">open</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="na">host</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="na">proxy</span><span class="p">:</span> <span class="p">{</span>
+      <span class="dl">'</span><span class="s1">/api</span><span class="dl">'</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">target</span><span class="p">:</span> <span class="dl">'</span><span class="s1">http://localhost:8080</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">changeOrigin</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="na">rewrite</span><span class="p">:</span> <span class="p">(</span><span class="nx">path</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">path</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/^</span><span class="se">\/</span><span class="sr">api/</span><span class="p">,</span> <span class="dl">''</span><span class="p">),</span>
+      <span class="p">},</span>
+    <span class="p">},</span>
+  <span class="p">},</span>
+
+  <span class="c1">// 构建优化</span>
+  <span class="na">build</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">outDir</span><span class="p">:</span> <span class="dl">'</span><span class="s1">dist</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">assetsDir</span><span class="p">:</span> <span class="dl">'</span><span class="s1">assets</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">sourcemap</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="na">cssCodeSplit</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="na">assetsInlineLimit</span><span class="p">:</span> <span class="mi">4096</span><span class="p">,</span>
+    <span class="na">minify</span><span class="p">:</span> <span class="dl">'</span><span class="s1">terser</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">terserOptions</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">compress</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">drop_console</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="na">drop_debugger</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+      <span class="p">},</span>
+    <span class="p">},</span>
+    <span class="na">rollupOptions</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">output</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">manualChunks</span><span class="p">:</span> <span class="p">{</span>
+          <span class="dl">'</span><span class="s1">vendor-react</span><span class="dl">'</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">react-dom</span><span class="dl">'</span><span class="p">],</span>
+          <span class="dl">'</span><span class="s1">vendor-utils</span><span class="dl">'</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">lodash-es</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">axios</span><span class="dl">'</span><span class="p">],</span>
+        <span class="p">},</span>
+        <span class="na">chunkFileNames</span><span class="p">:</span> <span class="dl">'</span><span class="s1">js/[name]-[hash].js</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">entryFileNames</span><span class="p">:</span> <span class="dl">'</span><span class="s1">js/[name]-[hash].js</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">assetFileNames</span><span class="p">:</span> <span class="p">(</span><span class="nx">info</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">info</span><span class="p">.</span><span class="nx">name</span><span class="p">.</span><span class="nx">endsWith</span><span class="p">(</span><span class="dl">'</span><span class="s1">.css</span><span class="dl">'</span><span class="p">))</span> <span class="k">return</span> <span class="dl">'</span><span class="s1">css/[name]-[hash].css</span><span class="dl">'</span>
+          <span class="k">if</span> <span class="p">(</span><span class="sr">/</span><span class="se">\.(</span><span class="sr">png|jpg|svg|gif|webp</span><span class="se">)</span><span class="sr">$/</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">info</span><span class="p">.</span><span class="nx">name</span><span class="p">))</span> <span class="k">return</span> <span class="dl">'</span><span class="s1">images/[name]-[hash][extname]</span><span class="dl">'</span>
+          <span class="k">return</span> <span class="dl">'</span><span class="s1">assets/[name]-[hash][extname]</span><span class="dl">'</span>
+        <span class="p">},</span>
+      <span class="p">},</span>
+    <span class="p">},</span>
+  <span class="p">},</span>
+<span class="p">})</span>
+</code></pre></div></div><hr /><h2 id="附速记口诀">附：速记口诀</h2><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Vite 快在开发不打包，ESM 按需来加载；
+esbuild 预构建依赖，Go 写的就是快；
+生产 Rollup 来上阵，Tree-shake 加压缩；
+开发生产两条路，又快又好两不误。
+</code></pre></div></div><hr /><blockquote><p>学习建议：先跟着”创建项目”部分动手跑一遍，再回来看配置和优化。面试重点回答”为什么快”和”开发/生产双引擎”这两个核心点。</p></blockquote></section><!-- Previous / Next navigation --><nav class="notes-pager"><div class="notes-pager-links"> <span></span> <a href="/notes/README-3/" class="notes-pager-next"> <span class="notes-pager-label">下一章 →</span> <span class="notes-pager-title">README</span> </a></div></nav></div></article><!-- Right Sidebar: Table of Contents (built by JS from DOM) --><aside class="notes-toc" id="notes-toc"><div class="notes-toc-inner"><h4 class="notes-toc-title">目录</h4><nav class="notes-toc-nav"><ul class="notes-toc-list" id="notes-toc-list"> <!-- Populated by notes-toc.js --></ul></nav></div></aside></div><script src="https://1571859588.github.io/assets/js/notes-toc.js"></script> <script> (function() { var q = new URLSearchParams(location.search).get('q'); if (!q || q.length < 2) return; var body = document.querySelector('.notes-body'); if (!body) return; // Walk text nodes, find and highlight matches var walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT, null, false); var textNodes = []; while (walker.nextNode()) { var p = walker.currentNode.parentNode; // Skip script, style, code blocks, and already-marked text if (p.tagName === 'SCRIPT' || p.tagName === 'STYLE' || p.tagName === 'MARK' || p.closest('pre') || p.closest('.notes-search-hit')) continue; textNodes.push(walker.currentNode); } var first = null; var re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'); textNodes.forEach(function(node) { var text = node.textContent; if (!re.test(text)) return; re.lastIndex = 0; // reset after test var frag = document.createDocumentFragment(); var lastIdx = 0; var match; while ((match = re.exec(text)) !== null) { if (match.index > lastIdx) { frag.appendChild(document.createTextNode(text.substring(lastIdx, match.index))); } var mark = document.createElement('mark'); mark.className = 'notes-search-mark'; mark.textContent = match[0]; frag.appendChild(mark); if (!first) first = mark; lastIdx = match.index + match[0].length; } if (lastIdx < text.length) { frag.appendChild(document.createTextNode(text.substring(lastIdx))); } node.parentNode.replaceChild(frag, node); }); if (first) { setTimeout(function() { first.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300); } })(); </script><div class="page__footer"><footer> <!-- start custom footer snippets --> <a href="/sitemap/">Sitemap</a> <!-- end custom footer snippets --><div class="page__footer-follow"><ul class="social-icons"><li><strong>Follow:</strong></li><li><a href="http://github.com/1571859588"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a></li><li><a href="https://1571859588.github.io/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li></ul></div><div class="page__footer-copyright"> &copy; 2026 Yuntao Nie, Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://github.com/academicpages/academicpages.github.io">AcademicPages</a>, a fork of <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.<br /> Site last updated 2026-07-06</div></footer></div><script src="https://1571859588.github.io/assets/js/main.min.js"></script> <script src="https://1571859588.github.io/assets/js/paper-details.js"></script> <!-- Fix kramdown stripping backslashes before _ in math spans. kramdown treats \_ as a markdown escape, converting $seq\_len$ to $seq_len$. MathJax then interprets _ as subscript instead of a literal underscore. This runs synchronously before MathJax (async) processes the page. --> <script> (function() { var content = document.querySelector('.page__content'); if (!content) return; var walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT, null, false); var nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode); nodes.forEach(function(node) { var text = node.textContent; var fixed = text.replace(/\$([^$\n]+?)\$/g, function(match, math) { // Inside $...$, add \ before _ followed by 2+ lowercase letters. // Safe: legitimate subscripts use single chars ($d_k$) or braces ($x_{ij}$). var fixedMath = math.replace(/_([a-z]{2,})/g, '\\_$1'); return fixedMath !== math ? '$' + fixedMath + '$' : match; }); if (fixed !== text) node.textContent = fixed; }); })(); </script> <script> var SERIES_INDEX = [ {t:"Vite学习笔记", u:"/notes/Vite%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"}, {t:"README", u:"/notes/README-3/"}, {t:"README", u:"/notes/README-4/"} ]; (function() { if (!SERIES_INDEX.length) return; var inp = document.getElementById('notes-sidebar-search-input'); var box = document.getElementById('notes-sidebar-search-results'); if (!inp || !box) return; function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; } function hl(t, q) { var o = '', L = 0, lo = t.toLowerCase(), ql = q.toLowerCase(), i; while ((i = lo.indexOf(ql, L)) !== -1) { o += esc(t.substring(L, i)) + '<mark class="notes-search-highlight">' + esc(t.substring(i, i + q.length)) + '</mark>'; L = i + q.length; } return o + esc(t.substring(L)); } inp.addEventListener('input', function() { var q = this.value.trim(); if (!q) { box.style.display = 'none'; box.innerHTML = ''; return; } var ql = q.toLowerCase(), hits = []; for (var i = 0; i < SERIES_INDEX.length; i++) { if (SERIES_INDEX[i].t.toLowerCase().indexOf(ql) !== -1) hits.push(SERIES_INDEX[i]); } if (!hits.length) { box.innerHTML = '<div class="notes-sidebar-search-empty">无匹配</div>'; } else { var h = ''; for (var j = 0; j < Math.min(hits.length, 15); j++) { h += '<a href="' + hits[j].u + '" class="notes-sidebar-search-hit" data-q="' + esc(q) + '">' + '<span class="notes-sidebar-search-hit-title">' + hl(hits[j].t, q) + '</span></a>'; } box.innerHTML = h; } box.style.display = 'block'; }); inp.addEventListener('keydown', function(e) { if (e.key === 'Escape') { box.style.display = 'none'; box.innerHTML = ''; this.blur(); } }); box.addEventListener('click', function(e) { var a = e.target.closest('.notes-sidebar-search-hit'); if (a && a.dataset.q) sessionStorage.setItem('notes-search-q', a.dataset.q); }); document.addEventListener('click', function(e) { if (!e.target.closest('#notes-sidebar-search')) { box.style.display = 'none'; box.innerHTML = ''; } }); })(); </script></body></html>

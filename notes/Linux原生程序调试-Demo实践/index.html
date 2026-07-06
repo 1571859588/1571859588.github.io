@@ -1,0 +1,430 @@
+<!doctype html><html lang="en" class="no-js"><head><meta charset="utf-8"> <!-- begin SEO --><title>Linux原生程序调试_Demo实践 - Yuntao Nie</title><meta property="og:locale" content="en-US"><meta property="og:site_name" content="Yuntao Nie"><meta property="og:title" content="Linux原生程序调试_Demo实践"><link rel="canonical" href="https://1571859588.github.io/notes/Linux%E5%8E%9F%E7%94%9F%E7%A8%8B%E5%BA%8F%E8%B0%83%E8%AF%95-Demo%E5%AE%9E%E8%B7%B5/"><meta property="og:url" content="https://1571859588.github.io/notes/Linux%E5%8E%9F%E7%94%9F%E7%A8%8B%E5%BA%8F%E8%B0%83%E8%AF%95-Demo%E5%AE%9E%E8%B7%B5/"><meta property="og:description" content="Linux 原生程序调试 Demo 实践（新人入门版）"> <script type="application/ld+json"> { "@context" : "http://schema.org", "@type" : "Person", "name" : "Yuntao Nie", "url" : "https://1571859588.github.io", "sameAs" : null } </script> <!-- end SEO --><link href="https://1571859588.github.io/feed.xml" type="application/atom+xml" rel="alternate" title="Yuntao Nie Feed"> <!-- http://t.co/dKP3o1e --><meta name="HandheldFriendly" content="True"><meta name="MobileOptimized" content="320"><meta name="viewport" content="width=device-width, initial-scale=1.0"> <script> document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js '; </script> <!-- For all browsers --><link rel="stylesheet" href="https://1571859588.github.io/assets/css/main.css"><meta http-equiv="cleartype" content="on"> <!-- start custom head snippets --><link rel="apple-touch-icon" sizes="57x57" href="https://1571859588.github.io/images/apple-touch-icon-57x57.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="60x60" href="https://1571859588.github.io/images/apple-touch-icon-60x60.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="72x72" href="https://1571859588.github.io/images/apple-touch-icon-72x72.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="76x76" href="https://1571859588.github.io/images/apple-touch-icon-76x76.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="114x114" href="https://1571859588.github.io/images/apple-touch-icon-114x114.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="120x120" href="https://1571859588.github.io/images/apple-touch-icon-120x120.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="144x144" href="https://1571859588.github.io/images/apple-touch-icon-144x144.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="152x152" href="https://1571859588.github.io/images/apple-touch-icon-152x152.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="180x180" href="https://1571859588.github.io/images/apple-touch-icon-180x180.png?v=M44lzPylqQ"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-32x32.png?v=M44lzPylqQ" sizes="32x32"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/android-chrome-192x192.png?v=M44lzPylqQ" sizes="192x192"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-96x96.png?v=M44lzPylqQ" sizes="96x96"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-16x16.png?v=M44lzPylqQ" sizes="16x16"><link rel="manifest" href="https://1571859588.github.io/images/manifest.json?v=M44lzPylqQ"><link rel="mask-icon" href="https://1571859588.github.io/images/safari-pinned-tab.svg?v=M44lzPylqQ" color="#000000"><link rel="shortcut icon" href="/images/favicon.ico?v=M44lzPylqQ"><meta name="msapplication-TileColor" content="#000000"><meta name="msapplication-TileImage" content="https://1571859588.github.io/images/mstile-144x144.png?v=M44lzPylqQ"><meta name="msapplication-config" content="https://1571859588.github.io/images/browserconfig.xml?v=M44lzPylqQ"><meta name="theme-color" content="#ffffff"><link rel="stylesheet" href="https://1571859588.github.io/assets/css/academicons.css"/> <!-- MathJax for math rendering --> <script> MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['\\(', '\\)']] } }; </script> <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script> <!-- end custom head snippets --></head><body> <!--[if lt IE 9]><div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div><![endif]--><div class="masthead"><div class="masthead__inner-wrap"><div class="masthead__menu"><nav id="site-nav" class="greedy-nav"> <button><div class="navicon"></div></button><ul class="visible-links"><li class="masthead__menu-item masthead__menu-item--lg"><a href="https://1571859588.github.io/">Yuntao Nie</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/publications/">Publications</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/cv/">CV</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/notes/">Notes</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/year-archive/">Blog</a></li></ul><ul class="hidden-links hidden"></ul></nav></div></div></div><div id="main" role="main" class="notes-layout"> <!-- Left Sidebar: Series Chapter Navigation --><aside class="notes-sidebar" id="notes-sidebar"><div class="notes-sidebar-inner"><div class="notes-series-header"><h3 class="notes-series-title">linux</h3></div><div class="notes-sidebar-search" id="notes-sidebar-search"> <input type="text" class="notes-sidebar-search-input" id="notes-sidebar-search-input" placeholder="搜索本专题…" autocomplete="off"><div class="notes-sidebar-search-results" id="notes-sidebar-search-results" style="display:none"></div></div><nav class="notes-chapter-nav"><ul class="notes-chapter-list"><li class="notes-chapter-item "> <a href="/notes/Linux%E5%8A%A8%E6%80%81%E5%BA%93%E8%B0%83%E8%AF%95-Demo%E5%AE%9E%E8%B7%B5/" class="notes-chapter-link"> <span class="notes-chapter-num">1</span> <span class="notes-chapter-title">Linux动态库调试_Demo实践</span> </a></li><li class="notes-chapter-item active"> <a href="/notes/Linux%E5%8E%9F%E7%94%9F%E7%A8%8B%E5%BA%8F%E8%B0%83%E8%AF%95-Demo%E5%AE%9E%E8%B7%B5/" class="notes-chapter-link"> <span class="notes-chapter-num">2</span> <span class="notes-chapter-title">Linux原生程序调试_Demo实践</span> </a></li><li class="notes-chapter-item "> <a href="/notes/Linux%E5%BC%80%E5%8F%91%E5%9F%BA%E6%9C%AC%E5%8A%9F-%E6%96%B0%E4%BA%BA%E5%85%A5%E9%97%A8%E7%89%88/" class="notes-chapter-link"> <span class="notes-chapter-num">3</span> <span class="notes-chapter-title">Linux开发基本功_新人入门版</span> </a></li></ul></nav><div class="notes-sidebar-footer"> <a href="/notes/" class="notes-back-link">← 所有笔记系列</a></div></div></aside><!-- Mobile sidebar toggle --> <button class="notes-sidebar-toggle" id="notes-sidebar-toggle" aria-label="Toggle sidebar"> <span class="notes-sidebar-toggle-icon"></span> </button> <!-- Main Content --><article class="notes-content" itemscope itemtype="http://schema.org/CreativeWork"><meta itemprop="headline" content="Linux原生程序调试_Demo实践"><div class="notes-content-inner"><header class="notes-header"><div class="notes-breadcrumb"> <a href="/notes/">Notes</a> <span class="notes-sep">›</span> <span>linux</span> <span class="notes-sep">›</span> <span>Linux原生程序调试_Demo实践</span></div><h1 class="notes-page-title" itemprop="headline">Linux原生程序调试_Demo实践</h1></header><section class="notes-body" itemprop="text"><h1 id="linux-原生程序调试-demo-实践新人入门版">Linux 原生程序调试 Demo 实践（新人入门版）</h1><blockquote><p>关联：<code class="language-plaintext highlighter-rouge">linux/Linux开发基本功_新人入门版.md</code> 第九章（调试原生程序） 关联：<code class="language-plaintext highlighter-rouge">cpp/编译链接模板与构建系统.md</code> 第 2 章（三类错误）、附录 A（编译参数） 目标：用<strong>故意有 bug 的小程序</strong>，把 GDB / ASan / strace / core dump 每条指令跑一遍，看懂输出 适用读者：刚学完 Linux 开发基本功第九章，想动手实践的新人 更新时间：2026-07-05（已根据 WSL2 实际运行结果修正）</p></blockquote><hr /><h2 id="一句话结论">一句话结论</h2><p>原生程序调试记住分工：<strong>程序崩了 → <code class="language-plaintext highlighter-rouge">gdb + bt</code> 看在哪崩；程序不崩但结果不对 → <code class="language-plaintext highlighter-rouge">gdb 条件断点</code> 主动抓 bug；想抓”第一次出错” → <code class="language-plaintext highlighter-rouge">ASan</code> 重编；怀疑”找不到文件/权限” → <code class="language-plaintext highlighter-rouge">strace</code> 看系统调用</strong>。不是所有 bug 都会崩溃——GDB 不只能”事后分析崩溃”，更能”主动设断点观察程序行为”。</p><hr /><h2 id="零为什么单独写这份-demo">零、为什么单独写这份 Demo？</h2><p>主文档第九章列了 GDB、ASan、strace 的命令，但新人看完常问：</p><ul><li>“我写什么程序才能触发这些 bug 来练手？”</li><li>“GDB 里 <code class="language-plaintext highlighter-rouge">bt</code> 输出的那些帧怎么看？”</li><li>“程序不崩，GDB 还有什么用？”</li><li>“ASan 报的那一大坨是什么意思？”</li><li>“core dump 文件怎么生成、怎么用？”</li></ul><p>这份 Demo 提供 4 个<strong>故意有 bug 的小程序</strong>，每个对应一种调试技术，照着敲就能看到真实输出和逐行解读。<strong>所有输出均在 WSL2 Ubuntu 24.04 + GDB 15.1 上实际运行验证过</strong>。</p><hr /><h2 id="一准备建项目目录">一、准备：建项目目录</h2><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> <span class="nt">-p</span> ~/demo/debug_demo <span class="o">&amp;&amp;</span> <span class="nb">cd</span> ~/demo/debug_demo
+<span class="c"># 后面所有命令都在这个目录里执行</span>
+</code></pre></div></div><hr /><h2 id="二demo-1gdb-调试不崩溃但结果不对的程序数组越界">二、Demo 1：GDB 调试”不崩溃但结果不对”的程序（数组越界）</h2><h3 id="21-为什么先讲不崩溃的例子">2.1 为什么先讲”不崩溃”的例子？</h3><p>很多新手以为”GDB 只能调试崩溃的程序”——这是误解。<strong>大部分 bug 不会让程序崩溃</strong>，只是结果不对。这类 bug 更难找，因为没有崩溃点给你看。GDB 的断点（尤其条件断点）正是为这类 bug 准备的。</p><h3 id="22-写一个有越界-bug-的程序">2.2 写一个有越界 bug 的程序</h3><p><strong><code class="language-plaintext highlighter-rouge">crash.cpp</code></strong>（数组越界，但不会崩溃）：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span>
+<span class="c1">// 故意写一个会越界访问的函数</span>
+<span class="kt">int</span> <span class="nf">sum_array</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span> <span class="n">arr</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">s</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>   <span class="c1">// bug：应该是 i &lt; n，这里多访问了一个</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="n">arr</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">s</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">arr</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">};</span>    <span class="c1">// 只有 5 个元素</span>
+    <span class="kt">int</span> <span class="n">total</span> <span class="o">=</span> <span class="n">sum_array</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>  <span class="c1">// 传 10，但数组只有 5 → 越界</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"total = "</span> <span class="o">&lt;&lt;</span> <span class="n">total</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div><p><strong>先想清楚 bug</strong>：数组 <code class="language-plaintext highlighter-rouge">arr</code> 只有 5 个元素（下标 0~4），但循环 <code class="language-plaintext highlighter-rouge">i &lt;= n</code>（n=10）会访问 <code class="language-plaintext highlighter-rouge">arr[0]</code> 到 <code class="language-plaintext highlighter-rouge">arr[10]</code>，即 <code class="language-plaintext highlighter-rouge">arr[5]</code>~<code class="language-plaintext highlighter-rouge">arr[10]</code> 都是越界访问。</p><h3 id="23-编译带调试信息">2.3 编译带调试信息</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>g++ <span class="nt">-g</span> <span class="nt">-O0</span> crash.cpp <span class="nt">-o</span> crash
+<span class="c">#   -g   加调试信息（源文件名、行号、变量名），GDB 靠它显示源码位置</span>
+<span class="c">#   -O0  不优化，代码和源码一一对应（优化会让变量"消失"、行号乱跳）</span>
+<span class="c">#   不加 -g 的话，GDB 里看不到函数名和行号，全是地址</span>
+
+<span class="nb">ls</span> <span class="nt">-la</span> crash
+<span class="c"># -rwxr-xr-x 1 lenck lenck 31984 Jul  5 16:56 crash</span>
+<span class="c">#   ↑ 文件大小 30KB 左右，比 -O2 版本大，因为含调试信息</span>
+</code></pre></div></div><h3 id="24-直接运行注意不会崩">2.4 直接运行——注意：不会崩！</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./crash
+<span class="c"># total = 1325951414      ← 一个奇怪的垃圾值，不是 15（1+2+3+4+5）</span>
+</code></pre></div></div><p><strong>为什么没崩？</strong> 这是新手最容易困惑的点：</p><p>数组 <code class="language-plaintext highlighter-rouge">arr</code> 是局部变量，存在<strong>栈</strong>上。越界访问 <code class="language-plaintext highlighter-rouge">arr[5]</code>、<code class="language-plaintext highlighter-rouge">arr[6]</code>… 时，读的是栈上 arr 后面的内存。这块内存<strong>属于当前程序的栈空间，是合法地址</strong>（操作系统没拦你），所以不会触发段错误。只是读到的是栈上其他变量/未初始化数据，所以得到垃圾值。</p><blockquote><p><strong>关键认知</strong>：越界访问不一定会崩溃！</p><ul><li>越界读到<strong>合法内存</strong>（栈/堆的已映射区域）→ 不崩，得到垃圾值（本例）</li><li>越界读到<strong>非法内存</strong>（未映射页）→ 段错误 SIGSEGV</li><li>这就是”未定义行为（UB）”——结果不可预测，可能”看起来正常”也可能崩</li></ul><p>所以<strong>不能靠”程序没崩”判断有没有内存错误</strong>，这也是后面 ASan 存在的意义。</p></blockquote><h3 id="25-用-gdb-调试基本操作breaknextstepprint">2.5 用 GDB 调试：基本操作（break/next/step/print）</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gdb ./crash
+<span class="c"># 进入 GDB 交互界面，提示符变成 (gdb)</span>
+<span class="c"># 会显示一堆 GDB 版本信息，忽略即可</span>
+</code></pre></div></div><p><strong>GDB 里的完整操作流程</strong>（逐条输入，和实际运行一致）：</p><pre><code class="language-gdb">(gdb) break main               # 在 main 函数设断点
+Breakpoint 1 at 0x11fe: file crash.cpp, line 12.
+
+(gdb) run                      # 开始运行，遇到断点停下
+Starting program: /home/lenck/demo/debug_demo/crash
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+
+Breakpoint 1, main () at crash.cpp:12
+12      int main() {
+#   程序停在 main 的第一行（第 12 行），还没执行任何语句
+#   注意：停在第 12 行 `int main() {`，不是第 13 行——断点停在"将要执行"的行
+
+(gdb) next                     # 单步执行（不进入函数内部，n 是简写）
+13          int arr[5] = {1, 2, 3, 4, 5};    // 只有 5 个元素
+#   执行完第 12 行，停在第 13 行（将要执行这行）
+
+(gdb) n                        # n 是 next 的简写
+14          int total = sum_array(arr, 10);  // 传 10，但数组只有 5 → 越界
+#   执行完第 13 行（arr 初始化好了），停在调用 sum_array 那行
+
+(gdb) step                     # 单步，【进入】函数内部（s 是简写）
+sum_array (arr=0x7fffffffdbf0, n=10) at crash.cpp:5
+5           int s = 0;
+#   step 进到 sum_array 里了！GDB 自动显示参数 arr=地址, n=10
+#   停在第 5 行 `int s = 0;`（将要执行）
+
+(gdb) s                        # 执行第 5 行，停在第 6 行
+6           for (int i = 0; i &lt;= n; ++i) {   // bug：应该是 i &lt; n
+
+(gdb) s                        # 执行 for 初始化，停在第 7 行
+7               s += arr[i];
+
+(gdb) print n                  # 查看变量 n 的值
+$1 = 10
+#   $1 是 GDB 给这次查询结果的编号，后面可以用 $1 引用
+
+(gdb) print arr[0]             # 查看数组第一个元素
+$2 = 1
+
+(gdb) info locals              # 看当前函数所有局部变量
+i = 0
+s = 0
+#   当前 i=0（第一轮循环），s=0（还没累加）
+
+(gdb) continue                 # 继续运行到结束（c 是简写）
+Continuing.
+total = -402146006             ← 程序正常输出（垃圾值，每次运行可能不同）
+[Inferior 1 (process 8778) exited normally]    ← 程序正常退出了！没崩！
+
+(gdb) bt                       # 尝试看调用栈
+No stack.
+#   ↑ 因为程序已经退出了，没有进程在运行，自然没有"栈"可看
+#   bt 只能在【程序还在运行】（停在某处或崩了）时用
+</code></pre><blockquote><p><strong>到这里你会发现</strong>：直接 <code class="language-plaintext highlighter-rouge">continue</code> 让程序跑完，啥也没抓到——因为程序根本不崩。 这正是”不崩溃的 bug”难调的原因。下面用<strong>条件断点</strong>来主动抓它。</p></blockquote><h3 id="26-用-gdb-条件断点精准抓越界核心技巧">2.6 用 GDB 条件断点精准抓越界（核心技巧）</h3><p>重启 GDB，这次用条件断点：当 <code class="language-plaintext highlighter-rouge">i &gt;= 5</code>（第一次越界）时自动停下。</p><pre><code class="language-gdb">(gdb) quit                     # 先退出上一轮
+# A debugging session is active.
+#         Inferior 1 [process 8778] will be killed.
+# Quit anyway? (y or n) y
+</code></pre><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gdb ./crash                    <span class="c"># 重新启动 GDB</span>
+</code></pre></div></div><pre><code class="language-gdb"># 思路：在循环体（第 7 行 s += arr[i]）设断点，但加条件"i &gt;= 5"
+# 这样只有越界时才停，前 5 次合法访问（i=0~4）会自动跳过
+
+(gdb) break crash.cpp:7 if i &gt;= 5
+Breakpoint 1 at 0x5555555551a9: file crash.cpp, line 7.
+#   在第 7 行设断点，条件是 i &gt;= 5
+#   含义：每次执行到第 7 行时检查 i，只有 i&gt;=5 才停下，否则继续
+
+(gdb) run
+Starting program: /home/lenck/demo/debug_demo/crash
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+
+Breakpoint 1, sum_array (arr=0x7fffffffdbf0, n=10) at crash.cpp:7
+7               s += arr[i];
+#   停下了！因为 i 达到了 5（越界第一次）
+
+(gdb) print i                  # 确认 i 的值
+$1 = 5
+#   i=5，但数组只有 0~4，这就是越界！
+
+(gdb) print arr[0]             # 合法元素（下标 0）
+$2 = 1
+
+(gdb) print arr[4]             # 最后一个合法元素（下标 4）
+$3 = 5
+
+(gdb) print arr[5]             # ★越界读第一个（下标 5）
+$4 = 32765                     ← 垃圾值！不是我们放的任何数
+#   这就是 bug 的铁证：arr[5] 根本不属于这个数组，读到的是栈上的垃圾
+
+(gdb) print arr[6]             # 越界读更多
+$5 = 0
+
+(gdb) info locals              # 看所有局部变量
+i = 5
+s = 15
+#   s=15 说明前 5 个合法元素（1+2+3+4+5=15）已经正确累加
+#   从 i=5 开始就要读垃圾了，所以最终结果是 15 + 一堆垃圾值
+
+(gdb) bt                       # 看调用栈（现在程序还停着，所以有栈）
+#0  sum_array (arr=0x7fffffffdbf0, n=10) at crash.cpp:7
+#1  0x0000555555555213 in main () at crash.cpp:14
+#   栈从顶(#0)到底(#1)：
+#   #0 当前停在最里层函数 sum_array，crash.cpp:7
+#   #1 是调用它的人 main，crash.cpp:14
+#   读法：main 第 14 行调用了 sum_array，现在停在 sum_array 第 7 行
+#   （注意：这里 bt 不是用来看"在哪崩的"，而是看"当前停在哪个函数调用链里"）
+
+(gdb) frame 1                  # 切到调用栈第 1 帧（main）
+#1  0x0000555555555213 in main () at crash.cpp:14
+14          int total = sum_array(arr, 10);
+#   现在在 main 的视角，能看到调用现场
+
+(gdb) frame 0                  # 切回第 0 帧（sum_array）
+#0  sum_array (arr=0x7fffffffdbf0, n=10) at crash.cpp:7
+7               s += arr[i];
+
+(gdb) continue                 # 继续运行
+Continuing.
+
+Breakpoint 1, sum_array (arr=0x7fffffffdbf0, n=10) at crash.cpp:7
+7               s += arr[i];
+#   ↑ 怎么又停了？！ 不是说 continue 会跑完吗？
+#   原因：断点设在循环体里，条件 i&gt;=5 在 i=5,6,7,8,9,10 时都满足
+#   每次 continue 都会走到下一个满足条件的 i，所以会连续停 6 次
+
+(gdb) c
+Continuing.
+
+Breakpoint 1, sum_array (arr=0x7fffffffdbf0, n=10) at crash.cpp:7
+7               s += arr[i];
+#   又停了，这次 i=6
+
+# ========== 为什么每次 continue/step 都会触发断点？（新手高频疑问）==========
+# 因为断点设在【循环体里】（第 7 行 s += arr[i]），循环每执行一次都经过第 7 行
+# 条件 i&gt;=5 在 i=5,6,7,8,9,10 时都成立（共 6 次），所以会停 6 次
+#
+# 你会看到这样的循环：
+#   continue → 停（i=6）→ continue → 停（i=7）→ ... → continue → 停（i=10）→ continue → 跑完
+#
+# 怎么避免？三个方法：
+#
+# 方法 1：只想看第一次越界，看完就 disable 断点
+#   (gdb) disable 1           # 临时禁用 1 号断点（不删，后面 enable 1 可恢复）
+#   (gdb) continue            # 然后就一路跑完了
+#
+# 方法 2：看完直接删断点
+#   (gdb) delete 1            # 删除 1 号断点（删了就没了，要重设）
+#   (gdb) continue            # 一路跑完
+#
+# 方法 3：条件设得更精确，只匹配"第一次越界"
+#   重新设：break crash.cpp:7 if i == 5    （而不是 i &gt;= 5）
+#   这样只有 i=5 那一次停，后面 i=6~10 不会停，continue 直接跑完
+#
+# 经验：调试循环里的 bug，如果只关心"第一次出错"，条件用 == 比用 &gt;= 省事
+#       用 &gt;= 适合"想逐次观察每次出错"，但要记得 disable/delete 才能跑完
+
+# ========== 继续演示（不做 disable，完整跑完看看）==========
+(gdb) info locals
+i = 10
+s = 1748637871                 ← s 已经累积了一堆垃圾值
+
+(gdb) c
+Continuing.
+total = 1606204025             ← 最终垃圾值（每次运行不同）
+[Inferior 1 (process 8792) exited normally]
+
+(gdb) quit
+# Quit anyway? (y or n) y
+</code></pre><p><strong>这个 Demo 的要点</strong>：</p><ol><li><strong>不是所有 bug 都会崩</strong>——越界读合法内存只产生垃圾值，程序”看起来正常”地跑完了</li><li><strong>条件断点</strong>是抓这类 bug 的利器：<code class="language-plaintext highlighter-rouge">break 文件:行号 if 条件</code>，只在条件满足时停</li><li><strong>断点设在循环里会反复触发</strong>——条件满足多少次就停多少次；只想看第一次就用 <code class="language-plaintext highlighter-rouge">==</code>，或看完用 <code class="language-plaintext highlighter-rouge">disable/delete</code></li><li><strong>bt 不只在崩溃时用</strong>——程序停着时 bt 能看当前调用链，帮你理解”怎么走到这里的”</li><li><strong>frame N</strong> 在调用栈各层之间切换，配合 print 看不同函数里的变量</li></ol><h3 id="27-gdb-常用命令速查本-demo-用到的">2.7 GDB 常用命令速查（本 Demo 用到的）</h3><table><thead><tr><th>命令</th><th>简写</th><th>作用</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">break 位置</code></td><td><code class="language-plaintext highlighter-rouge">b</code></td><td>设断点（<code class="language-plaintext highlighter-rouge">break main</code> / <code class="language-plaintext highlighter-rouge">break file.cpp:42</code> / <code class="language-plaintext highlighter-rouge">break file.cpp:7 if i&gt;=5</code>）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">disable N</code></td><td> </td><td>临时禁用 N 号断点（不删，<code class="language-plaintext highlighter-rouge">enable N</code> 可恢复）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">delete N</code></td><td><code class="language-plaintext highlighter-rouge">d N</code></td><td>删除 N 号断点</td></tr><tr><td><code class="language-plaintext highlighter-rouge">run [参数]</code></td><td><code class="language-plaintext highlighter-rouge">r</code></td><td>开始运行</td></tr><tr><td><code class="language-plaintext highlighter-rouge">next</code></td><td><code class="language-plaintext highlighter-rouge">n</code></td><td>单步，不进函数（把函数调用当一步）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">step</code></td><td><code class="language-plaintext highlighter-rouge">s</code></td><td>单步，进入函数内部</td></tr><tr><td><code class="language-plaintext highlighter-rouge">continue</code></td><td><code class="language-plaintext highlighter-rouge">c</code></td><td>继续到下个断点/结束</td></tr><tr><td><code class="language-plaintext highlighter-rouge">print 变量</code></td><td><code class="language-plaintext highlighter-rouge">p</code></td><td>查看变量值（<code class="language-plaintext highlighter-rouge">p n</code> / <code class="language-plaintext highlighter-rouge">p arr[5]</code> / <code class="language-plaintext highlighter-rouge">p *ptr</code>）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">info locals</code></td><td><code class="language-plaintext highlighter-rouge">i lo</code></td><td>当前函数所有局部变量</td></tr><tr><td><code class="language-plaintext highlighter-rouge">info args</code></td><td> </td><td>函数参数</td></tr><tr><td><code class="language-plaintext highlighter-rouge">backtrace</code></td><td><code class="language-plaintext highlighter-rouge">bt</code></td><td>看调用栈（程序停着时用，不是只能崩溃时用）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">frame N</code></td><td><code class="language-plaintext highlighter-rouge">f</code></td><td>切到第 N 帧（0 是最里层）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">list</code></td><td><code class="language-plaintext highlighter-rouge">l</code></td><td>看当前位置周围的源码</td></tr><tr><td><code class="language-plaintext highlighter-rouge">quit</code></td><td><code class="language-plaintext highlighter-rouge">q</code></td><td>退出</td></tr></tbody></table><blockquote><p><strong>GDB 调试两种模式</strong>：</p><ul><li><strong>程序崩了</strong>：<code class="language-plaintext highlighter-rouge">run</code> → 崩 → <code class="language-plaintext highlighter-rouge">bt</code> 看在哪崩 → <code class="language-plaintext highlighter-rouge">frame</code> 切过去 <code class="language-plaintext highlighter-rouge">print</code>（被动分析）</li><li><strong>程序不崩但结果不对</strong>：<code class="language-plaintext highlighter-rouge">break ... if 条件</code> → <code class="language-plaintext highlighter-rouge">run</code> → 停下 → <code class="language-plaintext highlighter-rouge">print</code> 看变量（主动抓 bug）</li></ul></blockquote><hr /><h2 id="三demo-2core-dump-事后分析用真正会崩的程序">三、Demo 2：core dump 事后分析（用真正会崩的程序）</h2><h3 id="31-为什么换一个程序">3.1 为什么换一个程序？</h3><p>Demo 1 的越界 bug 不会崩，没法演示 core dump。core dump 需要<strong>程序崩溃（收到 SIGSEGV 等信号）</strong>才会生成。所以这里写一个<strong>必定崩溃</strong>的程序：解引用空指针。</p><h3 id="32-写一个会崩的程序">3.2 写一个会崩的程序</h3><p><strong><code class="language-plaintext highlighter-rouge">segfault.cpp</code></strong>（解引用空指针，必定 SIGSEGV）：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">int</span><span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>          <span class="c1">// 空指针</span>
+    <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>                   <span class="c1">// 对空指针解引用并赋值 → 必崩</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"不会执行到这里"</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div><p><strong>为什么这个必崩？</strong> <code class="language-plaintext highlighter-rouge">nullptr</code> 是地址 0，操作系统把地址 0 所在的页设为不可访问（防止空指针误用）。<code class="language-plaintext highlighter-rouge">*p = 42</code> 试图写地址 0 → 内核发现访问非法页 → 发送 SIGSEGV 信号 → 程序崩溃。这和 Demo 1 不同——Demo 1 越界访问的是栈上合法地址，所以不崩。</p><h3 id="33-编译并运行这次真的崩了">3.3 编译并运行——这次真的崩了</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>g++ <span class="nt">-g</span> <span class="nt">-O0</span> segfault.cpp <span class="nt">-o</span> segfault
+<span class="c">#   同样要 -g 加调试信息，-O0 不优化</span>
+
+./segfault
+<span class="c"># Segmentation fault (core dumped)     ← 段错误！这次真的崩了</span>
+<span class="c"># （如果显示 "Segmentation fault" 没有 "(core dumped)"，说明 core 没生成，见 3.5）</span>
+</code></pre></div></div><h3 id="34-先用-gdb-在线调试看崩溃现场">3.4 先用 GDB 在线调试看崩溃现场</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gdb ./segfault
+</code></pre></div></div><pre><code class="language-gdb">(gdb) run
+Starting program: /home/lenck/demo/debug_demo/segfault
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+
+Program received signal SIGSEGV, Segmentation fault.
+0x0000555555555179 in main () at segfault.cpp:5
+5           *p = 42;                   # 对空指针解引用并赋值 → 必崩
+#   ↑ 关键信息：在 segfault.cpp 第 5 行崩了，收到 SIGSEGV 信号
+#   GDB 自动停在被信号中断的地方
+
+(gdb) bt                       # ★看调用栈（崩溃排查第一步！）
+#0  0x0000555555555179 in main () at segfault.cpp:5
+#   只有 main 一帧（因为崩溃在 main 里，没有更深的调用）
+#   如果是函数调用链很深的程序，bt 会显示完整链路
+
+(gdb) info locals              # 看崩溃时的局部变量
+p = 0x0
+#   p = 0x0 就是空指针！这就是崩溃原因
+
+(gdb) print p                  # 再确认一下
+$1 = (int *) 0x0
+#   (int *) 0x0 = int 类型的空指针
+
+(gdb) quit
+# A debugging session is active.
+#         Inferior 1 [process 12345] will be killed.
+# Quit anyway? (y or n) y
+</code></pre><p><strong>这个例子很简单（只有 main 一帧），真实场景 bt 的价值</strong>： 真实程序调用链很深，比如 <code class="language-plaintext highlighter-rouge">main → train() → forward() → attention() → matmul()</code>，崩溃在 <code class="language-plaintext highlighter-rouge">matmul()</code>。bt 能一次性显示整条链，告诉你”是 main 调用 train，train 调用 forward… 最终在 matmul 崩的”，定位 bug 时知道该看哪一层。</p><h3 id="35-开启-core-dump事后分析的前提">3.5 开启 core dump（事后分析的前提）</h3><p>GDB 在线调试需要”手动启动 gdb 再 run”。但真实场景往往是：<strong>程序在服务器上崩了，当时没开 GDB</strong>。这时 core dump 就是”现场快照”——崩的那一刻内核把内存状态存成文件，事后用 GDB 加载分析。</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 查看当前 core dump 限制</span>
+<span class="nb">ulimit</span> <span class="nt">-c</span>
+<span class="c"># 0          ← 0 表示不生成 core 文件（系统默认）</span>
+
+<span class="c"># 临时开启（当前终端有效）</span>
+<span class="nb">ulimit</span> <span class="nt">-c</span> unlimited
+<span class="nb">ulimit</span> <span class="nt">-c</span>
+<span class="c"># unlimited  ← 确认已开启</span>
+
+<span class="c"># 想永久生效：改 /etc/security/limits.conf 加一行 * soft core unlimited</span>
+</code></pre></div></div><p><strong>WSL2 特别注意</strong>：core 文件可能被 systemd 的 apport 接管，不生成在当前目录。检查并修改 core_pattern：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cat</span> /proc/sys/kernel/core_pattern
+<span class="c"># 如果输出是 "|/usr/share/apport/apport ..." 表示被 apport 接管了</span>
+<span class="c"># 改成直接写文件：</span>
+<span class="nb">echo</span> <span class="s2">"core.%e.%p"</span> | <span class="nb">sudo tee</span> /proc/sys/kernel/core_pattern
+<span class="c">#   %e=程序名 %p=PID，生成的 core 文件叫 core.segfault.12345</span>
+<span class="c">#   这样 core 文件会生成在程序运行的当前目录</span>
+
+<span class="c"># 永久生效（重启不丢）：</span>
+<span class="nb">echo</span> <span class="s2">"kernel.core_pattern=core.%e.%p"</span> | <span class="nb">sudo tee</span> <span class="nt">-a</span> /etc/sysctl.conf
+<span class="nb">sudo </span>sysctl <span class="nt">-p</span>
+</code></pre></div></div><h3 id="36-让程序崩了生成-core然后用-gdb-分析">3.6 让程序崩了生成 core，然后用 GDB 分析</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 确保 ulimit -c 是 unlimited</span>
+<span class="nb">ulimit</span> <span class="nt">-c</span> unlimited
+
+./segfault
+<span class="c"># Segmentation fault (core dumped)</span>
+
+<span class="nb">ls </span>core<span class="k">*</span>
+<span class="c"># core.segfault.12345      ← 生成了 core 文件（12345 是 PID）</span>
+</code></pre></div></div><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gdb ./segfault core.segfault.12345
+<span class="c"># GDB 自动加载 core 文件，显示崩溃时的状态：</span>
+<span class="c"># Core was generated by `./segfault'.</span>
+<span class="c"># Program terminated with signal SIGSEGV, Segmentation fault.</span>
+<span class="c"># #0  0x0000555555555179 in main () at segfault.cpp:5</span>
+<span class="c"># 5           *p = 42;                   # 对空指针解引用并赋值 → 必崩</span>
+<span class="c">#   ↑ 加载 core 后直接显示崩溃位置，和在线调试一模一样</span>
+
+<span class="o">(</span>gdb<span class="o">)</span> bt
+<span class="c">#0  0x0000555555555179 in main () at segfault.cpp:5</span>
+<span class="c">#   调用栈也和在线调试一样</span>
+
+<span class="o">(</span>gdb<span class="o">)</span> info locals
+p <span class="o">=</span> 0x0
+<span class="c">#   崩溃时 p 是空指针——bug 确认</span>
+
+<span class="o">(</span>gdb<span class="o">)</span> quit
+</code></pre></div></div><blockquote><p><strong>core dump 用法记一句话</strong>：服务器上程序崩了、当时没开 GDB，只要有 core 文件就能 <code class="language-plaintext highlighter-rouge">gdb 程序名 core文件名</code> 回到崩溃现场，效果和在线调试一样——<code class="language-plaintext highlighter-rouge">bt</code> 看在哪崩、<code class="language-plaintext highlighter-rouge">info locals</code> 看当时变量值。</p></blockquote><hr /><h2 id="四demo-3addresssanitizer-当场抓获内存错误含不崩溃的越界">四、Demo 3：AddressSanitizer 当场抓获内存错误（含不崩溃的越界）</h2><h3 id="41-为什么需要-asangdb-的局限">4.1 为什么需要 ASan（GDB 的局限）</h3><p>GDB 条件断点能抓 Demo 1 的越界，但前提是<strong>你得知道在哪设断点</strong>。如果不知道 bug 在哪行，条件断点无从设起。而且有些错误（use-after-free）可能离 bug 很远才出问题。</p><p>ASan（AddressSanitizer）在”第一次非法访问”时就停下并报告，<strong>不需要你猜断点位置</strong>。对比：</p><ul><li>Demo 1 的越界：GDB 要你手动设 <code class="language-plaintext highlighter-rouge">break ... if i&gt;=5</code>；ASan 自动报</li><li>use-after-free：GDB 很难抓（释放后可能过了很久才用）；ASan 当场报</li></ul><h3 id="42-用-asan-重新编译-demo-1-的-crashcpp">4.2 用 ASan 重新编译 Demo 1 的 crash.cpp</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>g++ <span class="nt">-fsanitize</span><span class="o">=</span>address,undefined <span class="nt">-g</span> <span class="nt">-O0</span> crash.cpp <span class="nt">-o</span> crash_asan
+<span class="c">#   -fsanitize=address     启用 ASan（检测越界、use-after-free、泄漏）</span>
+<span class="c">#   -fsanitize=undefined   启用 UBSan（检测未定义行为）</span>
+<span class="c">#   -g -O0                 调试信息 + 不优化（让报错有准确行号）</span>
+<span class="c">#   注意：ASan 和 TSan 不能同时用（见主文档 9.1 节）</span>
+</code></pre></div></div><h3 id="43-运行asan-当场停下对比-demo-1-的不崩">4.3 运行——ASan 当场停下（对比 Demo 1 的”不崩”）</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./crash_asan
+<span class="c"># 不像 ./crash 那样输出垃圾值就跑完，ASan 会在第一次越界时停下并报错：</span>
+<span class="c">#</span>
+<span class="c"># =================================================================</span>
+<span class="c"># ==12345==ERROR: AddressSanitizer: stack-buffer-overflow on address 0x...</span>
+<span class="c"># READ of size 4 at 0x... thread T0</span>
+<span class="c">#     #0 0x... in sum_array(int*, int) crash.cpp:7     ← 在 crash.cpp:7 越界读</span>
+<span class="c">#     #1 0x... in main crash.cpp:14</span>
+<span class="c">#</span>
+<span class="c"># Address 0x... is located in stack of thread T0 at offset ... in frame</span>
+<span class="c">#     #0 0x... in main</span>
+<span class="c">#   This frame has 1 object(s):</span>
+<span class="c">#     [32, 52) 'arr' (line 13) &lt;== Memory access at offset ... overflows this variable</span>
+<span class="c">#                                ↑ 告诉你越界的是 arr 这个变量（第 13 行定义）</span>
+<span class="c"># SUMMARY: AddressSanitizer: stack-buffer-overflow crash.cpp:7 in sum_array</span>
+<span class="c"># ==12345==ABORTING</span>
+</code></pre></div></div><p><strong>ASan 报告逐行解读</strong>：</p><ul><li>第 1 行：错误类型 <code class="language-plaintext highlighter-rouge">stack-buffer-overflow</code>（栈缓冲区溢出）</li><li><code class="language-plaintext highlighter-rouge">READ of size 4</code>：读了 4 字节（一个 int）——是”读”越界，不是”写”</li><li><code class="language-plaintext highlighter-rouge">#0 ... crash.cpp:7</code>：<strong>第一次出错的位置</strong>（第 7 行 <code class="language-plaintext highlighter-rouge">s += arr[i]</code>）</li><li><code class="language-plaintext highlighter-rouge">#1 ... crash.cpp:14</code>：调用者是 main 第 14 行</li><li><code class="language-plaintext highlighter-rouge">'arr' (line 13) ... overflows this variable</code>：告诉你越界的是 <code class="language-plaintext highlighter-rouge">arr</code> 变量（第 13 行定义）</li><li><strong>即使程序本来不会崩，ASan 也会在这停下</strong>——这是它比 GDB 强的地方</li></ul><p><strong>对比 Demo 1</strong>： | | <code class="language-plaintext highlighter-rouge">./crash</code>（无 ASan） | <code class="language-plaintext highlighter-rouge">./crash_asan</code>（有 ASan） | |—|—|—| | 行为 | 输出垃圾值，正常退出 | 当场报错并 abort | | 能否定位 bug | 不能（要手动设断点） | 能（直接报告出错行号和变量） | | 速度 | 正常 | 慢 2~3 倍 |</p><h3 id="44-asan-能检测的错误类型">4.4 ASan 能检测的错误类型</h3><table><thead><tr><th>错误</th><th>含义</th><th>触发场景</th></tr></thead><tbody><tr><td>stack-buffer-overflow</td><td>栈越界</td><td>局部数组越界（本 Demo）</td></tr><tr><td>heap-buffer-overflow</td><td>堆越界</td><td><code class="language-plaintext highlighter-rouge">new</code>/<code class="language-plaintext highlighter-rouge">malloc</code> 的数组越界</td></tr><tr><td>heap-use-after-free</td><td>释放后用</td><td><code class="language-plaintext highlighter-rouge">delete p; p-&gt;x</code></td></tr><tr><td>stack-use-after-scope</td><td>作用域失效后用</td><td>返回局部变量引用</td></tr><tr><td>memory leak</td><td>内存泄漏</td><td><code class="language-plaintext highlighter-rouge">new</code> 了没 <code class="language-plaintext highlighter-rouge">delete</code>（程序结束时报告）</td></tr></tbody></table><h3 id="45-一个-use-after-free-的例子asan-的强项">4.5 一个 use-after-free 的例子（ASan 的强项）</h3><p><strong><code class="language-plaintext highlighter-rouge">uaf.cpp</code></strong>：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span><span class="kt">int</span><span class="o">*</span> <span class="nf">make_leak</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">int</span><span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">(</span><span class="mi">42</span><span class="p">);</span>
+    <span class="k">delete</span> <span class="n">p</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">p</span><span class="p">;</span>           <span class="c1">// 返回已释放的指针</span>
+<span class="p">}</span>
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">int</span><span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="n">make_leak</span><span class="p">();</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">p</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>   <span class="c1">// use-after-free！</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 先看不加 ASan 的表现——可能"看起来正常"</span>
+g++ <span class="nt">-g</span> <span class="nt">-O0</span> uaf.cpp <span class="nt">-o</span> uaf
+./uaf
+<span class="c"># 42            ← 读到了"刚释放"的内存，值还在（运气好），没崩</span>
+<span class="c"># 这个 bug用 GDB 几乎不可能抓到（你不知道哪行有问题）</span>
+
+<span class="c"># 用 ASan 重编</span>
+g++ <span class="nt">-fsanitize</span><span class="o">=</span>address <span class="nt">-g</span> <span class="nt">-O0</span> uaf.cpp <span class="nt">-o</span> uaf_asan
+./uaf_asan
+<span class="c"># ==12345==ERROR: AddressSanitizer: heap-use-after-free on address 0x...</span>
+<span class="c"># READ of size 4 at 0x... thread T0</span>
+<span class="c">#     #0 ... in main uaf.cpp:7      ← 在第 7 行用了已释放的内存</span>
+<span class="c"># ...</span>
+<span class="c"># freed by thread T0 here:</span>
+<span class="c">#     #0 ... in operator delete</span>
+<span class="c">#     #1 ... in make_leak uaf.cpp:4 ← 在第 4 行 delete 的</span>
+<span class="c"># previously allocated by thread T0 here:</span>
+<span class="c">#     #1 ... in make_leak uaf.cpp:3 ← 在第 3 行 new 的</span>
+<span class="c"># ASan 直接告诉你：这块内存第3行申请、第4行释放、第7行又用——完整生命周期</span>
+</code></pre></div></div><blockquote><p><strong>ASan 用法记一句话</strong>：怀疑有内存错误（越界/use-after-free/泄漏），用 <code class="language-plaintext highlighter-rouge">-fsanitize=address -g -O0</code> 重编再跑，它会在”第一次出错”时停下并报告完整调用栈。比 GDB 抓得更早更准，尤其适合”不崩溃的内存错误”。</p></blockquote><hr /><h2 id="五demo-4strace-追踪系统调用">五、Demo 4：strace 追踪系统调用</h2><h3 id="51-strace-是什么什么时候用">5.1 strace 是什么、什么时候用</h3><p><code class="language-plaintext highlighter-rouge">strace</code> 追踪程序调用了哪些系统调用（open/read/write/connect 等）。<strong>最适合排查”找不到文件/权限不足/连不上网络”这类问题</strong>——看程序到底想去哪个路径找文件、被什么挡住了。</p><p>linux/wsl ubuntu 需要使用apt install 一下：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt update
+<span class="nb">sudo </span>apt <span class="nb">install </span>strace
+</code></pre></div></div><h3 id="52-用一个找不到文件的程序演示">5.2 用一个”找不到文件”的程序演示</h3><p><strong><code class="language-plaintext highlighter-rouge">missing.cpp</code></strong>（程序想读一个不存在的配置文件）：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;fstream&gt;</span><span class="cp">
+</span><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">ifstream</span> <span class="n">cfg</span><span class="p">(</span><span class="s">"/etc/myapp/config.yaml"</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">cfg</span><span class="p">)</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"config not found</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span> <span class="k">return</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>g++ <span class="nt">-g</span> missing.cpp <span class="nt">-o</span> missing
+./missing
+<span class="c"># config not found</span>
+</code></pre></div></div><p><strong>直接运行只知道”没找到”，但不知道程序到底去了哪些路径找。用 strace 看</strong>：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>strace <span class="nt">-f</span> <span class="nt">-e</span> <span class="nv">trace</span><span class="o">=</span>openat ./missing 2&gt;&amp;1 | <span class="nb">grep </span>config
+<span class="c">#   -f                跟踪子进程</span>
+<span class="c">#   -e trace=openat   只看 openat 系统调用（打开文件）</span>
+<span class="c">#   2&gt;&amp;1              strace 输出在 stderr，重定向到 stdout 方便 grep</span>
+<span class="c"># 输出：</span>
+<span class="c"># openat(AT_FDCWD, "/etc/myapp/config.yaml", O_RDONLY) = -1 ENOENT (No such file or directory)</span>
+<span class="c">#   解读：</span>
+<span class="c">#   程序尝试 openat 打开 /etc/myapp/config.yaml，只读模式</span>
+<span class="c">#   返回值 = -1，错误码 ENOENT = 文件不存在</span>
+<span class="c">#   → 现在你确切知道：程序就是去找这个路径，文件不存在</span>
+</code></pre></div></div><h3 id="53-strace-常见过滤">5.3 strace 常见过滤</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 看所有文件打开操作（最常用）</span>
+strace <span class="nt">-f</span> <span class="nt">-e</span> <span class="nv">trace</span><span class="o">=</span>open,openat ./missing 2&gt;&amp;1 | <span class="nb">tail</span>
+<span class="c">#   程序打开的每个文件都会列出来，包括 libc 加载的 .so 等</span>
+
+<span class="c"># 看网络操作（排查"连不上"）</span>
+strace <span class="nt">-f</span> <span class="nt">-e</span> <span class="nv">trace</span><span class="o">=</span>network ./myserver 2&gt;&amp;1 | <span class="nb">head</span> <span class="nt">-20</span>
+
+<span class="c"># 看所有系统调用（不过滤，信息量大，存文件慢慢看）</span>
+strace <span class="nt">-f</span> <span class="nt">-o</span> trace.log ./missing
+<span class="c">#   -o trace.log  把所有输出存到 trace.log（不污染屏幕）</span>
+<span class="c">#   然后 grep trace.log 找你关心的</span>
+
+<span class="c"># 排查"Permission denied"类问题</span>
+strace <span class="nt">-f</span> ./missing 2&gt;&amp;1 | <span class="nb">grep</span> <span class="nt">-i</span> <span class="s2">"eacces</span><span class="se">\|</span><span class="s2">enoent"</span>
+<span class="c">#   EACCES = 权限不足</span>
+<span class="c">#   ENOENT = 文件不存在</span>
+</code></pre></div></div><h3 id="54-strace-输出怎么读">5.4 strace 输出怎么读</h3><p>每行格式：<code class="language-plaintext highlighter-rouge">系统调用名(参数...) = 返回值 (错误码)</code></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openat(AT_FDCWD, "/etc/myapp/config.yaml", O_RDONLY) = -1 ENOENT (No such file or directory)
+└──┬─┘  └────┬────┘  └──────────┬──────────┘  └──┬───────────────────────────┘
+   │         │                  │                 │
+系统调用    第一个参数          打开模式          返回 -1 表示失败，ENOENT=原因
+</code></pre></div></div><table><thead><tr><th>常见错误码</th><th>含义</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">ENOENT</code></td><td>文件/目录不存在</td></tr><tr><td><code class="language-plaintext highlighter-rouge">EACCES</code></td><td>权限不足</td></tr><tr><td><code class="language-plaintext highlighter-rouge">EEXIST</code></td><td>文件已存在（创建时）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">EAGAIN</code></td><td>资源暂不可用（重试）</td></tr><tr><td><code class="language-plaintext highlighter-rouge">ECONNREFUSED</code></td><td>连接被拒绝（网络）</td></tr></tbody></table><h3 id="55-实战排查-python-import-失败">5.5 实战：排查 Python import 失败</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>strace <span class="nt">-f</span> python <span class="nt">-c</span> <span class="s2">"import torch"</span> 2&gt;&amp;1 | <span class="nb">grep</span> <span class="s2">"torch"</span> | <span class="nb">head</span> <span class="nt">-10</span>
+<span class="c"># 能看到 Python 在哪些路径找 torch 模块：</span>
+<span class="c"># openat(..., "/home/lxy/miniconda3/lib/python3.10/torch/__init__.py") = -1 ENOENT</span>
+<span class="c"># openat(..., "/home/lxy/miniconda3/lib/python3.10/torch.cpython-310.so") = 3  ← 最后在这找到了</span>
+<span class="c"># 看搜索路径顺序，能理解"为什么 import 的是这个 torch 不是那个"</span>
+</code></pre></div></div><blockquote><p><strong>strace 用法记一句话</strong>：程序报”找不到文件/权限不足/连不上”，但不知道它去哪找的，用 <code class="language-plaintext highlighter-rouge">strace -f -e trace=openat 程序 2&gt;&amp;1 \| grep 关键词</code> 看它到底试了哪些路径。</p></blockquote><hr /><h2 id="六综合实战一次完整的-bug-排查">六、综合实战：一次完整的 bug 排查</h2><blockquote><p>场景：你写的 C++ 训练程序结果不对（或崩了），怎么一步步定位。</p></blockquote><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 情况 A：程序崩了（Segmentation fault）</span>
+<span class="c"># 第 1 步：先看有没有 core 文件</span>
+<span class="nb">ls </span>core<span class="k">*</span> 2&gt;/dev/null
+<span class="c"># 有 → gdb ./train core.xxx，bt 看现场（见 Demo 2）</span>
+<span class="c"># 没有 → ulimit -c unlimited 后重新跑复现</span>
+
+<span class="c"># 第 2 步：没有 core，用 ASan 重编复现</span>
+g++ <span class="nt">-fsanitize</span><span class="o">=</span>address,undefined <span class="nt">-g</span> <span class="nt">-O0</span> train.cpp <span class="nt">-o</span> train_asan
+./train_asan
+<span class="c"># ASan 在第一次出错就停下，报告出错位置和变量</span>
+<span class="c"># → 80% 的内存 bug 到这步就定位了</span>
+
+<span class="c"># 情况 B：程序不崩但结果不对</span>
+<span class="c"># 第 1 步：用 ASan 重编跑一遍，排除内存错误</span>
+g++ <span class="nt">-fsanitize</span><span class="o">=</span>address,undefined <span class="nt">-g</span> <span class="nt">-O0</span> train.cpp <span class="nt">-o</span> train_asan
+./train_asan
+<span class="c"># ASan 报错 → 按 Demo 3 的方法读报告</span>
+<span class="c"># ASan 没报错 → bug 不是内存错误，是逻辑错误，转 GDB</span>
+
+<span class="c"># 第 2 步：GDB 设断点观察变量</span>
+gdb ./train
+<span class="o">(</span>gdb<span class="o">)</span> <span class="nb">break </span>train.cpp:42 <span class="k">if </span>loss <span class="o">&gt;</span> 100    <span class="c"># 在可疑行设条件断点</span>
+<span class="o">(</span>gdb<span class="o">)</span> run
+<span class="c"># 停下后 print 各变量，看哪个不对（见 Demo 1 的条件断点用法）</span>
+
+<span class="c"># 第 3 步：怀疑是"找不到文件/库"导致的</span>
+ldd ./train | <span class="nb">grep</span> <span class="s2">"not found"</span>      <span class="c"># 看缺哪个动态库（见动态库 Demo）</span>
+strace <span class="nt">-f</span> <span class="nt">-e</span> <span class="nv">trace</span><span class="o">=</span>openat ./train 2&gt;&amp;1 | <span class="nb">grep</span> <span class="nt">-i</span> <span class="s2">"enoent</span><span class="se">\|</span><span class="s2">eacces"</span>
+<span class="c">#   看程序在哪个路径找文件失败了</span>
+</code></pre></div></div><p><strong>排查决策树</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>程序出问题
+   │
+   ├─ 程序崩了（SIGSEGV）
+   │   ├─ 有 core 文件 → gdb 程序 core，bt 看现场
+   │   └─ 没 core 文件 → ASan 重编复现 / ulimit -c 开启 core 重跑
+   │
+   ├─ 程序不崩但结果不对
+   │   ├─ 先用 ASan 排除内存错误（越界/use-after-free/泄漏）
+   │   ├─ ASan 没报 → GDB 条件断点观察变量（break ... if 条件）
+   │   └─ 怀疑找不到文件/库 → ldd + strace
+   │
+   └─ 程序报"找不到文件/权限不足"
+       └─ strace -e trace=openat 看它试了哪些路径
+</code></pre></div></div><hr /><h2 id="七指令速查表本-demo-涉及的">七、指令速查表（本 Demo 涉及的）</h2><table><thead><tr><th>指令/工具</th><th>作用</th><th>关键参数</th><th>典型用法</th></tr></thead><tbody><tr><td><code class="language-plaintext highlighter-rouge">g++ -g -O0</code></td><td>编译带调试信息</td><td><code class="language-plaintext highlighter-rouge">-g</code> 调试信息 <code class="language-plaintext highlighter-rouge">-O0</code> 不优化</td><td><code class="language-plaintext highlighter-rouge">g++ -g -O0 x.cpp -o x</code></td></tr><tr><td><code class="language-plaintext highlighter-rouge">gdb 程序</code></td><td>在线调试</td><td>无</td><td><code class="language-plaintext highlighter-rouge">gdb ./crash</code></td></tr><tr><td><code class="language-plaintext highlighter-rouge">gdb 程序 core</code></td><td>分析 core dump</td><td>无</td><td><code class="language-plaintext highlighter-rouge">gdb ./segfault core.xxx</code></td></tr><tr><td><code class="language-plaintext highlighter-rouge">(gdb) bt</code></td><td>看调用栈</td><td><code class="language-plaintext highlighter-rouge">bt full</code> 带变量</td><td>程序停着时用</td></tr><tr><td><code class="language-plaintext highlighter-rouge">(gdb) break ... if 条件</code></td><td>条件断点</td><td><code class="language-plaintext highlighter-rouge">if</code> 后跟条件</td><td><code class="language-plaintext highlighter-rouge">b crash.cpp:7 if i&gt;=5</code></td></tr><tr><td><code class="language-plaintext highlighter-rouge">(gdb) run</code></td><td>运行</td><td><code class="language-plaintext highlighter-rouge">r arg1</code> 带参数</td><td> </td></tr><tr><td><code class="language-plaintext highlighter-rouge">(gdb) next/step</code></td><td>单步</td><td><code class="language-plaintext highlighter-rouge">n</code> 不进函数 <code class="language-plaintext highlighter-rouge">s</code> 进入</td><td> </td></tr><tr><td><code class="language-plaintext highlighter-rouge">(gdb) print</code></td><td>查看变量</td><td><code class="language-plaintext highlighter-rouge">p *ptr</code> <code class="language-plaintext highlighter-rouge">p arr[5]</code></td><td><code class="language-plaintext highlighter-rouge">p i</code></td></tr><tr><td><code class="language-plaintext highlighter-rouge">(gdb) frame N</code></td><td>切换栈帧</td><td><code class="language-plaintext highlighter-rouge">0</code> 最里层</td><td><code class="language-plaintext highlighter-rouge">f 1</code></td></tr><tr><td><code class="language-plaintext highlighter-rouge">ulimit -c unlimited</code></td><td>开启 core dump</td><td> </td><td>临时开启</td></tr><tr><td><code class="language-plaintext highlighter-rouge">g++ -fsanitize=address</code></td><td>ASan 检测内存错误</td><td><code class="language-plaintext highlighter-rouge">-g -O0</code> 配合</td><td><code class="language-plaintext highlighter-rouge">g++ -fsanitize=address -g -O0 x.cpp -o x</code></td></tr><tr><td><code class="language-plaintext highlighter-rouge">g++ -fsanitize=thread</code></td><td>TSan 检测数据竞争</td><td>不能和 ASan 同用</td><td> </td></tr><tr><td><code class="language-plaintext highlighter-rouge">strace</code></td><td>追踪系统调用</td><td><code class="language-plaintext highlighter-rouge">-f</code> 跟子进程 <code class="language-plaintext highlighter-rouge">-e trace=</code> 过滤</td><td><code class="language-plaintext highlighter-rouge">strace -f -e trace=openat ./x 2&gt;&amp;1 \| grep xxx</code></td></tr></tbody></table><hr /><h2 id="八常见坑--易混淆点">八、常见坑 &amp; 易混淆点</h2><ol><li><p><strong>越界访问不一定会崩</strong>——越界读到栈/堆上的合法内存只是得到垃圾值（Demo 1），只有读到未映射的非法页才会 SIGSEGV（Demo 2 的空指针）。所以<strong>不能靠”没崩”判断有没有内存错误</strong>，要用 ASan。</p></li><li><p><strong>GDB 看不到变量显示 <code class="language-plaintext highlighter-rouge">&lt;optimized out&gt;</code></strong>——是因为编译时开了 <code class="language-plaintext highlighter-rouge">-O2</code> 优化，变量被优化掉了。用 <code class="language-plaintext highlighter-rouge">-O0</code> 重编，或加 <code class="language-plaintext highlighter-rouge">-g</code> 配合 ASan。</p></li><li><p><strong><code class="language-plaintext highlighter-rouge">-fsanitize=address</code> 和 <code class="language-plaintext highlighter-rouge">-fsanitize=thread</code> 不能同时用</strong>——ASan 检测内存错误，TSan 检测数据竞争，二者互斥。先测内存错误（ASan），再单独测竞争（TSan）。</p></li><li><p><strong>ASan 让程序变慢 2~3 倍、占内存多</strong>——只在调试时用，发布版别带 <code class="language-plaintext highlighter-rouge">-fsanitize</code>。</p></li><li><p><strong>core 文件可能没生成</strong>——<code class="language-plaintext highlighter-rouge">ulimit -c</code> 是 0（默认）、磁盘满、<code class="language-plaintext highlighter-rouge">/proc/sys/kernel/core_pattern</code> 被设成 <code class="language-plaintext highlighter-rouge">|/...</code> 管道模式（如 Ubuntu 的 apport）都可能。先 <code class="language-plaintext highlighter-rouge">ulimit -c unlimited</code> + 改 core_pattern。</p></li><li><p><strong>GDB 的 <code class="language-plaintext highlighter-rouge">next</code> vs <code class="language-plaintext highlighter-rouge">step</code> 区别</strong>——<code class="language-plaintext highlighter-rouge">next</code> 遇到函数调用不进去（把函数当一步），<code class="language-plaintext highlighter-rouge">step</code> 会进入函数内部。看库代码用 <code class="language-plaintext highlighter-rouge">next</code>，看自己代码用 <code class="language-plaintext highlighter-rouge">step</code>。</p></li><li><p><strong><code class="language-plaintext highlighter-rouge">bt</code> 只能在程序停着时用</strong>——程序已退出（exited normally）时 <code class="language-plaintext highlighter-rouge">bt</code> 显示 <code class="language-plaintext highlighter-rouge">No stack</code>，因为没有进程在运行。bt 在”断点停下”或”收到信号崩溃”时才有内容。</p></li><li><p><strong>strace 输出在 stderr</strong>——要 <code class="language-plaintext highlighter-rouge">2&gt;&amp;1</code> 重定向才能 grep，否则 <code class="language-plaintext highlighter-rouge">strace ... | grep xxx</code> grep 不到。</p></li><li><p><strong>WSL2 上 TSan 报 <code class="language-plaintext highlighter-rouge">unexpected memory mapping</code></strong>——这是 WSL2 已知限制，不是代码 bug，改用 <code class="language-plaintext highlighter-rouge">valgrind --tool=helgrind</code>（见 cpp 笔记 8.6 节）。</p></li><li><p><strong><code class="language-plaintext highlighter-rouge">break main</code> 停在 <code class="language-plaintext highlighter-rouge">int main() {</code> 那行</strong>——不是 main 里的第一条语句。这是”将要执行”的语义：断点停在”即将执行但还没执行”的行。</p></li></ol><hr /><h2 id="九关联笔记">九、关联笔记</h2><ul><li><code class="language-plaintext highlighter-rouge">linux/Linux开发基本功_新人入门版.md</code> 第九章（命令清单与原理）、4.3 节（信号，SIGSEGV/SIGABRT）</li><li><code class="language-plaintext highlighter-rouge">cpp/编译链接模板与构建系统.md</code> 第 2 章（编译/链接/运行时三类错误）、附录 A.6（-g）、A.12（-fsanitize 参数详解）</li><li><code class="language-plaintext highlighter-rouge">cpp/编译链接模板与构建系统.md</code> 8.6 节（WSL2 上 TSan 的替代方案）</li><li><code class="language-plaintext highlighter-rouge">linux/Linux动态库调试_Demo实践.md</code>（动态库相关的 ldd/strace 配合使用）</li></ul></section><!-- Previous / Next navigation --><nav class="notes-pager"><div class="notes-pager-links"> <a href="/notes/Linux%E5%8A%A8%E6%80%81%E5%BA%93%E8%B0%83%E8%AF%95-Demo%E5%AE%9E%E8%B7%B5/" class="notes-pager-prev"> <span class="notes-pager-label">← 上一章</span> <span class="notes-pager-title">Linux动态库调试_Demo实践</span> </a> <a href="/notes/Linux%E5%BC%80%E5%8F%91%E5%9F%BA%E6%9C%AC%E5%8A%9F-%E6%96%B0%E4%BA%BA%E5%85%A5%E9%97%A8%E7%89%88/" class="notes-pager-next"> <span class="notes-pager-label">下一章 →</span> <span class="notes-pager-title">Linux开发基本功_新人入门版</span> </a></div></nav></div></article><!-- Right Sidebar: Table of Contents (built by JS from DOM) --><aside class="notes-toc" id="notes-toc"><div class="notes-toc-inner"><h4 class="notes-toc-title">目录</h4><nav class="notes-toc-nav"><ul class="notes-toc-list" id="notes-toc-list"> <!-- Populated by notes-toc.js --></ul></nav></div></aside></div><script src="https://1571859588.github.io/assets/js/notes-toc.js"></script> <script> (function() { var q = new URLSearchParams(location.search).get('q'); if (!q || q.length < 2) return; var body = document.querySelector('.notes-body'); if (!body) return; // Walk text nodes, find and highlight matches var walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT, null, false); var textNodes = []; while (walker.nextNode()) { var p = walker.currentNode.parentNode; // Skip script, style, code blocks, and already-marked text if (p.tagName === 'SCRIPT' || p.tagName === 'STYLE' || p.tagName === 'MARK' || p.closest('pre') || p.closest('.notes-search-hit')) continue; textNodes.push(walker.currentNode); } var first = null; var re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'); textNodes.forEach(function(node) { var text = node.textContent; if (!re.test(text)) return; re.lastIndex = 0; // reset after test var frag = document.createDocumentFragment(); var lastIdx = 0; var match; while ((match = re.exec(text)) !== null) { if (match.index > lastIdx) { frag.appendChild(document.createTextNode(text.substring(lastIdx, match.index))); } var mark = document.createElement('mark'); mark.className = 'notes-search-mark'; mark.textContent = match[0]; frag.appendChild(mark); if (!first) first = mark; lastIdx = match.index + match[0].length; } if (lastIdx < text.length) { frag.appendChild(document.createTextNode(text.substring(lastIdx))); } node.parentNode.replaceChild(frag, node); }); if (first) { setTimeout(function() { first.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300); } })(); </script><div class="page__footer"><footer> <!-- start custom footer snippets --> <a href="/sitemap/">Sitemap</a> <!-- end custom footer snippets --><div class="page__footer-follow"><ul class="social-icons"><li><strong>Follow:</strong></li><li><a href="http://github.com/1571859588"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a></li><li><a href="https://1571859588.github.io/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li></ul></div><div class="page__footer-copyright"> &copy; 2026 Yuntao Nie, Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://github.com/academicpages/academicpages.github.io">AcademicPages</a>, a fork of <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.<br /> Site last updated 2026-07-06</div></footer></div><script src="https://1571859588.github.io/assets/js/main.min.js"></script> <script src="https://1571859588.github.io/assets/js/paper-details.js"></script> <!-- Fix kramdown stripping backslashes before _ in math spans. kramdown treats \_ as a markdown escape, converting $seq\_len$ to $seq_len$. MathJax then interprets _ as subscript instead of a literal underscore. This runs synchronously before MathJax (async) processes the page. --> <script> (function() { var content = document.querySelector('.page__content'); if (!content) return; var walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT, null, false); var nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode); nodes.forEach(function(node) { var text = node.textContent; var fixed = text.replace(/\$([^$\n]+?)\$/g, function(match, math) { // Inside $...$, add \ before _ followed by 2+ lowercase letters. // Safe: legitimate subscripts use single chars ($d_k$) or braces ($x_{ij}$). var fixedMath = math.replace(/_([a-z]{2,})/g, '\\_$1'); return fixedMath !== math ? '$' + fixedMath + '$' : match; }); if (fixed !== text) node.textContent = fixed; }); })(); </script> <script> var SERIES_INDEX = [ {t:"Linux动态库调试_Demo实践", u:"/notes/Linux%E5%8A%A8%E6%80%81%E5%BA%93%E8%B0%83%E8%AF%95-Demo%E5%AE%9E%E8%B7%B5/"}, {t:"Linux原生程序调试_Demo实践", u:"/notes/Linux%E5%8E%9F%E7%94%9F%E7%A8%8B%E5%BA%8F%E8%B0%83%E8%AF%95-Demo%E5%AE%9E%E8%B7%B5/"}, {t:"Linux开发基本功_新人入门版", u:"/notes/Linux%E5%BC%80%E5%8F%91%E5%9F%BA%E6%9C%AC%E5%8A%9F-%E6%96%B0%E4%BA%BA%E5%85%A5%E9%97%A8%E7%89%88/"} ]; (function() { if (!SERIES_INDEX.length) return; var inp = document.getElementById('notes-sidebar-search-input'); var box = document.getElementById('notes-sidebar-search-results'); if (!inp || !box) return; function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; } function hl(t, q) { var o = '', L = 0, lo = t.toLowerCase(), ql = q.toLowerCase(), i; while ((i = lo.indexOf(ql, L)) !== -1) { o += esc(t.substring(L, i)) + '<mark class="notes-search-highlight">' + esc(t.substring(i, i + q.length)) + '</mark>'; L = i + q.length; } return o + esc(t.substring(L)); } inp.addEventListener('input', function() { var q = this.value.trim(); if (!q) { box.style.display = 'none'; box.innerHTML = ''; return; } var ql = q.toLowerCase(), hits = []; for (var i = 0; i < SERIES_INDEX.length; i++) { if (SERIES_INDEX[i].t.toLowerCase().indexOf(ql) !== -1) hits.push(SERIES_INDEX[i]); } if (!hits.length) { box.innerHTML = '<div class="notes-sidebar-search-empty">无匹配</div>'; } else { var h = ''; for (var j = 0; j < Math.min(hits.length, 15); j++) { h += '<a href="' + hits[j].u + '" class="notes-sidebar-search-hit" data-q="' + esc(q) + '">' + '<span class="notes-sidebar-search-hit-title">' + hl(hits[j].t, q) + '</span></a>'; } box.innerHTML = h; } box.style.display = 'block'; }); inp.addEventListener('keydown', function(e) { if (e.key === 'Escape') { box.style.display = 'none'; box.innerHTML = ''; this.blur(); } }); box.addEventListener('click', function(e) { var a = e.target.closest('.notes-sidebar-search-hit'); if (a && a.dataset.q) sessionStorage.setItem('notes-search-q', a.dataset.q); }); document.addEventListener('click', function(e) { if (!e.target.closest('#notes-sidebar-search')) { box.style.display = 'none'; box.innerHTML = ''; } }); })(); </script></body></html>

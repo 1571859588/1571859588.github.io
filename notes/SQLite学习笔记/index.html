@@ -1,0 +1,546 @@
+<!doctype html><html lang="en" class="no-js"><head><meta charset="utf-8"> <!-- begin SEO --><title>SQLite学习笔记 - Yuntao Nie</title><meta property="og:locale" content="en-US"><meta property="og:site_name" content="Yuntao Nie"><meta property="og:title" content="SQLite学习笔记"><link rel="canonical" href="https://1571859588.github.io/notes/SQLite%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><meta property="og:url" content="https://1571859588.github.io/notes/SQLite%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><meta property="og:description" content="SQLite 学习笔记：最轻量的数据库，从命令行到 Python 实战"> <script type="application/ld+json"> { "@context" : "http://schema.org", "@type" : "Person", "name" : "Yuntao Nie", "url" : "https://1571859588.github.io", "sameAs" : null } </script> <!-- end SEO --><link href="https://1571859588.github.io/feed.xml" type="application/atom+xml" rel="alternate" title="Yuntao Nie Feed"> <!-- http://t.co/dKP3o1e --><meta name="HandheldFriendly" content="True"><meta name="MobileOptimized" content="320"><meta name="viewport" content="width=device-width, initial-scale=1.0"> <script> document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js '; </script> <!-- For all browsers --><link rel="stylesheet" href="https://1571859588.github.io/assets/css/main.css"><meta http-equiv="cleartype" content="on"> <!-- start custom head snippets --><link rel="apple-touch-icon" sizes="57x57" href="https://1571859588.github.io/images/apple-touch-icon-57x57.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="60x60" href="https://1571859588.github.io/images/apple-touch-icon-60x60.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="72x72" href="https://1571859588.github.io/images/apple-touch-icon-72x72.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="76x76" href="https://1571859588.github.io/images/apple-touch-icon-76x76.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="114x114" href="https://1571859588.github.io/images/apple-touch-icon-114x114.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="120x120" href="https://1571859588.github.io/images/apple-touch-icon-120x120.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="144x144" href="https://1571859588.github.io/images/apple-touch-icon-144x144.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="152x152" href="https://1571859588.github.io/images/apple-touch-icon-152x152.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="180x180" href="https://1571859588.github.io/images/apple-touch-icon-180x180.png?v=M44lzPylqQ"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-32x32.png?v=M44lzPylqQ" sizes="32x32"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/android-chrome-192x192.png?v=M44lzPylqQ" sizes="192x192"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-96x96.png?v=M44lzPylqQ" sizes="96x96"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-16x16.png?v=M44lzPylqQ" sizes="16x16"><link rel="manifest" href="https://1571859588.github.io/images/manifest.json?v=M44lzPylqQ"><link rel="mask-icon" href="https://1571859588.github.io/images/safari-pinned-tab.svg?v=M44lzPylqQ" color="#000000"><link rel="shortcut icon" href="/images/favicon.ico?v=M44lzPylqQ"><meta name="msapplication-TileColor" content="#000000"><meta name="msapplication-TileImage" content="https://1571859588.github.io/images/mstile-144x144.png?v=M44lzPylqQ"><meta name="msapplication-config" content="https://1571859588.github.io/images/browserconfig.xml?v=M44lzPylqQ"><meta name="theme-color" content="#ffffff"><link rel="stylesheet" href="https://1571859588.github.io/assets/css/academicons.css"/> <!-- MathJax for math rendering --> <script> MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['\\(', '\\)']] } }; </script> <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script> <!-- end custom head snippets --></head><body> <!--[if lt IE 9]><div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div><![endif]--><div class="masthead"><div class="masthead__inner-wrap"><div class="masthead__menu"><nav id="site-nav" class="greedy-nav"> <button><div class="navicon"></div></button><ul class="visible-links"><li class="masthead__menu-item masthead__menu-item--lg"><a href="https://1571859588.github.io/">Yuntao Nie</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/publications/">Publications</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/cv/">CV</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/notes/">Notes</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/year-archive/">Blog</a></li></ul><ul class="hidden-links hidden"></ul></nav></div></div></div><div id="main" role="main" class="notes-layout"> <!-- Left Sidebar: Series Chapter Navigation --><aside class="notes-sidebar" id="notes-sidebar"><div class="notes-sidebar-inner"><div class="notes-series-header"><h3 class="notes-series-title">backend</h3></div><div class="notes-sidebar-search" id="notes-sidebar-search"> <input type="text" class="notes-sidebar-search-input" id="notes-sidebar-search-input" placeholder="搜索本专题…" autocomplete="off"><div class="notes-sidebar-search-results" id="notes-sidebar-search-results" style="display:none"></div></div><nav class="notes-chapter-nav"><ul class="notes-chapter-list"><li class="notes-chapter-item "> <a href="/notes/FastAPI%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="notes-chapter-link"> <span class="notes-chapter-num">1</span> <span class="notes-chapter-title">FastAPI学习笔记</span> </a></li><li class="notes-chapter-item "> <a href="/notes/MySQL%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="notes-chapter-link"> <span class="notes-chapter-num">2</span> <span class="notes-chapter-title">MySQL学习笔记</span> </a></li><li class="notes-chapter-item "> <a href="/notes/Redis%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="notes-chapter-link"> <span class="notes-chapter-num">3</span> <span class="notes-chapter-title">Redis学习笔记</span> </a></li><li class="notes-chapter-item active"> <a href="/notes/SQLite%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="notes-chapter-link"> <span class="notes-chapter-num">4</span> <span class="notes-chapter-title">SQLite学习笔记</span> </a></li></ul></nav><div class="notes-sidebar-footer"> <a href="/notes/" class="notes-back-link">← 所有笔记系列</a></div></div></aside><!-- Mobile sidebar toggle --> <button class="notes-sidebar-toggle" id="notes-sidebar-toggle" aria-label="Toggle sidebar"> <span class="notes-sidebar-toggle-icon"></span> </button> <!-- Main Content --><article class="notes-content" itemscope itemtype="http://schema.org/CreativeWork"><meta itemprop="headline" content="SQLite学习笔记"><div class="notes-content-inner"><header class="notes-header"><div class="notes-breadcrumb"> <a href="/notes/">Notes</a> <span class="notes-sep">›</span> <span>backend</span> <span class="notes-sep">›</span> <span>SQLite学习笔记</span></div><h1 class="notes-page-title" itemprop="headline">SQLite学习笔记</h1></header><section class="notes-body" itemprop="text"><h1 id="sqlite-学习笔记最轻量的数据库从命令行到-python-实战">SQLite 学习笔记：最轻量的数据库，从命令行到 Python 实战</h1><blockquote><table><tbody><tr><td>更新时间：2026-06-28</td><td>适用版本：SQLite 3.x / Python 内置 sqlite3</td></tr></tbody></table></blockquote><hr /><h2 id="一sqlite-是什么">一、SQLite 是什么？</h2><p><strong>一句话概括</strong>：SQLite 是一个<strong>不需要安装、不需要服务器</strong>的数据库，整个数据库就是一个 <code class="language-plaintext highlighter-rouge">.db</code> 文件。</p><h3 id="类比理解">类比理解</h3><table><thead><tr><th>概念</th><th>类比</th></tr></thead><tbody><tr><td><strong>Excel 文件</strong></td><td>一个 <code class="language-plaintext highlighter-rouge">.xlsx</code> 文件，用 Excel 软件打开就能编辑，不需要联网</td></tr><tr><td><strong>SQLite 数据库</strong></td><td>一个 <code class="language-plaintext highlighter-rouge">.db</code> 文件，用 SQL 语言操作，不需要数据库服务器</td></tr><tr><td><strong>MySQL/PostgreSQL</strong></td><td>像企业级 ERP 系统，需要专门安装服务器软件、配置端口、管理用户</td></tr></tbody></table><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>传统数据库架构：
+  你的程序 → 网络 → MySQL服务器进程 → 磁盘文件
+
+SQLite 架构：
+  你的程序 → SQLite库 → 直接读写 .db 文件
+</code></pre></div></div><p>就这么简单——SQLite 把”数据库服务器”这层直接干掉了，变成了程序里的一个库（library）。</p><hr /><h2 id="二什么时候用-sqlite什么时候用-mysqlpostgresql">二、什么时候用 SQLite？什么时候用 MySQL/PostgreSQL？</h2><h3 id="-适合用-sqlite-的场景">✅ 适合用 SQLite 的场景</h3><table><thead><tr><th>场景</th><th>原因</th></tr></thead><tbody><tr><td><strong>小型应用</strong>（个人博客、工具脚本）</td><td>零配置，一个文件搞定</td></tr><tr><td><strong>原型开发 / Demo</strong></td><td>快速验证想法，不需要搭环境</td></tr><tr><td><strong>嵌入式设备</strong>（手机 App、IoT）</td><td>Android/iOS 内置 SQLite</td></tr><tr><td><strong>自动化测试</strong></td><td>每次测试用全新数据库文件，干净隔离</td></tr><tr><td><strong>数据分析</strong>（中等规模数据）</td><td>配合 Pandas 非常方便</td></tr><tr><td><strong>配置文件存储</strong></td><td>比 JSON/YAML 更结构化，支持查询</td></tr></tbody></table><h3 id="-不适合用-sqlite-的场景">❌ 不适合用 SQLite 的场景</h3><table><thead><tr><th>场景</th><th>原因</th></tr></thead><tbody><tr><td><strong>高并发写入</strong>（电商、社交）</td><td>SQLite 同一时刻只允许一个写操作</td></tr><tr><td><strong>多服务器分布式部署</strong></td><td>文件无法跨服务器共享</td></tr><tr><td><strong>超大数据量</strong>（TB 级）</td><td>理论上限 281TB，但实际性能会下降</td></tr><tr><td><strong>需要细粒度权限管理</strong></td><td>SQLite 没有用户/权限系统</td></tr></tbody></table><blockquote><p><strong>记忆口诀</strong>：单机小量用 SQLite，并发大量上 MySQL。</p></blockquote><hr /><h2 id="三安装与工具">三、安装与工具</h2><h3 id="31-python-内置零安装">3.1 Python 内置（零安装！）</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">sqlite3</span>
+<span class="k">print</span><span class="p">(</span><span class="n">sqlite3</span><span class="p">.</span><span class="n">sqlite_version</span><span class="p">)</span>  <span class="c1"># 例如：3.45.1
+</span></code></pre></div></div><p>Python 自带 <code class="language-plaintext highlighter-rouge">sqlite3</code> 模块，不需要 <code class="language-plaintext highlighter-rouge">pip install</code> 任何东西。</p><h3 id="32-命令行工具">3.2 命令行工具</h3><p><strong>Windows</strong>：从 https://sqlite.org/download.html 下载 <code class="language-plaintext highlighter-rouge">sqlite-tools-win32</code> 解压即可。</p><p><strong>macOS / Linux</strong>：通常已预装，终端输入：</p><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sqlite3 <span class="nt">--version</span>
+</code></pre></div></div><h3 id="33-图形化工具强烈推荐">3.3 图形化工具（强烈推荐）</h3><p><strong>DB Browser for SQLite</strong>（免费开源）：https://sqlitebrowser.org/</p><p>功能：</p><ul><li>可视化建表、编辑数据</li><li>写 SQL 有自动补全</li><li>可以导入/导出 CSV</li><li>适合初学者理解表结构</li></ul><hr /><h2 id="四核心-sql-操作命令行实战">四、核心 SQL 操作（命令行实战）</h2><h3 id="41-创建数据库和表">4.1 创建数据库和表</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 启动 sqlite3 并创建数据库文件</span>
+sqlite3 my_database.db
+</code></pre></div></div><div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- 创建用户表</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">users</span> <span class="p">(</span>
+    <span class="n">id</span> <span class="nb">INTEGER</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="n">AUTOINCREMENT</span><span class="p">,</span>
+    <span class="n">name</span> <span class="nb">TEXT</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="n">email</span> <span class="nb">TEXT</span> <span class="k">UNIQUE</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="n">age</span> <span class="nb">INTEGER</span><span class="p">,</span>
+    <span class="n">created_at</span> <span class="nb">DATETIME</span> <span class="k">DEFAULT</span> <span class="k">CURRENT_TIMESTAMP</span>
+<span class="p">);</span>
+
+<span class="c1">-- 创建订单表</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">orders</span> <span class="p">(</span>
+    <span class="n">id</span> <span class="nb">INTEGER</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="n">AUTOINCREMENT</span><span class="p">,</span>
+    <span class="n">user_id</span> <span class="nb">INTEGER</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="n">product</span> <span class="nb">TEXT</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="n">amount</span> <span class="nb">REAL</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="n">order_date</span> <span class="nb">DATETIME</span> <span class="k">DEFAULT</span> <span class="k">CURRENT_TIMESTAMP</span><span class="p">,</span>
+    <span class="k">FOREIGN</span> <span class="k">KEY</span> <span class="p">(</span><span class="n">user_id</span><span class="p">)</span> <span class="k">REFERENCES</span> <span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">)</span>
+<span class="p">);</span>
+</code></pre></div></div><blockquote><p><strong>注意</strong>：<code class="language-plaintext highlighter-rouge">INTEGER PRIMARY KEY</code> 在 SQLite 中会自动递增（相当于 MySQL 的 AUTO_INCREMENT），加上 <code class="language-plaintext highlighter-rouge">AUTOINCREMENT</code> 关键字可以防止 ID 被复用。</p></blockquote><h3 id="42-insert--插入数据">4.2 INSERT — 插入数据</h3><div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- 插入单条</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">users</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">email</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">'张三'</span><span class="p">,</span> <span class="s1">'zhangsan@example.com'</span><span class="p">,</span> <span class="mi">28</span><span class="p">);</span>
+
+<span class="c1">-- 插入多条</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">users</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">email</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span> <span class="k">VALUES</span>
+    <span class="p">(</span><span class="s1">'李四'</span><span class="p">,</span> <span class="s1">'lisi@example.com'</span><span class="p">,</span> <span class="mi">25</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">'王五'</span><span class="p">,</span> <span class="s1">'wangwu@example.com'</span><span class="p">,</span> <span class="mi">32</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">'赵六'</span><span class="p">,</span> <span class="s1">'zhaoliu@example.com'</span><span class="p">,</span> <span class="mi">22</span><span class="p">);</span>
+
+<span class="c1">-- 插入订单</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">orders</span> <span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">product</span><span class="p">,</span> <span class="n">amount</span><span class="p">)</span> <span class="k">VALUES</span>
+    <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">'Python 教程'</span><span class="p">,</span> <span class="mi">59</span><span class="p">.</span><span class="mi">9</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">'机械键盘'</span><span class="p">,</span> <span class="mi">399</span><span class="p">.</span><span class="mi">0</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">'显示器'</span><span class="p">,</span> <span class="mi">1299</span><span class="p">.</span><span class="mi">0</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s1">'Python 教程'</span><span class="p">,</span> <span class="mi">59</span><span class="p">.</span><span class="mi">9</span><span class="p">);</span>
+</code></pre></div></div><h3 id="43-select--查询数据">4.3 SELECT — 查询数据</h3><div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- 查询所有用户</span>
+<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">users</span><span class="p">;</span>
+
+<span class="c1">-- 条件查询：年龄大于 25</span>
+<span class="k">SELECT</span> <span class="n">name</span><span class="p">,</span> <span class="n">age</span> <span class="k">FROM</span> <span class="n">users</span> <span class="k">WHERE</span> <span class="n">age</span> <span class="o">&gt;</span> <span class="mi">25</span><span class="p">;</span>
+
+<span class="c1">-- 模糊查询：名字包含"三"</span>
+<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">users</span> <span class="k">WHERE</span> <span class="n">name</span> <span class="k">LIKE</span> <span class="s1">'%三%'</span><span class="p">;</span>
+
+<span class="c1">-- 排序：按年龄降序</span>
+<span class="k">SELECT</span> <span class="n">name</span><span class="p">,</span> <span class="n">age</span> <span class="k">FROM</span> <span class="n">users</span> <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">age</span> <span class="k">DESC</span><span class="p">;</span>
+
+<span class="c1">-- 限制结果数量</span>
+<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">users</span> <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">age</span> <span class="k">DESC</span> <span class="k">LIMIT</span> <span class="mi">3</span><span class="p">;</span>
+
+<span class="c1">-- 分页（OFFSET）</span>
+<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">users</span> <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">id</span> <span class="k">LIMIT</span> <span class="mi">10</span> <span class="k">OFFSET</span> <span class="mi">20</span><span class="p">;</span>  <span class="c1">-- 第3页，每页10条</span>
+</code></pre></div></div><h3 id="44-update--更新数据">4.4 UPDATE — 更新数据</h3><div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- 更新单个用户</span>
+<span class="k">UPDATE</span> <span class="n">users</span> <span class="k">SET</span> <span class="n">age</span> <span class="o">=</span> <span class="mi">29</span> <span class="k">WHERE</span> <span class="n">name</span> <span class="o">=</span> <span class="s1">'张三'</span><span class="p">;</span>
+
+<span class="c1">-- 批量更新（小心！不加 WHERE 会更新全部）</span>
+<span class="k">UPDATE</span> <span class="n">users</span> <span class="k">SET</span> <span class="n">age</span> <span class="o">=</span> <span class="n">age</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>  <span class="c1">-- 所有人年龄+1</span>
+</code></pre></div></div><h3 id="45-delete--删除数据">4.5 DELETE — 删除数据</h3><div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- 删除指定用户</span>
+<span class="k">DELETE</span> <span class="k">FROM</span> <span class="n">users</span> <span class="k">WHERE</span> <span class="n">name</span> <span class="o">=</span> <span class="s1">'赵六'</span><span class="p">;</span>
+
+<span class="c1">-- ⚠️ 危险操作：删除所有数据（表还在）</span>
+<span class="k">DELETE</span> <span class="k">FROM</span> <span class="n">users</span><span class="p">;</span>
+
+<span class="c1">-- ⚠️ 更危险：连表一起删除</span>
+<span class="k">DROP</span> <span class="k">TABLE</span> <span class="n">users</span><span class="p">;</span>
+</code></pre></div></div><h3 id="46-join--多表关联查询">4.6 JOIN — 多表关联查询</h3><div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- 查询每个用户的订单</span>
+<span class="k">SELECT</span> <span class="n">users</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="n">orders</span><span class="p">.</span><span class="n">product</span><span class="p">,</span> <span class="n">orders</span><span class="p">.</span><span class="n">amount</span>
+<span class="k">FROM</span> <span class="n">users</span>
+<span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">orders</span> <span class="k">ON</span> <span class="n">users</span><span class="p">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">orders</span><span class="p">.</span><span class="n">user_id</span><span class="p">;</span>
+
+<span class="c1">-- 查询结果示例：</span>
+<span class="c1">-- 张三 | Python 教程 | 59.9</span>
+<span class="c1">-- 张三 | 机械键盘    | 399.0</span>
+<span class="c1">-- 李四 | 显示器      | 1299.0</span>
+<span class="c1">-- 王五 | Python 教程 | 59.9</span>
+</code></pre></div></div><h3 id="47-group-by--分组统计">4.7 GROUP BY — 分组统计</h3><div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- 每个用户的订单总金额</span>
+<span class="k">SELECT</span> <span class="n">users</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="k">SUM</span><span class="p">(</span><span class="n">orders</span><span class="p">.</span><span class="n">amount</span><span class="p">)</span> <span class="k">AS</span> <span class="n">total_spent</span><span class="p">,</span> <span class="k">COUNT</span><span class="p">(</span><span class="n">orders</span><span class="p">.</span><span class="n">id</span><span class="p">)</span> <span class="k">AS</span> <span class="n">order_count</span>
+<span class="k">FROM</span> <span class="n">users</span>
+<span class="k">LEFT</span> <span class="k">JOIN</span> <span class="n">orders</span> <span class="k">ON</span> <span class="n">users</span><span class="p">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">orders</span><span class="p">.</span><span class="n">user_id</span>
+<span class="k">GROUP</span> <span class="k">BY</span> <span class="n">users</span><span class="p">.</span><span class="n">id</span>
+<span class="k">HAVING</span> <span class="n">total_spent</span> <span class="o">&gt;</span> <span class="mi">0</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="n">total_spent</span> <span class="k">DESC</span><span class="p">;</span>
+
+<span class="c1">-- 结果：</span>
+<span class="c1">-- 张三 | 458.9 | 2</span>
+<span class="c1">-- 李四 | 1299.0 | 1</span>
+<span class="c1">-- 王五 | 59.9 | 1</span>
+</code></pre></div></div><h3 id="48-创建索引--提升查询速度">4.8 创建索引 — 提升查询速度</h3><div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- 给 email 字段创建唯一索引（加速 WHERE email = ? 查询）</span>
+<span class="k">CREATE</span> <span class="k">UNIQUE</span> <span class="k">INDEX</span> <span class="n">idx_users_email</span> <span class="k">ON</span> <span class="n">users</span><span class="p">(</span><span class="n">email</span><span class="p">);</span>
+
+<span class="c1">-- 给常用查询字段创建索引</span>
+<span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">idx_users_age</span> <span class="k">ON</span> <span class="n">users</span><span class="p">(</span><span class="n">age</span><span class="p">);</span>
+
+<span class="c1">-- 复合索引（覆盖多列查询）</span>
+<span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">idx_orders_user_date</span> <span class="k">ON</span> <span class="n">orders</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">order_date</span><span class="p">);</span>
+
+<span class="c1">-- 查看表的索引</span>
+<span class="p">.</span><span class="n">indexes</span> <span class="n">users</span>
+</code></pre></div></div><blockquote><p><strong>索引类比</strong>：索引就像书的目录。没有索引时，找内容要一页页翻（全表扫描）；有了索引，直接看目录跳到对应页。但索引也有代价——每次写入都要更新目录，所以不要给每个字段都建索引。</p></blockquote><hr /><h2 id="五python-sqlite3-模块完整实战">五、Python sqlite3 模块完整实战</h2><h3 id="51-基础连接与操作">5.1 基础连接与操作</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">sqlite3</span>
+
+<span class="c1"># 1. 连接数据库（文件不存在会自动创建）
+</span><span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="p">.</span><span class="n">connect</span><span class="p">(</span><span class="s">'example.db'</span><span class="p">)</span>
+
+<span class="c1"># 2. 创建游标对象（用来执行 SQL）
+</span><span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="n">cursor</span><span class="p">()</span>
+
+<span class="c1"># 3. 执行 SQL
+</span><span class="n">cursor</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">'''
+    CREATE TABLE IF NOT EXISTS students (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        score REAL
+    )
+'''</span><span class="p">)</span>
+
+<span class="c1"># 4. 提交事务（重要！不提交数据不会保存）
+</span><span class="n">conn</span><span class="p">.</span><span class="n">commit</span><span class="p">()</span>
+
+<span class="c1"># 5. 关闭连接
+</span><span class="n">conn</span><span class="p">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div></div><h3 id="52-使用上下文管理器推荐写法">5.2 使用上下文管理器（推荐写法）</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">sqlite3</span>
+
+<span class="c1"># with 语句会自动 commit（成功时）或 rollback（出错时）
+</span><span class="k">with</span> <span class="n">sqlite3</span><span class="p">.</span><span class="n">connect</span><span class="p">(</span><span class="s">'example.db'</span><span class="p">)</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
+    <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="n">cursor</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">"INSERT INTO students (name, score) VALUES (?, ?)"</span><span class="p">,</span> <span class="p">(</span><span class="s">'小明'</span><span class="p">,</span> <span class="mf">95.5</span><span class="p">))</span>
+    <span class="c1"># 不需要手动 commit，with 会处理
+</span></code></pre></div></div><blockquote><p>⚠️ <strong>注意</strong>：<code class="language-plaintext highlighter-rouge">with sqlite3.connect(...)</code> 管理的是<strong>事务</strong>，不是连接！连接不会自动关闭。如果要自动关闭连接，用 <code class="language-plaintext highlighter-rouge">contextlib.closing</code>。</p></blockquote><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">closing</span>
+
+<span class="k">with</span> <span class="n">closing</span><span class="p">(</span><span class="n">sqlite3</span><span class="p">.</span><span class="n">connect</span><span class="p">(</span><span class="s">'example.db'</span><span class="p">))</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">conn</span><span class="p">:</span>  <span class="c1"># 管理事务
+</span>        <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="n">cursor</span><span class="p">()</span>
+        <span class="n">cursor</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">"INSERT INTO students (name, score) VALUES (?, ?)"</span><span class="p">,</span> <span class="p">(</span><span class="s">'小红'</span><span class="p">,</span> <span class="mf">88.0</span><span class="p">))</span>
+    <span class="c1"># conn 会自动关闭
+</span></code></pre></div></div><h3 id="53-参数化查询防止-sql-注入">5.3 参数化查询（防止 SQL 注入！）</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">sqlite3</span>
+
+<span class="c1"># ❌ 错误示范：字符串拼接（SQL 注入风险！）
+</span><span class="n">user_input</span> <span class="o">=</span> <span class="s">"'; DROP TABLE students; --"</span>
+<span class="n">cursor</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s">"SELECT * FROM students WHERE name = '</span><span class="si">{</span><span class="n">user_input</span><span class="si">}</span><span class="s">'"</span><span class="p">)</span>
+<span class="c1"># 这会删掉整个表！
+</span>
+<span class="c1"># ✅ 正确写法：参数化查询（用 ? 占位符）
+</span><span class="n">cursor</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">"SELECT * FROM students WHERE name = ?"</span><span class="p">,</span> <span class="p">(</span><span class="n">user_input</span><span class="p">,))</span>
+<span class="c1"># SQLite 会自动转义特殊字符，安全！
+</span>
+<span class="c1"># ✅ 也可以用命名参数
+</span><span class="n">cursor</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">"SELECT * FROM students WHERE name = :name AND score &gt; :min_score"</span><span class="p">,</span>
+               <span class="p">{</span><span class="s">'name'</span><span class="p">:</span> <span class="s">'小明'</span><span class="p">,</span> <span class="s">'min_score'</span><span class="p">:</span> <span class="mi">60</span><span class="p">})</span>
+</code></pre></div></div><h3 id="54-完整-crud-示例">5.4 完整 CRUD 示例</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s">"""
+SQLite 完整 CRUD（增删改查）示例
+"""</span>
+<span class="kn">import</span> <span class="nn">sqlite3</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">closing</span>
+
+
+<span class="k">def</span> <span class="nf">init_db</span><span class="p">(</span><span class="n">db_path</span><span class="o">=</span><span class="s">'crud_demo.db'</span><span class="p">):</span>
+    <span class="s">"""初始化数据库，创建表"""</span>
+    <span class="k">with</span> <span class="n">closing</span><span class="p">(</span><span class="n">sqlite3</span><span class="p">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db_path</span><span class="p">))</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">conn</span><span class="p">:</span>
+            <span class="n">conn</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">'''
+                CREATE TABLE IF NOT EXISTS products (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name TEXT NOT NULL,
+                    price REAL NOT NULL,
+                    stock INTEGER DEFAULT 0,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                )
+            '''</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">create_product</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">price</span><span class="p">,</span> <span class="n">stock</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="s">"""C - Create：新增商品"""</span>
+    <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span>
+        <span class="s">"INSERT INTO products (name, price, stock) VALUES (?, ?, ?)"</span><span class="p">,</span>
+        <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">price</span><span class="p">,</span> <span class="n">stock</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">cursor</span><span class="p">.</span><span class="n">lastrowid</span>  <span class="c1"># 返回新插入的 ID
+</span>
+
+<span class="k">def</span> <span class="nf">read_products</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">min_price</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="s">"""R - Read：查询商品"""</span>
+    <span class="k">if</span> <span class="n">min_price</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span>
+            <span class="s">"SELECT * FROM products WHERE price &gt;= ? ORDER BY price"</span><span class="p">,</span>
+            <span class="p">(</span><span class="n">min_price</span><span class="p">,)</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">"SELECT * FROM products ORDER BY id"</span><span class="p">)</span>
+
+    <span class="c1"># 设置 Row factory，让结果可以用列名访问
+</span>    <span class="n">cursor</span><span class="p">.</span><span class="n">row_factory</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="p">.</span><span class="n">Row</span>
+    <span class="k">return</span> <span class="n">cursor</span><span class="p">.</span><span class="n">fetchall</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">update_stock</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">product_id</span><span class="p">,</span> <span class="n">new_stock</span><span class="p">):</span>
+    <span class="s">"""U - Update：更新库存"""</span>
+    <span class="n">conn</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span>
+        <span class="s">"UPDATE products SET stock = ? WHERE id = ?"</span><span class="p">,</span>
+        <span class="p">(</span><span class="n">new_stock</span><span class="p">,</span> <span class="n">product_id</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">delete_product</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">product_id</span><span class="p">):</span>
+    <span class="s">"""D - Delete：删除商品"""</span>
+    <span class="n">conn</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">"DELETE FROM products WHERE id = ?"</span><span class="p">,</span> <span class="p">(</span><span class="n">product_id</span><span class="p">,))</span>
+
+
+<span class="c1"># ---- 使用示例 ----
+</span><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="s">'crud_demo.db'</span>
+    <span class="n">init_db</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">closing</span><span class="p">(</span><span class="n">sqlite3</span><span class="p">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db</span><span class="p">))</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">conn</span><span class="p">:</span>
+            <span class="c1"># 新增
+</span>            <span class="n">id1</span> <span class="o">=</span> <span class="n">create_product</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="s">'Python 从入门到放弃'</span><span class="p">,</span> <span class="mf">69.9</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+            <span class="n">id2</span> <span class="o">=</span> <span class="n">create_product</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="s">'机械键盘 Cherry 红轴'</span><span class="p">,</span> <span class="mf">599.0</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+            <span class="n">id3</span> <span class="o">=</span> <span class="n">create_product</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="s">'降噪耳机'</span><span class="p">,</span> <span class="mf">1299.0</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"新增商品 ID: </span><span class="si">{</span><span class="n">id1</span><span class="si">}</span><span class="s">, </span><span class="si">{</span><span class="n">id2</span><span class="si">}</span><span class="s">, </span><span class="si">{</span><span class="n">id3</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+
+            <span class="c1"># 查询
+</span>            <span class="n">conn</span><span class="p">.</span><span class="n">row_factory</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="p">.</span><span class="n">Row</span>
+            <span class="n">products</span> <span class="o">=</span> <span class="n">read_products</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">所有商品："</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">products</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  </span><span class="si">{</span><span class="n">p</span><span class="p">[</span><span class="s">'id'</span><span class="p">]</span><span class="si">}</span><span class="s"> | </span><span class="si">{</span><span class="n">p</span><span class="p">[</span><span class="s">'name'</span><span class="p">]</span><span class="si">}</span><span class="s"> | ¥</span><span class="si">{</span><span class="n">p</span><span class="p">[</span><span class="s">'price'</span><span class="p">]</span><span class="si">}</span><span class="s"> | 库存:</span><span class="si">{</span><span class="n">p</span><span class="p">[</span><span class="s">'stock'</span><span class="p">]</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+
+            <span class="c1"># 更新
+</span>            <span class="n">update_stock</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">id1</span><span class="p">,</span> <span class="mi">80</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="se">\n</span><span class="s">更新商品 </span><span class="si">{</span><span class="n">id1</span><span class="si">}</span><span class="s"> 库存为 80"</span><span class="p">)</span>
+
+            <span class="c1"># 删除
+</span>            <span class="n">delete_product</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">id3</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"删除商品 </span><span class="si">{</span><span class="n">id3</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+
+            <span class="c1"># 再次查询（价格 &gt;= 100 的）
+</span>            <span class="n">expensive</span> <span class="o">=</span> <span class="n">read_products</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">min_price</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="se">\n</span><span class="s">价格 &gt;= 100 的商品：</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">expensive</span><span class="p">)</span><span class="si">}</span><span class="s"> 个"</span><span class="p">)</span>
+</code></pre></div></div><h3 id="55-row-factory让查询结果更好用">5.5 Row Factory（让查询结果更好用）</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">sqlite3</span>
+
+<span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="p">.</span><span class="n">connect</span><span class="p">(</span><span class="s">'example.db'</span><span class="p">)</span>
+
+<span class="c1"># 默认：返回 tuple，只能通过索引访问
+</span><span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">"SELECT * FROM students"</span><span class="p">)</span>
+<span class="n">row</span> <span class="o">=</span> <span class="n">cursor</span><span class="p">.</span><span class="n">fetchone</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># 不直观
+</span>
+<span class="c1"># 设置 row_factory 为 sqlite3.Row：可以用列名访问
+</span><span class="n">conn</span><span class="p">.</span><span class="n">row_factory</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="p">.</span><span class="n">Row</span>
+<span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">"SELECT * FROM students"</span><span class="p">)</span>
+<span class="n">row</span> <span class="o">=</span> <span class="n">cursor</span><span class="p">.</span><span class="n">fetchone</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s">'name'</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s">'score'</span><span class="p">])</span>  <span class="c1"># 清晰多了！
+</span></code></pre></div></div><hr /><h2 id="六sqlite-在-web-框架中的使用">六、SQLite 在 Web 框架中的使用</h2><h3 id="61-flask--sqlalchemy">6.1 Flask + SQLAlchemy</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
+<span class="kn">from</span> <span class="nn">flask_sqlalchemy</span> <span class="kn">import</span> <span class="n">SQLAlchemy</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+<span class="c1"># SQLite 数据库文件路径（相对于项目根目录）
+</span><span class="n">app</span><span class="p">.</span><span class="n">config</span><span class="p">[</span><span class="s">'SQLALCHEMY_DATABASE_URI'</span><span class="p">]</span> <span class="o">=</span> <span class="s">'sqlite:///app.db'</span>
+<span class="n">db</span> <span class="o">=</span> <span class="n">SQLAlchemy</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">db</span><span class="p">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">db</span><span class="p">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="p">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">username</span> <span class="o">=</span> <span class="n">db</span><span class="p">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="p">.</span><span class="n">String</span><span class="p">(</span><span class="mi">80</span><span class="p">),</span> <span class="n">unique</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">db</span><span class="p">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="p">.</span><span class="n">String</span><span class="p">(</span><span class="mi">120</span><span class="p">),</span> <span class="n">unique</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s">'&lt;User </span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">username</span><span class="si">}</span><span class="s">&gt;'</span>
+
+
+<span class="c1"># 创建表
+</span><span class="k">with</span> <span class="n">app</span><span class="p">.</span><span class="n">app_context</span><span class="p">():</span>
+    <span class="n">db</span><span class="p">.</span><span class="n">create_all</span><span class="p">()</span>
+</code></pre></div></div><h3 id="62-fastapi--sqlalchemy">6.2 FastAPI + SQLAlchemy</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">fastapi</span> <span class="kn">import</span> <span class="n">FastAPI</span><span class="p">,</span> <span class="n">Depends</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">Column</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">String</span><span class="p">,</span> <span class="n">create_engine</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="kn">import</span> <span class="n">declarative_base</span><span class="p">,</span> <span class="n">sessionmaker</span><span class="p">,</span> <span class="n">Session</span>
+
+<span class="c1"># 连接 SQLite
+</span><span class="n">SQLALCHEMY_DATABASE_URL</span> <span class="o">=</span> <span class="s">"sqlite:///./app.db"</span>
+<span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span>
+    <span class="n">SQLALCHEMY_DATABASE_URL</span><span class="p">,</span>
+    <span class="n">connect_args</span><span class="o">=</span><span class="p">{</span><span class="s">"check_same_thread"</span><span class="p">:</span> <span class="bp">False</span><span class="p">}</span>  <span class="c1"># SQLite 特有参数！
+</span><span class="p">)</span>
+<span class="n">SessionLocal</span> <span class="o">=</span> <span class="n">sessionmaker</span><span class="p">(</span><span class="n">autocommit</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">autoflush</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="n">engine</span><span class="p">)</span>
+<span class="n">Base</span> <span class="o">=</span> <span class="n">declarative_base</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">"users"</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+
+<span class="c1"># 创建表
+</span><span class="n">Base</span><span class="p">.</span><span class="n">metadata</span><span class="p">.</span><span class="n">create_all</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">engine</span><span class="p">)</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">()</span>
+
+
+<span class="c1"># 依赖注入：获取数据库 session
+</span><span class="k">def</span> <span class="nf">get_db</span><span class="p">():</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">SessionLocal</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">db</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">db</span><span class="p">.</span><span class="n">close</span><span class="p">()</span>
+
+
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"/users"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">read_users</span><span class="p">(</span><span class="n">db</span><span class="p">:</span> <span class="n">Session</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(</span><span class="n">get_db</span><span class="p">)):</span>
+    <span class="k">return</span> <span class="n">db</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">).</span><span class="nb">all</span><span class="p">()</span>
+
+
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">post</span><span class="p">(</span><span class="s">"/users"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">create_user</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(</span><span class="n">get_db</span><span class="p">)):</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="n">email</span><span class="p">)</span>
+    <span class="n">db</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+    <span class="n">db</span><span class="p">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">db</span><span class="p">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">user</span>
+</code></pre></div></div><blockquote><p><strong>重点</strong>：<code class="language-plaintext highlighter-rouge">check_same_thread=False</code> 是 SQLite 在 Web 框架中必须设置的参数，因为 Web 服务器会在不同线程中处理请求，而 SQLite 默认不允许跨线程使用同一个连接。</p></blockquote><hr /><h2 id="七进阶limitations--避坑指南">七、进阶：Limitations &amp; 避坑指南</h2><h3 id="71-写锁问题最常被问到的坑">7.1 写锁问题（最常被问到的坑）</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>问题：SQLite 在默认模式（Journal Mode = DELETE）下，
+      写操作会锁住整个数据库文件！
+
+  进程A: BEGIN; INSERT INTO ... → 拿到写锁
+  进程B: SELECT * FROM users    → 被阻塞！等待...
+  进程C: INSERT INTO ...        → 被阻塞！等待...
+</code></pre></div></div><p><strong>解决方案：开启 WAL 模式</strong></p><div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- 在 sqlite3 命令行中</span>
+<span class="n">PRAGMA</span> <span class="n">journal_mode</span><span class="o">=</span><span class="n">WAL</span><span class="p">;</span>
+</code></pre></div></div><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 在 Python 中
+</span><span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="p">.</span><span class="n">connect</span><span class="p">(</span><span class="s">'my.db'</span><span class="p">)</span>
+<span class="n">conn</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">'PRAGMA journal_mode=WAL'</span><span class="p">)</span>
+</code></pre></div></div><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>WAL 模式的好处：
+  - 读写可以同时进行（读不阻塞写，写不阻塞读）
+  - 只有"写和写"之间互斥
+  - 性能提升明显（尤其是读多写少的场景）
+
+WAL 模式的代价：
+  - 会多出 .db-wal 和 .db-shm 两个辅助文件
+  - 不支持 NFS 网络文件系统
+</code></pre></div></div><h3 id="72-alter-table-的限制">7.2 ALTER TABLE 的限制</h3><div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- SQLite 支持的 ALTER TABLE 操作（很有限）：</span>
+<span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">users</span> <span class="k">ADD</span> <span class="k">COLUMN</span> <span class="n">phone</span> <span class="nb">TEXT</span><span class="p">;</span>        <span class="c1">-- ✅ 可以加列</span>
+<span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">users</span> <span class="k">RENAME</span> <span class="k">TO</span> <span class="n">old_users</span><span class="p">;</span>           <span class="c1">-- ✅ 可以重命名表</span>
+<span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">users</span> <span class="k">RENAME</span> <span class="k">COLUMN</span> <span class="n">name</span> <span class="k">TO</span> <span class="n">full_name</span><span class="p">;</span> <span class="c1">-- ✅ 可以重命名列（3.25+）</span>
+
+<span class="c1">-- SQLite 不支持的（需要重建表）：</span>
+<span class="c1">-- ALTER TABLE users DROP COLUMN age;            -- ❌ 不能删列（3.35+ 才支持）</span>
+<span class="c1">-- ALTER TABLE users ALTER COLUMN age TEXT;      -- ❌ 不能修改列类型</span>
+<span class="c1">-- ALTER TABLE users ADD CONSTRAINT ...          -- ❌ 不能加约束</span>
+</code></pre></div></div><p><strong>变通方案：重建表</strong></p><div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- 步骤 1：创建新表</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">users_new</span> <span class="p">(</span>
+    <span class="n">id</span> <span class="nb">INTEGER</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+    <span class="n">name</span> <span class="nb">TEXT</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="n">email</span> <span class="nb">TEXT</span> <span class="k">NOT</span> <span class="k">NULL</span>
+    <span class="c1">-- 去掉了 age 列</span>
+<span class="p">);</span>
+
+<span class="c1">-- 步骤 2：复制数据</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">users_new</span> <span class="k">SELECT</span> <span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">email</span> <span class="k">FROM</span> <span class="n">users</span><span class="p">;</span>
+
+<span class="c1">-- 步骤 3：删除旧表</span>
+<span class="k">DROP</span> <span class="k">TABLE</span> <span class="n">users</span><span class="p">;</span>
+
+<span class="c1">-- 步骤 4：重命名新表</span>
+<span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">users_new</span> <span class="k">RENAME</span> <span class="k">TO</span> <span class="n">users</span><span class="p">;</span>
+</code></pre></div></div><h3 id="73-文件权限">7.3 文件权限</h3><div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># SQLite 需要对 .db 文件及其所在目录有读写权限</span>
+<span class="c"># Linux/Mac 下注意：</span>
+<span class="nb">chmod </span>664 my_database.db      <span class="c"># 文件权限</span>
+<span class="nb">chmod </span>775 /path/to/db_dir/    <span class="c"># 目录也要有权限（SQLite 要创建 journal 文件）</span>
+
+<span class="c"># Docker 容器中常见问题：确保容器内用户对挂载目录有写权限</span>
+</code></pre></div></div><h3 id="74-其他常见坑">7.4 其他常见坑</h3><table><thead><tr><th>坑</th><th>说明</th><th>解决方案</th></tr></thead><tbody><tr><td><strong>类型系统宽松</strong></td><td><code class="language-plaintext highlighter-rouge">age</code> 列定义为 INTEGER，但 SQLite 允许插入字符串</td><td>用 <code class="language-plaintext highlighter-rouge">CHECK</code> 约束或应用层校验</td></tr><tr><td><strong>日期时间</strong></td><td>SQLite 没有 DATETIME 类型，存的是字符串</td><td>用 ISO 8601 格式：<code class="language-plaintext highlighter-rouge">2026-06-28 10:00:00</code></td></tr><tr><td><strong>布尔值</strong></td><td>没有 BOOLEAN 类型</td><td>用 0/1 表示 False/True</td></tr><tr><td><strong>连接不关闭</strong></td><td>忘记 <code class="language-plaintext highlighter-rouge">conn.close()</code> 导致文件被锁</td><td>始终使用 <code class="language-plaintext highlighter-rouge">with closing(...)</code></td></tr><tr><td><strong>并发写入</strong></td><td>多线程同时写入报错</td><td>WAL 模式 + 连接池 / 写队列</td></tr></tbody></table><hr /><h2 id="八面试回答">八、面试回答</h2><h3 id="q1请介绍一下-sqlite-的特点和适用场景">Q1：请介绍一下 SQLite 的特点和适用场景</h3><blockquote><p><strong>参考回答</strong>：</p><p>SQLite 是一个嵌入式关系数据库，它的核心特点是<strong>无需服务器进程</strong>——整个数据库就是一个普通文件，通过 SQLite 库直接读写。</p><p><strong>主要特点</strong>：</p><ol><li><strong>零配置</strong>：不需要安装、不需要配置端口或用户权限</li><li><strong>单文件</strong>：一个 <code class="language-plaintext highlighter-rouge">.db</code> 文件就是完整数据库，便于备份和迁移</li><li><strong>跨平台</strong>：Windows、Linux、macOS、Android、iOS 全支持</li><li><strong>标准 SQL</strong>：支持大部分 SQL-92 标准</li><li><strong>ACID 事务</strong>：保证数据一致性</li></ol><p><strong>适用场景</strong>：移动 App（Android/iOS 内置）、桌面应用（如 Chrome 存书签）、小型 Web 应用（配合 Flask/FastAPI）、原型开发、自动化测试、嵌入式设备。</p><p><strong>不适用场景</strong>：高并发写入（如电商秒杀）、多服务器分布式部署、需要细粒度权限控制的场景。这些情况下应该选择 MySQL 或 PostgreSQL。</p></blockquote><h3 id="q2python-中如何防止-sql-注入">Q2：Python 中如何防止 SQL 注入？</h3><blockquote><p><strong>参考回答</strong>：</p><p>SQL 注入是攻击者通过构造恶意输入，改变 SQL 语句的逻辑。比如：</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 危险！
+</span><span class="n">query</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"SELECT * FROM users WHERE name = '</span><span class="si">{</span><span class="n">user_input</span><span class="si">}</span><span class="s">'"</span>
+<span class="c1"># 如果 user_input = "' OR '1'='1"，查询变成：
+# SELECT * FROM users WHERE name = '' OR '1'='1'
+# 这会返回所有用户！
+</span></code></pre></div></div><p><strong>防护方法</strong>是使用<strong>参数化查询</strong>（Parameterized Query）：</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 安全！SQLite 驱动会自动转义参数
+</span><span class="n">cursor</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">"SELECT * FROM users WHERE name = ?"</span><span class="p">,</span> <span class="p">(</span><span class="n">user_input</span><span class="p">,))</span>
+</code></pre></div></div><p>原理是：SQL 语句和参数是分开传递给数据库引擎的，引擎先解析 SQL 结构，再把参数填入，所以恶意输入无法改变 SQL 的语义。这在所有数据库（MySQL、PostgreSQL 等）中都适用，不仅限于 SQLite。</p></blockquote><h3 id="q3sqlite-的写性能瓶颈怎么解决">Q3：SQLite 的写性能瓶颈怎么解决？</h3><blockquote><p><strong>参考回答</strong>：</p><p>SQLite 默认的日志模式（Journal Mode = DELETE）下，写操作会对整个数据库文件加排他锁，导致同一时刻只能有一个写操作，读操作也会被写操作阻塞。</p><p><strong>解决方案</strong>：</p><ol><li><strong>开启 WAL 模式</strong>（Write-Ahead Logging）：<code class="language-plaintext highlighter-rouge">PRAGMA journal_mode=WAL</code>。WAL 允许读写并发——读操作不阻塞写操作，写操作不阻塞读操作，只有写和写之间互斥。性能可以提升数倍。</li><li><strong>合并写入</strong>：把多条 INSERT 放在一个事务里（<code class="language-plaintext highlighter-rouge">BEGIN ... COMMIT</code>），减少锁竞争次数。一次批量插入 1000 条比 1000 次单独插入快 100 倍。</li><li><strong>写队列</strong>：用一个单独的线程/进程负责所有写操作，其他线程只读。</li><li><strong>读写分离</strong>：主库负责写，通过 WAL 或复制到只读副本负责读。</li></ol><p>如果这些方案仍不够，说明已经到达 SQLite 的天花板，应该迁移到 MySQL/PostgreSQL。</p></blockquote><hr /><h2 id="九深入追问">九、深入追问</h2><h3 id="追问-1wal-模式的底层原理是什么">追问 1：WAL 模式的底层原理是什么？</h3><p><strong>WAL（Write-Ahead Logging）的核心思想</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>传统模式（Rollback Journal）：
+  写入时 → 先备份原始数据到 .db-journal → 修改 .db 文件 → 删掉 journal
+  读取时 → 如果数据库被锁，等待
+
+WAL 模式：
+  写入时 → 新数据追加到 .db-wal 文件（不动原文件）→ checkpoint 时合并回 .db
+  读取时 → 同时看 .db 和 .db-wal，WAL 中的数据优先级更高
+
+关键：读操作不需要等写操作完成，因为写的是 WAL 文件，不是原文件。
+</code></pre></div></div><p><strong>Checkpoint 机制</strong>：WAL 文件会不断增长，需要定期把 WAL 中的数据合并回主数据库文件（checkpoint）。SQLite 会在 WAL 达到一定大小（默认 1000 页）时自动触发 checkpoint。</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 手动触发 checkpoint
+</span><span class="n">conn</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">"PRAGMA wal_checkpoint"</span><span class="p">)</span>       <span class="c1"># PASSIVE（默认）
+</span><span class="n">conn</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">"PRAGMA wal_checkpoint(FULL)"</span><span class="p">)</span>  <span class="c1"># 等待所有读写完成
+</span><span class="n">conn</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">"PRAGMA wal_checkpoint(TRUNCATE)"</span><span class="p">)</span>  <span class="c1"># 截断 WAL 文件
+</span></code></pre></div></div><h3 id="追问-2sql-注入有哪些高级形式">追问 2：SQL 注入有哪些高级形式？</h3><p>除了经典的 <code class="language-plaintext highlighter-rouge">' OR '1'='1</code>，还有：</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 1. 联合查询注入（UNION 注入）
+# 输入：' UNION SELECT username, password FROM admin_users --
+# 拼接后：SELECT name, email FROM users WHERE name = '' UNION SELECT username, password FROM admin_users --'
+</span>
+<span class="c1"># 2. 时间盲注（Time-based Blind）
+# 输入：' ; SELECT CASE WHEN (SELECT password FROM admin WHERE id=1) LIKE 'a%' THEN sqlite3_sleep(5000) ELSE 1 END --
+# 通过响应时间判断密码首字母
+</span>
+<span class="c1"># 3. 二次注入（Stored）
+# 第一步：注册时用户名为 admin'--（存入数据库）
+# 第二步：修改密码时 UPDATE users SET password='new' WHERE name='admin'--'
+# -- 后面的内容被注释掉，变成了修改 admin 的密码
+</span></code></pre></div></div><p><strong>终极防护</strong>：永远用参数化查询，永远不拼接 SQL 字符串。ORM（如 SQLAlchemy）内部自动使用参数化，也能有效防护。</p><h3 id="追问-3sqlite-需要连接池吗">追问 3：SQLite 需要连接池吗？</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># SQLite 不像 MySQL 那样需要传统连接池，原因：
+# 1. SQLite 连接本质上就是打开一个文件，开销极小
+# 2. SQLite 的连接是进程级别的，不支持跨进程共享
+</span>
+<span class="c1"># 但在多线程 Web 应用中，仍然建议：
+</span><span class="kn">import</span> <span class="nn">sqlite3</span>
+<span class="kn">from</span> <span class="nn">queue</span> <span class="kn">import</span> <span class="n">Queue</span>
+
+<span class="k">class</span> <span class="nc">SQLiteConnectionPool</span><span class="p">:</span>
+    <span class="s">"""简单的 SQLite 连接池"""</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_path</span><span class="p">,</span> <span class="n">pool_size</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">pool</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="n">pool_size</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">pool_size</span><span class="p">):</span>
+            <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="p">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db_path</span><span class="p">,</span> <span class="n">check_same_thread</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+            <span class="n">conn</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">'PRAGMA journal_mode=WAL'</span><span class="p">)</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">pool</span><span class="p">.</span><span class="n">put</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">pool</span><span class="p">.</span><span class="n">get</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">return_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conn</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">pool</span><span class="p">.</span><span class="n">put</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+
+<span class="c1"># 使用
+</span><span class="n">pool</span> <span class="o">=</span> <span class="n">SQLiteConnectionPool</span><span class="p">(</span><span class="s">'app.db'</span><span class="p">,</span> <span class="n">pool_size</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">conn</span> <span class="o">=</span> <span class="n">pool</span><span class="p">.</span><span class="n">get_connection</span><span class="p">()</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">"SELECT * FROM users"</span><span class="p">)</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">cursor</span><span class="p">.</span><span class="n">fetchall</span><span class="p">()</span>
+<span class="k">finally</span><span class="p">:</span>
+    <span class="n">pool</span><span class="p">.</span><span class="n">return_connection</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+</code></pre></div></div><blockquote><p><strong>实际建议</strong>：对于 FastAPI/Flask 项目，用 SQLAlchemy 的连接池即可（它会自动管理 SQLite 连接）。不需要手写连接池。</p></blockquote><hr /><h2 id="十易混淆点">十、易混淆点</h2><h3 id="101-sqlite-vs-mysql-核心区别">10.1 SQLite vs MySQL 核心区别</h3><table><thead><tr><th>对比项</th><th>SQLite</th><th>MySQL</th></tr></thead><tbody><tr><td><strong>架构</strong></td><td>库（Library），嵌入程序中</td><td>服务器（Server），独立进程</td></tr><tr><td><strong>安装</strong></td><td>不需要安装</td><td>需要安装 MySQL Server</td></tr><tr><td><strong>数据存储</strong></td><td>单个 <code class="language-plaintext highlighter-rouge">.db</code> 文件</td><td>数据目录，多文件管理</td></tr><tr><td><strong>并发写入</strong></td><td>默认只允许一个写者</td><td>支持多写者（行级锁）</td></tr><tr><td><strong>用户权限</strong></td><td>无（文件权限控制）</td><td>完善的用户/权限系统</td></tr><tr><td><strong>数据类型</strong></td><td>动态类型（弱类型）</td><td>静态类型（强类型）</td></tr><tr><td><strong>ALTER TABLE</strong></td><td>功能有限</td><td>功能完整</td></tr><tr><td><strong>网络访问</strong></td><td>不支持（本地文件）</td><td>支持 TCP/IP 远程连接</td></tr><tr><td><strong>存储过程</strong></td><td>不支持</td><td>支持</td></tr><tr><td><strong>全文搜索</strong></td><td>FTS5 扩展（很好用！）</td><td>FULLTEXT 索引</td></tr></tbody></table><h3 id="102-orm-vs-原生-sql">10.2 ORM vs 原生 SQL</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># ORM 方式（SQLAlchemy）
+</span><span class="n">user</span> <span class="o">=</span> <span class="n">session</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">).</span><span class="nb">filter</span><span class="p">(</span><span class="n">User</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">'张三'</span><span class="p">).</span><span class="n">first</span><span class="p">()</span>
+
+<span class="c1"># 原生 SQL
+</span><span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">"SELECT * FROM users WHERE name = ?"</span><span class="p">,</span> <span class="p">(</span><span class="s">'张三'</span><span class="p">,))</span>
+<span class="n">user</span> <span class="o">=</span> <span class="n">cursor</span><span class="p">.</span><span class="n">fetchone</span><span class="p">()</span>
+</code></pre></div></div><table><thead><tr><th>对比</th><th>ORM</th><th>原生 SQL</th></tr></thead><tbody><tr><td><strong>开发速度</strong></td><td>快（Python 对象操作）</td><td>慢（手写 SQL）</td></tr><tr><td><strong>性能</strong></td><td>有额外开销</td><td>直接执行，更快</td></tr><tr><td><strong>学习成本</strong></td><td>需要学 ORM 框架</td><td>需要学 SQL</td></tr><tr><td><strong>复杂查询</strong></td><td>ORM 表达力有限</td><td>SQL 可以写任意复杂</td></tr><tr><td><strong>可维护性</strong></td><td>高（代码即文档）</td><td>低（SQL 散落在各处）</td></tr></tbody></table><blockquote><p><strong>建议</strong>：简单操作用 ORM，复杂查询/性能敏感场景用原生 SQL。两者可以混用。</p></blockquote><h3 id="103-同步-vs-异步">10.3 同步 vs 异步</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 同步（sqlite3 标准库）
+</span><span class="kn">import</span> <span class="nn">sqlite3</span>
+<span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="p">.</span><span class="n">connect</span><span class="p">(</span><span class="s">'app.db'</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">"SELECT * FROM users"</span><span class="p">).</span><span class="n">fetchall</span><span class="p">()</span>
+
+<span class="c1"># 异步（aiosqlite，用于 FastAPI 等异步框架）
+</span><span class="kn">import</span> <span class="nn">aiosqlite</span>
+<span class="k">async</span> <span class="k">with</span> <span class="n">aiosqlite</span><span class="p">.</span><span class="n">connect</span><span class="p">(</span><span class="s">'app.db'</span><span class="p">)</span> <span class="k">as</span> <span class="n">db</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">with</span> <span class="n">db</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">"SELECT * FROM users"</span><span class="p">)</span> <span class="k">as</span> <span class="n">cursor</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">cursor</span><span class="p">.</span><span class="n">fetchall</span><span class="p">()</span>
+</code></pre></div></div><blockquote><p><strong>关键点</strong>：<code class="language-plaintext highlighter-rouge">sqlite3</code> 标准库是同步的，在 <code class="language-plaintext highlighter-rouge">async def</code> 中使用会阻塞事件循环！异步场景要用 <code class="language-plaintext highlighter-rouge">aiosqlite</code>（底层是用线程池包装的同步调用）。</p></blockquote><hr /><h2 id="十一实用技巧汇总">十一、实用技巧汇总</h2><h3 id="111-内存数据库测试神器">11.1 内存数据库（测试神器）</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">sqlite3</span>
+
+<span class="c1"># 使用 :memory: 创建内存数据库——速度极快，程序结束自动消失
+</span><span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="p">.</span><span class="n">connect</span><span class="p">(</span><span class="s">':memory:'</span><span class="p">)</span>
+<span class="n">conn</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">"CREATE TABLE test (id INTEGER PRIMARY KEY, value TEXT)"</span><span class="p">)</span>
+<span class="n">conn</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">"INSERT INTO test VALUES (1, 'hello')"</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">"SELECT * FROM test"</span><span class="p">).</span><span class="n">fetchall</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>  <span class="c1"># [(1, 'hello')]
+# 关闭连接后数据消失
+</span></code></pre></div></div><h3 id="112-批量插入优化">11.2 批量插入优化</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">sqlite3</span>
+
+<span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="p">.</span><span class="n">connect</span><span class="p">(</span><span class="s">'demo.db'</span><span class="p">)</span>
+
+<span class="c1"># ❌ 慢：逐条插入（每条都是一个事务）
+</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10000</span><span class="p">):</span>
+    <span class="n">conn</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">"INSERT INTO data (value) VALUES (?)"</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span><span class="p">,))</span>
+<span class="n">conn</span><span class="p">.</span><span class="n">commit</span><span class="p">()</span>  <span class="c1"># 约 30 秒
+</span>
+<span class="c1"># ✅ 快：一个事务批量插入
+</span><span class="n">conn</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">"BEGIN"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10000</span><span class="p">):</span>
+    <span class="n">conn</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">"INSERT INTO data (value) VALUES (?)"</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span><span class="p">,))</span>
+<span class="n">conn</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">"COMMIT"</span><span class="p">)</span>  <span class="c1"># 约 0.1 秒
+</span>
+<span class="c1"># ✅✅ 最快：使用 executemany
+</span><span class="n">data</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span><span class="p">,)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10000</span><span class="p">)]</span>
+<span class="n">conn</span><span class="p">.</span><span class="n">executemany</span><span class="p">(</span><span class="s">"INSERT INTO data (value) VALUES (?)"</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+<span class="n">conn</span><span class="p">.</span><span class="n">commit</span><span class="p">()</span>  <span class="c1"># 约 0.05 秒
+</span></code></pre></div></div><h3 id="113-常用-pragma-设置">11.3 常用 PRAGMA 设置</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="p">.</span><span class="n">connect</span><span class="p">(</span><span class="s">'app.db'</span><span class="p">)</span>
+
+<span class="c1"># 开启 WAL 模式（读写并发）
+</span><span class="n">conn</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">'PRAGMA journal_mode=WAL'</span><span class="p">)</span>
+
+<span class="c1"># 设置缓存大小（单位：页数，默认 2000，增大可提升性能）
+</span><span class="n">conn</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">'PRAGMA cache_size=-64000'</span><span class="p">)</span>  <span class="c1"># 64MB 缓存
+</span>
+<span class="c1"># 开启外键约束（默认关闭！）
+</span><span class="n">conn</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">'PRAGMA foreign_keys=ON'</span><span class="p">)</span>
+
+<span class="c1"># 设置同步模式（NORMAL 比 FULL 快，配合 WAL 足够安全）
+</span><span class="n">conn</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">'PRAGMA synchronous=NORMAL'</span><span class="p">)</span>
+
+<span class="c1"># 查看当前设置
+</span><span class="k">print</span><span class="p">(</span><span class="n">conn</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">'PRAGMA journal_mode'</span><span class="p">).</span><span class="n">fetchone</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="n">conn</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">'PRAGMA cache_size'</span><span class="p">).</span><span class="n">fetchone</span><span class="p">())</span>
+</code></pre></div></div><h3 id="114-sqlite-全文搜索fts5">11.4 SQLite 全文搜索（FTS5）</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">sqlite3</span>
+
+<span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="p">.</span><span class="n">connect</span><span class="p">(</span><span class="s">'search_demo.db'</span><span class="p">)</span>
+
+<span class="c1"># 创建全文搜索虚拟表
+</span><span class="n">conn</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">'''
+    CREATE VIRTUAL TABLE IF NOT EXISTS articles_fts
+    USING fts5(title, content)
+'''</span><span class="p">)</span>
+
+<span class="c1"># 插入数据
+</span><span class="n">conn</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">"INSERT INTO articles_fts (title, content) VALUES (?, ?)"</span><span class="p">,</span>
+             <span class="p">(</span><span class="s">'Python 入门'</span><span class="p">,</span> <span class="s">'Python 是一种简洁的编程语言'</span><span class="p">))</span>
+<span class="n">conn</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">"INSERT INTO articles_fts (title, content) VALUES (?, ?)"</span><span class="p">,</span>
+             <span class="p">(</span><span class="s">'Java 入门'</span><span class="p">,</span> <span class="s">'Java 是企业级开发的首选语言'</span><span class="p">))</span>
+
+<span class="c1"># 全文搜索
+</span><span class="n">results</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span>
+    <span class="s">"SELECT * FROM articles_fts WHERE articles_fts MATCH 'Python'"</span>
+<span class="p">).</span><span class="n">fetchall</span><span class="p">()</span>
+<span class="c1"># 返回包含 "Python" 的所有文章
+</span></code></pre></div></div><hr /><h2 id="十二快速参考卡片">十二、快速参考卡片</h2><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌──────────────────────────────────────────────────┐
+│               SQLite 速查手册                      │
+├──────────────────────────────────────────────────┤
+│ 连接：  sqlite3.connect('file.db')               │
+│ 内存：  sqlite3.connect(':memory:')              │
+│ 游标：  conn.cursor()                            │
+│ 执行：  cursor.execute(sql, params)              │
+│ 提交：  conn.commit()                            │
+│ 关闭：  conn.close()                             │
+├──────────────────────────────────────────────────┤
+│ 占位符：  ? 或 :name                             │
+│ 插入ID： cursor.lastrowid                       │
+│ 行工厂： conn.row_factory = sqlite3.Row          │
+│ WAL：   PRAGMA journal_mode=WAL                  │
+│ 外键：  PRAGMA foreign_keys=ON                   │
+├──────────────────────────────────────────────────┤
+│ CLI：   sqlite3 my.db                           │
+│ 导出：  .dump &gt; backup.sql                      │
+│ 导入：  .read backup.sql                        │
+│ CSV：  .mode csv &amp;&amp; .import data.csv mytable    │
+└──────────────────────────────────────────────────┘
+</code></pre></div></div><hr /><blockquote><p><strong>学习路线建议</strong>：先用 DB Browser 可视化操作理解表结构 → 在命令行练习 SQL 语句 → 用 Python 写 CRUD → 尝试在 Flask/FastAPI 项目中使用 → 学习 WAL、FTS5 等进阶功能。</p></blockquote></section><!-- Previous / Next navigation --><nav class="notes-pager"><div class="notes-pager-links"> <a href="/notes/Redis%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="notes-pager-prev"> <span class="notes-pager-label">← 上一章</span> <span class="notes-pager-title">Redis学习笔记</span> </a> <span></span></div></nav></div></article><!-- Right Sidebar: Table of Contents (built by JS from DOM) --><aside class="notes-toc" id="notes-toc"><div class="notes-toc-inner"><h4 class="notes-toc-title">目录</h4><nav class="notes-toc-nav"><ul class="notes-toc-list" id="notes-toc-list"> <!-- Populated by notes-toc.js --></ul></nav></div></aside></div><script src="https://1571859588.github.io/assets/js/notes-toc.js"></script> <script> (function() { var q = new URLSearchParams(location.search).get('q'); if (!q || q.length < 2) return; var body = document.querySelector('.notes-body'); if (!body) return; // Walk text nodes, find and highlight matches var walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT, null, false); var textNodes = []; while (walker.nextNode()) { var p = walker.currentNode.parentNode; // Skip script, style, code blocks, and already-marked text if (p.tagName === 'SCRIPT' || p.tagName === 'STYLE' || p.tagName === 'MARK' || p.closest('pre') || p.closest('.notes-search-hit')) continue; textNodes.push(walker.currentNode); } var first = null; var re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'); textNodes.forEach(function(node) { var text = node.textContent; if (!re.test(text)) return; re.lastIndex = 0; // reset after test var frag = document.createDocumentFragment(); var lastIdx = 0; var match; while ((match = re.exec(text)) !== null) { if (match.index > lastIdx) { frag.appendChild(document.createTextNode(text.substring(lastIdx, match.index))); } var mark = document.createElement('mark'); mark.className = 'notes-search-mark'; mark.textContent = match[0]; frag.appendChild(mark); if (!first) first = mark; lastIdx = match.index + match[0].length; } if (lastIdx < text.length) { frag.appendChild(document.createTextNode(text.substring(lastIdx))); } node.parentNode.replaceChild(frag, node); }); if (first) { setTimeout(function() { first.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300); } })(); </script><div class="page__footer"><footer> <!-- start custom footer snippets --> <a href="/sitemap/">Sitemap</a> <!-- end custom footer snippets --><div class="page__footer-follow"><ul class="social-icons"><li><strong>Follow:</strong></li><li><a href="http://github.com/1571859588"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a></li><li><a href="https://1571859588.github.io/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li></ul></div><div class="page__footer-copyright"> &copy; 2026 Yuntao Nie, Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://github.com/academicpages/academicpages.github.io">AcademicPages</a>, a fork of <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.<br /> Site last updated 2026-07-06</div></footer></div><script src="https://1571859588.github.io/assets/js/main.min.js"></script> <script src="https://1571859588.github.io/assets/js/paper-details.js"></script> <!-- Fix kramdown stripping backslashes before _ in math spans. kramdown treats \_ as a markdown escape, converting $seq\_len$ to $seq_len$. MathJax then interprets _ as subscript instead of a literal underscore. This runs synchronously before MathJax (async) processes the page. --> <script> (function() { var content = document.querySelector('.page__content'); if (!content) return; var walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT, null, false); var nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode); nodes.forEach(function(node) { var text = node.textContent; var fixed = text.replace(/\$([^$\n]+?)\$/g, function(match, math) { // Inside $...$, add \ before _ followed by 2+ lowercase letters. // Safe: legitimate subscripts use single chars ($d_k$) or braces ($x_{ij}$). var fixedMath = math.replace(/_([a-z]{2,})/g, '\\_$1'); return fixedMath !== math ? '$' + fixedMath + '$' : match; }); if (fixed !== text) node.textContent = fixed; }); })(); </script> <script> var SERIES_INDEX = [ {t:"FastAPI学习笔记", u:"/notes/FastAPI%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"}, {t:"MySQL学习笔记", u:"/notes/MySQL%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"}, {t:"Redis学习笔记", u:"/notes/Redis%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"}, {t:"SQLite学习笔记", u:"/notes/SQLite%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"} ]; (function() { if (!SERIES_INDEX.length) return; var inp = document.getElementById('notes-sidebar-search-input'); var box = document.getElementById('notes-sidebar-search-results'); if (!inp || !box) return; function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; } function hl(t, q) { var o = '', L = 0, lo = t.toLowerCase(), ql = q.toLowerCase(), i; while ((i = lo.indexOf(ql, L)) !== -1) { o += esc(t.substring(L, i)) + '<mark class="notes-search-highlight">' + esc(t.substring(i, i + q.length)) + '</mark>'; L = i + q.length; } return o + esc(t.substring(L)); } inp.addEventListener('input', function() { var q = this.value.trim(); if (!q) { box.style.display = 'none'; box.innerHTML = ''; return; } var ql = q.toLowerCase(), hits = []; for (var i = 0; i < SERIES_INDEX.length; i++) { if (SERIES_INDEX[i].t.toLowerCase().indexOf(ql) !== -1) hits.push(SERIES_INDEX[i]); } if (!hits.length) { box.innerHTML = '<div class="notes-sidebar-search-empty">无匹配</div>'; } else { var h = ''; for (var j = 0; j < Math.min(hits.length, 15); j++) { h += '<a href="' + hits[j].u + '" class="notes-sidebar-search-hit" data-q="' + esc(q) + '">' + '<span class="notes-sidebar-search-hit-title">' + hl(hits[j].t, q) + '</span></a>'; } box.innerHTML = h; } box.style.display = 'block'; }); inp.addEventListener('keydown', function(e) { if (e.key === 'Escape') { box.style.display = 'none'; box.innerHTML = ''; this.blur(); } }); box.addEventListener('click', function(e) { var a = e.target.closest('.notes-sidebar-search-hit'); if (a && a.dataset.q) sessionStorage.setItem('notes-search-q', a.dataset.q); }); document.addEventListener('click', function(e) { if (!e.target.closest('#notes-sidebar-search')) { box.style.display = 'none'; box.innerHTML = ''; } }); })(); </script></body></html>

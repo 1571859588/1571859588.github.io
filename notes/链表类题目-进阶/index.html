@@ -1,0 +1,724 @@
+<!doctype html><html lang="en" class="no-js"><head><meta charset="utf-8"> <!-- begin SEO --><title>链表类题目_进阶 - Yuntao Nie</title><meta property="og:locale" content="en-US"><meta property="og:site_name" content="Yuntao Nie"><meta property="og:title" content="链表类题目_进阶"><link rel="canonical" href="https://1571859588.github.io/notes/%E9%93%BE%E8%A1%A8%E7%B1%BB%E9%A2%98%E7%9B%AE-%E8%BF%9B%E9%98%B6/"><meta property="og:url" content="https://1571859588.github.io/notes/%E9%93%BE%E8%A1%A8%E7%B1%BB%E9%A2%98%E7%9B%AE-%E8%BF%9B%E9%98%B6/"><meta property="og:description" content="LeetCode Hot 100 链表类题目（进阶）"> <script type="application/ld+json"> { "@context" : "http://schema.org", "@type" : "Person", "name" : "Yuntao Nie", "url" : "https://1571859588.github.io", "sameAs" : null } </script> <!-- end SEO --><link href="https://1571859588.github.io/feed.xml" type="application/atom+xml" rel="alternate" title="Yuntao Nie Feed"> <!-- http://t.co/dKP3o1e --><meta name="HandheldFriendly" content="True"><meta name="MobileOptimized" content="320"><meta name="viewport" content="width=device-width, initial-scale=1.0"> <script> document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js '; </script> <!-- For all browsers --><link rel="stylesheet" href="https://1571859588.github.io/assets/css/main.css"><meta http-equiv="cleartype" content="on"> <!-- start custom head snippets --><link rel="apple-touch-icon" sizes="57x57" href="https://1571859588.github.io/images/apple-touch-icon-57x57.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="60x60" href="https://1571859588.github.io/images/apple-touch-icon-60x60.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="72x72" href="https://1571859588.github.io/images/apple-touch-icon-72x72.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="76x76" href="https://1571859588.github.io/images/apple-touch-icon-76x76.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="114x114" href="https://1571859588.github.io/images/apple-touch-icon-114x114.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="120x120" href="https://1571859588.github.io/images/apple-touch-icon-120x120.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="144x144" href="https://1571859588.github.io/images/apple-touch-icon-144x144.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="152x152" href="https://1571859588.github.io/images/apple-touch-icon-152x152.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="180x180" href="https://1571859588.github.io/images/apple-touch-icon-180x180.png?v=M44lzPylqQ"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-32x32.png?v=M44lzPylqQ" sizes="32x32"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/android-chrome-192x192.png?v=M44lzPylqQ" sizes="192x192"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-96x96.png?v=M44lzPylqQ" sizes="96x96"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-16x16.png?v=M44lzPylqQ" sizes="16x16"><link rel="manifest" href="https://1571859588.github.io/images/manifest.json?v=M44lzPylqQ"><link rel="mask-icon" href="https://1571859588.github.io/images/safari-pinned-tab.svg?v=M44lzPylqQ" color="#000000"><link rel="shortcut icon" href="/images/favicon.ico?v=M44lzPylqQ"><meta name="msapplication-TileColor" content="#000000"><meta name="msapplication-TileImage" content="https://1571859588.github.io/images/mstile-144x144.png?v=M44lzPylqQ"><meta name="msapplication-config" content="https://1571859588.github.io/images/browserconfig.xml?v=M44lzPylqQ"><meta name="theme-color" content="#ffffff"><link rel="stylesheet" href="https://1571859588.github.io/assets/css/academicons.css"/> <!-- MathJax for math rendering --> <script> MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['\\(', '\\)']] } }; </script> <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script> <!-- end custom head snippets --></head><body> <!--[if lt IE 9]><div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div><![endif]--><div class="masthead"><div class="masthead__inner-wrap"><div class="masthead__menu"><nav id="site-nav" class="greedy-nav"> <button><div class="navicon"></div></button><ul class="visible-links"><li class="masthead__menu-item masthead__menu-item--lg"><a href="https://1571859588.github.io/">Yuntao Nie</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/publications/">Publications</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/cv/">CV</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/notes/">Notes</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/year-archive/">Blog</a></li></ul><ul class="hidden-links hidden"></ul></nav></div></div></div><div id="main" role="main" class="notes-layout"> <!-- Left Sidebar: Series Chapter Navigation --><aside class="notes-sidebar" id="notes-sidebar"><div class="notes-sidebar-inner"><div class="notes-series-header"><h3 class="notes-series-title">leetcode</h3></div><div class="notes-sidebar-search" id="notes-sidebar-search"> <input type="text" class="notes-sidebar-search-input" id="notes-sidebar-search-input" placeholder="搜索本专题…" autocomplete="off"><div class="notes-sidebar-search-results" id="notes-sidebar-search-results" style="display:none"></div></div><nav class="notes-chapter-nav"><ul class="notes-chapter-list"><li class="notes-chapter-item "> <a href="/notes/%E5%8F%8C%E6%8C%87%E9%92%88%E7%B1%BB%E9%A2%98%E7%9B%AE/" class="notes-chapter-link"> <span class="notes-chapter-num">1</span> <span class="notes-chapter-title">双指针类题目</span> </a></li><li class="notes-chapter-item "> <a href="/notes/%E5%93%88%E5%B8%8C%E7%B1%BB%E9%A2%98%E7%9B%AE/" class="notes-chapter-link"> <span class="notes-chapter-num">2</span> <span class="notes-chapter-title">哈希类题目</span> </a></li><li class="notes-chapter-item "> <a href="/notes/%E5%AD%90%E4%B8%B2%E7%B1%BB%E9%A2%98%E7%9B%AE/" class="notes-chapter-link"> <span class="notes-chapter-num">3</span> <span class="notes-chapter-title">子串类题目</span> </a></li><li class="notes-chapter-item "> <a href="/notes/%E6%99%AE%E9%80%9A%E6%95%B0%E7%BB%84%E7%B1%BB%E9%A2%98%E7%9B%AE/" class="notes-chapter-link"> <span class="notes-chapter-num">4</span> <span class="notes-chapter-title">普通数组类题目</span> </a></li><li class="notes-chapter-item "> <a href="/notes/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%B1%BB%E9%A2%98%E7%9B%AE/" class="notes-chapter-link"> <span class="notes-chapter-num">5</span> <span class="notes-chapter-title">滑动窗口类题目</span> </a></li><li class="notes-chapter-item "> <a href="/notes/%E7%9F%A9%E9%98%B5%E7%B1%BB%E9%A2%98%E7%9B%AE/" class="notes-chapter-link"> <span class="notes-chapter-num">6</span> <span class="notes-chapter-title">矩阵类题目</span> </a></li><li class="notes-chapter-item "> <a href="/notes/%E9%93%BE%E8%A1%A8%E7%B1%BB%E9%A2%98%E7%9B%AE/" class="notes-chapter-link"> <span class="notes-chapter-num">7</span> <span class="notes-chapter-title">链表类题目</span> </a></li><li class="notes-chapter-item active"> <a href="/notes/%E9%93%BE%E8%A1%A8%E7%B1%BB%E9%A2%98%E7%9B%AE-%E8%BF%9B%E9%98%B6/" class="notes-chapter-link"> <span class="notes-chapter-num">8</span> <span class="notes-chapter-title">链表类题目_进阶</span> </a></li></ul></nav><div class="notes-sidebar-footer"> <a href="/notes/" class="notes-back-link">← 所有笔记系列</a></div></div></aside><!-- Mobile sidebar toggle --> <button class="notes-sidebar-toggle" id="notes-sidebar-toggle" aria-label="Toggle sidebar"> <span class="notes-sidebar-toggle-icon"></span> </button> <!-- Main Content --><article class="notes-content" itemscope itemtype="http://schema.org/CreativeWork"><meta itemprop="headline" content="链表类题目_进阶"><div class="notes-content-inner"><header class="notes-header"><div class="notes-breadcrumb"> <a href="/notes/">Notes</a> <span class="notes-sep">›</span> <span>leetcode</span> <span class="notes-sep">›</span> <span>链表类题目_进阶</span></div><h1 class="notes-page-title" itemprop="headline">链表类题目_进阶</h1></header><section class="notes-body" itemprop="text"><h1 id="leetcode-hot-100-链表类题目进阶">LeetCode Hot 100 链表类题目（进阶）</h1><blockquote><p>更新时间：2026-07-06 来源：LeetCode Hot 100 链表专题（进阶篇） 状态：刷题笔记，含完整代码 + 推导 + 面试追问 关联：基础题（160/206/234/141）见同目录 <code class="language-plaintext highlighter-rouge">链表类题目.md</code></p></blockquote><hr /><h2 id="一句话总结">一句话总结</h2><p>进阶链表题的核心套路：<strong>① 双指针的”间距控制”（19 删倒数第 N、142 找环入口）；② dummy 哨兵节点处理头节点变动（21 合并、24 交换）；③ 反转链表作为子组件的复用（25 K 个一组、148 排序）；④ 空间压缩技巧（138 原地复制、148 自底向上归并、146 双向链表+哈希）</strong>。关键认知：<strong>链表题不靠”聪明算法”，靠”指针操作细节 + 哨兵节点”</strong>——遇到头节点可能变动的题，第一反应就是加 dummy。</p><hr /><h2 id="题目索引">题目索引</h2><table><thead><tr><th>题号</th><th>题目</th><th>难度</th><th>核心技巧</th><th>时间</th><th>空间</th></tr></thead><tbody><tr><td>2</td><td>两数相加</td><td>中等</td><td>模拟加法 + 进位</td><td>O(max(m,n))</td><td>O(max(m,n))</td></tr><tr><td>19</td><td>删除倒数第 N 个节点</td><td>中等</td><td>快慢指针间距 n+1</td><td>O(n)</td><td>O(1)</td></tr><tr><td>21</td><td>合并两个有序链表</td><td>简单</td><td>dummy + 双指针比较</td><td>O(m+n)</td><td>O(1)</td></tr><tr><td>23</td><td>合并 K 个升序链表</td><td>困难</td><td>最小堆</td><td>O(N log k)</td><td>O(k)</td></tr><tr><td>24</td><td>两两交换节点</td><td>中等</td><td>dummy + 三指针交换</td><td>O(n)</td><td>O(1)</td></tr><tr><td>25</td><td>K 个一组翻转</td><td>困难</td><td>分组反转链表</td><td>O(n)</td><td>O(1)</td></tr><tr><td>138</td><td>随机链表复制</td><td>中等</td><td>原地拼接三次遍历</td><td>O(n)</td><td>O(1)</td></tr><tr><td>142</td><td>环形链表 II</td><td>中等</td><td>Floyd 快慢指针</td><td>O(n)</td><td>O(1)</td></tr><tr><td>146</td><td>LRU 缓存</td><td>中等</td><td>哈希 + 双向链表</td><td>O(1)</td><td>O(n)</td></tr><tr><td>148</td><td>排序链表</td><td>中等</td><td>归并排序（自底向上）</td><td>O(n log n)</td><td>O(1)</td></tr></tbody></table><blockquote><p>相关标签：<code class="language-plaintext highlighter-rouge">链表</code> <code class="language-plaintext highlighter-rouge">递归</code> <code class="language-plaintext highlighter-rouge">双指针</code> <code class="language-plaintext highlighter-rouge">堆</code> <code class="language-plaintext highlighter-rouge">分治</code> <code class="language-plaintext highlighter-rouge">哈希</code> <code class="language-plaintext highlighter-rouge">设计</code></p></blockquote><hr /><h2 id="q1-2-两数相加模拟加法--进位">Q1: 2. 两数相加（模拟加法 + 进位）</h2><p><strong>题目</strong>：两个非空链表表示两个非负整数，数字<strong>逆序</strong>存储，每个节点存一位。相加后以同样形式返回链表。</p><blockquote><p><a href="https://leetcode.cn/problems/add-two-numbers/?envType=study-plan-v2&amp;envId=top-100-liked">2. 两数相加 - 力扣</a> 标签：链表 | 数学 | 模拟</p></blockquote><p><strong>示例</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>输入：l1 = [2,4,3], l2 = [5,6,4]
+输出：[7,0,8]
+解释：342 + 465 = 807，逆序存储即 [7,0,8]
+</code></pre></div></div><h3 id="一句话结论">一句话结论</h3><p><strong>用 dummy 哨兵 + tail 指针逐位相加，维护一个进位 carry</strong>。循环条件是 <code class="language-plaintext highlighter-rouge">l1 or l2 or carry</code>，最后一个 <code class="language-plaintext highlighter-rouge">or carry</code> 是为了处理最高位进位（如 999+1=1000 多出一位）。</p><h3 id="解法最优迭代模拟">解法（最优：迭代模拟）</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">ListNode</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">next</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">val</span>
+        <span class="bp">self</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="nb">next</span>
+
+<span class="k">def</span> <span class="nf">addTwoNumbers</span><span class="p">(</span><span class="n">l1</span><span class="p">:</span> <span class="n">ListNode</span><span class="p">,</span> <span class="n">l2</span><span class="p">:</span> <span class="n">ListNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ListNode</span><span class="p">:</span>
+    <span class="s">"""
+    时间 O(max(m,n))，空间 O(max(m,n))（结果链表，不计入算法空间）
+    核心：逐位相加，carry = sum // 10，当前位 = sum % 10
+    """</span>
+    <span class="n">dummy</span> <span class="o">=</span> <span class="n">ListNode</span><span class="p">()</span>   <span class="c1"># 哨兵，避免单独处理头节点
+</span>    <span class="n">tail</span> <span class="o">=</span> <span class="n">dummy</span>
+    <span class="n">carry</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1"># 三个条件缺一不可：l1、l2、carry 任何一个还有就要继续
+</span>    <span class="k">while</span> <span class="n">l1</span> <span class="ow">or</span> <span class="n">l2</span> <span class="ow">or</span> <span class="n">carry</span><span class="p">:</span>
+        <span class="n">total</span> <span class="o">=</span> <span class="n">carry</span>
+        <span class="k">if</span> <span class="n">l1</span><span class="p">:</span>
+            <span class="n">total</span> <span class="o">+=</span> <span class="n">l1</span><span class="p">.</span><span class="n">val</span>
+            <span class="n">l1</span> <span class="o">=</span> <span class="n">l1</span><span class="p">.</span><span class="nb">next</span>
+        <span class="k">if</span> <span class="n">l2</span><span class="p">:</span>
+            <span class="n">total</span> <span class="o">+=</span> <span class="n">l2</span><span class="p">.</span><span class="n">val</span>
+            <span class="n">l2</span> <span class="o">=</span> <span class="n">l2</span><span class="p">.</span><span class="nb">next</span>
+
+        <span class="n">carry</span> <span class="o">=</span> <span class="n">total</span> <span class="o">//</span> <span class="mi">10</span>          <span class="c1"># 进位
+</span>        <span class="n">tail</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">ListNode</span><span class="p">(</span><span class="n">total</span> <span class="o">%</span> <span class="mi">10</span><span class="p">)</span>  <span class="c1"># 当前位
+</span>        <span class="n">tail</span> <span class="o">=</span> <span class="n">tail</span><span class="p">.</span><span class="nb">next</span>
+
+    <span class="k">return</span> <span class="n">dummy</span><span class="p">.</span><span class="nb">next</span>
+</code></pre></div></div><h3 id="推导过程">推导过程</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>l1 = 2→4→3   (表示 342)
+l2 = 5→6→4   (表示 465)
+
+第 1 位：carry=0, total=2+5+0=7, carry=0, 结果 7, tail 前进
+  l1=4, l2=6
+第 2 位：carry=0, total=4+6+0=10, carry=1, 结果 0, tail 前进
+  l1=3, l2=4
+第 3 位：carry=1, total=3+4+1=8, carry=0, 结果 8, tail 前进
+  l1=None, l2=None, carry=0 → 循环退出
+
+结果：7→0→8（表示 807）✓
+</code></pre></div></div><h3 id="为什么循环条件必须带-or-carry">为什么循环条件必须带 <code class="language-plaintext highlighter-rouge">or carry</code></h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>极端例子：l1=[9,9,9,9] (9999), l2=[1] (1)
+  逐位加完三个 9 后，l1=l2=None，但 carry=1（最后一位 9+1=10）
+  如果循环条件只有 "l1 or l2"，此时会退出 → 漏掉最高位的 1！
+
+带 or carry 后：
+  最后一次循环：total=0+0+1=1, carry=0, 结果 1
+  结果：0→0→0→0→1（表示 10000）✓
+</code></pre></div></div><h3 id="其他解法">其他解法</h3><table><thead><tr><th>解法</th><th>时间</th><th>空间</th><th>说明</th></tr></thead><tbody><tr><td><strong>迭代模拟（本解）</strong></td><td>O(max(m,n))</td><td>O(max(m,n))</td><td>推荐，不易错</td></tr><tr><td>递归</td><td>O(max(m,n))</td><td>O(max(m,n))</td><td>递归栈额外空间，思路类似</td></tr></tbody></table><p>递归版本质一样，把”进位”作为递归返回值传递。迭代版更直观，面试推荐。</p><h3 id="易错点">易错点</h3><ol><li>忘记循环条件带 <code class="language-plaintext highlighter-rouge">or carry</code> → 最高位进位丢失。</li><li>用 <code class="language-plaintext highlighter-rouge">total += l1.val</code> 前没判 <code class="language-plaintext highlighter-rouge">if l1</code> → 空指针。</li><li>忘记移动 <code class="language-plaintext highlighter-rouge">l1 = l1.next</code> → 死循环。</li><li>直接修改原链表节点（如复用 l1 节点）→ 题目允许但容易出错，建议新建节点。</li></ol><hr /><h2 id="q2-19-删除链表的倒数第-n-个结点快慢指针间距">Q2: 19. 删除链表的倒数第 N 个结点（快慢指针间距）</h2><p><strong>题目</strong>：删除链表倒数第 n 个节点，返回头节点。要求<strong>一趟扫描</strong>。</p><blockquote><p><a href="https://leetcode.cn/problems/remove-nth-node-from-end-of-list/?envType=study-plan-v2&amp;envId=top-100-liked">19. 删除链表的倒数第 N 个结点 - 力扣</a> 标签：链表 | 双指针</p></blockquote><p><strong>示例</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>输入：head = [1,2,3,4,5], n = 2
+输出：[1,2,3,5]   （删除倒数第 2 个，即节点 4）
+</code></pre></div></div><h3 id="一句话结论-1">一句话结论</h3><p><strong>dummy 哨兵 + 快慢指针，快指针先走 n+1 步</strong>（不是 n 步！），然后快慢同速走，快到尾时慢正好停在要删节点的前驱。</p><h3 id="解法最优双指针一趟扫描">解法（最优：双指针一趟扫描）</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">removeNthFromEnd</span><span class="p">(</span><span class="n">head</span><span class="p">:</span> <span class="n">ListNode</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ListNode</span><span class="p">:</span>
+    <span class="s">"""
+    时间 O(n)，空间 O(1)
+    核心：快指针先走 n+1 步，慢指针停在被删节点的前驱
+    """</span>
+    <span class="c1"># dummy 处理"删头节点"的边界（n = 链表长度时）
+</span>    <span class="n">dummy</span> <span class="o">=</span> <span class="n">ListNode</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">head</span><span class="p">)</span>
+    <span class="n">fast</span> <span class="o">=</span> <span class="n">slow</span> <span class="o">=</span> <span class="n">dummy</span>
+
+    <span class="c1"># 快指针先走 n+1 步，制造 n+1 的间距
+</span>    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">fast</span> <span class="o">=</span> <span class="n">fast</span><span class="p">.</span><span class="nb">next</span>
+
+    <span class="c1"># 快慢同速，快到尾时慢在被删节点的前驱
+</span>    <span class="k">while</span> <span class="n">fast</span><span class="p">:</span>
+        <span class="n">slow</span> <span class="o">=</span> <span class="n">slow</span><span class="p">.</span><span class="nb">next</span>
+        <span class="n">fast</span> <span class="o">=</span> <span class="n">fast</span><span class="p">.</span><span class="nb">next</span>
+
+    <span class="c1"># 删除 slow 的下一个节点
+</span>    <span class="n">slow</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">slow</span><span class="p">.</span><span class="nb">next</span><span class="p">.</span><span class="nb">next</span>
+
+    <span class="k">return</span> <span class="n">dummy</span><span class="p">.</span><span class="nb">next</span>
+</code></pre></div></div><h3 id="推导过程-1">推导过程</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>head = 1→2→3→4→5, n=2
+加 dummy：dummy→1→2→3→4→5→None
+fast=slow=dummy
+
+第 1 步：fast 先走 n+1=3 步
+  fast=dummy→1→2→3，fast 停在 3
+  此时 fast 在 3，slow 在 dummy，间距 3（即 slow 后面数 3 个是 fast）
+
+第 2 步：快慢同速
+  fast=3→4, slow=dummy→1
+  fast=4→5, slow=1→2
+  fast=5→None, slow=2→3
+  fast=None 退出
+
+此时 slow 停在节点 2，它是要删节点 4 的前驱（2→3→4→5）。
+等一下，slow=3，slow.next=4，删 4 ✓
+结果：1→2→3→5 ✓
+</code></pre></div></div><h3 id="为什么快指针走-n1-步而不是-n-步">为什么快指针走 n+1 步而不是 n 步</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>要删倒数第 n 个，需要它的"前驱"（倒数第 n+1 个）。
+如果快指针只走 n 步，制造 n 的间距：
+  快到尾时，慢停在倒数第 n 个（要删的节点本身），但删节点要知道前驱！
+  此时 slow.next 是要删的，slow 本身可能就是头节点（n=长度时），slow.next 操作 OK，但返回 head 时若删的是头节点就出错。
+
+走 n+1 步：
+  快到尾时，慢停在倒数第 n+1 个（前驱）。
+  slow.next.next 操作安全，且 dummy 保证了即使删头节点也能正确返回 dummy.next。
+
+口诀：要删第 n 个，找第 n+1 个，所以快走 n+1 步。
+</code></pre></div></div><h3 id="为什么必须用-dummy">为什么必须用 dummy</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>考虑删除头节点的情况：head=[1], n=1
+  不加 dummy：fast 先走 2 步会越界（链表只有 1 个节点 + dummy 才够）
+  加 dummy：dummy→1→None
+    fast 走 2 步：dummy→1→None，fast=None
+    while fast 不执行（fast 已 None）
+    slow=dummy，slow.next=1，删除：slow.next=None
+    返回 dummy.next=None ✓
+
+不加 dummy，删除头节点后返回的 head 还是原来的头（已被删），逻辑出错。
+</code></pre></div></div><h3 id="其他解法-1">其他解法</h3><table><thead><tr><th>解法</th><th>时间</th><th>空间</th><th>说明</th></tr></thead><tbody><tr><td>两趟扫描</td><td>O(n)</td><td>O(1)</td><td>第一趟算长度 L，第二趟走 L-n 步</td></tr><tr><td><strong>双指针一趟（本解）</strong></td><td>O(n)</td><td>O(1)</td><td>满足”一趟扫描”进阶要求</td></tr></tbody></table><p>两趟扫描更易懂，但题目进阶要求一趟，所以双指针是最优。</p><h3 id="易错点-1">易错点</h3><ol><li>快指针走 n 步而非 n+1 步 → slow 停错位置。</li><li>不加 dummy → 删头节点时出错。</li><li>循环条件写成 <code class="language-plaintext highlighter-rouge">while fast.next</code> → 快指针少走一步。</li></ol><hr /><h2 id="q3-21-合并两个有序链表dummy--双指针">Q3: 21. 合并两个有序链表（dummy + 双指针）</h2><p><strong>题目</strong>：合并两个升序链表为一个新的升序链表，拼接所有节点。</p><blockquote><p><a href="https://leetcode.cn/problems/merge-two-sorted-lists/?envType=study-plan-v2&amp;envId=top-100-liked">21. 合并两个有序链表 - 力扣</a> 标签：链表 | 递归</p></blockquote><p><strong>示例</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>输入：l1 = [1,2,4], l2 = [1,3,4]
+输出：[1,1,2,3,4,4]
+</code></pre></div></div><h3 id="一句话结论-2">一句话结论</h3><p><strong>dummy 哨兵 + tail 指针，每次比较两链表头，小的接到 tail 后面，移动对应链表</strong>。最后把剩余链表直接接上。</p><h3 id="解法最优迭代">解法（最优：迭代）</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">mergeTwoLists</span><span class="p">(</span><span class="n">l1</span><span class="p">:</span> <span class="n">ListNode</span><span class="p">,</span> <span class="n">l2</span><span class="p">:</span> <span class="n">ListNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ListNode</span><span class="p">:</span>
+    <span class="s">"""
+    时间 O(m+n)，空间 O(1)（复用原节点）
+    核心：比较两链表头，小的接到 tail，移动该链表
+    """</span>
+    <span class="n">dummy</span> <span class="o">=</span> <span class="n">ListNode</span><span class="p">()</span>
+    <span class="n">tail</span> <span class="o">=</span> <span class="n">dummy</span>
+
+    <span class="k">while</span> <span class="n">l1</span> <span class="ow">and</span> <span class="n">l2</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">l1</span><span class="p">.</span><span class="n">val</span> <span class="o">&lt;=</span> <span class="n">l2</span><span class="p">.</span><span class="n">val</span><span class="p">:</span>
+            <span class="n">tail</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">l1</span>
+            <span class="n">l1</span> <span class="o">=</span> <span class="n">l1</span><span class="p">.</span><span class="nb">next</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tail</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">l2</span>
+            <span class="n">l2</span> <span class="o">=</span> <span class="n">l2</span><span class="p">.</span><span class="nb">next</span>
+        <span class="n">tail</span> <span class="o">=</span> <span class="n">tail</span><span class="p">.</span><span class="nb">next</span>
+
+    <span class="c1"># 其中一个链表已空，把另一个剩余部分直接接上
+</span>    <span class="n">tail</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">l1</span> <span class="k">if</span> <span class="n">l1</span> <span class="k">else</span> <span class="n">l2</span>
+
+    <span class="k">return</span> <span class="n">dummy</span><span class="p">.</span><span class="nb">next</span>
+</code></pre></div></div><h3 id="推导过程-2">推导过程</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>l1 = 1→2→4, l2 = 1→3→4
+
+第 1 次：1 vs 1, 1&lt;=1 取 l1 → dummy→1, l1=2, tail=1
+第 2 次：2 vs 1, 1&lt;2 取 l2 → ...→1, l2=3, tail=1
+第 3 次：2 vs 3, 2&lt;3 取 l1 → ...→2, l1=4, tail=2
+第 4 次：4 vs 3, 3&lt;4 取 l2 → ...→3, l2=4, tail=3
+第 5 次：4 vs 4, 4&lt;=4 取 l1 → ...→4, l1=None, tail=4
+循环退出，l1=None, l2=4→None
+tail.next = l2 → ...→4→4→None
+
+结果：1→1→2→3→4→4 ✓
+</code></pre></div></div><h3 id="递归解法">递归解法</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">mergeTwoLists</span><span class="p">(</span><span class="n">l1</span><span class="p">:</span> <span class="n">ListNode</span><span class="p">,</span> <span class="n">l2</span><span class="p">:</span> <span class="n">ListNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ListNode</span><span class="p">:</span>
+    <span class="s">"""时间 O(m+n)，空间 O(m+n)（递归栈）"""</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">l1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">l2</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">l2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">l1</span>
+    <span class="k">if</span> <span class="n">l1</span><span class="p">.</span><span class="n">val</span> <span class="o">&lt;=</span> <span class="n">l2</span><span class="p">.</span><span class="n">val</span><span class="p">:</span>
+        <span class="n">l1</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">mergeTwoLists</span><span class="p">(</span><span class="n">l1</span><span class="p">.</span><span class="nb">next</span><span class="p">,</span> <span class="n">l2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">l1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">l2</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">mergeTwoLists</span><span class="p">(</span><span class="n">l1</span><span class="p">,</span> <span class="n">l2</span><span class="p">.</span><span class="nb">next</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">l2</span>
+</code></pre></div></div><h3 id="两种解法对比">两种解法对比</h3><table><thead><tr><th>解法</th><th>时间</th><th>空间</th><th>说明</th></tr></thead><tbody><tr><td><strong>迭代（本解）</strong></td><td>O(m+n)</td><td><strong>O(1)</strong></td><td>推荐，省栈</td></tr><tr><td>递归</td><td>O(m+n)</td><td>O(m+n)</td><td>代码短，但栈空间</td></tr></tbody></table><p>面试推荐迭代。这个 merge 函数是 23、148 的核心组件，务必熟练。</p><h3 id="易错点-2">易错点</h3><ol><li>忘记 <code class="language-plaintext highlighter-rouge">tail = tail.next</code> → 所有节点都接到同一个位置。</li><li>忘记最后接剩余链表 <code class="language-plaintext highlighter-rouge">tail.next = l1 if l1 else l2</code> → 丢失剩余节点。</li><li>用 <code class="language-plaintext highlighter-rouge">&lt;</code> 而非 <code class="language-plaintext highlighter-rouge">&lt;=</code> → 也能过，但相等时优先取 l1 更稳定。</li></ol><hr /><h2 id="q4-23-合并-k-个升序链表最小堆">Q4: 23. 合并 K 个升序链表（最小堆）</h2><p><strong>题目</strong>：合并 K 个已排序的链表为一个升序链表。</p><blockquote><p><a href="https://leetcode.cn/problems/merge-k-sorted-lists/?envType=study-plan-v2&amp;envId=top-100-liked">23. 合并 K 个升序链表 - 力扣</a> 标签：链表 | 堆（优先队列）| 分治</p></blockquote><p><strong>示例</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>输入：lists = [[1,4,5],[1,3,4],[2,6]]
+输出：[1,1,2,3,4,4,5,6]
+</code></pre></div></div><h3 id="一句话结论-3">一句话结论</h3><p><strong>用最小堆维护 K 个链表的当前头</strong>：每次弹出最小值接到结果，再把它所在链表的下一个节点压入堆。时间 O(N log k)。</p><h3 id="解法最优最小堆">解法（最优：最小堆）</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">heapq</span>
+
+<span class="k">def</span> <span class="nf">mergeKLists</span><span class="p">(</span><span class="n">lists</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ListNode</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ListNode</span><span class="p">:</span>
+    <span class="s">"""
+    时间 O(N log k)，空间 O(k)
+    N = 所有节点总数，k = 链表个数
+    核心：堆里维护 k 个链表当前最小头，每次取最小，补一个
+    """</span>
+    <span class="n">dummy</span> <span class="o">=</span> <span class="n">ListNode</span><span class="p">()</span>
+    <span class="n">tail</span> <span class="o">=</span> <span class="n">dummy</span>
+    <span class="n">heap</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># 入堆：用 (val, 链表序号, node) 避免节点不可比较
+</span>    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lists</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">node</span><span class="p">:</span>
+            <span class="n">heapq</span><span class="p">.</span><span class="n">heappush</span><span class="p">(</span><span class="n">heap</span><span class="p">,</span> <span class="p">(</span><span class="n">node</span><span class="p">.</span><span class="n">val</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">node</span><span class="p">))</span>
+
+    <span class="k">while</span> <span class="n">heap</span><span class="p">:</span>
+        <span class="n">val</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">node</span> <span class="o">=</span> <span class="n">heapq</span><span class="p">.</span><span class="n">heappop</span><span class="p">(</span><span class="n">heap</span><span class="p">)</span>
+        <span class="n">tail</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">node</span>
+        <span class="n">tail</span> <span class="o">=</span> <span class="n">tail</span><span class="p">.</span><span class="nb">next</span>
+        <span class="c1"># 把该链表的下一个节点压入堆
+</span>        <span class="k">if</span> <span class="n">node</span><span class="p">.</span><span class="nb">next</span><span class="p">:</span>
+            <span class="n">heapq</span><span class="p">.</span><span class="n">heappush</span><span class="p">(</span><span class="n">heap</span><span class="p">,</span> <span class="p">(</span><span class="n">node</span><span class="p">.</span><span class="nb">next</span><span class="p">.</span><span class="n">val</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">node</span><span class="p">.</span><span class="nb">next</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">dummy</span><span class="p">.</span><span class="nb">next</span>
+</code></pre></div></div><h3 id="推导过程-3">推导过程</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lists = [[1,4,5],[1,3,4],[2,6]]
+初始堆：[(1,0,n0), (1,1,n1), (2,2,n2)]  （三个链表头）
+
+第 1 次：弹 (1,0,n0)，接 n0(值1)
+  补 n0.next=4 → 堆 [(1,1,n1),(2,2,n2),(4,0,n0_2)]
+第 2 次：弹 (1,1,n1)，接 n1(值1)
+  补 n1.next=3 → 堆 [(2,2,n2),(3,1,n1_2),(4,0,n0_2)]
+第 3 次：弹 (2,2,n2)，接 n2(值2)
+  补 n2.next=6 → 堆 [(3,1,n1_2),(4,0,n0_2),(6,2,n2_2)]
+...依此类推
+最终结果：1→1→2→3→4→4→5→6 ✓
+</code></pre></div></div><h3 id="为什么堆元素用-val-i-node-三元组">为什么堆元素用 (val, i, node) 三元组</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Python 的 heapq 在 val 相同时会比较下一个元素。
+如果用 (val, node)，两个 val 相同的节点会比较 node，而 ListNode 不可比较 → TypeError。
+加 i（链表序号）后，val 相同时比较 i，永远比较不到 node，安全。
+</code></pre></div></div><h3 id="分治解法on-log-kolog-k-空间">分治解法（O(N log k)，O(log k) 空间）</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">mergeKLists</span><span class="p">(</span><span class="n">lists</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ListNode</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ListNode</span><span class="p">:</span>
+    <span class="s">"""分治：两两合并，log k 轮"""</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">lists</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">None</span>
+
+    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">lists</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">merged</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">lists</span><span class="p">),</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="n">l1</span> <span class="o">=</span> <span class="n">lists</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">l2</span> <span class="o">=</span> <span class="n">lists</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">lists</span><span class="p">)</span> <span class="k">else</span> <span class="bp">None</span>
+            <span class="n">merged</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">mergeTwo</span><span class="p">(</span><span class="n">l1</span><span class="p">,</span> <span class="n">l2</span><span class="p">))</span>  <span class="c1"># 复用 21 题的 merge
+</span>        <span class="n">lists</span> <span class="o">=</span> <span class="n">merged</span>
+    <span class="k">return</span> <span class="n">lists</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</code></pre></div></div><h3 id="解法对比">解法对比</h3><table><thead><tr><th>解法</th><th>时间</th><th>空间</th><th>说明</th></tr></thead><tbody><tr><td>依次合并</td><td>O(kN)</td><td>O(1)</td><td>顺序合并，每轮从头扫，最慢</td></tr><tr><td><strong>最小堆（本解）</strong></td><td><strong>O(N log k)</strong></td><td>O(k)</td><td>通用最优</td></tr><tr><td>分治</td><td>O(N log k)</td><td>O(log k)</td><td>递归栈，k 很大时省</td></tr></tbody></table><p>堆法最通用。分治法空间略优，但要复用 mergeTwo 函数。</p><h3 id="易错点-3">易错点</h3><ol><li>堆元素直接用 <code class="language-plaintext highlighter-rouge">(val, node)</code> → val 相同时 TypeError。必须加索引。</li><li>忘记判 <code class="language-plaintext highlighter-rouge">if node</code> 就入堆 → 空节点入堆报错。</li><li>补节点时用 <code class="language-plaintext highlighter-rouge">if node.next</code> 判断 → 正确，避免空节点入堆。</li></ol><hr /><h2 id="q5-24-两两交换链表中的节点dummy--三指针">Q5: 24. 两两交换链表中的节点（dummy + 三指针）</h2><p><strong>题目</strong>：两两交换相邻节点，只能节点交换不能改值。</p><blockquote><p><a href="https://leetcode.cn/problems/swap-nodes-in-pairs/?envType=study-plan-v2&amp;envId=top-100-liked">24. 两两交换链表中的节点 - 力扣</a> 标签：链表 | 递归</p></blockquote><p><strong>示例</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>输入：head = [1,2,3,4]
+输出：[2,1,4,3]
+</code></pre></div></div><h3 id="一句话结论-4">一句话结论</h3><p><strong>dummy 哨兵 + prev/a/b 三指针</strong>，每次把 <code class="language-plaintext highlighter-rouge">prev→a→b→b.next</code> 改成 <code class="language-plaintext highlighter-rouge">prev→b→a→b.next</code>，然后 prev 移到 a（下一对的前驱）。</p><h3 id="解法最优迭代-1">解法（最优：迭代）</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">swapPairs</span><span class="p">(</span><span class="n">head</span><span class="p">:</span> <span class="n">ListNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ListNode</span><span class="p">:</span>
+    <span class="s">"""
+    时间 O(n)，空间 O(1)
+    核心：每对用三指针交换，prev 是当前对的前驱
+    """</span>
+    <span class="n">dummy</span> <span class="o">=</span> <span class="n">ListNode</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">head</span><span class="p">)</span>
+    <span class="n">prev</span> <span class="o">=</span> <span class="n">dummy</span>
+
+    <span class="k">while</span> <span class="n">prev</span><span class="p">.</span><span class="nb">next</span> <span class="ow">and</span> <span class="n">prev</span><span class="p">.</span><span class="nb">next</span><span class="p">.</span><span class="nb">next</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">prev</span><span class="p">.</span><span class="nb">next</span>          <span class="c1"># 当前对第一个
+</span>        <span class="n">b</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="nb">next</span>             <span class="c1"># 当前对第二个
+</span>
+        <span class="c1"># 交换：prev→a→b→b.next  →  prev→b→a→b.next
+</span>        <span class="n">a</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">b</span><span class="p">.</span><span class="nb">next</span>
+        <span class="n">b</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">a</span>
+        <span class="n">prev</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">b</span>
+
+        <span class="c1"># a 现在是这对的第二个，是下一对的前驱
+</span>        <span class="n">prev</span> <span class="o">=</span> <span class="n">a</span>
+
+    <span class="k">return</span> <span class="n">dummy</span><span class="p">.</span><span class="nb">next</span>
+</code></pre></div></div><h3 id="推导过程-4">推导过程</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>head = 1→2→3→4→None
+dummy→1→2→3→4→None, prev=dummy
+
+第 1 轮：a=1, b=2
+  a.next = 4? 不，b.next=3
+  a.next = 3   (1 指向 3)
+  b.next = a   (2 指向 1)
+  prev.next = b (dummy 指向 2)
+  链表：dummy→2→1→3→4→None
+  prev = a = 1（下一对的前驱）
+
+第 2 轮：prev=1, prev.next=3, prev.next.next=4
+  a=3, b=4
+  a.next = None (b.next=None)
+  b.next = a (4 指向 3)
+  prev.next = b (1 指向 4)
+  链表：dummy→2→1→4→3→None
+  prev = a = 3
+
+下一轮：prev=3, prev.next=None → 退出
+
+结果：2→1→4→3 ✓
+</code></pre></div></div><h3 id="三条指针赋值的顺序很重要">三条指针赋值的顺序很重要</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>错误顺序：先改 prev.next 再改 a.next
+  prev.next = b   (dummy 指向 2)
+  a.next = b.next (此时 b.next 是 1 还是 3？b.next 没变还是 1，所以 a.next=1 错误循环)
+
+正确顺序：
+  a.next = b.next  (先存 b 的下一个，a 指向它)
+  b.next = a       (b 指向 a)
+  prev.next = b    (prev 指向 b)
+
+核心：先让 a 接管 b 的后续，再让 b 指向 a，最后让 prev 接 b。
+</code></pre></div></div><h3 id="递归解法-1">递归解法</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">swapPairs</span><span class="p">(</span><span class="n">head</span><span class="p">:</span> <span class="n">ListNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ListNode</span><span class="p">:</span>
+    <span class="s">"""时间 O(n)，空间 O(n)（递归栈）"""</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">head</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">head</span><span class="p">.</span><span class="nb">next</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">head</span>
+    <span class="n">new_head</span> <span class="o">=</span> <span class="n">head</span><span class="p">.</span><span class="nb">next</span>           <span class="c1"># 第二个变新头
+</span>    <span class="n">head</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">swapPairs</span><span class="p">(</span><span class="n">head</span><span class="p">.</span><span class="nb">next</span><span class="p">.</span><span class="nb">next</span><span class="p">)</span>  <span class="c1"># 第一个指向后面交换后的头
+</span>    <span class="n">new_head</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">head</span>           <span class="c1"># 新头指向原第一个
+</span>    <span class="k">return</span> <span class="n">new_head</span>
+</code></pre></div></div><h3 id="解法对比-1">解法对比</h3><table><thead><tr><th>解法</th><th>时间</th><th>空间</th><th>说明</th></tr></thead><tbody><tr><td><strong>迭代（本解）</strong></td><td>O(n)</td><td><strong>O(1)</strong></td><td>推荐</td></tr><tr><td>递归</td><td>O(n)</td><td>O(n)</td><td>代码短，思路清晰</td></tr></tbody></table><h3 id="易错点-4">易错点</h3><ol><li>三条赋值顺序错 → 形成环或丢失节点。必须先 <code class="language-plaintext highlighter-rouge">a.next=b.next</code>。</li><li>循环条件只用 <code class="language-plaintext highlighter-rouge">prev.next</code> → 奇数个节点时最后一个漏判，应同时判 <code class="language-plaintext highlighter-rouge">prev.next and prev.next.next</code>。</li><li>忘记 <code class="language-plaintext highlighter-rouge">prev = a</code> 后 prev 没前进 → 死循环。</li></ol><hr /><h2 id="q6-25-k-个一组翻转链表分组反转">Q6: 25. K 个一组翻转链表（分组反转）</h2><p><strong>题目</strong>：每 k 个节点一组翻转，不足 k 个保持原序。要求实际节点交换。</p><blockquote><p><a href="https://leetcode.cn/problems/reverse-nodes-in-k-group/?envType=study-plan-v2&amp;envId=top-100-liked">25. K 个一组翻转链表 - 力扣</a> 标签：链表 | 递归</p></blockquote><p><strong>示例</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>输入：head = [1,2,3,4,5], k = 2
+输出：[2,1,4,3,5]   （最后 5 不足 k=2，保持）
+</code></pre></div></div><h3 id="一句话结论-5">一句话结论</h3><p><strong>dummy + 分组循环</strong>：每组先检查够不够 k 个，够则用反转链表函数翻转整组，再连接前后；不够则结束。反转链表是 206 题的复用。</p><h3 id="解法最优迭代分组反转">解法（最优：迭代分组反转）</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">reverseKGroup</span><span class="p">(</span><span class="n">head</span><span class="p">:</span> <span class="n">ListNode</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ListNode</span><span class="p">:</span>
+    <span class="s">"""
+    时间 O(n)，空间 O(1)
+    核心：每组先检查够 k 个，够则反转整组并连接前后
+    """</span>
+    <span class="k">def</span> <span class="nf">reverse</span><span class="p">(</span><span class="n">head</span><span class="p">:</span> <span class="n">ListNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ListNode</span><span class="p">:</span>
+        <span class="s">"""反转链表，返回新头"""</span>
+        <span class="n">prev</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">curr</span> <span class="o">=</span> <span class="n">head</span>
+        <span class="k">while</span> <span class="n">curr</span><span class="p">:</span>
+            <span class="n">nxt</span> <span class="o">=</span> <span class="n">curr</span><span class="p">.</span><span class="nb">next</span>
+            <span class="n">curr</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">prev</span>
+            <span class="n">prev</span> <span class="o">=</span> <span class="n">curr</span>
+            <span class="n">curr</span> <span class="o">=</span> <span class="n">nxt</span>
+        <span class="k">return</span> <span class="n">prev</span>
+
+    <span class="n">dummy</span> <span class="o">=</span> <span class="n">ListNode</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">head</span><span class="p">)</span>
+    <span class="n">prev</span> <span class="o">=</span> <span class="n">dummy</span>  <span class="c1"># 上一组的尾
+</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="c1"># 检查从 prev.next 起是否够 k 个
+</span>        <span class="n">tail</span> <span class="o">=</span> <span class="n">prev</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+            <span class="n">tail</span> <span class="o">=</span> <span class="n">tail</span><span class="p">.</span><span class="nb">next</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">tail</span><span class="p">:</span>          <span class="c1"># 不足 k 个
+</span>                <span class="k">return</span> <span class="n">dummy</span><span class="p">.</span><span class="nb">next</span>
+
+        <span class="c1"># 记录下一组起点
+</span>        <span class="n">nxt_group</span> <span class="o">=</span> <span class="n">tail</span><span class="p">.</span><span class="nb">next</span>
+        <span class="c1"># 断开当前组（tail 后面切断）
+</span>        <span class="n">tail</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="c1"># 翻转当前组，prev.next 是组头，翻转后变组尾
+</span>        <span class="n">group_head</span> <span class="o">=</span> <span class="n">prev</span><span class="p">.</span><span class="nb">next</span>
+        <span class="n">prev</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="n">group_head</span><span class="p">)</span>  <span class="c1"># reverse 返回新头（原 tail）
+</span>
+        <span class="c1"># 连接：group_head 现在是组尾，接下一组
+</span>        <span class="n">group_head</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">nxt_group</span>
+        <span class="c1"># prev 移到组尾，作为下一组的前驱
+</span>        <span class="n">prev</span> <span class="o">=</span> <span class="n">group_head</span>
+</code></pre></div></div><h3 id="推导过程-5">推导过程</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>head = 1→2→3→4→5, k=2
+dummy→1→2→3→4→5, prev=dummy
+
+第 1 组：
+  检查：tail=dummy→1→2，走 k=2 步，tail 停在 2（够）
+  nxt_group = 3 (tail.next)
+  tail.next = None（断开：1→2→None）
+  group_head = 1
+  prev.next = reverse(1→2) = 2→1   (反转后 2→1→None)
+  group_head(=1).next = nxt_group(=3)  → 2→1→3→4→5
+  prev = group_head = 1
+
+第 2 组：
+  检查：tail=1→3→4，走 2 步，tail 停在 4（够）
+  nxt_group = 5
+  tail.next = None（断开：3→4→None）
+  group_head = 3
+  prev.next = reverse(3→4) = 4→3
+  group_head(=3).next = 5  → 4→3→5
+  prev = 3
+
+第 3 组：
+  检查：tail=3→5→None，走 2 步，tail 到 None（不足）
+  返回 dummy.next
+
+链表：dummy→2→1→4→3→5，即 2→1→4→3→5 ✓
+</code></pre></div></div><h3 id="关键认知反转后原组头变组尾">关键认知：反转后原组头变组尾</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>原组：group_head → ... → tail → None
+reverse 后：tail → ... → group_head → None
+group_head 变成了组尾，所以 group_head.next = nxt_group 能正确连接下一组。
+prev 也应该移到 group_head（新的组尾，下一组的前驱）。
+</code></pre></div></div><h3 id="递归解法-2">递归解法</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">reverseKGroup</span><span class="p">(</span><span class="n">head</span><span class="p">:</span> <span class="n">ListNode</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ListNode</span><span class="p">:</span>
+    <span class="s">"""时间 O(n)，空间 O(n/k)（递归栈）"""</span>
+    <span class="c1"># 检查够不够 k 个
+</span>    <span class="n">tail</span> <span class="o">=</span> <span class="n">head</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">tail</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">head</span>  <span class="c1"># 不足 k 个，不翻
+</span>        <span class="n">tail</span> <span class="o">=</span> <span class="n">tail</span><span class="p">.</span><span class="nb">next</span>
+    <span class="c1"># tail 现在是下一组起点（走 k 步后）
+</span>
+    <span class="c1"># 翻转前 k 个
+</span>    <span class="n">prev</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">curr</span> <span class="o">=</span> <span class="n">head</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+        <span class="n">nxt</span> <span class="o">=</span> <span class="n">curr</span><span class="p">.</span><span class="nb">next</span>
+        <span class="n">curr</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">prev</span>
+        <span class="n">prev</span> <span class="o">=</span> <span class="n">curr</span>
+        <span class="n">curr</span> <span class="o">=</span> <span class="n">nxt</span>
+
+    <span class="c1"># head 现在是组尾，接上后面递归翻转的结果
+</span>    <span class="n">head</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">reverseKGroup</span><span class="p">(</span><span class="n">tail</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">prev</span>  <span class="c1"># prev 是组头
+</span></code></pre></div></div><h3 id="解法对比-2">解法对比</h3><table><thead><tr><th>解法</th><th>时间</th><th>空间</th><th>说明</th></tr></thead><tbody><tr><td><strong>迭代（本解）</strong></td><td>O(n)</td><td><strong>O(1)</strong></td><td>满足进阶 O(1)</td></tr><tr><td>递归</td><td>O(n)</td><td>O(n/k)</td><td>代码短，思路清晰</td></tr></tbody></table><h3 id="易错点-5">易错点</h3><ol><li>反转前没断开 <code class="language-plaintext highlighter-rouge">tail.next = None</code> → reverse 会翻到链表末尾。</li><li>反转后用 <code class="language-plaintext highlighter-rouge">prev.next = reverse(...)</code> 但忘了 <code class="language-plaintext highlighter-rouge">group_head.next = nxt_group</code> → 链表断开。</li><li>检查够 k 个时循环条件错 → 误翻不足的组。</li><li>这是 Hard 题，但本质是 206 反转链表的组合应用，拆解后不难。</li></ol><hr /><h2 id="q7-138-随机链表的复制原地拼接三次遍历">Q7: 138. 随机链表的复制（原地拼接三次遍历）</h2><p><strong>题目</strong>：深拷贝带 random 指针的链表。每个节点有 val、next、random（可指向任意节点或空）。</p><blockquote><p><a href="https://leetcode.cn/problems/copy-list-with-random-pointer/?envType=study-plan-v2&amp;envId=top-100-liked">138. 随机链表的复制 - 力扣</a> 标签：哈希 | 链表</p></blockquote><p><strong>示例</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>输入：head = [[7,null],[13,0],[11,4],[10,2],[1,0]]
+输出：[[7,null],[13,0],[11,4],[10,2],[1,0]]
+</code></pre></div></div><h3 id="一句话结论-6">一句话结论</h3><p><strong>原地拼接法三步走</strong>：① 在每个原节点后插入复制节点；② 复制节点的 random = 原节点 random 的 next；③ 分离两个链表。O(n) 时间 O(1) 额外空间。</p><h3 id="解法最优原地拼接">解法（最优：原地拼接）</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Node</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">next</span><span class="p">:</span> <span class="s">'Node'</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">random</span><span class="p">:</span> <span class="s">'Node'</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">val</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="nb">next</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">random</span> <span class="o">=</span> <span class="n">random</span>
+
+<span class="k">def</span> <span class="nf">copyRandomList</span><span class="p">(</span><span class="n">head</span><span class="p">:</span> <span class="s">'Node'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s">'Node'</span><span class="p">:</span>
+    <span class="s">"""
+    时间 O(n)，空间 O(1)（不计结果链表）
+    核心：在原节点后插入复制节点，借用原链表建立 random 映射
+    """</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">head</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">None</span>
+
+    <span class="c1"># 第 1 遍：每个原节点后插入复制节点
+</span>    <span class="c1"># A→B→C  变成  A→A'→B→B'→C→C'
+</span>    <span class="n">cur</span> <span class="o">=</span> <span class="n">head</span>
+    <span class="k">while</span> <span class="n">cur</span><span class="p">:</span>
+        <span class="n">copy</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="n">cur</span><span class="p">.</span><span class="n">val</span><span class="p">)</span>
+        <span class="n">copy</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">cur</span><span class="p">.</span><span class="nb">next</span>
+        <span class="n">cur</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">copy</span>
+        <span class="n">cur</span> <span class="o">=</span> <span class="n">copy</span><span class="p">.</span><span class="nb">next</span>  <span class="c1"># 跳到下一个原节点
+</span>
+    <span class="c1"># 第 2 遍：设置复制节点的 random
+</span>    <span class="c1"># copy.random = cur.random.next（原节点 random 的复制版本）
+</span>    <span class="n">cur</span> <span class="o">=</span> <span class="n">head</span>
+    <span class="k">while</span> <span class="n">cur</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">cur</span><span class="p">.</span><span class="n">random</span><span class="p">:</span>
+            <span class="n">cur</span><span class="p">.</span><span class="nb">next</span><span class="p">.</span><span class="n">random</span> <span class="o">=</span> <span class="n">cur</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="nb">next</span>  <span class="c1"># cur.random 是原节点，它的 next 就是复制节点
+</span>        <span class="n">cur</span> <span class="o">=</span> <span class="n">cur</span><span class="p">.</span><span class="nb">next</span><span class="p">.</span><span class="nb">next</span>  <span class="c1"># 跳到下一个原节点
+</span>
+    <span class="c1"># 第 3 遍：分离两个链表
+</span>    <span class="n">cur</span> <span class="o">=</span> <span class="n">head</span>
+    <span class="n">new_head</span> <span class="o">=</span> <span class="n">head</span><span class="p">.</span><span class="nb">next</span>
+    <span class="k">while</span> <span class="n">cur</span><span class="p">:</span>
+        <span class="n">copy</span> <span class="o">=</span> <span class="n">cur</span><span class="p">.</span><span class="nb">next</span>
+        <span class="n">cur</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">copy</span><span class="p">.</span><span class="nb">next</span>        <span class="c1"># 恢复原链表
+</span>        <span class="n">cur</span> <span class="o">=</span> <span class="n">copy</span><span class="p">.</span><span class="nb">next</span>             <span class="c1"># 下一个原节点
+</span>        <span class="n">copy</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">cur</span><span class="p">.</span><span class="nb">next</span> <span class="k">if</span> <span class="n">cur</span> <span class="k">else</span> <span class="bp">None</span>  <span class="c1"># 复制链表连接
+</span>    <span class="k">return</span> <span class="n">new_head</span>
+</code></pre></div></div><h3 id="推导过程关键看第-2-步">推导过程（关键看第 2 步）</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>原链表：A(random=C)→B(random=A)→C(random=None)
+（A 的 random 指向 C，B 的 random 指向 A）
+
+第 1 遍后（每个原节点后插复制）：
+  A→A'→B→B'→C→C'→None
+  此时 A'、B'、C' 的 random 都是 None（还没设）
+
+第 2 遍设置 random：
+  A.random = C（原节点），C.next = C'（复制节点）
+  → A'.random = C.next = C' ✓
+  B.random = A，A.next = A'
+  → B'.random = A.next = A' ✓
+  C.random = None
+  → C'.random = None ✓
+
+第 3 遍分离：
+  原链表恢复：A→B→C
+  复制链表：A'→B'→C'（random 已正确）
+</code></pre></div></div><h3 id="为什么-copyrandom--currandomnext">为什么 <code class="language-plaintext highlighter-rouge">copy.random = cur.random.next</code></h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cur.random 指向某个原节点（比如 C），
+而我们在第 1 步已经在 C 后面插入了 C'（C.next = C'）。
+所以 cur.random.next 就是 C 对应的复制节点 C'。
+这正是 cur 的复制节点 cur.next 的 random 应该指向的目标。
+</code></pre></div></div><h3 id="哈希表解法on-空间更易理解">哈希表解法（O(n) 空间，更易理解）</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">copyRandomList_hash</span><span class="p">(</span><span class="n">head</span><span class="p">:</span> <span class="s">'Node'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s">'Node'</span><span class="p">:</span>
+    <span class="s">"""时间 O(n)，空间 O(n)"""</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">head</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">None</span>
+    <span class="c1"># 第一遍：建原节点→复制节点的映射
+</span>    <span class="n">memo</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="n">head</span>
+    <span class="k">while</span> <span class="n">cur</span><span class="p">:</span>
+        <span class="n">memo</span><span class="p">[</span><span class="n">cur</span><span class="p">]</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="n">cur</span><span class="p">.</span><span class="n">val</span><span class="p">)</span>
+        <span class="n">cur</span> <span class="o">=</span> <span class="n">cur</span><span class="p">.</span><span class="nb">next</span>
+    <span class="c1"># 第二遍：设置 next 和 random
+</span>    <span class="n">cur</span> <span class="o">=</span> <span class="n">head</span>
+    <span class="k">while</span> <span class="n">cur</span><span class="p">:</span>
+        <span class="n">memo</span><span class="p">[</span><span class="n">cur</span><span class="p">].</span><span class="nb">next</span> <span class="o">=</span> <span class="n">memo</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">cur</span><span class="p">.</span><span class="nb">next</span><span class="p">)</span>
+        <span class="n">memo</span><span class="p">[</span><span class="n">cur</span><span class="p">].</span><span class="n">random</span> <span class="o">=</span> <span class="n">memo</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">cur</span><span class="p">.</span><span class="n">random</span><span class="p">)</span>
+        <span class="n">cur</span> <span class="o">=</span> <span class="n">cur</span><span class="p">.</span><span class="nb">next</span>
+    <span class="k">return</span> <span class="n">memo</span><span class="p">[</span><span class="n">head</span><span class="p">]</span>
+</code></pre></div></div><h3 id="解法对比-3">解法对比</h3><table><thead><tr><th>解法</th><th>时间</th><th>空间</th><th>说明</th></tr></thead><tbody><tr><td>哈希表</td><td>O(n)</td><td>O(n)</td><td>易理解，先用这个 AC</td></tr><tr><td><strong>原地拼接（本解）</strong></td><td>O(n)</td><td><strong>O(1)</strong></td><td>满足进阶 O(1)</td></tr></tbody></table><p>面试可以先讲哈希表法建立思路，再优化到原地拼接展示空间优化能力。</p><h3 id="易错点-6">易错点</h3><ol><li>第 3 遍分离时 <code class="language-plaintext highlighter-rouge">copy.next = cur.next</code> → 要在 <code class="language-plaintext highlighter-rouge">cur.next = copy.next</code> 之前取，或用临时变量。</li><li>第 2 遍跳步用 <code class="language-plaintext highlighter-rouge">cur = cur.next</code> → 应该 <code class="language-plaintext highlighter-rouge">cur.next.next</code>，否则会卡在复制节点。</li><li><code class="language-plaintext highlighter-rouge">cur.random</code> 为 None 时没判空 → 空指针。必须 <code class="language-plaintext highlighter-rouge">if cur.random</code>。</li></ol><hr /><h2 id="q8-142-环形链表-iifloyd-找环入口">Q8: 142. 环形链表 II（Floyd 找环入口）</h2><p><strong>题目</strong>：返回链表入环的第一个节点，无环返回 null。不允许修改链表。</p><blockquote><p><a href="https://leetcode.cn/problems/linked-list-cycle-ii/description/?envType=study-plan-v2&amp;envId=top-100-liked">142. 环形链表 II - 力扣</a> 标签：哈希 | 链表 | 双指针</p></blockquote><p><strong>示例</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>输入：head = [3,2,0,-4], pos = 1
+输出：返回索引为 1 的节点（tail 连接到节点 2）
+</code></pre></div></div><h3 id="一句话结论-7">一句话结论</h3><p><strong>Floyd 算法两阶段</strong>：① 快慢指针找相遇点；② 一指针从头、一指针从相遇点，同速走，相遇即环入口。数学保证：从头走 a 步 = 从相遇点走 c + (n-1) 圈，两者必在入口相遇。</p><h3 id="解法最优floyd-快慢指针">解法（最优：Floyd 快慢指针）</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">detectCycle</span><span class="p">(</span><span class="n">head</span><span class="p">:</span> <span class="n">ListNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ListNode</span><span class="p">:</span>
+    <span class="s">"""
+    时间 O(n)，空间 O(1)
+    核心：阶段一找相遇点，阶段二一头一相遇点同速走
+    """</span>
+    <span class="c1"># 阶段一：快慢指针找相遇点
+</span>    <span class="n">slow</span> <span class="o">=</span> <span class="n">fast</span> <span class="o">=</span> <span class="n">head</span>
+    <span class="n">meet</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">while</span> <span class="n">fast</span> <span class="ow">and</span> <span class="n">fast</span><span class="p">.</span><span class="nb">next</span><span class="p">:</span>
+        <span class="n">slow</span> <span class="o">=</span> <span class="n">slow</span><span class="p">.</span><span class="nb">next</span>         <span class="c1"># 慢走 1
+</span>        <span class="n">fast</span> <span class="o">=</span> <span class="n">fast</span><span class="p">.</span><span class="nb">next</span><span class="p">.</span><span class="nb">next</span>    <span class="c1"># 快走 2
+</span>        <span class="k">if</span> <span class="n">slow</span> <span class="ow">is</span> <span class="n">fast</span><span class="p">:</span>
+            <span class="n">meet</span> <span class="o">=</span> <span class="n">slow</span>
+            <span class="k">break</span>
+
+    <span class="c1"># 无环
+</span>    <span class="k">if</span> <span class="n">meet</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">None</span>
+
+    <span class="c1"># 阶段二：一头一相遇点，同速走
+</span>    <span class="n">p</span> <span class="o">=</span> <span class="n">head</span>
+    <span class="k">while</span> <span class="n">p</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">meet</span><span class="p">:</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="nb">next</span>
+        <span class="n">meet</span> <span class="o">=</span> <span class="n">meet</span><span class="p">.</span><span class="nb">next</span>
+    <span class="k">return</span> <span class="n">p</span>  <span class="c1"># 相遇即入口
+</span></code></pre></div></div><h3 id="推导过程-6">推导过程</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>head = 3→2→0→4→(回到 2)，环入口是节点 2
+      a (头到入口)
+      3 → 2 ←入口
+          ↑   ↓
+      b   0   4
+          ↑___↓ (c)
+  a = 1（3→2），b = 0（入口 2 到相遇点），c = 3（相遇点到入口）
+
+阶段一：快慢指针
+  slow=3, fast=3
+  第1步: slow=2, fast=0
+  第2步: slow=0, fast=4
+  第3步: slow=4, fast=2（相遇，meet=2？）
+  实际相遇点取决于环结构，假设相遇在某个点
+
+阶段二：p 从 head(3) 走，meet 从相遇点走
+  p=3→2, meet=...→2
+  两者在某点相遇，相遇点即入口 2 ✓
+</code></pre></div></div><h3 id="数学证明为什么阶段二必在入口相遇">数学证明（为什么阶段二必在入口相遇）</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>设：
+  a = 头到环入口的距离
+  b = 环入口到相遇点的距离（顺时针）
+  c = 相遇点到环入口的距离（顺时针）
+  环长 L = b + c
+
+阶段一相遇时：
+  慢指针走：a + b 步（进环后走 b 到相遇，b &lt; L）
+  快指针走：a + b + nL 步（在环里绕了 n 圈，n≥1）
+  快 = 2 × 慢：
+    a + b + nL = 2(a + b)
+    → nL = a + b
+    → a = nL - b = (n-1)L + (L - b) = (n-1)L + c
+
+所以从头走 a 步 = 从相遇点走 c 步 + 绕 (n-1) 圈。
+两者同时走、同速，步数相同（都是 a），必在环入口相遇。
+</code></pre></div></div><p>通俗理解：从头到入口的距离 a，等于从相遇点绕回入口的距离（c + 若干整圈）。所以两头同时出发同速走，走的步数一样，会在入口碰头。</p><h3 id="其他解法-2">其他解法</h3><table><thead><tr><th>解法</th><th>时间</th><th>空间</th><th>说明</th></tr></thead><tbody><tr><td>哈希集合</td><td>O(n)</td><td>O(n)</td><td>访问过的节点入集合，第一个重复即入口</td></tr><tr><td><strong>Floyd（本解）</strong></td><td>O(n)</td><td><strong>O(1)</strong></td><td>满足进阶 O(1)</td></tr></tbody></table><h3 id="与-141-的关系">与 141 的关系</h3><p>141 只判断”有没有环”（到相遇点即可），142 要”找到入口”（多走阶段二）。本解在 141 基础上加了阶段二。见 <code class="language-plaintext highlighter-rouge">链表类题目.md</code> 的 141 题。</p><h3 id="易错点-7">易错点</h3><ol><li>阶段一慢指针进环前快指针已绕圈 → 不影响，数学证明对任意情况成立。</li><li>用 <code class="language-plaintext highlighter-rouge">while fast and fast.next</code> 但忘记判 <code class="language-plaintext highlighter-rouge">meet is None</code> → 无环时阶段二报错。</li><li>阶段二判断用 <code class="language-plaintext highlighter-rouge">==</code> → 应用 <code class="language-plaintext highlighter-rouge">is</code>，节点对象比较。</li><li>无环时慢指针走 n 步就到尾，不会相遇，meet 保持 None。</li></ol><hr /><h2 id="q9-146-lru-缓存哈希--双向链表">Q9: 146. LRU 缓存（哈希 + 双向链表）</h2><p><strong>题目</strong>：设计 LRU 缓存，get/put 均 O(1)。容量满时淘汰最久未使用的。</p><blockquote><p><a href="https://leetcode.cn/problems/lru-cache/?envType=study-plan-v2&amp;envId=top-100-liked">146. LRU 缓存 - 力扣</a> 标签：设计 | 哈希 | 链表 | 双向链表</p></blockquote><p><strong>示例</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>LRUCache lRUCache = new LRUCache(2);
+lRUCache.put(1, 1); // {1=1}
+lRUCache.put(2, 2); // {1=1, 2=2}
+lRUCache.get(1);    // 返回 1
+lRUCache.put(3, 3); // 淘汰 2，{1=1, 3=3}
+lRUCache.get(2);    // 返回 -1
+lRUCache.put(4, 4); // 淘汰 1，{4=4, 3=3}
+lRUCache.get(1);    // 返回 -1
+lRUCache.get(3);    // 返回 3
+lRUCache.get(4);    // 返回 4
+</code></pre></div></div><h3 id="一句话结论-8">一句话结论</h3><p><strong>哈希表 O(1) 查找 + 双向链表 O(1) 调整顺序</strong>：节点放在双向链表，最近访问的放头部，淘汰尾部。dummy 头尾节点省边界处理。</p><h3 id="解法最优哈希--双向链表">解法（最优：哈希 + 双向链表）</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">DLinkedNode</span><span class="p">:</span>
+    <span class="s">"""双向链表节点，存 key 是为了淘汰时能从哈希表删 key"""</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">key</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">prev</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="bp">None</span>
+
+<span class="k">class</span> <span class="nc">LRUCache</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">capacity</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">capacity</span> <span class="o">=</span> <span class="n">capacity</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">size</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">cache</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># key -&gt; 节点
+</span>
+        <span class="c1"># dummy 头尾节点，省去 None 判断
+</span>        <span class="bp">self</span><span class="p">.</span><span class="n">head</span> <span class="o">=</span> <span class="n">DLinkedNode</span><span class="p">()</span>  <span class="c1"># dummy head（最近使用）
+</span>        <span class="bp">self</span><span class="p">.</span><span class="n">tail</span> <span class="o">=</span> <span class="n">DLinkedNode</span><span class="p">()</span>  <span class="c1"># dummy tail（最久未使用）
+</span>        <span class="bp">self</span><span class="p">.</span><span class="n">head</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">tail</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">tail</span><span class="p">.</span><span class="n">prev</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">head</span>
+
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="s">"""O(1)：查到则移到头部并返回值，否则 -1"""</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">cache</span><span class="p">:</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">cache</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">moveToHead</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>   <span class="c1"># 访问过，移到头部
+</span>        <span class="k">return</span> <span class="n">node</span><span class="p">.</span><span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="s">"""O(1)：存在则更新+移头部；不存在则新建+加头部，超容则删尾"""</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">cache</span><span class="p">:</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">cache</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="n">node</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">moveToHead</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="n">DLinkedNode</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">cache</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">node</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">addToHead</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">size</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="p">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="p">.</span><span class="n">capacity</span><span class="p">:</span>
+                <span class="n">removed</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">removeTail</span><span class="p">()</span>  <span class="c1"># 淘汰尾部
+</span>                <span class="bp">self</span><span class="p">.</span><span class="n">cache</span><span class="p">.</span><span class="n">pop</span><span class="p">(</span><span class="n">removed</span><span class="p">.</span><span class="n">key</span><span class="p">)</span>   <span class="c1"># 同步删哈希表
+</span>                <span class="bp">self</span><span class="p">.</span><span class="n">size</span> <span class="o">-=</span> <span class="mi">1</span>
+
+    <span class="c1"># ===== 双向链表操作，全是 O(1) =====
+</span>    <span class="k">def</span> <span class="nf">addToHead</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">DLinkedNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="s">"""插入到 dummy head 之后（最近使用位）"""</span>
+        <span class="n">node</span><span class="p">.</span><span class="n">prev</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">head</span>
+        <span class="n">node</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">head</span><span class="p">.</span><span class="nb">next</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">head</span><span class="p">.</span><span class="nb">next</span><span class="p">.</span><span class="n">prev</span> <span class="o">=</span> <span class="n">node</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">head</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">node</span>
+
+    <span class="k">def</span> <span class="nf">removeNode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">DLinkedNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="s">"""删除任意节点"""</span>
+        <span class="n">node</span><span class="p">.</span><span class="n">prev</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">node</span><span class="p">.</span><span class="nb">next</span>
+        <span class="n">node</span><span class="p">.</span><span class="nb">next</span><span class="p">.</span><span class="n">prev</span> <span class="o">=</span> <span class="n">node</span><span class="p">.</span><span class="n">prev</span>
+
+    <span class="k">def</span> <span class="nf">moveToHead</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">DLinkedNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="s">"""移到头部 = 删除 + 加头"""</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">removeNode</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">addToHead</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">removeTail</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DLinkedNode</span><span class="p">:</span>
+        <span class="s">"""删除尾部（dummy tail 前一个），返回被删节点"""</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">tail</span><span class="p">.</span><span class="n">prev</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">removeNode</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">node</span>
+</code></pre></div></div><h3 id="结构示意图">结构示意图</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>哈希表：{key1: node1, key2: node2, ...}
+
+双向链表（head 侧是最近使用，tail 侧是最久未使用）：
+  head(d) ↔ node1 ↔ node2 ↔ ... ↔ nodeN ↔ tail(d)
+
+get(key1)：哈希表查到 node1 → 移到 head 侧 → 返回值
+put(key_new)：新建节点加 head 侧 → 若超容删 tail 侧节点（同步删哈希表）
+</code></pre></div></div><h3 id="为什么必须用双向链表">为什么必须用双向链表</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>要 O(1) 删除任意节点，必须知道前驱。
+单向链表删节点要从头找前驱，O(n)。
+双向链表每个节点存 prev，删节点直接 node.prev.next = node.next，O(1)。
+</code></pre></div></div><h3 id="为什么节点要存-key">为什么节点要存 key</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>淘汰尾部节点时，要从哈希表删对应 key。
+如果节点不存 key，删尾后无法知道它对应的 key，哈希表无法同步。
+所以 DLinkedNode 同时存 key 和 value。
+</code></pre></div></div><h3 id="为什么用-dummy-头尾">为什么用 dummy 头尾</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>不用 dummy 的话：
+  加头节点时要判链表是否空
+  删尾节点时要判是不是最后一个
+  移动节点时要判是不是头
+
+用 dummy 后，head 和 tail 永远存在，所有操作统一，省去边界判断。
+</code></pre></div></div><h3 id="python-偷懒解法用-ordereddict">Python 偷懒解法（用 OrderedDict）</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+
+<span class="k">class</span> <span class="nc">LRUCache</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">capacity</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">cap</span> <span class="o">=</span> <span class="n">capacity</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">od</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">od</span><span class="p">:</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">od</span><span class="p">.</span><span class="n">move_to_end</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>  <span class="c1"># 移到末尾（最近使用）
+</span>        <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">od</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">od</span><span class="p">:</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">od</span><span class="p">.</span><span class="n">move_to_end</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">od</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">od</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="p">.</span><span class="n">cap</span><span class="p">:</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">od</span><span class="p">.</span><span class="n">popitem</span><span class="p">(</span><span class="n">last</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>  <span class="c1"># 删头部（最久未使用）
+</span></code></pre></div></div><p>注意：<code class="language-plaintext highlighter-rouge">move_to_end</code> 默认移到末尾，<code class="language-plaintext highlighter-rouge">popitem(last=False)</code> 删头部（最老的）。这与手写版的”头部是最近”相反，但效果一样。</p><h3 id="解法对比-4">解法对比</h3><table><thead><tr><th>解法</th><th>get/put 时间</th><th>空间</th><th>说明</th></tr></thead><tbody><tr><td><strong>哈希+双向链表（本解）</strong></td><td><strong>O(1)</strong></td><td>O(n)</td><td>面试标准答案</td></tr><tr><td>OrderedDict</td><td>O(1)</td><td>O(n)</td><td>Python 偷懒，面试要能手写</td></tr></tbody></table><p>面试必须手写双向链表版。OrderedDict 只能作为”知道 Python 有这工具”的加分项。</p><h3 id="易错点-8">易错点</h3><ol><li>节点不存 key → 淘汰时无法同步删哈希表。</li><li><code class="language-plaintext highlighter-rouge">pop(removed.key)</code> 忘记写 → 哈希表残留，下次 get 返回已删节点。</li><li><code class="language-plaintext highlighter-rouge">removeTail</code> 返回的是节点不是值 → 要拿 node.key。</li><li>dummy 头尾没初始化相连 → 第一节点加入时 prev 为空。</li><li><code class="language-plaintext highlighter-rouge">put</code> 已存在的 key 时忘记更新 value → 数据不一致。</li></ol><hr /><h2 id="q10-148-排序链表归并排序自底向上">Q10: 148. 排序链表（归并排序自底向上）</h2><p><strong>题目</strong>：链表升序排序，要求 O(n log n) 时间、O(1) 空间（进阶）。</p><blockquote><p><a href="https://leetcode.cn/problems/sort-list/?envType=study-plan-v2&amp;envId=top-100-liked">148. 排序链表 - 力扣</a> 标签：链表 | 双指针 | 分治 | 排序</p></blockquote><p><strong>示例</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>输入：head = [4,2,1,3]
+输出：[1,2,3,4]
+</code></pre></div></div><h3 id="一句话结论-9">一句话结论</h3><p><strong>归并排序自底向上</strong>：size 从 1 倍增，每轮把相邻两个 size 长的子链表归并。用迭代代替递归，省掉 O(log n) 栈空间，实现 O(1) 额外空间。</p><h3 id="解法最优自底向上归并">解法（最优：自底向上归并）</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">sortList</span><span class="p">(</span><span class="n">head</span><span class="p">:</span> <span class="n">ListNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ListNode</span><span class="p">:</span>
+    <span class="s">"""
+    时间 O(n log n)，空间 O(1)（自底向上迭代，无递归栈）
+    核心：size 从 1 倍增，每轮归并相邻两段
+    """</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">head</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">head</span><span class="p">.</span><span class="nb">next</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">head</span>
+
+    <span class="c1"># 求长度
+</span>    <span class="n">length</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="n">head</span>
+    <span class="k">while</span> <span class="n">node</span><span class="p">:</span>
+        <span class="n">length</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="p">.</span><span class="nb">next</span>
+
+    <span class="n">dummy</span> <span class="o">=</span> <span class="n">ListNode</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">head</span><span class="p">)</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="n">size</span> <span class="o">&lt;</span> <span class="n">length</span><span class="p">:</span>
+        <span class="n">tail</span> <span class="o">=</span> <span class="n">dummy</span>       <span class="c1"># 已归并部分的尾
+</span>        <span class="n">cur</span> <span class="o">=</span> <span class="n">dummy</span><span class="p">.</span><span class="nb">next</span>   <span class="c1"># 当前待归并起点
+</span>        <span class="k">while</span> <span class="n">cur</span><span class="p">:</span>
+            <span class="c1"># 取出第一段（长度 size）
+</span>            <span class="n">left</span> <span class="o">=</span> <span class="n">cur</span>
+            <span class="n">right</span> <span class="o">=</span> <span class="n">split</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+            <span class="c1"># 取出第二段后的下一段
+</span>            <span class="n">cur</span> <span class="o">=</span> <span class="n">split</span><span class="p">(</span><span class="n">right</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span> <span class="k">if</span> <span class="n">right</span> <span class="k">else</span> <span class="bp">None</span>
+            <span class="c1"># 归并两段，接回主链
+</span>            <span class="n">merged</span> <span class="o">=</span> <span class="n">merge</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
+            <span class="n">tail</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">merged</span>
+            <span class="k">while</span> <span class="n">tail</span><span class="p">.</span><span class="nb">next</span><span class="p">:</span>   <span class="c1"># tail 走到归并后末尾
+</span>                <span class="n">tail</span> <span class="o">=</span> <span class="n">tail</span><span class="p">.</span><span class="nb">next</span>
+        <span class="n">size</span> <span class="o">*=</span> <span class="mi">2</span>
+    <span class="k">return</span> <span class="n">dummy</span><span class="p">.</span><span class="nb">next</span>
+
+
+<span class="k">def</span> <span class="nf">split</span><span class="p">(</span><span class="n">head</span><span class="p">:</span> <span class="n">ListNode</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ListNode</span><span class="p">:</span>
+    <span class="s">"""从 head 走 n 步，断开，返回后半段头"""</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">head</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">None</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="n">head</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>     <span class="c1"># 走 n-1 步，停在长度 n 的最后节点
+</span>        <span class="k">if</span> <span class="ow">not</span> <span class="n">cur</span><span class="p">.</span><span class="nb">next</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="n">cur</span> <span class="o">=</span> <span class="n">cur</span><span class="p">.</span><span class="nb">next</span>
+    <span class="n">nxt</span> <span class="o">=</span> <span class="n">cur</span><span class="p">.</span><span class="nb">next</span>
+    <span class="n">cur</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="bp">None</span>            <span class="c1"># 断开
+</span>    <span class="k">return</span> <span class="n">nxt</span>
+
+
+<span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="n">l1</span><span class="p">:</span> <span class="n">ListNode</span><span class="p">,</span> <span class="n">l2</span><span class="p">:</span> <span class="n">ListNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ListNode</span><span class="p">:</span>
+    <span class="s">"""合并两个有序链表，复用 21 题"""</span>
+    <span class="n">dummy</span> <span class="o">=</span> <span class="n">ListNode</span><span class="p">()</span>
+    <span class="n">tail</span> <span class="o">=</span> <span class="n">dummy</span>
+    <span class="k">while</span> <span class="n">l1</span> <span class="ow">and</span> <span class="n">l2</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">l1</span><span class="p">.</span><span class="n">val</span> <span class="o">&lt;=</span> <span class="n">l2</span><span class="p">.</span><span class="n">val</span><span class="p">:</span>
+            <span class="n">tail</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">l1</span>
+            <span class="n">l1</span> <span class="o">=</span> <span class="n">l1</span><span class="p">.</span><span class="nb">next</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tail</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">l2</span>
+            <span class="n">l2</span> <span class="o">=</span> <span class="n">l2</span><span class="p">.</span><span class="nb">next</span>
+        <span class="n">tail</span> <span class="o">=</span> <span class="n">tail</span><span class="p">.</span><span class="nb">next</span>
+    <span class="n">tail</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">l1</span> <span class="k">if</span> <span class="n">l1</span> <span class="k">else</span> <span class="n">l2</span>
+    <span class="k">return</span> <span class="n">dummy</span><span class="p">.</span><span class="nb">next</span>
+</code></pre></div></div><h3 id="推导过程-7">推导过程</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>head = 4→2→1→3, length=4
+
+size=1（每段 1 个节点）：
+  第1轮：left=4, right=2, 归并得 2→4, cur=1→3
+  第2轮：left=1, right=3, 归并得 1→3, cur=None
+  链表：2→4→1→3
+
+size=2（每段 2 个节点）：
+  第1轮：left=2→4, right=1→3, 归并得 1→2→3→4, cur=None
+  链表：1→2→3→4
+
+size=4 &gt;= length=4，结束。
+结果：1→2→3→4 ✓
+</code></pre></div></div><h3 id="自顶向下递归版olog-n-栈空间">自顶向下递归版（O(log n) 栈空间）</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">sortList_recursive</span><span class="p">(</span><span class="n">head</span><span class="p">:</span> <span class="n">ListNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ListNode</span><span class="p">:</span>
+    <span class="s">"""时间 O(n log n)，空间 O(log n)（递归栈）"""</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">head</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">head</span><span class="p">.</span><span class="nb">next</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">head</span>
+    <span class="c1"># 快慢指针找中点
+</span>    <span class="n">slow</span><span class="p">,</span> <span class="n">fast</span> <span class="o">=</span> <span class="n">head</span><span class="p">,</span> <span class="n">head</span><span class="p">.</span><span class="nb">next</span>
+    <span class="k">while</span> <span class="n">fast</span> <span class="ow">and</span> <span class="n">fast</span><span class="p">.</span><span class="nb">next</span><span class="p">:</span>
+        <span class="n">slow</span> <span class="o">=</span> <span class="n">slow</span><span class="p">.</span><span class="nb">next</span>
+        <span class="n">fast</span> <span class="o">=</span> <span class="n">fast</span><span class="p">.</span><span class="nb">next</span><span class="p">.</span><span class="nb">next</span>
+    <span class="n">mid</span> <span class="o">=</span> <span class="n">slow</span><span class="p">.</span><span class="nb">next</span>
+    <span class="n">slow</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="bp">None</span>  <span class="c1"># 断开
+</span>    <span class="c1"># 递归排序两半，再归并
+</span>    <span class="k">return</span> <span class="n">merge</span><span class="p">(</span><span class="n">sortList_recursive</span><span class="p">(</span><span class="n">head</span><span class="p">),</span> <span class="n">sortList_recursive</span><span class="p">(</span><span class="n">mid</span><span class="p">))</span>
+</code></pre></div></div><p>递归版更易懂，但不满足 O(1) 空间进阶要求。</p><h3 id="为什么用归并而不是快排">为什么用归并而不是快排</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>快排在数组上很快是因为随机访问分区点。
+链表无法 O(1) 随机访问，快排分区效率低。
+归并排序天然适合链表：
+  - 找中点：快慢指针 O(n)
+  - 归并：双指针 O(n)
+  - 不需要随机访问
+且归并是稳定排序，链表归并能 O(1) 额外空间（数组归并要 O(n) 辅助空间，但链表靠改指针即可）。
+</code></pre></div></div><h3 id="解法对比-5">解法对比</h3><table><thead><tr><th>解法</th><th>时间</th><th>空间</th><th>说明</th></tr></thead><tbody><tr><td><strong>自底向上归并（本解）</strong></td><td>O(n log n)</td><td><strong>O(1)</strong></td><td>满足进阶</td></tr><tr><td>递归归并</td><td>O(n log n)</td><td>O(log n)</td><td>易理解</td></tr><tr><td>插入排序</td><td>O(n²)</td><td>O(1)</td><td>不满足时间要求</td></tr></tbody></table><h3 id="易错点-9">易错点</h3><ol><li><code class="language-plaintext highlighter-rouge">split</code> 走 n 步写成 <code class="language-plaintext highlighter-rouge">range(n)</code> → 多走一步，段长不对。</li><li>每轮归并后忘记把 <code class="language-plaintext highlighter-rouge">tail</code> 移到末尾 → 下一段接错位置。</li><li><code class="language-plaintext highlighter-rouge">merge</code> 函数和 21 题一样，直接复用，但要确保 <code class="language-plaintext highlighter-rouge">split</code> 正确断开。</li><li><code class="language-plaintext highlighter-rouge">size</code> 倍增用 <code class="language-plaintext highlighter-rouge">size *= 2</code>，不是 <code class="language-plaintext highlighter-rouge">size += 1</code>。</li><li>递归版快慢指针找中点时，fast 从 head.next 出发（保证偶数时 slow 停在前半尾）。</li></ol><hr /><h2 id="链表进阶题通用思路">链表进阶题通用思路</h2><table><thead><tr><th>模式</th><th>典型题目</th><th>关键技巧</th></tr></thead><tbody><tr><td>dummy 哨兵</td><td>19/21/24/25</td><td>头节点可能变动时，加 dummy 省边界</td></tr><tr><td>双指针间距</td><td>19 删倒数N / 142 找环入口</td><td>快指针先走制造间距，或快慢追及</td></tr><tr><td>反转链表复用</td><td>25 K个一组 / 148 排序</td><td>reverse 是组件，组合使用</td></tr><tr><td>空间压缩</td><td>138 原地复制 / 148 自底向上</td><td>用原链表结构存储映射，省哈希表</td></tr><tr><td>堆/优先队列</td><td>23 合并K个</td><td>维护多路数据的最值</td></tr><tr><td>哈希+双向链表</td><td>146 LRU</td><td>查找 O(1) + 顺序调整 O(1)</td></tr></tbody></table><h3 id="核心认知">核心认知</h3><ol><li><strong>dummy 哨兵是链表题第一工具</strong>：凡是涉及头节点可能变动（删除、插入、合并、交换），都加 dummy，省去大量边界判断。</li><li><strong>快慢指针间距可控</strong>：快指针先走 n 步 → 制造 n 的间距；快指针走 2 倍速 → 找中点或判环。间距和速度是两种用法。</li><li><strong>反转链表是万能组件</strong>：25、148、206 都用到，务必写熟。</li><li><strong>链表排序用归并</strong>：快排不适合链表（无随机访问），归并天然适配。</li><li><strong>进阶 O(1) 空间的套路</strong>：借用原链表节点存映射关系（138）、用迭代代替递归（148）、用指针代替哈希（142）。</li></ol><h3 id="常见陷阱速查">常见陷阱速查</h3><table><thead><tr><th>陷阱</th><th>出现题目</th><th>规避方法</th></tr></thead><tbody><tr><td>改 next 前没存下一个节点</td><td>206/24/25</td><td>先 <code class="language-plaintext highlighter-rouge">nxt = curr.next</code></td></tr><tr><td>删节点没找前驱</td><td>19</td><td>快指针多走 1 步，或用 dummy</td></tr><tr><td>循环条件漏判</td><td>24/141</td><td>同时判 <code class="language-plaintext highlighter-rouge">fast and fast.next</code></td></tr><tr><td>哈希表不同步</td><td>146 LRU</td><td>删尾后 <code class="language-plaintext highlighter-rouge">cache.pop(key)</code></td></tr><tr><td>比较节点用 <code class="language-plaintext highlighter-rouge">==</code></td><td>141/142</td><td>用 <code class="language-plaintext highlighter-rouge">is</code> 比较对象身份</td></tr></tbody></table><hr /><h2 id="关联笔记">关联笔记</h2><ul><li>同目录 <code class="language-plaintext highlighter-rouge">链表类题目.md</code>：基础题 160 相交链表、206 反转链表、234 回文链表、141 环形链表（本文件 142 是其进阶）</li><li>同目录 <code class="language-plaintext highlighter-rouge">双指针类题目.md</code>：双指针思想在链表中的体现</li><li>同目录 <code class="language-plaintext highlighter-rouge">哈希类题目.md</code>：哈希表在 LRU、判环中的应用</li><li><code class="language-plaintext highlighter-rouge">面试经历/</code> 目录下的算法面经</li></ul></section><!-- Previous / Next navigation --><nav class="notes-pager"><div class="notes-pager-links"> <a href="/notes/%E9%93%BE%E8%A1%A8%E7%B1%BB%E9%A2%98%E7%9B%AE/" class="notes-pager-prev"> <span class="notes-pager-label">← 上一章</span> <span class="notes-pager-title">链表类题目</span> </a> <span></span></div></nav></div></article><!-- Right Sidebar: Table of Contents (built by JS from DOM) --><aside class="notes-toc" id="notes-toc"><div class="notes-toc-inner"><h4 class="notes-toc-title">目录</h4><nav class="notes-toc-nav"><ul class="notes-toc-list" id="notes-toc-list"> <!-- Populated by notes-toc.js --></ul></nav></div></aside></div><script src="https://1571859588.github.io/assets/js/notes-toc.js"></script> <script> (function() { var q = new URLSearchParams(location.search).get('q'); if (!q || q.length < 2) return; var body = document.querySelector('.notes-body'); if (!body) return; // Walk text nodes, find and highlight matches var walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT, null, false); var textNodes = []; while (walker.nextNode()) { var p = walker.currentNode.parentNode; // Skip script, style, code blocks, and already-marked text if (p.tagName === 'SCRIPT' || p.tagName === 'STYLE' || p.tagName === 'MARK' || p.closest('pre') || p.closest('.notes-search-hit')) continue; textNodes.push(walker.currentNode); } var first = null; var re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'); textNodes.forEach(function(node) { var text = node.textContent; if (!re.test(text)) return; re.lastIndex = 0; // reset after test var frag = document.createDocumentFragment(); var lastIdx = 0; var match; while ((match = re.exec(text)) !== null) { if (match.index > lastIdx) { frag.appendChild(document.createTextNode(text.substring(lastIdx, match.index))); } var mark = document.createElement('mark'); mark.className = 'notes-search-mark'; mark.textContent = match[0]; frag.appendChild(mark); if (!first) first = mark; lastIdx = match.index + match[0].length; } if (lastIdx < text.length) { frag.appendChild(document.createTextNode(text.substring(lastIdx))); } node.parentNode.replaceChild(frag, node); }); if (first) { setTimeout(function() { first.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300); } })(); </script><div class="page__footer"><footer> <!-- start custom footer snippets --> <a href="/sitemap/">Sitemap</a> <!-- end custom footer snippets --><div class="page__footer-follow"><ul class="social-icons"><li><strong>Follow:</strong></li><li><a href="http://github.com/1571859588"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a></li><li><a href="https://1571859588.github.io/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li></ul></div><div class="page__footer-copyright"> &copy; 2026 Yuntao Nie, Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://github.com/academicpages/academicpages.github.io">AcademicPages</a>, a fork of <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.<br /> Site last updated 2026-07-06</div></footer></div><script src="https://1571859588.github.io/assets/js/main.min.js"></script> <script src="https://1571859588.github.io/assets/js/paper-details.js"></script> <!-- Fix kramdown stripping backslashes before _ in math spans. kramdown treats \_ as a markdown escape, converting $seq\_len$ to $seq_len$. MathJax then interprets _ as subscript instead of a literal underscore. This runs synchronously before MathJax (async) processes the page. --> <script> (function() { var content = document.querySelector('.page__content'); if (!content) return; var walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT, null, false); var nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode); nodes.forEach(function(node) { var text = node.textContent; var fixed = text.replace(/\$([^$\n]+?)\$/g, function(match, math) { // Inside $...$, add \ before _ followed by 2+ lowercase letters. // Safe: legitimate subscripts use single chars ($d_k$) or braces ($x_{ij}$). var fixedMath = math.replace(/_([a-z]{2,})/g, '\\_$1'); return fixedMath !== math ? '$' + fixedMath + '$' : match; }); if (fixed !== text) node.textContent = fixed; }); })(); </script> <script> var SERIES_INDEX = [ {t:"双指针类题目", u:"/notes/%E5%8F%8C%E6%8C%87%E9%92%88%E7%B1%BB%E9%A2%98%E7%9B%AE/"}, {t:"哈希类题目", u:"/notes/%E5%93%88%E5%B8%8C%E7%B1%BB%E9%A2%98%E7%9B%AE/"}, {t:"子串类题目", u:"/notes/%E5%AD%90%E4%B8%B2%E7%B1%BB%E9%A2%98%E7%9B%AE/"}, {t:"普通数组类题目", u:"/notes/%E6%99%AE%E9%80%9A%E6%95%B0%E7%BB%84%E7%B1%BB%E9%A2%98%E7%9B%AE/"}, {t:"滑动窗口类题目", u:"/notes/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%B1%BB%E9%A2%98%E7%9B%AE/"}, {t:"矩阵类题目", u:"/notes/%E7%9F%A9%E9%98%B5%E7%B1%BB%E9%A2%98%E7%9B%AE/"}, {t:"链表类题目", u:"/notes/%E9%93%BE%E8%A1%A8%E7%B1%BB%E9%A2%98%E7%9B%AE/"}, {t:"链表类题目_进阶", u:"/notes/%E9%93%BE%E8%A1%A8%E7%B1%BB%E9%A2%98%E7%9B%AE-%E8%BF%9B%E9%98%B6/"} ]; (function() { if (!SERIES_INDEX.length) return; var inp = document.getElementById('notes-sidebar-search-input'); var box = document.getElementById('notes-sidebar-search-results'); if (!inp || !box) return; function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; } function hl(t, q) { var o = '', L = 0, lo = t.toLowerCase(), ql = q.toLowerCase(), i; while ((i = lo.indexOf(ql, L)) !== -1) { o += esc(t.substring(L, i)) + '<mark class="notes-search-highlight">' + esc(t.substring(i, i + q.length)) + '</mark>'; L = i + q.length; } return o + esc(t.substring(L)); } inp.addEventListener('input', function() { var q = this.value.trim(); if (!q) { box.style.display = 'none'; box.innerHTML = ''; return; } var ql = q.toLowerCase(), hits = []; for (var i = 0; i < SERIES_INDEX.length; i++) { if (SERIES_INDEX[i].t.toLowerCase().indexOf(ql) !== -1) hits.push(SERIES_INDEX[i]); } if (!hits.length) { box.innerHTML = '<div class="notes-sidebar-search-empty">无匹配</div>'; } else { var h = ''; for (var j = 0; j < Math.min(hits.length, 15); j++) { h += '<a href="' + hits[j].u + '" class="notes-sidebar-search-hit" data-q="' + esc(q) + '">' + '<span class="notes-sidebar-search-hit-title">' + hl(hits[j].t, q) + '</span></a>'; } box.innerHTML = h; } box.style.display = 'block'; }); inp.addEventListener('keydown', function(e) { if (e.key === 'Escape') { box.style.display = 'none'; box.innerHTML = ''; this.blur(); } }); box.addEventListener('click', function(e) { var a = e.target.closest('.notes-sidebar-search-hit'); if (a && a.dataset.q) sessionStorage.setItem('notes-search-q', a.dataset.q); }); document.addEventListener('click', function(e) { if (!e.target.closest('#notes-sidebar-search')) { box.style.display = 'none'; box.innerHTML = ''; } }); })(); </script></body></html>

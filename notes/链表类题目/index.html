@@ -1,0 +1,325 @@
+<!doctype html><html lang="en" class="no-js"><head><meta charset="utf-8"> <!-- begin SEO --><title>链表类题目 - Yuntao Nie</title><meta property="og:locale" content="en-US"><meta property="og:site_name" content="Yuntao Nie"><meta property="og:title" content="链表类题目"><link rel="canonical" href="https://1571859588.github.io/notes/%E9%93%BE%E8%A1%A8%E7%B1%BB%E9%A2%98%E7%9B%AE/"><meta property="og:url" content="https://1571859588.github.io/notes/%E9%93%BE%E8%A1%A8%E7%B1%BB%E9%A2%98%E7%9B%AE/"><meta property="og:description" content="LeetCode Hot 100 链表类题目"> <script type="application/ld+json"> { "@context" : "http://schema.org", "@type" : "Person", "name" : "Yuntao Nie", "url" : "https://1571859588.github.io", "sameAs" : null } </script> <!-- end SEO --><link href="https://1571859588.github.io/feed.xml" type="application/atom+xml" rel="alternate" title="Yuntao Nie Feed"> <!-- http://t.co/dKP3o1e --><meta name="HandheldFriendly" content="True"><meta name="MobileOptimized" content="320"><meta name="viewport" content="width=device-width, initial-scale=1.0"> <script> document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js '; </script> <!-- For all browsers --><link rel="stylesheet" href="https://1571859588.github.io/assets/css/main.css"><meta http-equiv="cleartype" content="on"> <!-- start custom head snippets --><link rel="apple-touch-icon" sizes="57x57" href="https://1571859588.github.io/images/apple-touch-icon-57x57.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="60x60" href="https://1571859588.github.io/images/apple-touch-icon-60x60.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="72x72" href="https://1571859588.github.io/images/apple-touch-icon-72x72.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="76x76" href="https://1571859588.github.io/images/apple-touch-icon-76x76.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="114x114" href="https://1571859588.github.io/images/apple-touch-icon-114x114.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="120x120" href="https://1571859588.github.io/images/apple-touch-icon-120x120.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="144x144" href="https://1571859588.github.io/images/apple-touch-icon-144x144.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="152x152" href="https://1571859588.github.io/images/apple-touch-icon-152x152.png?v=M44lzPylqQ"><link rel="apple-touch-icon" sizes="180x180" href="https://1571859588.github.io/images/apple-touch-icon-180x180.png?v=M44lzPylqQ"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-32x32.png?v=M44lzPylqQ" sizes="32x32"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/android-chrome-192x192.png?v=M44lzPylqQ" sizes="192x192"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-96x96.png?v=M44lzPylqQ" sizes="96x96"><link rel="icon" type="image/png" href="https://1571859588.github.io/images/favicon-16x16.png?v=M44lzPylqQ" sizes="16x16"><link rel="manifest" href="https://1571859588.github.io/images/manifest.json?v=M44lzPylqQ"><link rel="mask-icon" href="https://1571859588.github.io/images/safari-pinned-tab.svg?v=M44lzPylqQ" color="#000000"><link rel="shortcut icon" href="/images/favicon.ico?v=M44lzPylqQ"><meta name="msapplication-TileColor" content="#000000"><meta name="msapplication-TileImage" content="https://1571859588.github.io/images/mstile-144x144.png?v=M44lzPylqQ"><meta name="msapplication-config" content="https://1571859588.github.io/images/browserconfig.xml?v=M44lzPylqQ"><meta name="theme-color" content="#ffffff"><link rel="stylesheet" href="https://1571859588.github.io/assets/css/academicons.css"/> <!-- MathJax for math rendering --> <script> MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['\\(', '\\)']] } }; </script> <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script> <!-- end custom head snippets --></head><body> <!--[if lt IE 9]><div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div><![endif]--><div class="masthead"><div class="masthead__inner-wrap"><div class="masthead__menu"><nav id="site-nav" class="greedy-nav"> <button><div class="navicon"></div></button><ul class="visible-links"><li class="masthead__menu-item masthead__menu-item--lg"><a href="https://1571859588.github.io/">Yuntao Nie</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/publications/">Publications</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/cv/">CV</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/notes/">Notes</a></li><li class="masthead__menu-item"><a href="https://1571859588.github.io/year-archive/">Blog</a></li></ul><ul class="hidden-links hidden"></ul></nav></div></div></div><div id="main" role="main" class="notes-layout"> <!-- Left Sidebar: Series Chapter Navigation --><aside class="notes-sidebar" id="notes-sidebar"><div class="notes-sidebar-inner"><div class="notes-series-header"><h3 class="notes-series-title">leetcode</h3></div><div class="notes-sidebar-search" id="notes-sidebar-search"> <input type="text" class="notes-sidebar-search-input" id="notes-sidebar-search-input" placeholder="搜索本专题…" autocomplete="off"><div class="notes-sidebar-search-results" id="notes-sidebar-search-results" style="display:none"></div></div><nav class="notes-chapter-nav"><ul class="notes-chapter-list"><li class="notes-chapter-item "> <a href="/notes/%E5%8F%8C%E6%8C%87%E9%92%88%E7%B1%BB%E9%A2%98%E7%9B%AE/" class="notes-chapter-link"> <span class="notes-chapter-num">1</span> <span class="notes-chapter-title">双指针类题目</span> </a></li><li class="notes-chapter-item "> <a href="/notes/%E5%93%88%E5%B8%8C%E7%B1%BB%E9%A2%98%E7%9B%AE/" class="notes-chapter-link"> <span class="notes-chapter-num">2</span> <span class="notes-chapter-title">哈希类题目</span> </a></li><li class="notes-chapter-item "> <a href="/notes/%E5%AD%90%E4%B8%B2%E7%B1%BB%E9%A2%98%E7%9B%AE/" class="notes-chapter-link"> <span class="notes-chapter-num">3</span> <span class="notes-chapter-title">子串类题目</span> </a></li><li class="notes-chapter-item "> <a href="/notes/%E6%99%AE%E9%80%9A%E6%95%B0%E7%BB%84%E7%B1%BB%E9%A2%98%E7%9B%AE/" class="notes-chapter-link"> <span class="notes-chapter-num">4</span> <span class="notes-chapter-title">普通数组类题目</span> </a></li><li class="notes-chapter-item "> <a href="/notes/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%B1%BB%E9%A2%98%E7%9B%AE/" class="notes-chapter-link"> <span class="notes-chapter-num">5</span> <span class="notes-chapter-title">滑动窗口类题目</span> </a></li><li class="notes-chapter-item "> <a href="/notes/%E7%9F%A9%E9%98%B5%E7%B1%BB%E9%A2%98%E7%9B%AE/" class="notes-chapter-link"> <span class="notes-chapter-num">6</span> <span class="notes-chapter-title">矩阵类题目</span> </a></li><li class="notes-chapter-item active"> <a href="/notes/%E9%93%BE%E8%A1%A8%E7%B1%BB%E9%A2%98%E7%9B%AE/" class="notes-chapter-link"> <span class="notes-chapter-num">7</span> <span class="notes-chapter-title">链表类题目</span> </a></li><li class="notes-chapter-item "> <a href="/notes/%E9%93%BE%E8%A1%A8%E7%B1%BB%E9%A2%98%E7%9B%AE-%E8%BF%9B%E9%98%B6/" class="notes-chapter-link"> <span class="notes-chapter-num">8</span> <span class="notes-chapter-title">链表类题目_进阶</span> </a></li></ul></nav><div class="notes-sidebar-footer"> <a href="/notes/" class="notes-back-link">← 所有笔记系列</a></div></div></aside><!-- Mobile sidebar toggle --> <button class="notes-sidebar-toggle" id="notes-sidebar-toggle" aria-label="Toggle sidebar"> <span class="notes-sidebar-toggle-icon"></span> </button> <!-- Main Content --><article class="notes-content" itemscope itemtype="http://schema.org/CreativeWork"><meta itemprop="headline" content="链表类题目"><div class="notes-content-inner"><header class="notes-header"><div class="notes-breadcrumb"> <a href="/notes/">Notes</a> <span class="notes-sep">›</span> <span>leetcode</span> <span class="notes-sep">›</span> <span>链表类题目</span></div><h1 class="notes-page-title" itemprop="headline">链表类题目</h1></header><section class="notes-body" itemprop="text"><h1 id="leetcode-hot-100-链表类题目">LeetCode Hot 100 链表类题目</h1><blockquote><p>更新时间：2026-07-04 来源：LeetCode Hot 100 链表专题 状态：刷题笔记，含完整代码 + 推导 + 面试追问</p></blockquote><hr /><h2 id="一句话总结">一句话总结</h2><p>链表题的核心套路就三板斧：<strong>① 快慢指针（找中点、判环、找交点）；② 反转链表（迭代 / 递归，是很多题的子步骤）；③ 指针换向（改 next 指向）</strong>。关键认知：<strong>链表题不靠”聪明算法”，靠”指针操作细节”</strong>——画图、理清谁指向谁、注意空指针，比想高级解法更重要。</p><hr /><h2 id="题目索引">题目索引</h2><table><thead><tr><th>题号</th><th>题目</th><th>难度</th><th>核心技巧</th><th>时间</th><th>空间</th></tr></thead><tbody><tr><td>160</td><td>相交链表</td><td>简单</td><td>双指针走对方链表</td><td>O(m+n)</td><td>O(1)</td></tr><tr><td>206</td><td>反转链表</td><td>简单</td><td>迭代三指针</td><td>O(n)</td><td>O(1)</td></tr><tr><td>234</td><td>回文链表</td><td>简单</td><td>找中点 + 反转后半 + 比较</td><td>O(n)</td><td>O(1)</td></tr><tr><td>141</td><td>环形链表</td><td>简单</td><td>快慢指针追及</td><td>O(n)</td><td>O(1)</td></tr></tbody></table><blockquote><p>相关标签：<code class="language-plaintext highlighter-rouge">哈希</code> <code class="language-plaintext highlighter-rouge">链表</code> <code class="language-plaintext highlighter-rouge">双指针</code> <code class="language-plaintext highlighter-rouge">递归</code></p></blockquote><hr /><h2 id="q1-160-相交链表双指针走对方链表">Q1: 160. 相交链表（双指针走对方链表）</h2><p><strong>题目</strong>：给你两个单链表的头节点 headA 和 headB，找出并返回两个单链表相交的起始节点。若不相交返回 null。要求<strong>链表保持原始结构</strong>。</p><blockquote><p><a href="https://leetcode.cn/problems/intersection-of-two-linked-lists/?envType=study-plan-v2&amp;envId=top-100-liked">160. 相交链表 - 力扣</a> 标签：哈希 | 链表 | 双指针</p></blockquote><p><strong>示例</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>输入：intersectVal = 8, listA = [4,1,8,4,5], listB = [5,6,1,8,4,5], skipA = 2, skipB = 3
+输出：Intersected at '8'
+</code></pre></div></div><h3 id="先解释自定义评测系统是什么意思">先解释”自定义评测系统”是什么意思</h3><p>题目里那段”自定义评测”看起来很绕，其实就是<strong>力扣后台构造测试用例的方式</strong>，不是给你的函数的输入。逐个解释：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>intersectVal：相交节点的值。不相交时为 0。
+listA、listB：两条链表的所有节点值。
+skipA：链表 A 从头走到相交节点，要跳过多少个节点。
+skipB：链表 B 从头走到相交节点，要跳过多少个节点。
+</code></pre></div></div><p>以示例 1 为例：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>listA = [4,1,8,4,5], skipA = 2 → 从 A 头走 2 步到节点 8（相交点）
+listB = [5,6,1,8,4,5], skipB = 3 → 从 B 头走 3 步到节点 8（相交点）
+
+    A: 4 → 1 ↘
+                8 → 4 → 5
+    B: 5 → 6 → 1 ↗
+
+"相交"指的是内存中同一个节点对象，不是"值相同"。
+所以 A 里的 1 和 B 里的 1 虽然值都是 1，但是两个不同节点；
+而 A 里的 8 和 B 里的 8 是同一个节点（内存地址相同）。
+</code></pre></div></div><p><strong>你只需要知道</strong>：函数收到的就是两个链表头指针 headA、headB，如果两条链表在某个节点汇合成同一段后续，就返回那个汇合节点。</p><h3 id="一句话结论">一句话结论</h3><p><strong>两个指针 a、b 分别从 headA、headB 出发，a 走到头就转去走 headB，b 走到头就转去走 headA。如果相交，两指针会在交点相遇；如果不相交，两指针会同时走到 null（各走 m+n 步）。</strong></p><h3 id="解法最优双指针交叉走">解法（最优：双指针交叉走）</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">ListNode</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="bp">None</span>
+
+<span class="k">def</span> <span class="nf">getIntersectionNode</span><span class="p">(</span><span class="n">headA</span><span class="p">:</span> <span class="n">ListNode</span><span class="p">,</span> <span class="n">headB</span><span class="p">:</span> <span class="n">ListNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ListNode</span><span class="p">:</span>
+    <span class="s">"""
+    时间 O(m+n)，空间 O(1)
+    核心：指针 A 走完 A 链表转去走 B 链表，指针 B 反之
+    若相交，两指针走的总路程相同，必在交点相遇
+    """</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">headA</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">headB</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">None</span>
+
+    <span class="n">pa</span><span class="p">,</span> <span class="n">pb</span> <span class="o">=</span> <span class="n">headA</span><span class="p">,</span> <span class="n">headB</span>
+
+    <span class="c1"># 两指针走的总长度都是 m+n，要么在交点相遇，要么同时到 None
+</span>    <span class="k">while</span> <span class="n">pa</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">pb</span><span class="p">:</span>
+        <span class="n">pa</span> <span class="o">=</span> <span class="n">pa</span><span class="p">.</span><span class="nb">next</span> <span class="k">if</span> <span class="n">pa</span> <span class="k">else</span> <span class="n">headB</span>  <span class="c1"># A 走到尾，转去 B
+</span>        <span class="n">pb</span> <span class="o">=</span> <span class="n">pb</span><span class="p">.</span><span class="nb">next</span> <span class="k">if</span> <span class="n">pb</span> <span class="k">else</span> <span class="n">headA</span>  <span class="c1"># B 走到尾，转去 A
+</span>
+    <span class="k">return</span> <span class="n">pa</span>  <span class="c1"># 相交则返回交点，不相交则两指针同时为 None
+</span></code></pre></div></div><h3 id="推导过程">推导过程</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>情况 1：相交
+  A 链表: 4 → 1 ↘
+                  8 → 4 → 5   （A 链表长 5，交点前长 2）
+  B 链表: 5 → 6 → 1 ↗           （B 链表长 6，交点前长 3）
+
+  指针 a 路径：4→1→8→4→5→(转B)5→6→1→8  ← 在 8 相遇
+  指针 b 路径：5→6→1→8→4→5→(转A)4→1→8  ← 在 8 相遇
+
+  为什么相遇？
+    指针 a 走了 (2 + 3) + (3) = ... 不对，换个数法：
+    指针 a 走完 A 全长(5) + B 中交点前长度(3) = 8 步到交点
+    指针 b 走完 B 全长(6) + A 中交点前长度(2) = 8 步到交点
+    两者步数相同 → 同时到达交点 ✓
+
+情况 2：不相交
+  A 链表长 m，B 链表长 n，无交点
+  指针 a 走 m 步到尾，转 B 走 n 步 → 共 m+n 步到 None
+  指针 b 走 n 步到尾，转 A 走 m 步 → 共 n+m 步到 None
+  同时到 None，pa is pb (都是 None) → 退出，返回 None ✓
+</code></pre></div></div><h3 id="为什么这个技巧能成立">为什么这个技巧能成立</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>关键：让两指针走的"总路程"相同。
+
+A 链表交点前有 a 段，交点后有 c 段（A 总长 = a + c）
+B 链表交点前有 b 段，交点后有 c 段（B 总长 = b + c）
+
+指针 a 走 A 全程 + B 交点前 = (a+c) + b
+指针 b 走 B 全程 + A 交点前 = (b+c) + a
+两者都是 a + b + c，所以同时到达交点。
+</code></pre></div></div><h3 id="其他解法对比">其他解法对比</h3><table><thead><tr><th>解法</th><th>时间</th><th>空间</th><th>思路</th></tr></thead><tbody><tr><td>哈希集合</td><td>O(m+n)</td><td>O(m)</td><td>把 A 的节点存集合，B 遍历找第一个在集合里的</td></tr><tr><td><strong>双指针交叉（本解）</strong></td><td>O(m+n)</td><td><strong>O(1)</strong></td><td>A 走完转 B，B 走完转 A</td></tr><tr><td>长度对齐法</td><td>O(m+n)</td><td>O(1)</td><td>先算两链表长度差，长的先走差值步</td></tr></tbody></table><p>双指针交叉法最优雅，且满足进阶的 O(1) 空间。长度对齐法也 O(1)，但需要先遍历两次算长度。</p><h3 id="易错点">易错点</h3><ol><li>判空用 <code class="language-plaintext highlighter-rouge">pa is not pb</code> 而不是 <code class="language-plaintext highlighter-rouge">pa != pb</code>——Python 中也要用 <code class="language-plaintext highlighter-rouge">is</code>，因为题目要求返回<strong>同一个节点对象</strong>。</li><li>写成 <code class="language-plaintext highlighter-rouge">pa = pa.next or headB</code> → 当 <code class="language-plaintext highlighter-rouge">pa.next</code> 是 None 时返回 headB 是对的，但用 <code class="language-plaintext highlighter-rouge">if pa else headB</code> 更清晰，避免 val=0 的节点被误判。</li><li>忘记处理 <code class="language-plaintext highlighter-rouge">headA or headB</code> 为空的情况 → 直接返回 None。</li></ol><hr /><h2 id="q2-206-反转链表迭代三指针">Q2: 206. 反转链表（迭代三指针）</h2><p><strong>题目</strong>：给你单链表头节点 head，反转链表并返回新头。</p><blockquote><p><a href="https://leetcode.cn/problems/reverse-linked-list/?envType=study-plan-v2&amp;envId=top-100-liked">206. 反转链表 - 力扣</a> 标签：递归 | 链表</p></blockquote><p><strong>示例</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>输入：head = [1,2,3,4,5]
+输出：[5,4,3,2,1]
+</code></pre></div></div><h3 id="一句话结论-1">一句话结论</h3><p><strong>迭代法用三个指针 prev/curr/next，每一步把 curr.next 指向 prev，然后三个指针整体右移一格</strong>。这是链表题的”基本功”，很多题都要用。</p><h3 id="解法一最优迭代法">解法一（最优：迭代法）</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">ListNode</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">next</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">val</span>
+        <span class="bp">self</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="nb">next</span>
+
+<span class="k">def</span> <span class="nf">reverseList</span><span class="p">(</span><span class="n">head</span><span class="p">:</span> <span class="n">ListNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ListNode</span><span class="p">:</span>
+    <span class="s">"""
+    时间 O(n)，空间 O(1)
+    核心：三指针 prev/curr/next，逐个改 next 指向
+    """</span>
+    <span class="n">prev</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">curr</span> <span class="o">=</span> <span class="n">head</span>
+
+    <span class="k">while</span> <span class="n">curr</span><span class="p">:</span>
+        <span class="n">nxt</span> <span class="o">=</span> <span class="n">curr</span><span class="p">.</span><span class="nb">next</span>     <span class="c1"># 先存下一个，否则改完就丢了
+</span>        <span class="n">curr</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">prev</span>    <span class="c1"># 反转指向：curr 指向前一个
+</span>        <span class="n">prev</span> <span class="o">=</span> <span class="n">curr</span>         <span class="c1"># prev 前进
+</span>        <span class="n">curr</span> <span class="o">=</span> <span class="n">nxt</span>          <span class="c1"># curr 前进
+</span>
+    <span class="k">return</span> <span class="n">prev</span>  <span class="c1"># 循环结束时 curr=None，prev 是新头
+</span></code></pre></div></div><h3 id="推导过程-1">推导过程</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>head = 1 → 2 → 3 → 4 → 5 → None
+
+初始：prev=None, curr=1
+
+第 1 步：
+  nxt = 2
+  curr.next = None  （1 指向 None）
+  prev = 1, curr = 2
+  链表：None ← 1    2 → 3 → 4 → 5 → None
+
+第 2 步：
+  nxt = 3
+  curr.next = 1     （2 指向 1）
+  prev = 2, curr = 3
+  链表：None ← 1 ← 2    3 → 4 → 5 → None
+
+第 3 步：
+  nxt = 4
+  curr.next = 2     （3 指向 2）
+  prev = 3, curr = 4
+  链表：None ← 1 ← 2 ← 3    4 → 5 → None
+
+... 依此类推
+
+第 5 步后：
+  prev = 5, curr = None
+  链表：None ← 1 ← 2 ← 3 ← 4 ← 5
+
+返回 prev=5，即新头 ✓
+</code></pre></div></div><h3 id="为什么必须先存-nxt">为什么必须先存 nxt</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curr.next = prev 这一句会"切断" curr 和原来下一个节点的联系。
+如果没提前存 nxt，执行完后 curr.next 已经变了，
+再写 curr = curr.next 就会回到 prev 那边，逻辑全乱。
+所以必须：
+  nxt = curr.next   # 先存
+  curr.next = prev  # 再改
+  prev, curr = curr, nxt  # 再移
+</code></pre></div></div><h3 id="解法二递归法">解法二（递归法）</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">reverseList_recursive</span><span class="p">(</span><span class="n">head</span><span class="p">:</span> <span class="n">ListNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ListNode</span><span class="p">:</span>
+    <span class="s">"""
+    时间 O(n)，空间 O(n)（递归栈）
+    核心：递归反转后面的，再把当前接到尾部
+    """</span>
+    <span class="c1"># 1. 终止条件：空或单节点
+</span>    <span class="k">if</span> <span class="ow">not</span> <span class="n">head</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">head</span><span class="p">.</span><span class="nb">next</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">head</span>
+
+    <span class="c1"># 2. 递归反转 head 之后的部分，new_head 是反转后的新头
+</span>    <span class="n">new_head</span> <span class="o">=</span> <span class="n">reverseList_recursive</span><span class="p">(</span><span class="n">head</span><span class="p">.</span><span class="nb">next</span><span class="p">)</span>
+
+    <span class="c1"># 3. head.next 现在是反转后链表的"尾节点"
+</span>    <span class="c1">#    让它指向 head，head 指向 None（成为新尾）
+</span>    <span class="n">head</span><span class="p">.</span><span class="nb">next</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">head</span>
+    <span class="n">head</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">return</span> <span class="n">new_head</span>
+</code></pre></div></div><h3 id="递归法推导">递归法推导</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>head = 1 → 2 → 3 → None
+
+reverseList(1):
+  reverseList(2):
+    reverseList(3):
+      3.next=None → 返回 3（new_head=3）
+    回到 reverseList(2)：
+      head=2, head.next=3
+      2.next.next = 2  →  3 指向 2
+      2.next = None
+      链表：3 → 2 → None，返回 new_head=3
+    回到 reverseList(1)：
+      head=1, head.next=2
+      1.next.next = 1  →  2 指向 1
+      1.next = None
+      链表：3 → 2 → 1 → None，返回 new_head=3 ✓
+</code></pre></div></div><h3 id="两种解法对比">两种解法对比</h3><table><thead><tr><th>解法</th><th>时间</th><th>空间</th><th>优点</th><th>缺点</th></tr></thead><tbody><tr><td><strong>迭代（推荐）</strong></td><td>O(n)</td><td><strong>O(1)</strong></td><td>省栈空间，不易爆栈</td><td>代码略长</td></tr><tr><td>递归</td><td>O(n)</td><td>O(n)</td><td>代码短，思路清晰</td><td>链表长时栈溢出</td></tr></tbody></table><p>面试推荐迭代法。递归法可以作为”你能想到递归吗”的加分项，但要主动说明递归栈空间的缺点。</p><h3 id="易错点-1">易错点</h3><ol><li>迭代时忘记存 <code class="language-plaintext highlighter-rouge">nxt</code> → 改完 <code class="language-plaintext highlighter-rouge">curr.next</code> 后丢失后续节点。</li><li>返回 <code class="language-plaintext highlighter-rouge">curr</code> 而不是 <code class="language-plaintext highlighter-rouge">prev</code> → 循环结束时 <code class="language-plaintext highlighter-rouge">curr=None</code>，返回错。</li><li>递归法里 <code class="language-plaintext highlighter-rouge">head.next.next = head</code> 这句最难理解，要多画图。</li><li>递归法忘记 <code class="language-plaintext highlighter-rouge">head.next = None</code> → 会形成环。</li></ol><hr /><h2 id="q3-234-回文链表找中点--反转后半--比较">Q3: 234. 回文链表（找中点 + 反转后半 + 比较）</h2><p><strong>题目</strong>：判断单链表是否为回文（正读反读一样）。</p><blockquote><p><a href="https://leetcode.cn/problems/palindrome-linked-list/?envType=study-plan-v2&amp;envId=top-100-liked">234. 回文链表 - 力扣</a> 标签：栈 | 递归 | 链表 | 双指针</p></blockquote><p><strong>示例</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>输入：head = [1,2,2,1]
+输出：true
+</code></pre></div></div><h3 id="一句话结论-2">一句话结论</h3><p><strong>用快慢指针找中点 → 反转后半部分 → 双指针比较前后两半</strong>。三步都是 O(n) 时间 O(1) 空间，是这道题进阶要求的最优解。</p><h3 id="解法最优快慢指针--反转--比较">解法（最优：快慢指针 + 反转 + 比较）</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">ListNode</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">next</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">val</span>
+        <span class="bp">self</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="nb">next</span>
+
+<span class="k">def</span> <span class="nf">isPalindrome</span><span class="p">(</span><span class="n">head</span><span class="p">:</span> <span class="n">ListNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="s">"""
+    时间 O(n)，空间 O(1)
+    核心：快慢指针找中点 → 反转后半 → 双指针比较
+    """</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">head</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">head</span><span class="p">.</span><span class="nb">next</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">True</span>
+
+    <span class="c1"># 第 1 步：快慢指针找中点（slow 停在前半的最后一个）
+</span>    <span class="n">slow</span><span class="p">,</span> <span class="n">fast</span> <span class="o">=</span> <span class="n">head</span><span class="p">,</span> <span class="n">head</span>
+    <span class="k">while</span> <span class="n">fast</span><span class="p">.</span><span class="nb">next</span> <span class="ow">and</span> <span class="n">fast</span><span class="p">.</span><span class="nb">next</span><span class="p">.</span><span class="nb">next</span><span class="p">:</span>
+        <span class="n">slow</span> <span class="o">=</span> <span class="n">slow</span><span class="p">.</span><span class="nb">next</span>
+        <span class="n">fast</span> <span class="o">=</span> <span class="n">fast</span><span class="p">.</span><span class="nb">next</span><span class="p">.</span><span class="nb">next</span>
+    <span class="c1"># slow 现在是前半最后一个节点（偶数）或正中间（奇数）
+</span>
+    <span class="c1"># 第 2 步：反转 slow 之后的部分
+</span>    <span class="n">second_half</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="n">slow</span><span class="p">.</span><span class="nb">next</span><span class="p">)</span>
+
+    <span class="c1"># 第 3 步：双指针比较前半和反转后的后半
+</span>    <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span> <span class="o">=</span> <span class="n">head</span><span class="p">,</span> <span class="n">second_half</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="k">while</span> <span class="n">p2</span><span class="p">:</span>  <span class="c1"># 只比后半长度，前半多一个节点（奇数时）不影响
+</span>        <span class="k">if</span> <span class="n">p1</span><span class="p">.</span><span class="n">val</span> <span class="o">!=</span> <span class="n">p2</span><span class="p">.</span><span class="n">val</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="k">break</span>
+        <span class="n">p1</span> <span class="o">=</span> <span class="n">p1</span><span class="p">.</span><span class="nb">next</span>
+        <span class="n">p2</span> <span class="o">=</span> <span class="n">p2</span><span class="p">.</span><span class="nb">next</span>
+
+    <span class="c1"># 第 4 步（可选）：恢复链表
+</span>    <span class="c1"># reverse(second_half)
+</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="k">def</span> <span class="nf">reverse</span><span class="p">(</span><span class="n">head</span><span class="p">:</span> <span class="n">ListNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ListNode</span><span class="p">:</span>
+    <span class="s">"""反转链表，返回新头"""</span>
+    <span class="n">prev</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">curr</span> <span class="o">=</span> <span class="n">head</span>
+    <span class="k">while</span> <span class="n">curr</span><span class="p">:</span>
+        <span class="n">nxt</span> <span class="o">=</span> <span class="n">curr</span><span class="p">.</span><span class="nb">next</span>
+        <span class="n">curr</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">prev</span>
+        <span class="n">prev</span> <span class="o">=</span> <span class="n">curr</span>
+        <span class="n">curr</span> <span class="o">=</span> <span class="n">nxt</span>
+    <span class="k">return</span> <span class="n">prev</span>
+</code></pre></div></div><h3 id="推导过程-2">推导过程</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>情况 1：偶数 [1,2,2,1]
+
+第 1 步：快慢指针找中点
+  slow=1, fast=1
+  fast.next=2 且 fast.next.next=2 → slow=2, fast=2
+  fast.next=1 且 fast.next.next=None → 退出
+  slow 停在 2（第 2 个节点，前半最后一个）
+
+第 2 步：反转 slow 之后 [2,1] → [1,2]
+  链表变成：1 → 2 → 1 → 2 → None（前半没动，后半反向）
+
+第 3 步：比较
+  p1 从 head=1 开始：1 → 2
+  p2 从 second_half=1 开始：1 → 2
+  1==1, 2==2 → 回文 ✓
+
+情况 2：奇数 [1,2,3,2,1]
+
+第 1 步：快慢指针
+  slow=1, fast=1
+  fast.next=2 且 fast.next.next=3 → slow=2, fast=3
+  fast.next=2 且 fast.next.next=1 → slow=3, fast=1
+  fast.next=None → 退出
+  slow 停在 3（正中间）
+
+第 2 步：反转 slow 之后 [2,1] → [1,2]
+  链表：1 → 2 → 3 → 1 → 2 → None（中间节点 3 不参与比较）
+
+第 3 步：比较
+  p1 从 head=1：1 → 2 → 3（停）
+  p2 从 second_half=1：1 → 2（停）
+  1==1, 2==2 → 回文 ✓（中间的 3 被忽略，不影响判断）
+</code></pre></div></div><h3 id="为什么快慢指针循环条件是-fastnext-and-fastnextnext">为什么快慢指针循环条件是 <code class="language-plaintext highlighter-rouge">fast.next and fast.next.next</code></h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>目的是让 slow 停在"前半最后一个"（偶数）或"正中间"（奇数）。
+
+如果用 fast and fast.next：
+  偶数 [1,2,2,1]：slow 停在第 2 个 2（后半第一个），不是前半最后
+  → 反转后会包含中间元素，比较时对不齐
+
+用 fast.next and fast.next.next：
+  偶数 [1,2,2,1]：slow 停在 2（前半最后）✓
+  奇数 [1,2,3,2,1]：slow 停在 3（正中间）✓
+
+这样后半长度 ≤ 前半，比较时只走后半长度，奇数中间节点自动忽略。
+</code></pre></div></div><h3 id="其他解法对比-1">其他解法对比</h3><table><thead><tr><th>解法</th><th>时间</th><th>空间</th><th>思路</th></tr></thead><tbody><tr><td>复制到数组 + 双指针</td><td>O(n)</td><td>O(n)</td><td>链表 → 数组，首尾指针比较</td></tr><tr><td>栈</td><td>O(n)</td><td>O(n)</td><td>前半入栈，后半和栈顶比</td></tr><tr><td><strong>快慢指针+反转（本解）</strong></td><td>O(n)</td><td><strong>O(1)</strong></td><td>原地操作，满足进阶</td></tr><tr><td>递归</td><td>O(n)</td><td>O(n)</td><td>利用递归栈”反向”遍历</td></tr></tbody></table><p>本解法满足进阶的 O(1) 空间。递归法虽然代码短，但栈空间 O(n)，不算 O(1)。</p><h3 id="易错点-2">易错点</h3><ol><li>快慢指针循环条件写错 → slow 停的位置不对，比较时错位。</li><li>忘记只比较后半长度 → 奇数时中间节点会多出来。</li><li>反转后没恢复链表 → 题目虽不强制，但面试最好恢复（展示工程素养）。</li><li>用 <code class="language-plaintext highlighter-rouge">fast and fast.next</code> 代替 <code class="language-plaintext highlighter-rouge">fast.next and fast.next.next</code> → 对齐错。</li></ol><hr /><h2 id="q4-141-环形链表快慢指针追及">Q4: 141. 环形链表（快慢指针追及）</h2><p><strong>题目</strong>：判断链表中是否有环。环指尾节点连接到链表中某个节点，可无限遍历。</p><blockquote><p><a href="https://leetcode.cn/problems/linked-list-cycle/?envType=study-plan-v2&amp;envId=top-100-liked">141. 环形链表 - 力扣</a> 标签：哈希 | 链表 | 双指针</p></blockquote><p><strong>示例</strong>：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>输入：head = [3,2,0,-4], pos = 1
+输出：true
+解释：链表中有一个环，其尾部连接到第二个节点（索引 1）。
+</code></pre></div></div><blockquote><p>注：<code class="language-plaintext highlighter-rouge">pos</code> 只是力扣用来描述环位置的参数，不传给你的函数。你只收到 head。</p></blockquote><h3 id="一句话结论-3">一句话结论</h3><p><strong>快指针每次走 2 步，慢指针每次走 1 步。如果有环，快指针一定会在环里追上慢指针（相遇）；如果无环，快指针先到 null。</strong></p><h3 id="解法最优快慢指针--floyd-判圈法">解法（最优：快慢指针 / Floyd 判圈法）</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">ListNode</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="bp">None</span>
+
+<span class="k">def</span> <span class="nf">hasCycle</span><span class="p">(</span><span class="n">head</span><span class="p">:</span> <span class="n">ListNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="s">"""
+    时间 O(n)，空间 O(1)
+    核心：快慢指针，快走2步慢走1步，有环必相遇
+    """</span>
+    <span class="n">slow</span><span class="p">,</span> <span class="n">fast</span> <span class="o">=</span> <span class="n">head</span><span class="p">,</span> <span class="n">head</span>
+
+    <span class="k">while</span> <span class="n">fast</span> <span class="ow">and</span> <span class="n">fast</span><span class="p">.</span><span class="nb">next</span><span class="p">:</span>
+        <span class="n">slow</span> <span class="o">=</span> <span class="n">slow</span><span class="p">.</span><span class="nb">next</span>         <span class="c1"># 慢走 1 步
+</span>        <span class="n">fast</span> <span class="o">=</span> <span class="n">fast</span><span class="p">.</span><span class="nb">next</span><span class="p">.</span><span class="nb">next</span>    <span class="c1"># 快走 2 步
+</span>
+        <span class="k">if</span> <span class="n">slow</span> <span class="ow">is</span> <span class="n">fast</span><span class="p">:</span>          <span class="c1"># 注意用 is
+</span>            <span class="k">return</span> <span class="bp">True</span>
+
+    <span class="k">return</span> <span class="bp">False</span>
+</code></pre></div></div><h3 id="推导过程-3">推导过程</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>情况 1：有环  3 → 2 → 0 → 4 → (回到 2)
+
+slow, fast 都从 3 出发
+  第 1 步：slow=2, fast=0
+  第 2 步：slow=0, fast=2（fast 进环了）
+  第 3 步：slow=4, fast=4（fast 追上 slow）→ 返回 true ✓
+
+情况 2：无环  3 → 2 → 0 → 4 → None
+
+slow, fast 都从 3 出发
+  第 1 步：slow=2, fast=0
+  第 2 步：slow=0, fast=None（fast.next.next 越界前 fast.next=None）
+  循环条件 fast and fast.next 不满足 → 退出，返回 false ✓
+</code></pre></div></div><h3 id="为什么有环快慢指针必相遇数学证明">为什么有环快慢指针必相遇（数学证明）</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>设环外长度 a，环长度 b。慢指针进环时，快指针已在环内。
+
+设慢指针进环时，快指针在慢指针前面 k 步（k &lt; b）。
+此后每一步，快指针比慢指针多走 1 步，距离每步缩小 1。
+所以再走 b - k 步，距离缩到 0，相遇。
+
+因为 k &lt; b，所以 b - k &gt; 0，一定能相遇。
+关键是：相对速度是 1 步/次，而环长有限，所以必追上。
+</code></pre></div></div><h3 id="为什么循环条件是-fast-and-fastnext">为什么循环条件是 <code class="language-plaintext highlighter-rouge">fast and fast.next</code></h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>快指针一次走 2 步：fast = fast.next.next
+所以必须保证 fast 不是 None，且 fast.next 不是 None。
+
+如果无环：
+  fast 先到链表尾，fast.next = None
+  → fast.next.next 会报错（None 没有 next）
+  → 所以要先判断 fast and fast.next
+</code></pre></div></div><h3 id="其他解法对比-2">其他解法对比</h3><table><thead><tr><th>解法</th><th>时间</th><th>空间</th><th>思路</th></tr></thead><tbody><tr><td>哈希集合</td><td>O(n)</td><td>O(n)</td><td>访问过的节点存集合，重复即有环</td></tr><tr><td><strong>快慢指针（本解）</strong></td><td>O(n)</td><td><strong>O(1)</strong></td><td>Floyd 判圈法</td></tr><tr><td>标记法</td><td>O(n)</td><td>O(1)</td><td>改节点 val 打标记（会破坏数据，不推荐）</td></tr></tbody></table><p>快慢指针满足进阶的 O(1) 空间，且不破坏链表，是最优解。</p><h3 id="延伸如何找到环的入口142-题">延伸：如何找到环的入口（142 题）</h3><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">detectCycle</span><span class="p">(</span><span class="n">head</span><span class="p">:</span> <span class="n">ListNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ListNode</span><span class="p">:</span>
+    <span class="s">"""找到环的入口节点"""</span>
+    <span class="n">slow</span><span class="p">,</span> <span class="n">fast</span> <span class="o">=</span> <span class="n">head</span><span class="p">,</span> <span class="n">head</span>
+    <span class="n">has_cycle</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="k">while</span> <span class="n">fast</span> <span class="ow">and</span> <span class="n">fast</span><span class="p">.</span><span class="nb">next</span><span class="p">:</span>
+        <span class="n">slow</span> <span class="o">=</span> <span class="n">slow</span><span class="p">.</span><span class="nb">next</span>
+        <span class="n">fast</span> <span class="o">=</span> <span class="n">fast</span><span class="p">.</span><span class="nb">next</span><span class="p">.</span><span class="nb">next</span>
+        <span class="k">if</span> <span class="n">slow</span> <span class="ow">is</span> <span class="n">fast</span><span class="p">:</span>
+            <span class="n">has_cycle</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">break</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">has_cycle</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">None</span>
+
+    <span class="c1"># 关键定理：相遇点到环入口的距离 = 头到环入口的距离
+</span>    <span class="c1"># 让一个指针从头开始，另一个从相遇点开始，同速走，相遇即入口
+</span>    <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span> <span class="o">=</span> <span class="n">head</span><span class="p">,</span> <span class="n">slow</span>
+    <span class="k">while</span> <span class="n">p1</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">p2</span><span class="p">:</span>
+        <span class="n">p1</span> <span class="o">=</span> <span class="n">p1</span><span class="p">.</span><span class="nb">next</span>
+        <span class="n">p2</span> <span class="o">=</span> <span class="n">p2</span><span class="p">.</span><span class="nb">next</span>
+    <span class="k">return</span> <span class="n">p1</span>
+</code></pre></div></div><p>记忆：<strong>相遇后，一头一相遇点，同速走必在环入口相遇</strong>。这是 Floyd 算法的完整版。</p><h3 id="易错点-3">易错点</h3><ol><li>判等用 <code class="language-plaintext highlighter-rouge">==</code> 而非 <code class="language-plaintext highlighter-rouge">is</code> → 节点 val 相同但不是同一对象会误判。必须用 <code class="language-plaintext highlighter-rouge">is</code>。</li><li>循环条件写错 → <code class="language-plaintext highlighter-rouge">fast.next and fast</code> 顺序错，会先访问空。</li><li>快慢指针都从 head 出发，第一次循环就 <code class="language-plaintext highlighter-rouge">slow is fast</code> → 误判。要先走再判，所以 <code class="language-plaintext highlighter-rouge">if slow is fast</code> 放在移动后。</li><li><code class="language-plaintext highlighter-rouge">fast = fast.next.next</code> 没判断 <code class="language-plaintext highlighter-rouge">fast.next</code> 是否为 None → 空指针异常。</li></ol><hr /><h2 id="链表类题目通用思路">链表类题目通用思路</h2><table><thead><tr><th>模式</th><th>典型题目</th><th>关键技巧</th></tr></thead><tbody><tr><td>双指针交叉走</td><td>160 相交链表</td><td>A 走完转 B，B 走完转 A</td></tr><tr><td>三指针反转</td><td>206 反转链表</td><td>prev/curr/next，改 next 指向</td></tr><tr><td>快慢指针找中点</td><td>234 回文链表</td><td>快走2慢走1，slow 到中点</td></tr><tr><td>快慢指针判环</td><td>141 环形链表</td><td>快追慢，有环必相遇</td></tr></tbody></table><p><strong>核心认知</strong>：</p><ol><li><strong>画图</strong>是链表题的第一工具——谁指向谁、改完什么样，画出来一目了然。</li><li><strong>快慢指针</strong>是链表的”瑞士军刀”：找中点、判环、找交点、找倒数第 k 个，都能用。</li><li><strong>反转链表</strong>是基础组件——回文、K 个一组反转、加法链表都会用到。</li><li><strong>注意空指针</strong>：<code class="language-plaintext highlighter-rouge">fast.next.next</code> 之前一定判断 <code class="language-plaintext highlighter-rouge">fast.next</code>，否则崩。</li></ol><hr /><h2 id="关联笔记">关联笔记</h2><ul><li>本目录 <code class="language-plaintext highlighter-rouge">双指针类题目.md</code>（双指针思想在链表中的应用）</li><li>本目录 <code class="language-plaintext highlighter-rouge">哈希类题目.md</code>（哈希集合也是判环/判相交的备选）</li><li><code class="language-plaintext highlighter-rouge">面试经历/</code> 目录下的算法面经</li></ul></section><!-- Previous / Next navigation --><nav class="notes-pager"><div class="notes-pager-links"> <a href="/notes/%E7%9F%A9%E9%98%B5%E7%B1%BB%E9%A2%98%E7%9B%AE/" class="notes-pager-prev"> <span class="notes-pager-label">← 上一章</span> <span class="notes-pager-title">矩阵类题目</span> </a> <a href="/notes/%E9%93%BE%E8%A1%A8%E7%B1%BB%E9%A2%98%E7%9B%AE-%E8%BF%9B%E9%98%B6/" class="notes-pager-next"> <span class="notes-pager-label">下一章 →</span> <span class="notes-pager-title">链表类题目_进阶</span> </a></div></nav></div></article><!-- Right Sidebar: Table of Contents (built by JS from DOM) --><aside class="notes-toc" id="notes-toc"><div class="notes-toc-inner"><h4 class="notes-toc-title">目录</h4><nav class="notes-toc-nav"><ul class="notes-toc-list" id="notes-toc-list"> <!-- Populated by notes-toc.js --></ul></nav></div></aside></div><script src="https://1571859588.github.io/assets/js/notes-toc.js"></script> <script> (function() { var q = new URLSearchParams(location.search).get('q'); if (!q || q.length < 2) return; var body = document.querySelector('.notes-body'); if (!body) return; // Walk text nodes, find and highlight matches var walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT, null, false); var textNodes = []; while (walker.nextNode()) { var p = walker.currentNode.parentNode; // Skip script, style, code blocks, and already-marked text if (p.tagName === 'SCRIPT' || p.tagName === 'STYLE' || p.tagName === 'MARK' || p.closest('pre') || p.closest('.notes-search-hit')) continue; textNodes.push(walker.currentNode); } var first = null; var re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'); textNodes.forEach(function(node) { var text = node.textContent; if (!re.test(text)) return; re.lastIndex = 0; // reset after test var frag = document.createDocumentFragment(); var lastIdx = 0; var match; while ((match = re.exec(text)) !== null) { if (match.index > lastIdx) { frag.appendChild(document.createTextNode(text.substring(lastIdx, match.index))); } var mark = document.createElement('mark'); mark.className = 'notes-search-mark'; mark.textContent = match[0]; frag.appendChild(mark); if (!first) first = mark; lastIdx = match.index + match[0].length; } if (lastIdx < text.length) { frag.appendChild(document.createTextNode(text.substring(lastIdx))); } node.parentNode.replaceChild(frag, node); }); if (first) { setTimeout(function() { first.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300); } })(); </script><div class="page__footer"><footer> <!-- start custom footer snippets --> <a href="/sitemap/">Sitemap</a> <!-- end custom footer snippets --><div class="page__footer-follow"><ul class="social-icons"><li><strong>Follow:</strong></li><li><a href="http://github.com/1571859588"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a></li><li><a href="https://1571859588.github.io/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li></ul></div><div class="page__footer-copyright"> &copy; 2026 Yuntao Nie, Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://github.com/academicpages/academicpages.github.io">AcademicPages</a>, a fork of <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.<br /> Site last updated 2026-07-06</div></footer></div><script src="https://1571859588.github.io/assets/js/main.min.js"></script> <script src="https://1571859588.github.io/assets/js/paper-details.js"></script> <!-- Fix kramdown stripping backslashes before _ in math spans. kramdown treats \_ as a markdown escape, converting $seq\_len$ to $seq_len$. MathJax then interprets _ as subscript instead of a literal underscore. This runs synchronously before MathJax (async) processes the page. --> <script> (function() { var content = document.querySelector('.page__content'); if (!content) return; var walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT, null, false); var nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode); nodes.forEach(function(node) { var text = node.textContent; var fixed = text.replace(/\$([^$\n]+?)\$/g, function(match, math) { // Inside $...$, add \ before _ followed by 2+ lowercase letters. // Safe: legitimate subscripts use single chars ($d_k$) or braces ($x_{ij}$). var fixedMath = math.replace(/_([a-z]{2,})/g, '\\_$1'); return fixedMath !== math ? '$' + fixedMath + '$' : match; }); if (fixed !== text) node.textContent = fixed; }); })(); </script> <script> var SERIES_INDEX = [ {t:"双指针类题目", u:"/notes/%E5%8F%8C%E6%8C%87%E9%92%88%E7%B1%BB%E9%A2%98%E7%9B%AE/"}, {t:"哈希类题目", u:"/notes/%E5%93%88%E5%B8%8C%E7%B1%BB%E9%A2%98%E7%9B%AE/"}, {t:"子串类题目", u:"/notes/%E5%AD%90%E4%B8%B2%E7%B1%BB%E9%A2%98%E7%9B%AE/"}, {t:"普通数组类题目", u:"/notes/%E6%99%AE%E9%80%9A%E6%95%B0%E7%BB%84%E7%B1%BB%E9%A2%98%E7%9B%AE/"}, {t:"滑动窗口类题目", u:"/notes/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%B1%BB%E9%A2%98%E7%9B%AE/"}, {t:"矩阵类题目", u:"/notes/%E7%9F%A9%E9%98%B5%E7%B1%BB%E9%A2%98%E7%9B%AE/"}, {t:"链表类题目", u:"/notes/%E9%93%BE%E8%A1%A8%E7%B1%BB%E9%A2%98%E7%9B%AE/"}, {t:"链表类题目_进阶", u:"/notes/%E9%93%BE%E8%A1%A8%E7%B1%BB%E9%A2%98%E7%9B%AE-%E8%BF%9B%E9%98%B6/"} ]; (function() { if (!SERIES_INDEX.length) return; var inp = document.getElementById('notes-sidebar-search-input'); var box = document.getElementById('notes-sidebar-search-results'); if (!inp || !box) return; function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; } function hl(t, q) { var o = '', L = 0, lo = t.toLowerCase(), ql = q.toLowerCase(), i; while ((i = lo.indexOf(ql, L)) !== -1) { o += esc(t.substring(L, i)) + '<mark class="notes-search-highlight">' + esc(t.substring(i, i + q.length)) + '</mark>'; L = i + q.length; } return o + esc(t.substring(L)); } inp.addEventListener('input', function() { var q = this.value.trim(); if (!q) { box.style.display = 'none'; box.innerHTML = ''; return; } var ql = q.toLowerCase(), hits = []; for (var i = 0; i < SERIES_INDEX.length; i++) { if (SERIES_INDEX[i].t.toLowerCase().indexOf(ql) !== -1) hits.push(SERIES_INDEX[i]); } if (!hits.length) { box.innerHTML = '<div class="notes-sidebar-search-empty">无匹配</div>'; } else { var h = ''; for (var j = 0; j < Math.min(hits.length, 15); j++) { h += '<a href="' + hits[j].u + '" class="notes-sidebar-search-hit" data-q="' + esc(q) + '">' + '<span class="notes-sidebar-search-hit-title">' + hl(hits[j].t, q) + '</span></a>'; } box.innerHTML = h; } box.style.display = 'block'; }); inp.addEventListener('keydown', function(e) { if (e.key === 'Escape') { box.style.display = 'none'; box.innerHTML = ''; this.blur(); } }); box.addEventListener('click', function(e) { var a = e.target.closest('.notes-sidebar-search-hit'); if (a && a.dataset.q) sessionStorage.setItem('notes-search-q', a.dataset.q); }); document.addEventListener('click', function(e) { if (!e.target.closest('#notes-sidebar-search')) { box.style.display = 'none'; box.innerHTML = ''; } }); })(); </script></body></html>

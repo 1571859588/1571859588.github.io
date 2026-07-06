@@ -1,0 +1,1189 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="https://1571859588.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://1571859588.github.io/" rel="alternate" type="text/html" /><updated>2026-07-06T17:19:49+00:00</updated><id>https://1571859588.github.io/feed.xml</id><title type="html">Yuntao Nie</title><subtitle>personal description</subtitle><author><name>Yuntao Nie</name><email>cuaklenck@gmail.com</email></author><entry><title type="html">Why Do Transformers Use Layer Normalization? Deep Dive into Normalization Mechanics</title><link href="https://1571859588.github.io/posts/2026/06/llm-interview-layernorm-en/" rel="alternate" type="text/html" title="Why Do Transformers Use Layer Normalization? Deep Dive into Normalization Mechanics" /><published>2026-06-07T00:00:00+00:00</published><updated>2026-06-07T00:00:00+00:00</updated><id>https://1571859588.github.io/posts/2026/06/llm-interview-layernorm-en</id><content type="html" xml:base="https://1571859588.github.io/posts/2026/06/llm-interview-layernorm-en/"><![CDATA[<p>A classic and highly frequent question in large language model (LLM) algorithm interviews (such as Kuaishou’s Kuaistar program, ByteDance, and Alibaba) is: <strong>“Why do Transformers use Layer Normalization (LN) instead of Batch Normalization (BN)?”</strong></p>
+
+<p>While most candidates can list a few high-level reasons, few can provide a comprehensive explanation covering data distribution, mathematical stability, and optimization landscapes. Furthermore, interviewers often follow up with questions about newer alternatives like RMSNorm or why BN is preferred in Convolutional Neural Networks (CNNs) like ResNet.</p>
+
+<p>This post will dissect this question step-by-step. We will break down the mathematical formulations, provide proofs, and explain the underlying principles in a way that is accessible to readers with a high school level of mathematics.</p>
+
+<hr />
+
+<h2 id="1-the-four-common-normalization-methods">1. The Four Common Normalization Methods</h2>
+
+<p>To understand why Layer Normalization is preferred, we must first compare it to other normalization techniques. In deep learning, there are four classic normalization methods:</p>
+<ol>
+  <li><strong>Batch Normalization (BN)</strong></li>
+  <li><strong>Layer Normalization (LN)</strong></li>
+  <li><strong>Instance Normalization (IN)</strong></li>
+  <li><strong>Group Normalization (GN)</strong></li>
+</ol>
+
+<p>These methods differ in the dimensions over which they compute the mean and variance.</p>
+
+<blockquote>
+  <p><em>Placeholder: [Refer to Figure 1: Comparison of normalization methods (Source: Wu &amp; He, 2018). Each image shows a feature map tensor, where N is the batch axis, C is the channel axis, and H, W are the spatial axes (height and width). The pixels in blue are normalized by the same mean and variance.]</em></p>
+</blockquote>
+
+<h3 id="11-dimensional-comparisons">1.1 Dimensional Comparisons</h3>
+<p>Let’s define a tensor representing a batch of data:</p>
+<ul>
+  <li>$N$: Batch size (number of samples/sentences).</li>
+  <li>$C$: Channels / Hidden Dimension ($D$).</li>
+  <li>
+    <p>$H, W$: Spatial dimensions (Height and Width for images, or Sequence Length $S$ for text).</p>
+  </li>
+  <li><strong>Batch Normalization (BN)</strong>: Normalizes across the batch dimension $N$ and spatial dimensions $H, W$ for each channel $C$ separately.</li>
+  <li><strong>Layer Normalization (LN)</strong>: Normalizes across the channel dimension $C$ and spatial dimensions (for NLP, usually just the channel/feature dimension $D$) for each sample/token individually.</li>
+  <li><strong>Instance Normalization (IN)</strong>: Normalizes across the spatial dimensions $H, W$ for each channel and sample independently (commonly used in image style transfer).</li>
+  <li><strong>Group Normalization (GN)</strong>: Groups channels into smaller sub-groups, and normalizes within each group for each sample independently.</li>
+</ul>
+
+<hr />
+
+<h2 id="2-why-transformers-use-layer-normalization-three-core-reasons">2. Why Transformers Use Layer Normalization (Three Core Reasons)</h2>
+
+<p>There are three primary reasons why Layer Normalization is integral to the success of deep Transformer models:</p>
+
+<h3 id="21-ensuring-training-stability-gradient-flow">2.1 Ensuring Training Stability (Gradient Flow)</h3>
+<p>In deep neural networks, activations are repeatedly multiplied by weight matrices:
+\(h_L = W_L \cdot \sigma(W_{L-1} \dots \sigma(W_1 x))\)</p>
+<ul>
+  <li>If the weights are slightly too large, the activations can grow exponentially with depth $L$, leading to <strong>gradient explosion</strong>.</li>
+  <li>If the weights are slightly too small, the activations decay to zero, leading to <strong>gradient vanishing</strong>.</li>
+  <li>When gradients explode or vanish, training becomes unstable, and the loss function can output <code class="language-plaintext highlighter-rouge">NaN</code> (Not a Number).</li>
+</ul>
+
+<p>Layer Normalization resolves this by standardizing the activations at the output of each sub-layer to have a mean of $0$ and a variance of $1$:
+\(\hat{x}_i = \frac{x_i - \mu}{\sqrt{\sigma^2 + \epsilon}}\)
+This constrains the magnitude of the vectors, ensuring stable forward activations and healthy backward gradient flow.</p>
+
+<hr />
+
+<h3 id="22-accelerating-model-convergence-optimization-landscape">2.2 Accelerating Model Convergence (Optimization Landscape)</h3>
+<p>Normalizing features shifts the optimization landscape of the model, making it much easier to train.</p>
+
+<h4 id="1-preventing-activation-saturation">1. Preventing Activation Saturation</h4>
+<p>Without normalization, activation values can drift into the “saturation regions” (dead areas) of non-linear activation functions (e.g., GeLU or SwiGLU). In these regions, the derivative of the activation function approaches $0$, halting learning. Standardizing the features keeps the inputs in the active, responsive region.</p>
+
+<h4 id="2-smoothing-the-loss-contour-the-ellipse-vs-circle-example">2. Smoothing the Loss Contour: The Ellipse vs. Circle Example</h4>
+<p>Imagine we are finding the lowest point in a valley (minimizing the loss function).</p>
+<ul>
+  <li><strong>Case A: Unnormalized Features (Narrow Ellipse Contour)</strong>
+If features have very different scales, the loss contour lines form a long, narrow ellipse. If you perform gradient descent here, the steps will oscillate wildly back and forth across the steep walls of the valley, making very slow progress toward the minimum point.</li>
+  <li><strong>Case B: Normalized Features (Spherical/Circular Contour)</strong>
+Normalization scales the features equally, transforming the narrow ellipse into a neat circle. In a circular contour, the gradient direction points directly toward the minimum point. This allows the model to use larger learning rates and converge much faster.</li>
+</ul>
+
+<hr />
+
+<h3 id="23-reducing-sensitivity-to-weight-initialization-scale-invariance-proof">2.3 Reducing Sensitivity to Weight Initialization (Scale Invariance Proof)</h3>
+
+<p>In early deep learning, training was highly sensitive to how weights were initialized (e.g., requiring precise Xavier or He initializations). Layer Normalization exhibits <strong>scale invariance</strong>, which mathematically reduces this sensitivity.</p>
+
+<h4 id="mathematical-proof-of-scale-invariance">Mathematical Proof of Scale Invariance</h4>
+<p>Suppose we multiply the weight matrix $W$ of a linear layer by a constant scalar factor $k$ (where $k &gt; 0$), resulting in $W’ = k W$.
+Let’s see what happens to the output of the layer $y = W x$ under Layer Normalization.</p>
+
+<ol>
+  <li><strong>Modified Output</strong>:
+\(y'_i = (W'x)_i = (kWx)_i = k y_i\)</li>
+  <li><strong>Modified Mean</strong>:
+\(\mu(y') = \frac{1}{D} \sum_{i=1}^D y'_i = \frac{1}{D} \sum_{i=1}^D (k y_i) = k \left( \frac{1}{D} \sum_{i=1}^D y_i \right) = k \mu(y)\)</li>
+  <li><strong>Modified Variance</strong>:
+\(\begin{aligned}
+\sigma^2(y') &amp;= \frac{1}{D} \sum_{i=1}^D \left( y'_i - \mu(y') \right)^2 \\
+&amp;= \frac{1}{D} \sum_{i=1}^D \left( k y_i - k \mu(y) \right)^2 \\
+&amp;= \frac{1}{D} \sum_{i=1}^D k^2 \left( y_i - \mu(y) \right)^2 \\
+&amp;= k^2 \sigma^2(y)
+\end{aligned}\)
+Therefore, the standard deviation is:
+\(\sigma(y') = \sqrt{k^2 \sigma^2(y)} = k \sigma(y)\)</li>
+  <li><strong>Applying Layer Normalization</strong>:
+\(\text{LN}(y')_i = \frac{y'_i - \mu(y')}{\sigma(y')} = \frac{k y_i - k \mu(y)}{k \sigma(y)} = \frac{k(y_i - \mu(y))}{k \sigma(y)} = \frac{y_i - \mu(y)}{\sigma(y)} = \text{LN}(y)_i\)</li>
+</ol>
+
+<p>This mathematically proves that multiplying the weights by any scalar $k$ does not change the normalized output. Thus, even if the weight initialization scale is off, Layer Normalization naturally buffers and standardizes the activations, making training highly robust.</p>
+
+<hr />
+
+<h2 id="3-interview-follow-ups-consecutive-questions">3. Interview Follow-Ups: Consecutive Questions</h2>
+
+<p>In a real interview, this question is often followed by deeper inquiries. Let’s explore how to answer them.</p>
+
+<h3 id="31-why-not-use-batch-normalization-bn-in-transformers">3.1 Why Not Use Batch Normalization (BN) in Transformers?</h3>
+
+<p>There are two primary reasons why Batch Normalization fails in NLP and Transformer architectures:</p>
+
+<h4 id="1-the-variable-length-padding-problem">1. The Variable-Length Padding Problem</h4>
+<p>In NLP, sentences in a batch have different lengths. To process them together, we pad shorter sentences with zeros (padding tokens).</p>
+<ul>
+  <li><strong>Batch Normalization</strong> computes statistics (mean and variance) vertically across the entire batch. The dummy padding tokens distort the batch statistics, polluting the mean and variance calculations for real words.</li>
+  <li><strong>Layer Normalization</strong> computes statistics horizontally within each token vector individually. It is completely independent of other tokens or sentences, making it immune to padding artifacts.</li>
+</ul>
+
+<h4 id="concrete-numerical-example">Concrete Numerical Example</h4>
+<p>Consider a batch of size $B=2$, sequence length $S=2$, and hidden dimension $D=2$.</p>
+<ul>
+  <li>Sentence 1: <code class="language-plaintext highlighter-rouge">[[1.0, 2.0], [0.0, 0.0]]</code> (Second token is padding).</li>
+  <li>Sentence 2: <code class="language-plaintext highlighter-rouge">[[3.0, 4.0], [5.0, 6.0]]</code> (No padding).</li>
+</ul>
+
+<p>If we use BN to normalize the first channel ($d=0$) across the batch and sequence (4 values: <code class="language-plaintext highlighter-rouge">[1.0, 0.0, 3.0, 5.0]</code>):</p>
+<ul>
+  <li>Mean: $\mu = \frac{1+0+3+5}{4} = 2.25$.</li>
+  <li>Notice how the padding value <code class="language-plaintext highlighter-rouge">0.0</code> pulled the mean down from $3.0$ (mean of real inputs <code class="language-plaintext highlighter-rouge">1, 3, 5</code>) to $2.25$. This introduces artificial noise to the real token embeddings.</li>
+</ul>
+
+<h4 id="2-batch-size-independence-at-inference">2. Batch Size Independence at Inference</h4>
+<p>During autoregressive generation (inference), we generate text token-by-token, often with a batch size of $1$.</p>
+<ul>
+  <li><strong>BN</strong> requires batch statistics. If the batch size is $1$ during inference, the calculated mean and variance will fluctuate wildly compared to the statistics accumulated during training (where batch sizes were large). This causes a training-inference mismatch.</li>
+  <li><strong>LN</strong> behaves identically regardless of batch size or sequence length, ensuring stable and consistent performance.</li>
+</ul>
+
+<hr />
+
+<h3 id="32-what-is-the-difference-between-layernorm-and-rmsnorm">3.2 What is the Difference Between LayerNorm and RMSNorm?</h3>
+
+<p><strong>RMSNorm (Root Mean Square Normalization)</strong> (Zhang &amp; Sennrich, 2019) is a modern, faster alternative to LayerNorm used in models like LLaMA and Gemma.</p>
+
+<h4 id="1-formulations">1. Formulations</h4>
+<ul>
+  <li><strong>LayerNorm</strong>: Normalizes using both mean ($\mu$) and variance ($\sigma^2$):
+\(\hat{x}_i = \frac{x_i - \mu}{\sqrt{\sigma^2 + \epsilon}}\)</li>
+  <li><strong>RMSNorm</strong>: Hypothesizes that the mean shifting ($\mu$) is unnecessary. It only scales by the Root Mean Square (RMS):
+\(\text{RMS}(x) = \sqrt{\frac{1}{D} \sum_{i=1}^D x_i^2}\)
+\(\hat{x}_i = \frac{x_i}{\text{RMS}(x)}\)</li>
+</ul>
+
+<h4 id="2-why-use-rmsnorm">2. Why Use RMSNorm?</h4>
+<ul>
+  <li><strong>Computational Efficiency</strong>: By avoiding the mean computation ($\mu$), RMSNorm reduces the number of operations. It saves about $7\%$–$10\%$ of the computation time in the normalization layers.</li>
+  <li><strong>Comparable Performance</strong>: Empirical studies show that RMSNorm achieves virtually identical convergence speed and downstream task accuracy as standard LayerNorm.</li>
+</ul>
+
+<hr />
+
+<h3 id="33-how-does-layernorm-perform-in-convolutional-networks-eg-resnet">3.3 How Does LayerNorm Perform in Convolutional Networks (e.g., ResNet)?</h3>
+
+<p>Historically, Batch Normalization is much better than LayerNorm in CNNs. Why?</p>
+
+<h4 id="1-spatial-consistency-in-images">1. Spatial Consistency in Images</h4>
+<p>In images, neighboring pixels are highly correlated (they represent similar features, like a patch of color or an edge).</p>
+<ul>
+  <li><strong>BN</strong> computes mean and variance for each channel across all pixels and batches. This preserves the relative differences in activation levels across different pixels.</li>
+  <li><strong>LN</strong> normalizes all channels at each individual pixel. This squashes the channel-wise differences at each pixel, destroying the spatial structure and reducing the CNN’s capacity to extract spatial hierarchies.</li>
+</ul>
+
+<h4 id="2-modern-vision-transformers-vit">2. Modern Vision Transformers (ViT)</h4>
+<p>Interestingly, in modern <strong>Vision Transformers (ViTs)</strong> and hybrid networks like ConvNeXt, LayerNorm is used instead of BN. This is because ViTs process images as sequences of patches (treating them like tokens in a sentence), making LN highly effective.</p>
+
+<hr />
+
+<h2 id="references">References</h2>
+
+<ol>
+  <li><strong>Ba, J. L., Kiros, J. R., &amp; Hinton, G. E. (2016). Layer Normalization.</strong> <em>arXiv preprint arXiv:1607.06450.</em>
+    <ul>
+      <li><em>Role in this post</em>: The seminal paper that proposed Layer Normalization, explaining its mathematical formulation and demonstrating its effectiveness in stabilizing sequence models.</li>
+    </ul>
+  </li>
+  <li><strong>Wu, Y., &amp; He, K. (2018). Group Normalization.</strong> <em>Proceedings of the European Conference on Computer Vision (ECCV).</em>
+    <ul>
+      <li><em>Role in this post</em>: Introduced Group Normalization and provided the classic visualization comparing BN, LN, IN, and GN across batch and channel axes.</li>
+    </ul>
+  </li>
+  <li><strong>Zhang, B., &amp; Sennrich, R. (2019). Root Mean Square Layer Normalization.</strong> <em>Advances in Neural Information Processing Systems, 32.</em>
+    <ul>
+      <li><em>Role in this post</em>: Proposed RMSNorm, proving that scaling by the root mean square of activations is sufficient to stabilize training while saving compute.</li>
+    </ul>
+  </li>
+  <li><strong>Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, L., &amp; Polosukhin, I. (2017). Attention Is All You Need.</strong> <em>Advances in Neural Information Processing Systems, 30.</em>
+    <ul>
+      <li><em>Role in this post</em>: The foundational paper of the Transformer architecture, which popularized the use of Layer Normalization in sequence-to-sequence neural networks.</li>
+    </ul>
+  </li>
+</ol>]]></content><author><name>Yuntao Nie</name><email>cuaklenck@gmail.com</email></author><category term="LLM Interview" /><category term="Layer Normalization" /><category term="Batch Normalization" /><category term="RMSNorm" /><category term="Transformer Architecture" /><category term="Interview Preparation" /><summary type="html"><![CDATA[A classic and highly frequent question in large language model (LLM) algorithm interviews (such as Kuaishou’s Kuaistar program, ByteDance, and Alibaba) is: “Why do Transformers use Layer Normalization (LN) instead of Batch Normalization (BN)?”]]></summary></entry><entry><title type="html">Absolute vs. Relative Position Embeddings: The Deep Connection Between Vanilla Transformer and LLaMA’s RoPE</title><link href="https://1571859588.github.io/posts/2026/06/llm-interview-llama-en/" rel="alternate" type="text/html" title="Absolute vs. Relative Position Embeddings: The Deep Connection Between Vanilla Transformer and LLaMA’s RoPE" /><published>2026-06-06T00:00:00+00:00</published><updated>2026-06-06T00:00:00+00:00</updated><id>https://1571859588.github.io/posts/2026/06/llm-interview-llama-en</id><content type="html" xml:base="https://1571859588.github.io/posts/2026/06/llm-interview-llama-en/"><![CDATA[<p>A common question that candidates struggle to answer deeply in top-tier LLM algorithm interviews (e.g., Kuaishou’s Kuaistar program, ByteDance, and Alibaba) is: <strong>“What is the difference and connection between the positional encodings in the Vanilla Transformer and LLaMA?”</strong></p>
+
+<p>While most candidates can state that the Vanilla Transformer uses absolute sinusoidal positional encoding and LLaMA uses Rotary Position Embedding (RoPE), few can explain the deep mathematical connection between them. Specifically, many fail to answer how RoPE is derived from the sinusoidal encoding, and how it represents relative position using absolute rotation.</p>
+
+<p>This post will dissect this question step-by-step. We will break down the mathematical formulations, provide intuitive derivations, and explain how LLaMA implements RoPE, all explained in a way that is accessible even to readers with a high school level of mathematics.</p>
+
+<hr />
+
+<h2 id="1-positional-encoding-in-the-global-transformer-architecture">1. Positional Encoding in the Global Transformer Architecture</h2>
+
+<p>Before diving into the math, let’s understand where positional information is injected in the overall architecture.</p>
+
+<p>In a standard sequence processing model, Self-Attention is <strong>position-invariant</strong>. This means that if we shuffle the order of the words in a sentence, the Self-Attention output values remain identical (only shuffled accordingly). However, word order is crucial for language (e.g., <em>“Not bad”</em> vs. <em>“Bad, not”</em>). Therefore, we must inject position information.</p>
+
+<h3 id="11-position-injection-in-the-vanilla-transformer">1.1 Position Injection in the Vanilla Transformer</h3>
+<p>In the original Transformer architecture (Vaswani et al., 2017), position information is added directly to the input word embeddings.</p>
+<ul>
+  <li><strong>Location</strong>: At the very bottom of both the Encoder and Decoder stacks.</li>
+  <li><strong>Formula</strong>:
+\(X_{\text{final}} = X_{\text{embedding}} + PE\)</li>
+  <li>
+    <p><strong>Reference Diagram</strong>:</p>
+
+    <p><img src="/images/blogs/2026-06-02-llm-interview-Transformer-en/transformer_architecture.png" alt="The Transformer model architecture" /></p>
+
+    <blockquote>
+      <p><em>Figure 1: The Transformer - model architecture (Source: Vaswani et al., 2017). The encoder (left) maps an input sequence of symbol representations to a sequence of continuous representations, which the decoder (right) then uses to generate an output sequence of symbols one token at a time.</em> 
+Note that in this original encoder-decoder architecture, “Positional Encoding” is added to both the “Input Embedding” and “Output Embedding” at the bottom of the respective stacks.</p>
+    </blockquote>
+  </li>
+</ul>
+
+<h3 id="12-position-injection-in-llama-rope">1.2 Position Injection in LLaMA (RoPE)</h3>
+<p>In LLaMA (Touvron et al., 2023), instead of adding positional vectors at the input layer, position information is applied directly within the Self-Attention layer of each Decoder block.</p>
+
+<p><img src="/images/blogs/2026-06-06-llm-interview-llama-en/llama_architecture.png" alt="LLaMA model architecture" /></p>
+
+<ul>
+  <li><strong>Location</strong>: Inside the Multi-Head Attention module, right before computing the dot product between the Query ($Q$) and Key ($K$) vectors.</li>
+  <li><strong>Formula</strong>:
+\(\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{\tilde{Q}\tilde{K}^T}{\sqrt{d_k}}\right)V\)
+where $\tilde{Q} = R(Q, t)$ and $\tilde{K} = R(K, s)$ represent the Query and Key vectors rotated by their respective position-based matrices.</li>
+</ul>
+
+<hr />
+
+<h2 id="2-vanilla-transformer-sinusoidal-absolute-position-encoding">2. Vanilla Transformer: Sinusoidal Absolute Position Encoding</h2>
+
+<p>The Vanilla Transformer uses absolute positional encodings, where each token position $t$ is mapped to a unique vector of dimension $D$ using sine and cosine functions.</p>
+
+<h3 id="21-the-formulation">2.1 The Formulation</h3>
+<p>For a token at absolute position $t$, the elements of its positional encoding vector $PE_t \in \mathbb{R}^D$ are defined as:
+\(\begin{align*}
+PE_{(t, 2i)} &amp;= \sin\left(\theta_i \cdot t\right) = \sin\left(\frac{t}{10000^{\frac{2i}{D}}}\right) \\
+PE_{(t, 2i+1)} &amp;= \cos\left(\theta_i \cdot t\right) = \cos\left(\frac{t}{10000^{\frac{2i}{D}}}\right)
+\end{align*}\)
+where:</p>
+<ul>
+  <li>$t$ is the token’s position in the sequence ($t = 0, 1, 2, \dots, S-1$).</li>
+  <li>$i$ is the dimension index ($i = 0, 1, \dots, D/2 - 1$).</li>
+  <li>$\theta_i = \frac{1}{10000^{\frac{2i}{D}}}$ is a scaling factor that determines the frequency of the wave for that dimension pair.</li>
+</ul>
+
+<hr />
+
+<h3 id="22-why-use-sine-and-cosine-high-school-trigonometry-proof">2.2 Why Use Sine and Cosine? (High School Trigonometry Proof)</h3>
+
+<p>Vaswani et al. (2017) stated that they chose these sinusoidal functions because:</p>
+<blockquote>
+  <p><em>“We hypothesized it would allow the model to easily learn to attend by relative positions, since for any fixed offset $k$, $PE_{t+k}$ can be represented as a linear function of $PE_t$.”</em></p>
+</blockquote>
+
+<p>Let’s prove this statement step-by-step using high school trigonometric addition formulas.</p>
+
+<p>Recall the angle addition formulas:
+\(\begin{align*}
+\sin(\alpha + \beta) &amp;= \sin\alpha \cos\beta + \cos\alpha \sin\beta \\
+\cos(\alpha + \beta) &amp;= \cos\alpha \cos\beta - \sin\alpha \sin\beta
+\end{align*}\)</p>
+
+<p>Let’s look at a single 2D dimension pair $(2i, 2i+1)$ of the positional embedding at position $t + k$:
+\(PE_{t+k} = \begin{bmatrix} \sin(\theta_i(t+k)) \\ \cos(\theta_i(t+k)) \end{bmatrix} = \begin{bmatrix} \sin(\theta_i t + \theta_i k) \\ \cos(\theta_i t + \theta_i k) \end{bmatrix}\)</p>
+
+<p>Using the trigonometric addition formulas, we expand the components:</p>
+<ol>
+  <li><strong>Sine component</strong>:
+\(\sin(\theta_i t + \theta_i k) = \sin(\theta_i t)\cos(\theta_i k) + \cos(\theta_i t)\sin(\theta_i k)\)</li>
+  <li><strong>Cosine component</strong>:
+\(\cos(\theta_i t + \theta_i k) = \cos(\theta_i t)\cos(\theta_i k) - \sin(\theta_i t)\sin(\theta_i k)\)</li>
+</ol>
+
+<p>Now, we can rewrite this system of linear equations in matrix form:
+\(\begin{bmatrix}
+\sin(\theta_i (t + k)) \\
+\cos(\theta_i (t + k))
+\end{bmatrix}
+=
+\begin{bmatrix}
+\cos(\theta_i k) &amp; \sin(\theta_i k) \\
+-\sin(\theta_i k) &amp; \cos(\theta_i k)
+\end{bmatrix}
+\begin{bmatrix}
+\sin(\theta_i t) \\
+\cos(\theta_i t)
+\end{bmatrix}\)</p>
+
+<p>Let’s denote the transformation matrix as $R_k^{(i)}$:
+\(R_k^{(i)} = \begin{bmatrix}
+\cos(\theta_i k) &amp; \sin(\theta_i k) \\
+-\sin(\theta_i k) &amp; \cos(\theta_i k)
+\end{bmatrix}\)
+Thus:
+\(PE_{t+k} = R_k PE_t\)
+This mathematically proves that $PE_{t+k}$ is a linear function of $PE_t$. The transformation matrix $R_k$ depends <em>only</em> on the relative distance offset $k$, and is completely independent of the absolute position $t$.</p>
+
+<hr />
+
+<h3 id="23-the-clock-analogy-intuitive-explanation">2.3 The Clock Analogy (Intuitive Explanation)</h3>
+
+<p>To understand this physically, imagine a clock:</p>
+<ul>
+  <li>The positional embedding at position $t$ is like a clock hand pointing at a certain angle $\theta_i t$.</li>
+  <li>If we move forward by $k$ steps, the new positional embedding is simply the hand rotated by an angle of $\theta_i k$.</li>
+  <li>The matrix $R_k^{(i)}$ is a <strong>2D rotation matrix</strong> that performs this clockwise rotation.</li>
+</ul>
+
+<hr />
+
+<h2 id="3-llama-rotary-position-embedding-rope">3. LLaMA: Rotary Position Embedding (RoPE)</h2>
+
+<p>LLaMA replaces absolute positional encodings with <strong>Rotary Position Embedding (RoPE)</strong> (Su et al., 2021). The core idea of RoPE is to implement relative position encoding by applying a rotation matrix directly to the Query and Key vectors.</p>
+
+<h3 id="31-what-is-a-2d-rotation-matrix-high-school-primer">3.1 What is a 2D Rotation Matrix? (High School Primer)</h3>
+
+<p>In a 2D plane, if you have a point with coordinates $(x, y)$ and you rotate it counterclockwise around the origin $(0,0)$ by an angle $\theta$, its new coordinates $(x’, y’)$ are calculated using the rotation matrix:
+\(\begin{bmatrix} x' \\ y' \end{bmatrix} = \begin{bmatrix} \cos\theta &amp; -\sin\theta \\ \sin\theta &amp; \cos\theta \end{bmatrix} \begin{bmatrix} x \\ y \end{bmatrix}\)</p>
+
+<h4 id="concrete-numerical-example">Concrete Numerical Example</h4>
+<p>Let’s take a point $P = (1, 0)$ and rotate it counterclockwise by $\theta = 90^\circ$ ($\pi/2$ radians).</p>
+<ul>
+  <li>$\cos(90^\circ) = 0$</li>
+  <li>$\sin(90^\circ) = 1$</li>
+</ul>
+
+<p>Applying the matrix:
+\(\begin{bmatrix} x' \\ y' \end{bmatrix} = \begin{bmatrix} 0 &amp; -1 \\ 1 &amp; 0 \end{bmatrix} \begin{bmatrix} 1 \\ 0 \end{bmatrix} = \begin{bmatrix} 0 \\ 1 \end{bmatrix}\)
+The rotated point is $(0, 1)$, which is exactly $90^\circ$ counterclockwise from $(1, 0)$ on the y-axis.</p>
+
+<hr />
+
+<h3 id="32-the-rope-formulation">3.2 The RoPE Formulation</h3>
+
+<p>Let $q_t \in \mathbb{R}^D$ be the Query vector at position $t$, and $k_s \in \mathbb{R}^D$ be the Key vector at position $s$.</p>
+
+<p>RoPE divides the $D$-dimensional vector into $D/2$ pairs of 2-dimensional vectors. For each 2D pair index $j$ (where $j = 1, 2, \dots, D/2$), it rotates the vector by an angle of $\theta_j \cdot t$ (for Query) or $\theta_j \cdot s$ (for Key).</p>
+
+<p>The rotation matrix $R_{\Theta, t}^D$ is a block-diagonal matrix composed of $D/2$ separate 2D rotation matrices:
+\(R_{\Theta, t}^D = \begin{bmatrix}
+\cos(\theta_1 t) &amp; -\sin(\theta_1 t) &amp; 0 &amp; 0 &amp; \dots &amp; 0 &amp; 0 \\
+\sin(\theta_1 t) &amp; \cos(\theta_1 t) &amp; 0 &amp; 0 &amp; \dots &amp; 0 &amp; 0 \\
+0 &amp; 0 &amp; \cos(\theta_2 t) &amp; -\sin(\theta_2 t) &amp; \dots &amp; 0 &amp; 0 \\
+0 &amp; 0 &amp; \sin(\theta_2 t) &amp; \cos(\theta_2 t) &amp; \dots &amp; 0 &amp; 0 \\
+\vdots &amp; \vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots &amp; \vdots \\
+0 &amp; 0 &amp; 0 &amp; 0 &amp; \dots &amp; \cos(\theta_{D/2} t) &amp; -\sin(\theta_{D/2} t) \\
+0 &amp; 0 &amp; 0 &amp; 0 &amp; \dots &amp; \sin(\theta_{D/2} t) &amp; \cos(\theta_{D/2} t)
+\end{bmatrix}\)
+The rotated Query and Key vectors are computed as:
+\(\tilde{q}_t = R_{\Theta, t}^D q_t, \quad \tilde{k}_s = R_{\Theta, s}^D k_s\)</p>
+
+<hr />
+
+<h3 id="33-proof-how-rope-encodes-relative-distance">3.3 Proof: How RoPE Encodes Relative Distance</h3>
+
+<p>The Self-Attention mechanism calculates the similarity between Query and Key using their dot product (inner product). Let’s see what happens to the dot product of the rotated vectors $\tilde{q}_t$ and $\tilde{k}_s$:
+\(\langle \tilde{q}_t, \tilde{k}_s \rangle = \tilde{q}_t^T \tilde{k}_s = \left( R_{\Theta, t}^D q_t \right)^T \left( R_{\Theta, s}^D k_s \right) = q_t^T \left( R_{\Theta, t}^D \right)^T R_{\Theta, s}^D k_s\)</p>
+
+<p>Let’s compute the core matrix multiplication $\left( R_{\Theta, t}^D \right)^T R_{\Theta, s}^D$. Since $R$ is a block-diagonal matrix, we can analyze the multiplication for a single 2D block $j$ independently.</p>
+
+<p>The transpose of a rotation matrix is its inverse (since rotation matrices are orthogonal):
+\(\left(R_{\Theta, t}^{(j)}\right)^T = \begin{bmatrix} \cos(\theta_j t) &amp; \sin(\theta_j t) \\ -\sin(\theta_j t) &amp; \cos(\theta_j t) \end{bmatrix} = R_{\Theta, -t}^{(j)}\)</p>
+
+<p>Now, multiply the transposed matrix at position $t$ by the matrix at position $s$:
+\(\left(R_{\Theta, t}^{(j)}\right)^T R_{\Theta, s}^{(j)} = \begin{bmatrix}
+\cos(\theta_j t) &amp; \sin(\theta_j t) \\
+-\sin(\theta_j t) &amp; \cos(\theta_j t)
+\end{bmatrix}
+\begin{bmatrix}
+\cos(\theta_j s) &amp; -\sin(\theta_j s) \\
+\sin(\theta_j s) &amp; \cos(\theta_j s)
+\end{bmatrix}\)</p>
+
+<p>Let’s compute the matrix multiplication step-by-step:</p>
+<ol>
+  <li><strong>Top-left element</strong>:
+\(\begin{aligned}
+\cos(\theta_j t)\cos(\theta_j s) + \sin(\theta_j t)\sin(\theta_j s) &amp;= \cos(\theta_j s - \theta_j t) \\
+&amp;= \cos(\theta_j(s - t))
+\end{aligned}\)</li>
+  <li><strong>Top-right element</strong>:
+\(\begin{aligned}
+\cos(\theta_j t)(-\sin(\theta_j s)) + \sin(\theta_j t)\cos(\theta_j s) &amp;= -(\sin(\theta_j s)\cos(\theta_j t) - \cos(\theta_j s)\sin(\theta_j t)) \\
+&amp;= -\sin(\theta_j(s - t))
+\end{aligned}\)</li>
+  <li><strong>Bottom-left element</strong>:
+\(\begin{aligned}
+-\sin(\theta_j t)\cos(\theta_j s) + \cos(\theta_j t)\sin(\theta_j s) &amp;= \sin(\theta_j s)\cos(\theta_j t) - \cos(\theta_j s)\sin(\theta_j t) \\
+&amp;= \sin(\theta_j(s - t))
+\end{aligned}\)</li>
+  <li><strong>Bottom-right element</strong>:
+\(\begin{aligned}
+(-\sin(\theta_j t))(-\sin(\theta_j s)) + \cos(\theta_j t)\cos(\theta_j s) &amp;= \cos(\theta_j t)\cos(\theta_j s) + \sin(\theta_j t)\sin(\theta_j s) \\
+&amp;= \cos(\theta_j(s - t))
+\end{aligned}\)</li>
+</ol>
+
+<p>Putting the elements back into the matrix:
+\(\left(R_{\Theta, t}^{(j)}\right)^T R_{\Theta, s}^{(j)} = \begin{bmatrix}
+\cos(\theta_j (s - t)) &amp; -\sin(\theta_j (s - t)) \\
+\sin(\theta_j (s - t)) &amp; \cos(\theta_j (s - t))
+\end{bmatrix} = R_{\Theta, s - t}^{(j)}\)</p>
+
+<p>Therefore, for the entire $D$-dimensional space:
+\(\left( R_{\Theta, t}^D \right)^T R_{\Theta, s}^D = R_{\Theta, s - t}^D\)
+Substituting this back into the dot product formula:
+\(\tilde{q}_t^T \tilde{k}_s = q_t^T R_{\Theta, s - t}^D k_s\)
+This is an incredibly elegant result! The dot product of the rotated Query and Key vectors depends <strong>only</strong> on their relative distance offset $(s - t)$.</p>
+
+<hr />
+
+<h3 id="34-efficient-implementation-the-rotation-formula">3.4 Efficient Implementation: The Rotation Formula</h3>
+
+<p>Multiplying a $D \times D$ sparse matrix $R_{\Theta, t}^D$ by a vector $x$ takes $O(D^2)$ operations if done naively. However, because $R_{\Theta, t}^D$ is block-diagonal with mostly zeros, we can compute the multiplication much faster.</p>
+
+<p>For a 2D slice of the vector $x = [x_1, x_2]^T$:
+\(\begin{bmatrix} \cos\theta &amp; -\sin\theta \\ \sin\theta &amp; \cos\theta \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} = \begin{bmatrix} x_1 \cos\theta - x_2 \sin\theta \\ x_1 \sin\theta + x_2 \cos\theta \end{bmatrix}\)
+We can rewrite the right-hand side by grouping the trigonometric terms:
+\(\begin{bmatrix} x_1 \cos\theta - x_2 \sin\theta \\ x_1 \sin\theta + x_2 \cos\theta \end{bmatrix} = \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} \cos\theta + \begin{bmatrix} -x_2 \\ x_1 \end{bmatrix} \sin\theta\)</p>
+
+<p>Extending this to a $D$-dimensional vector $x$, we define:
+\(\tilde{x} = \begin{bmatrix} -x_2 \\ x_1 \\ -x_4 \\ x_3 \\ \dots \\ -x_D \\ x_{D-1} \end{bmatrix}\)
+Then, the rotation can be computed using element-wise multiplication (Hadamard product $\odot$):
+\(R_{\Theta, t}^D x = x \odot \cos(t\Theta) + \tilde{x} \odot \sin(t\Theta)\)
+where $\cos(t\Theta)$ and $\sin(t\Theta)$ are vectors of shape $[D]$ repeating the corresponding $\cos(\theta_j t)$ and $\sin(\theta_j t)$ values twice. This reduces the computational complexity from $O(D^2)$ to $O(D)$, which is highly efficient.</p>
+
+<hr />
+
+<h2 id="4-key-differences-vanilla-transformer-vs-llama-rope">4. Key Differences: Vanilla Transformer vs. LLaMA (RoPE)</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Feature</th>
+      <th style="text-align: left">Vanilla Transformer (Sinusoidal PE)</th>
+      <th style="text-align: left">LLaMA (RoPE)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><strong>Type of Encoding</strong></td>
+      <td style="text-align: left">Absolute (but possesses relative properties).</td>
+      <td style="text-align: left">Relative (implemented using absolute rotation).</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Integration Method</strong></td>
+      <td style="text-align: left">Vector addition: added directly to the input embeddings.</td>
+      <td style="text-align: left">Multiplicative rotation: applied directly to Q and K inside attention.</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Model Architecture</strong></td>
+      <td style="text-align: left">Added once at the input layer (bottom of the network).</td>
+      <td style="text-align: left">Applied at every Single Multi-Head Attention layer.</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Context Length Extension</strong></td>
+      <td style="text-align: left">Hard to scale; absolute positions are fixed.</td>
+      <td style="text-align: left">Easy to scale using interpolation methods (e.g. YaRN, RoPE scaling).</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Long-Range Decay</strong></td>
+      <td style="text-align: left">No explicit decay built into the encoding.</td>
+      <td style="text-align: left">Naturally decays as relative distance increases, prioritizing local context.</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="references">References</h2>
+
+<ol>
+  <li><strong>Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, L., &amp; Polosukhin, I. (2017). Attention Is All You Need.</strong> <em>Advances in Neural Information Processing Systems, 30.</em>
+    <ul>
+      <li><em>Role in this post</em>: Introduced absolute sinusoidal positional encodings and proposed the hypothesis that sinusoidal functions allow the model to learn relative position relationships via linear transformations.</li>
+    </ul>
+  </li>
+  <li><strong>Su, J., Lu, Y., Pan, S., Murtadha, A., Wen, B., &amp; Liu, Y. (2021). RoFormer: Enhanced Transformer with Rotary Position Embedding.</strong> <em>arXiv preprint arXiv:2104.09864.</em>
+    <ul>
+      <li><em>Role in this post</em>: Proposed RoPE (Rotary Position Embedding), providing the mathematical framework for applying 2D rotation matrices to Query and Key vectors to encode relative position.</li>
+    </ul>
+  </li>
+  <li><strong>Touvron, H., Martin, L., Stone, K., Albert, P., Almahairi, A., Babaei, Y., Bashlykov, N., Batra, S., Bhargava, P., Bhosale, S., et al. (2023). LLaMA: Open and Efficient Foundation Language Models.</strong> <em>arXiv preprint arXiv:2302.13971.</em>
+    <ul>
+      <li><em>Role in this post</em>: Documented LLaMA’s architecture, which adopts RoPE as its position encoding mechanism, solidifying RoPE as the standard for modern autoregressive large language models.</li>
+    </ul>
+  </li>
+</ol>]]></content><author><name>Yuntao Nie</name><email>cuaklenck@gmail.com</email></author><category term="LLM Interview" /><category term="Positional Encoding" /><category term="Rotary Position Embedding" /><category term="Transformer Architecture" /><category term="LLaMA" /><category term="Interview Preparation" /><summary type="html"><![CDATA[A common question that candidates struggle to answer deeply in top-tier LLM algorithm interviews (e.g., Kuaishou’s Kuaistar program, ByteDance, and Alibaba) is: “What is the difference and connection between the positional encodings in the Vanilla Transformer and LLaMA?”]]></summary></entry><entry><title type="html">Deep Dive into the Transformer Architecture: A Comprehensive Interview Guide</title><link href="https://1571859588.github.io/posts/2026/06/llm-interview-transformer-en/" rel="alternate" type="text/html" title="Deep Dive into the Transformer Architecture: A Comprehensive Interview Guide" /><published>2026-06-02T00:00:00+00:00</published><updated>2026-06-02T00:00:00+00:00</updated><id>https://1571859588.github.io/posts/2026/06/llm-interview-Transformer-en</id><content type="html" xml:base="https://1571859588.github.io/posts/2026/06/llm-interview-transformer-en/"><![CDATA[<p>As the foundational architecture behind modern Large Language Models (LLMs), the Transformer has revolutionized natural language processing by capturing long-range dependencies and global context more effectively than recurrent architectures. Consequently, deep conceptual and mathematical understanding of the Transformer is one of the most frequently tested topics in LLM algorithm interviews (e.g., at top-tier companies like Xiaomi, ByteDance, and Alibaba).</p>
+
+<p>This blog post dissects a series of core, low-level questions asked during an LLM algorithm group interview at Xiaomi. Through these questions, we will explore not only the standard answers but also the underlying mathematical and structural design principles of the Transformer, bridging the gap between basic preparation and deep engineering intuition.</p>
+
+<hr />
+
+<h2 id="1-global-architecture-of-the-transformer">1. Global Architecture of the Transformer</h2>
+
+<p>The Transformer model, introduced by Vaswani et al. in the seminal paper <em>“Attention Is All You Need”</em>, is based entirely on attention mechanisms, discarding recurrence and convolutions. At a macro level, the original architecture consists of an encoder-decoder framework:</p>
+
+<ul>
+  <li><strong>Encoder Stack</strong>: Composed of $N$ identical blocks (typically $N=6$). Each block contains two main sub-layers:
+    <ol>
+      <li>A <strong>Multi-Head Self-Attention (MHSA)</strong> mechanism.</li>
+      <li>A position-wise <strong>Feed-Forward Network (FFN)</strong>.</li>
+    </ol>
+  </li>
+  <li><strong>Decoder Stack</strong>: Also composed of $N$ identical blocks. Each block contains three sub-layers:
+    <ol>
+      <li>A <strong>Masked Multi-Head Self-Attention</strong> mechanism (to prevent positions from attending to subsequent positions during autoregressive generation).</li>
+      <li>An <strong>Encoder-Decoder Cross-Attention</strong> mechanism (which performs attention over the encoder stack’s outputs).</li>
+      <li>A position-wise <strong>Feed-Forward Network (FFN)</strong>.</li>
+    </ol>
+  </li>
+</ul>
+
+<p><em>(Note: While the original Transformer is an encoder-decoder model designed for sequence-to-sequence tasks like translation, modern autoregressive LLMs—such as the GPT, LLaMA, and DeepSeek series—typically adopt a decoder-only architecture where the cross-attention layer is omitted.)</em></p>
+
+<p>Below is the structural diagram of the Transformer model architecture.</p>
+
+<p><img src="/images/blogs/2026-06-02-llm-interview-Transformer-en/transformer_architecture.png" alt="The Transformer model architecture" /></p>
+
+<p><em>Figure 1: The Transformer - model architecture (Source: Vaswani et al., 2017). The encoder (left) maps an input sequence of symbol representations to a sequence of continuous representations, which the decoder (right) then uses to generate an output sequence of symbols one token at a time.</em></p>
+
+<hr />
+
+<h2 id="2-shape-and-dimensions-of-input-vectors">2. Shape and Dimensions of Input Vectors</h2>
+
+<p>This question tests your understanding of the tensor dimensions and data flow as they pass through the Transformer’s layers. Let us trace the shape of the tensors step by step, using a simple concrete example to make these abstract dimensions intuitive.</p>
+
+<h3 id="21-core-concepts-and-notation">2.1 Core Concepts and Notation</h3>
+<p>To process natural language, we represent text as multi-dimensional tables of numbers, called <strong>tensors</strong>. Let’s define the key dimensions:</p>
+<ul>
+  <li>$B$ (<strong>Batch Size</strong>): The number of sentences we process together in one go.</li>
+  <li>$S$ (<strong>Sequence Length</strong> / $seq_len$): The number of words (or tokens) in a sentence.</li>
+  <li>$D$ (<strong>Hidden / Embedding Dimension</strong>): The size of the list of numbers representing a single word.</li>
+  <li>$V$ (<strong>Vocabulary Size</strong>): The total number of unique words in our dictionary.</li>
+</ul>
+
+<hr />
+
+<h3 id="22-step-by-step-shape-walkthrough-with-a-numerical-example">2.2 Step-by-Step Shape Walkthrough with a Numerical Example</h3>
+
+<p>Let’s build a toy model:</p>
+<ul>
+  <li><strong>Vocabulary ($V=5$)</strong>: Our dictionary has only 5 words: <code class="language-plaintext highlighter-rouge">["我", "爱", "机", "器", "人"]</code>.</li>
+  <li><strong>Embedding Dimension ($D=3$)</strong>: Each word is represented by a list of 3 numbers.</li>
+  <li><strong>Sequence Length ($S=4$)</strong>: We want to process the sentence <code class="language-plaintext highlighter-rouge">"我爱机器"</code>, which has 4 tokens.</li>
+  <li><strong>Batch Size ($B=2$)</strong>: We process 2 sentences at once.</li>
+</ul>
+
+<h4 id="step-1-input-token-sequence--shape-b-s">Step 1: Input Token Sequence — Shape $[B, S]$</h4>
+<p>Each word in our sentence is first converted to its position (index) in our dictionary.</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">"我"</code> $\rightarrow 0$, <code class="language-plaintext highlighter-rouge">"爱"</code> $\rightarrow 1$, <code class="language-plaintext highlighter-rouge">"机"</code> $\rightarrow 2$, <code class="language-plaintext highlighter-rouge">"器"</code> $\rightarrow 3$.</li>
+  <li>Sentence 1: <code class="language-plaintext highlighter-rouge">[0, 1, 2, 3]</code></li>
+  <li>Sentence 2 (e.g. <code class="language-plaintext highlighter-rouge">"爱我机器"</code>): <code class="language-plaintext highlighter-rouge">[1, 0, 2, 3]</code></li>
+</ul>
+
+<p>We stack these two sentences together to form a batch tensor:
+\(X_{\text{token}} = \begin{bmatrix} [0, 1, 2, 3] \\ [1, 0, 2, 3] \end{bmatrix} \quad \text{of shape } [2, 4] \implies [B, S]\)</p>
+
+<h4 id="step-2-word-embedding-projection--shape-b-s-d">Step 2: Word Embedding Projection — Shape $[B, S, D]$</h4>
+<p>We look up each word index in our word embedding lookup matrix $W_e \in \mathbb{R}^{V \times D}$ (which is a table of shape $5 \times 3$):
+\(W_e = \begin{bmatrix}
+0.1 &amp; 0.2 &amp; 0.3 \\
+0.4 &amp; 0.5 &amp; 0.6 \\
+0.7 &amp; 0.8 &amp; 0.9 \\
+0.1 &amp; -0.1 &amp; 0.0 \\
+0.2 &amp; 0.3 &amp; -0.4
+\end{bmatrix}\)
+Replacing the word indices in $X_{\text{token}}$ with their respective 3-dimensional rows from $W_e$ gives:</p>
+<ul>
+  <li>Sentence 1: <code class="language-plaintext highlighter-rouge">[[0.1, 0.2, 0.3], [0.4, 0.5, 0.6], [0.7, 0.8, 0.9], [0.1, -0.1, 0.0]]</code> (shape $[4, 3]$)</li>
+  <li>Sentence 2: <code class="language-plaintext highlighter-rouge">[[0.4, 0.5, 0.6], [0.1, 0.2, 0.3], [0.7, 0.8, 0.9], [0.1, -0.1, 0.0]]</code> (shape $[4, 3]$)</li>
+</ul>
+
+<p>Combined, the batch tensor has shape $[2, 4, 3]$ (corresponding to $[B, S, D]$).</p>
+
+<h4 id="step-3-multi-head-attention-mha-layers--shape-b-h-s-d_k">Step 3: Multi-Head Attention (MHA) Layers — Shape $[B, h, S, d_k]$</h4>
+<p>In Multi-Head Attention, we project the embedding tensor into three separate tensors: Query ($Q$), Key ($K$), and Value ($V$) using weight matrices of shape $D \times D$.
+To allow the model to focus on different aspects of the text simultaneously, we split the hidden dimension $D$ into $h$ different “heads”.
+Let’s choose $h = 2$ heads.</p>
+<ul>
+  <li><strong>Head Dimension ($d_k$)</strong>: $d_k = D / h = 3 / 2 = 1.5$ (in practice, we use integers like $D=4096, h=32 \implies d_k=128$. For this example, let’s assume we started with $D=8, h=2 \implies d_k=4$).</li>
+</ul>
+
+<p>Let’s trace with $D=8, h=2, d_k=4$:</p>
+<ol>
+  <li><strong>Projection</strong>: We multiply the input $X \in \mathbb{R}^{B \times S \times D}$ by projection matrices $W^Q, W^K, W^V \in \mathbb{R}^{D \times D}$ to get $Q, K, V \in \mathbb{R}^{B \times S \times D}$.</li>
+  <li><strong>Splitting into Heads</strong>: The dimension $D=8$ is split into 2 heads of size $4$. The tensor shape shifts from $[B, S, D]$ to:
+\([B, S, h, d_k] \xrightarrow{\text{transpose}} [B, h, S, d_k]\)
+This shape means we have $B$ batches, each containing $h$ independent attention heads, and each head has a sequence of $S$ tokens represented by a $d_k$-dimensional vector.</li>
+  <li><strong>Attention Map Computation</strong>: We compute the dot product between queries ($Q$) and keys ($K$) for every pair of words.
+    <ul>
+      <li>$Q$ has shape $[B, h, S, d_k]$.</li>
+      <li>$K^T$ (transposing the last two dimensions) has shape $[B, h, d_k, S]$.</li>
+      <li>Multiplying them:
+\([B, h, S, d_k] \times [B, h, d_k, S] \rightarrow [B, h, S, S]\)
+The resulting $[B, h, S, S]$ tensor represents the “importance score” (attention map) between every pair of words in the sequence. For instance, the element at index $(b, head, i, j)$ tells us how much the $i$-th word pays attention to the $j$-th word.</li>
+    </ul>
+  </li>
+  <li><strong>Applying Attention to Values</strong>: We weight the Value tensor ($V$) by these attention scores:
+\(\text{Attention Map} \times V \implies [B, h, S, S] \times [B, h, S, d_k] \rightarrow [B, h, S, d_k]\)</li>
+  <li><strong>Concatenation</strong>: We merge all $h$ heads back together by concatenating them along the head dimension:
+\(\text{Transpose: } [B, h, S, d_k] \rightarrow [B, S, h, d_k] \xrightarrow{\text{Reshape: }} [B, S, h \times d_k] \implies [B, S, D]\)
+Finally, we multiply by an output projection matrix $W^O \in \mathbb{R}^{D \times D}$, maintaining the shape $[B, S, D]$.</li>
+</ol>
+
+<p>Because the attention layer only linearly combines and projects features, the sequence length $S$ and the embedding dimension $D$ are perfectly preserved.</p>
+
+<hr />
+
+<h2 id="3-why-scale-attention-dot-products-by-sqrtd_k">3. Why Scale Attention Dot-Products by $\sqrt{d_k}$?</h2>
+
+<p>In the attention formula:
+\(\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V\)
+why do we divide by $\sqrt{d_k}$? Let’s break down the probability and calculus concepts step-by-step to see why this division is critical.</p>
+
+<h3 id="31-what-are-mean-and-variance-high-school-primer">3.1 What are Mean and Variance? (High School Primer)</h3>
+<ul>
+  <li><strong>Random Variable</strong>: A variable whose value depends on outcomes of a random phenomenon.</li>
+  <li><strong>Mean / Expected Value ($\mathbb{E}[X]$)</strong>: The average value of a random variable over many trials.</li>
+  <li><strong>Variance ($\text{Var}(X)$)</strong>: A measure of how far the values are spread out from their average.
+    <ul>
+      <li>If $\text{Var}(X) = 0$, all values are exactly equal to the mean.</li>
+      <li>If $\text{Var}(X)$ is large, the values can be extremely high or extremely low.</li>
+    </ul>
+  </li>
+  <li><strong>Key Properties of Variance</strong>:
+    <ol>
+      <li><strong>Scale Rule</strong>: If you multiply a random variable by a constant number $a$, the variance is scaled by $a^2$:
+\(\text{Var}(aX) = a^2 \text{Var}(X)\)</li>
+      <li><strong>Sum Rule</strong>: If two random variables $X$ and $Y$ are independent (they don’t affect each other), the variance of their sum is the sum of their variances:
+\(\text{Var}(X + Y) = \text{Var}(X) + \text{Var}(Y)\)</li>
+      <li><strong>Product Rule for Independent Zero-Mean Variables</strong>: If $X$ and $Y$ are independent and both have a mean of $0$, then:
+\(\text{Var}(XY) = \text{Var}(X) \cdot \text{Var}(Y)\)</li>
+    </ol>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="32-step-by-step-derivation-of-dot-product-variance">3.2 Step-by-Step Derivation of Dot Product Variance</h3>
+
+<p>Let’s calculate the dot product of a single Query vector $q$ and a single Key vector $k$. Both are of dimension $d_k$:
+\(q = [q_1, q_2, \dots, q_{d_k}], \quad k = [k_1, k_2, \dots, k_{d_k}]\)
+The dot product $q \cdot k$ is:
+\(q \cdot k = \sum_{i=1}^{d_k} q_i k_i = q_1 k_1 + q_2 k_2 + \dots + q_{d_k} k_{d_k}\)</p>
+
+<p>Let’s assume that each element $q_i$ and $k_i$ is randomly initialized such that:</p>
+<ul>
+  <li>$\mathbb{E}[q_i] = \mathbb{E}[k_i] = 0$ (mean is 0)</li>
+  <li>$\text{Var}(q_i) = \text{Var}(k_i) = 1$ (variance is 1)</li>
+  <li>All $q_i$ and $k_j$ are independent of one another.</li>
+</ul>
+
+<h4 id="step-a-variance-of-a-single-term-q_i-k_i">Step A: Variance of a single term $q_i k_i$</h4>
+<p>Since $q_i$ and $k_i$ are independent and have mean 0, we apply the Product Rule:
+\(\text{Var}(q_i k_i) = \text{Var}(q_i) \cdot \text{Var}(k_i) = 1 \cdot 1 = 1\)</p>
+
+<h4 id="step-b-variance-of-the-sum-of-d_k-terms">Step B: Variance of the sum of $d_k$ terms</h4>
+<p>Since all terms $q_i k_i$ are independent, we apply the Sum Rule:
+\(\text{Var}(q \cdot k) = \text{Var}\left(\sum_{i=1}^{d_k} q_i k_i\right) = \sum_{i=1}^{d_k} \text{Var}(q_i k_i) = \underbrace{1 + 1 + \dots + 1}_{d_k \text{ times}} = d_k\)
+This means that the variance of the dot product is exactly equal to the dimension $d_k$. As the dimension $d_k$ grows (e.g., $d_k = 128$), the variance of the dot product becomes very large ($128$).</p>
+
+<h4 id="step-c-scaling-the-variance-back-to-1">Step C: Scaling the variance back to 1</h4>
+<p>If we divide the dot product by $\sqrt{d_k}$, we can apply the Scale Rule (with $a = 1/\sqrt{d_k}$):
+\(\text{Var}\left(\frac{q \cdot k}{\sqrt{d_k}}\right) = \left(\frac{1}{\sqrt{d_k}}\right)^2 \text{Var}(q \cdot k) = \frac{1}{d_k} \cdot d_k = 1\)
+By dividing by $\sqrt{d_k}$, we guarantee that the variance of the inputs to the Softmax function is always $1$, regardless of how large the head dimension $d_k$ becomes.</p>
+
+<hr />
+
+<h3 id="33-why-large-variance-causes-gradient-vanishing-in-softmax">3.3 Why Large Variance Causes Gradient Vanishing in Softmax</h3>
+
+<p>Let’s understand why a large variance is harmful to training. The Softmax function turns raw numbers (logits) into probabilities:
+\(\text{softmax}(z)_i = \frac{e^{z_i}}{\sum_{j} e^{z_j}}\)</p>
+
+<h4 id="concrete-numerical-example">Concrete Numerical Example</h4>
+<p>Imagine we have 3 words, and we compute their attention logits $z$.</p>
+
+<ul>
+  <li>
+    <p><strong>Case A: Small Variance (Scaled, e.g., $z = [-1, 0, 1]$)</strong>
+\(\text{softmax}([-1, 0, 1]) = \left[ \frac{e^{-1}}{e^{-1} + e^0 + e^1}, \frac{e^0}{e^{-1} + e^0 + e^1}, \frac{e^1}{e^{-1} + e^0 + e^1} \right] \approx [0.09, 0.24, 0.67]\)
+Here, the probabilities are spread out smoothly. If the inputs change slightly, the probabilities change smoothly. Gradients will flow well.</p>
+  </li>
+  <li>
+    <p><strong>Case B: Large Variance (Unscaled, e.g., $z = [-10, 0, 10]$)</strong>
+\(e^{-10} \approx 0.000045, \quad e^0 = 1, \quad e^{10} \approx 22026\)
+\(\text{softmax}([-10, 0, 10]) \approx \left[ \frac{0.000045}{22027}, \frac{1}{22027}, \frac{22026}{22027} \right] \approx [0.000000002, 0.000045, 0.999955]\)
+The probability distribution becomes extremely “sharp”, almost identical to a one-hot vector $[0, 0, 1]$.</p>
+  </li>
+</ul>
+
+<h4 id="the-gradient-problem">The Gradient Problem</h4>
+<p>The derivative (gradient) of Softmax with respect to its input $z_j$ is given by:
+\(\frac{\partial \text{softmax}(z)_i}{\partial z_j} = \text{softmax}(z)_i \cdot (\delta_{ij} - \text{softmax}(z)_j)\)
+Where $\delta_{ij} = 1$ if $i=j$, and $0$ otherwise.</p>
+<ul>
+  <li>In <strong>Case B</strong>, the values of $\text{softmax}(z)_i$ are either extremely close to $0$ (for $i=1,2$) or extremely close to $1$ (for $i=3$).</li>
+  <li>If $\text{softmax}(z)_i \approx 0$, then the product $\text{softmax}(z)_i \cdot (\dots) \approx 0$.</li>
+  <li>If $\text{softmax}(z)_i \approx 1$, then $(1 - \text{softmax}(z)_i) \approx 0$, so the gradient is also $\approx 0$.</li>
+  <li>This means the gradient completely vanishes, stopping the neural network from learning.</li>
+</ul>
+
+<p>By scaling by $1/\sqrt{d_k}$, we keep the inputs in the active, responsive region of Softmax.</p>
+
+<hr />
+
+<h3 id="34-embedding-scaling-by-sqrtd">3.4 Embedding Scaling by $\sqrt{D}$</h3>
+
+<p>In the original Transformer, the output of the embedding layer is multiplied by $\sqrt{D}$ before adding positional encodings:
+\(X_{\text{final}} = X_{\text{embedding}} \times \sqrt{D} + PE\)</p>
+
+<p>Let’s understand why this is necessary:</p>
+
+<h4 id="1-variance-calibration-xavier-initialization">1. Variance Calibration (Xavier Initialization)</h4>
+<p>When we initialize the embedding lookup matrix, we use Xavier initialization to ensure training stability. Under Xavier, the weights are initialized with a variance of $1/D$.</p>
+<ul>
+  <li>This means the elements of our word embeddings $X_{\text{embedding}}$ start with a variance of $\text{Var}(X_{ij}) \approx 1/D$.</li>
+  <li>If $D=4096$, the variance is $1/4096 \approx 0.00024$. The numbers are very small.</li>
+  <li>By multiplying the embedding tensor by $\sqrt{D}$, we scale the variance of its elements back to $1.0$:
+\(\text{Var}(\sqrt{D} \cdot X_{ij}) = (\sqrt{D})^2 \text{Var}(X_{ij}) = D \cdot \frac{1}{D} = 1\)</li>
+</ul>
+
+<h4 id="2-signal-preservation">2. Signal Preservation</h4>
+<p>Positional encodings ($PE$) consist of sine and cosine values, which naturally vary between $[-1, 1]$. The average variance of these values is about $0.5$.</p>
+<ul>
+  <li>Without scaling, the embedding values (with variance $1/D \approx 0.00024$) would have an average magnitude of about $\sqrt{1/4096} \approx 0.015$.</li>
+  <li>If we directly add the positional encoding (values around $\pm 1.0$) to the embedding (values around $\pm 0.015$), the positional encoding will be nearly <strong>70 times larger</strong> than the word embedding!</li>
+  <li>The semantic word information would be completely drowned out by the positional information.</li>
+  <li>Multiplying the embedding by $\sqrt{D}$ scales its values to have an average magnitude of $\approx 1.0$, allowing the semantic signal and the positional signal to be combined at a balanced $1:1$ ratio.</li>
+</ul>
+
+<hr />
+
+<h2 id="4-layer-normalization-which-dimension-is-normalized">4. Layer Normalization: Which Dimension is Normalized?</h2>
+
+<p>Layer Normalization (LN) stabilizes the activations in deep networks. To understand how it works and which dimension it normalizes, we compare it with Batch Normalization (BN) using a concrete numerical example.</p>
+
+<h3 id="41-concept-and-formulas">4.1 Concept and Formulas</h3>
+<p>For a single word/token vector $x \in \mathbb{R}^D$ (representing one token in one sentence):</p>
+<ol>
+  <li><strong>Compute Mean</strong>:
+\(\mu = \frac{1}{D} \sum_{i=1}^D x_i\)</li>
+  <li><strong>Compute Variance</strong>:
+\(\sigma^2 = \frac{1}{D} \sum_{i=1}^D (x_i - \mu)^2\)</li>
+  <li><strong>Normalize</strong>:
+\(\hat{x}_i = \frac{x_i - \mu}{\sqrt{\sigma^2 + \epsilon}} \quad (\epsilon \text{ is a tiny number to prevent division by zero})\)</li>
+  <li><strong>Scale and Shift</strong>:
+\(y_i = \gamma_i \hat{x}_i + \beta_i\)
+where $\gamma, \beta \in \mathbb{R}^D$ are learnable parameters that let the model adapt the normalized values.</li>
+</ol>
+
+<hr />
+
+<h3 id="42-numerical-comparison-layernorm-vs-batchnorm">4.2 Numerical Comparison: LayerNorm vs BatchNorm</h3>
+
+<p>Let’s construct a small tensor of shape $[B=2, S=2, D=3]$ (Batch size 2, Sequence length 2, Hidden dimension 3):</p>
+
+<ul>
+  <li><strong>Batch 1 (Sentence 1)</strong>:
+    <ul>
+      <li>Token 1 (<code class="language-plaintext highlighter-rouge">"I"</code>): $x_{1,1} = [1.0, 2.0, 3.0]$</li>
+      <li>Token 2 (<code class="language-plaintext highlighter-rouge">"love"</code>): $x_{1,2} = [2.0, 4.0, 6.0]$</li>
+    </ul>
+  </li>
+  <li><strong>Batch 2 (Sentence 2)</strong>:
+    <ul>
+      <li>Token 1 (<code class="language-plaintext highlighter-rouge">"You"</code>): $x_{2,1} = [1.0, -1.0, 0.0]$</li>
+      <li>Token 2 (<code class="language-plaintext highlighter-rouge">"too"</code>): $x_{2,2} = [-2.0, 0.0, 2.0]$</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="case-1-layer-normalization-ln">Case 1: Layer Normalization (LN)</h4>
+<p>LN works <strong>horizontally</strong> (across the features dimension $D$) on each token vector independently.</p>
+
+<p>Let’s normalize Batch 1, Token 1 ($x_{1,1} = [1.0, 2.0, 3.0]$):</p>
+<ol>
+  <li><strong>Mean</strong>: $\mu = \frac{1.0 + 2.0 + 3.0}{3} = 2.0$</li>
+  <li><strong>Variance</strong>: $\sigma^2 = \frac{(1.0-2.0)^2 + (2.0-2.0)^2 + (3.0-2.0)^2}{3} = \frac{1.0 + 0.0 + 1.0}{3} = \frac{2}{3} \approx 0.667$</li>
+  <li><strong>Standard Deviation</strong>: $\sigma = \sqrt{0.667} \approx 0.816$</li>
+  <li><strong>Normalized Token</strong>:
+\(\hat{x}_{1,1} = \left[ \frac{1.0 - 2.0}{0.816}, \frac{2.0 - 2.0}{0.816}, \frac{3.0 - 2.0}{0.816} \right] \approx [-1.22, 0.0, 1.22]\)</li>
+</ol>
+
+<p>Notice that this calculation <strong>only used the numbers inside this single token</strong>. What happens to other tokens or sentences does not affect it.</p>
+
+<h4 id="case-2-batch-normalization-bn">Case 2: Batch Normalization (BN)</h4>
+<p>BN works <strong>vertically</strong> (across the batch dimension $B$ and sequence dimension $S$) for each feature index independently.</p>
+
+<p>Let’s normalize the first feature index ($d=0$) of our tensor. The values for $d=0$ across all batches and tokens are:
+\([1.0 \ (\text{from } x_{1,1}), \ 2.0 \ (\text{from } x_{1,2}), \ 1.0 \ (\text{from } x_{2,1}), \ -2.0 \ (\text{from } x_{2,2})]\)</p>
+<ol>
+  <li><strong>Mean</strong>: $\mu = \frac{1.0 + 2.0 + 1.0 + (-2.0)}{4} = 0.5$</li>
+  <li><strong>Variance</strong>: $\sigma^2 = \frac{(1-0.5)^2 + (2-0.5)^2 + (1-0.5)^2 + (-2-0.5)^2}{4} = \frac{0.25 + 2.25 + 0.25 + 6.25}{4} = 2.25$</li>
+  <li><strong>Standard Deviation</strong>: $\sigma = \sqrt{2.25} = 1.5$</li>
+  <li><strong>Normalized values for $d=0$</strong>:
+    <ul>
+      <li>For $x_{1,1}$: $\hat{x}_{1,1}[0] = \frac{1.0 - 0.5}{1.5} \approx 0.33$</li>
+      <li>For $x_{1,2}$: $\hat{x}_{1,2}[0] = \frac{2.0 - 0.5}{1.5} = 1.0$</li>
+      <li>For $x_{2,1}$: $\hat{x}_{2,1}[0] = \frac{1.0 - 0.5}{1.5} \approx 0.33$</li>
+      <li>For $x_{2,2}$: $\hat{x}_{2,2}[0] = \frac{-2.0 - 0.5}{1.5} \approx -1.67$</li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h3 id="43-why-is-layernorm-preferred-in-nlptransformers">4.3 Why is LayerNorm Preferred in NLP/Transformers?</h3>
+
+<ol>
+  <li><strong>Handling Variable Sequence Lengths</strong>:
+In NLP, different sentences have different lengths. If we use BN, padding tokens (which are added to make sentences the same length in a batch) will skew the mean and variance calculations of other real tokens, introducing noise. Since LN is computed per token, it is completely unaffected by padding.</li>
+  <li><strong>Batch Size Independence</strong>:
+BN requires a sufficiently large batch size to calculate stable means and variances. During generation (inference), we often generate text one sentence at a time (batch size = 1), which makes BN unstable. LN works exactly the same way during training and inference, regardless of the batch size.</li>
+  <li><strong>Parameter Matching</strong>:
+Since LN normalizes along the hidden dimension $D$, its learnable scaling parameters $\gamma$ and shift parameters $\beta$ are of shape $[D]$. This perfectly matches the embedding representation of each token.</li>
+</ol>
+
+<hr />
+
+<h2 id="references">References</h2>
+
+<ol>
+  <li><strong>Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, L., &amp; Polosukhin, I. (2017). Attention Is All You Need.</strong> <em>Advances in Neural Information Processing Systems, 30.</em>
+    <ul>
+      <li><em>Role in this post</em>: The foundational paper introducing the Transformer architecture, scaled dot-product attention, multi-head attention, and the overall encoder-decoder framework. It provides the core mathematical justification for scaling by $1/\sqrt{d_k}$ and multiplying embeddings by $\sqrt{d_{\text{model}}}$.</li>
+    </ul>
+  </li>
+  <li><strong>Ba, J. L., Kiros, J. R., &amp; Hinton, G. E. (2016). Layer Normalization.</strong> <em>arXiv preprint arXiv:1607.06450.</em>
+    <ul>
+      <li><em>Role in this post</em>: The paper that proposed Layer Normalization as an alternative to Batch Normalization. It explains the mathematical formulation of LN and why it is well-suited for recurrent architectures and sequence-to-sequence learning tasks.</li>
+    </ul>
+  </li>
+  <li><strong>Glorot, X., &amp; Bengio, Y. (2010). Understanding the difficulty of training deep feedforward neural networks.</strong> <em>Proceedings of the Thirteenth International Conference on Artificial Intelligence and Statistics.</em>
+    <ul>
+      <li><em>Role in this post</em>: Introduced “Xavier initialization” (Glorot initialization). It provides the mathematical context for why embedding matrices initialized with variance $1/D$ require scaling by $\sqrt{D}$ to restore variance to 1.</li>
+    </ul>
+  </li>
+</ol>]]></content><author><name>Yuntao Nie</name><email>cuaklenck@gmail.com</email></author><category term="LLM Interview" /><category term="Transformer Architecture" /><category term="Multi-Head Attention" /><category term="Layer Normalization" /><category term="Interview Preparation" /><summary type="html"><![CDATA[As the foundational architecture behind modern Large Language Models (LLMs), the Transformer has revolutionized natural language processing by capturing long-range dependencies and global context more effectively than recurrent architectures. Consequently, deep conceptual and mathematical understanding of the Transformer is one of the most frequently tested topics in LLM algorithm interviews (e.g., at top-tier companies like Xiaomi, ByteDance, and Alibaba).]]></summary></entry><entry><title type="html">Why Does LLM Performance Temporarily Decline and Then Recover During RL Post-Training?</title><link href="https://1571859588.github.io/posts/2026/05/llm-interview-sft-rl-en/" rel="alternate" type="text/html" title="Why Does LLM Performance Temporarily Decline and Then Recover During RL Post-Training?" /><published>2026-05-29T00:00:00+00:00</published><updated>2026-05-29T00:00:00+00:00</updated><id>https://1571859588.github.io/posts/2026/05/llm-interview-SFT-RL-en</id><content type="html" xml:base="https://1571859588.github.io/posts/2026/05/llm-interview-sft-rl-en/"><![CDATA[<p>During the post-training phase of Large Language Models (LLMs), a highly intriguing phenomenon often occurs: when transitioning from Supervised Fine-Tuning (SFT) to Reinforcement Learning (RL) (such as RLHF, RLAIF, or GRPO), the model’s out-of-distribution (OOD) performance on test datasets initially <strong>declines</strong> before <strong>recovering</strong> and eventually <strong>outperforming</strong> the SFT baseline.</p>
+
+<p>This U-shaped performance trajectory is a classic post-training question frequently asked in top-tier LLM algorithm interviews (e.g., at ByteDance, Alibaba, and Zhipu AI). It directly tests your deep understanding of the mathematical and geometric optimization landscapes of both the SFT and RL training stages.</p>
+
+<p><img src="/images/blogs/2026-05-29-llm-interview-SFT-RL-en.assets/image-20260529145901727.png" alt="U-Shaped Performance Curve during SFT-to-RL transition" /></p>
+
+<p>In this blog post, we will dissect the underlying mechanics behind this phenomenon, drawing on recent theoretical and empirical breakthroughs.</p>
+
+<hr />
+
+<h2 id="1-introduction-the-post-training-pipeline">1. Introduction: The Post-Training Pipeline</h2>
+
+<p>A standard pipeline for post-training large language models (such as GPT-4, Claude, and DeepSeek-R1) involves two sequential stages:</p>
+<ol>
+  <li><strong>Supervised Fine-Tuning (SFT)</strong> to teach the model to follow instructions and generate standard answers.</li>
+  <li><strong>Reinforcement Learning (RL)</strong> (e.g., RLHF, RLAIF, or RLVR/GRPO) to align the model with human preferences or enhance its reasoning capabilities.</li>
+</ol>
+
+<p>However, this sequential transition introduces a core question: <em>Why does the model’s performance on test datasets temporarily drop at the beginning of the RL phase, only to recover and ultimately exceed the SFT baseline as training progresses?</em></p>
+
+<hr />
+
+<h2 id="2-phase-1-why-does-performance-drop-initially">2. Phase 1: Why Does Performance Drop Initially?</h2>
+
+<h3 id="21-the-objective-conflict-and-mathematical-non-decouplability">2.1 The Objective Conflict and Mathematical Non-Decouplability</h3>
+<p>A 2026 research paper by Huawei Technologies (<em>On the Non-decoupling of Supervised Fine-tuning and Reinforcement Learning in Post-training</em>) mathematically demonstrates that SFT and RL are <strong>inherently coupled (non-decouplable) in essence</strong>. Specifically, the paper proves that regardless of which training phase comes first, the subsequent phase will inevitably disrupt the representation and knowledge learned during the initial phase.</p>
+
+<p>The underlying reason lies in their conflicting mathematical objectives:</p>
+<ul>
+  <li><strong>SFT Objective</strong>: Minimizes the negative log-likelihood (NLL) of tokens, forcing the model to precisely match the token distribution of the training data.</li>
+  <li><strong>RL Objective</strong>: Maximizes the expected reward, focusing strictly on whether the final generated output achieves a high reward score, regardless of the token-level generation path.</li>
+</ul>
+
+<p>Even if SFT training has fully converged to a low loss, the cross-entropy (SFT) loss will inevitably rise once RL training begins. This mathematical phenomenon is empirically verified in Qwen3-0.6B models, where the cross-entropy loss spikes immediately at the start of RL training, occasionally even exceeding the loss of the pre-trained base model, leading to a temporary decline in test-set performance.</p>
+
+<h3 id="22-parameter-space-re-shaping--catastrophic-forgetting">2.2 Parameter Space Re-shaping &amp; Catastrophic Forgetting</h3>
+<p>From the perspective of the parameter space:</p>
+<ul>
+  <li>SFT pulls the model’s weights toward a specific subspace that memorizes the empirical distribution of the fine-tuning dataset.</li>
+  <li>Since RL is solely driven by maximizing rewards, it forces the model’s parameters to migrate toward a different region of the parameter space, overriding SFT-learned token-level features. This phenomenon is known as <strong>catastrophic forgetting</strong>.</li>
+</ul>
+
+<p>An intuitive analogy is that SFT is like a student <strong>memorizing standard answers</strong> for an exam. The closer the student mimics the reference keys, the lower the training loss. RL, however, is like requiring the student to <strong>explore and solve problems independently</strong>. RL only evaluates the correctness of the final outcome (the reward) and allows the student to find alternative, creative solution paths. When the model is abruptly switched from “rote-memorization mode” to “active-exploration mode,” it initially struggles to adapt, causing its test-set scores to plummet.</p>
+
+<hr />
+
+<h2 id="3-phase-2-why-does-performance-recover-and-surge">3. Phase 2: Why Does Performance Recover and Surge?</h2>
+
+<h3 id="31-svd-analysis-singular-vector-rotation-in-weight-matrices">3.1 SVD Analysis: Singular Vector Rotation in Weight Matrices</h3>
+<p>Recent work (<em>RL Is Neither a Panacea Nor a Mirage: Understanding Supervised vs. Reinforcement Learning Fine-Tuning for LLMs</em>) provides a deeper geometric explanation using <strong>Singular Value Decomposition (SVD)</strong> of the model’s weight matrices ($W = U \Sigma V^T$):</p>
+<ol>
+  <li><strong>Generalization Depends on Directions</strong>: Researchers discovered that the model’s generalization capability is not determined by the magnitude of its singular values ($\Sigma$), but rather by the <strong>direction of its singular vectors</strong> ($U$ and $V$).</li>
+  <li><strong>SFT Causes Vector Rotation</strong>: During aggressive SFT training, the singular vectors corresponding to the dominant principal components (the largest and smallest singular values) undergo a rotation that degrades out-of-distribution (OOD) generalization.</li>
+  <li><strong>RL Re-aligns the Vectors</strong>: Surprisingly, subsequent RL training rotates these singular vector directions back to a more robust orientation, especially in the shallow (lower) and deep (upper) layers of the network.</li>
+  <li><strong>Causal Evidence</strong>: To verify this causally, researchers conducted an intervention: they took the high-performing RL-tuned model and replaced its weight matrices’ singular vectors with those from the SFT model. As a result, the model’s OOD accuracy on the Llama-3.2-11B model plummeted from <strong>16.2% to 10.6%</strong> (with cross-entropy loss increasing by over 1.3%). This proves that the new geometric directions recovered by RL are the primary drivers of generalization.</li>
+</ol>
+
+<h3 id="32-reward-variance-driven-implicit-regularization">3.2 Reward Variance-Driven Implicit Regularization</h3>
+<p>Most importantly, RL exhibits an <strong>implicit regularization effect</strong> driven by <strong>reward variance</strong>.</p>
+
+<p>When the model is highly uncertain about a particular sample, the variance of rewards across multiple generated rollouts (answers) is typically very high. Under RL objectives (such as policy gradients), a higher reward variance naturally scales down the magnitude of the gradient updates for those uncertain samples. This acts as a “self-adaptive braking system”—in highly uncertain representation regions, the parameter updates are extremely conservative, preventing the disruption of pre-existing knowledge. Conversely, in highly confident regions with low reward variance, the parameters update rapidly.</p>
+
+<h3 id="33-what-does-not-drive-the-performance-recovery">3.3 What DOES NOT Drive the Performance Recovery?</h3>
+<p>A common misconception is that the recovery of generalization during RL is primarily driven by:</p>
+<ol>
+  <li><strong>The KL Divergence Penalty</strong>: The KL penalty is designed to keep the RL policy close to the SFT reference policy. However, ablation studies show that even when the KL penalty is completely removed, the model’s performance still recovers (though the training process itself becomes highly unstable).</li>
+  <li><strong>Chain-of-Thought (CoT) Reasoning</strong>: Some hypothesize that the performance gains are solely due to longer reasoning trajectories. Yet, even on short-context tasks without CoT, the model still exhibits a robust recovery of generalization.</li>
+</ol>
+
+<p>These experiments demonstrate that the <strong>implicit regularization mechanism driven by reward variance</strong> is the actual dominant force behind this performance recovery.</p>
+
+<hr />
+
+<h2 id="4-key-engineering-takeaways-and-best-practices">4. Key Engineering Takeaways and Best Practices</h2>
+
+<h3 id="41-stop-sft-early-the-danger-of-over-sft">4.1 Stop SFT Early: The Danger of Over-SFT</h3>
+<p>If SFT training is carried out for too long, the model severely overfits the training dataset. This pulls the model’s parameters too far into the SFT empirical distribution space. Consequently:</p>
+<ul>
+  <li>The RL phase requires significantly more steps to pull the parameters back toward a generalizable state, and in some cases, the model may never fully recover.</li>
+  <li><strong>Industry Best Practice</strong>: Instead of waiting for SFT to fully converge, teams often start RL training from an <strong>intermediate SFT checkpoint</strong>. For example, empirical studies on the Llama-3.2-11B model show that its OOD generalization peaks at only <strong>20% of the full SFT training trajectory</strong>; continuing SFT beyond this point actually degrades the downstream RL potential.</li>
+</ul>
+
+<h3 id="42-rft-reinforcement-fine-tuning-vs-sft-in-continual-learning">4.2 RFT (Reinforcement Fine-Tuning) vs. SFT in Continual Learning</h3>
+<p>Another profound finding from <em>Reinforcement Fine-Tuning Naturally Mitigates Forgetting in Continual Post-Training</em> is that <strong>Reinforcement Fine-Tuning (RFT)</strong> is inherently more resilient to catastrophic forgetting than SFT:</p>
+<ul>
+  <li>In continual learning scenarios, SFT leads to severe catastrophic forgetting, causing a sharp drop in performance on previous tasks.</li>
+  <li>In contrast, RFT can retain performance on previous tasks without requiring any explicit data replay strategies, closely approaching the performance of joint multi-task training.</li>
+  <li>This demonstrates that the reinforcement learning paradigm is inherently more friendly to long-term knowledge retention and continual adaptation.</li>
+</ul>
+
+<hr />
+
+<h2 id="5-interview-cheat-sheet-how-to-answer-like-a-pro">5. Interview Cheat Sheet: How to Answer Like a Pro</h2>
+
+<p>When asked: <em>“Why does an LLM’s performance decline initially and then recover during reinforcement learning following SFT?”</em></p>
+
+<p>Here is a structured, professional outline to structure your answer:</p>
+
+<ol>
+  <li><strong>Acknowledge the Core Conflict</strong>:
+Explain that SFT and RL have fundamentally different optimization objectives that are mathematically coupled (as proven by Huawei in 2026). SFT minimizes token-level negative log-likelihood (memorizing a specific empirical distribution), while RL maximizes expected reward (optimizing for the final outcome). This mismatch creates a temporary performance drop during the transition.</li>
+  <li><strong>Explain the Initial Drop (Phase 1: Degradation)</strong>:
+    <ul>
+      <li><strong>Parameter Space Re-shaping &amp; Catastrophic Forgetting</strong>: The RL objective forces the parameters to shift away from the SFT subspace, overriding the precise token-level distribution matching learned in SFT.</li>
+      <li><strong>Singular Vector Rotation</strong>: SVD analysis reveals that SFT causes the singular vectors (orientation) of weight matrices to rotate away from optimal generalization configurations.</li>
+    </ul>
+  </li>
+  <li><strong>Explain the Recovery and Surge (Phase 2: Restoration)</strong>:
+    <ul>
+      <li><strong>Singular Vector Re-alignment</strong>: RL rotates the singular vector directions back to highly robust, generalizable orientations (especially in shallow and deep layers). Replacing RL singular vectors with SFT ones causes accuracy to plummet (e.g., Llama-3.2-11B dropping from 16.2% to 10.6%).</li>
+      <li><strong>Reward Variance-Driven Implicit Regularization</strong>: Higher reward variance on uncertain samples naturally scales down gradients, acting as a self-adaptive braking system that protects old knowledge while allowing fast learning in confident regions.</li>
+    </ul>
+  </li>
+  <li><strong>Offer Strategic Recommendations</strong>:
+    <ul>
+      <li><strong>Avoid Over-SFT</strong>: Use intermediate SFT checkpoints (e.g., stopping at 20% training progress) rather than fully converged ones to initiate RL.</li>
+      <li><strong>Highlight RFT</strong>: Point out that RFT is naturally more resilient to catastrophic forgetting in continual learning setups than SFT due to this implicit variance regularization.</li>
+    </ul>
+  </li>
+</ol>
+
+<p>This explanation shows that the U-shaped curve is not a simple “forget-and-relearn” process, but rather a representation-level shift where the model transitions from a <strong>memorization-driven representation</strong> to a <strong>generalization-driven reasoning mode</strong>.</p>
+
+<hr />
+
+<h2 id="references">References</h2>
+
+<ol>
+  <li><strong>On the Non-decoupling of Supervised Fine-tuning and Reinforcement Learning in Post-training</strong> (Huawei Technologies, 2026) — <em>Proves the mathematical non-decouplability of SFT and RL, demonstrating that sequential training inevitably leads to cross-entropy loss spikes during the RL phase.</em></li>
+  <li><strong>RL Is Neither a Panacea Nor a Mirage: Understanding Supervised vs. Reinforcement Learning Fine-Tuning for LLMs</strong> (August 2025) — <em>Uses Singular Value Decomposition (SVD) to analyze representation space changes, proving that singular vector rotation, rather than singular value magnitude, drives generalization recovery in RL.</em></li>
+  <li><strong>Reinforcement Fine-Tuning Naturally Mitigates Forgetting in Continual Post-Training</strong> (Lai et al., 2025) — <em>Demonstrates that RFT naturally mitigates catastrophic forgetting in continual learning settings compared to SFT, thanks to a reward variance-driven implicit regularization mechanism.</em></li>
+</ol>]]></content><author><name>Yuntao Nie</name><email>cuaklenck@gmail.com</email></author><category term="LLM Interview" /><category term="SFT and RL Tradeoffs" /><category term="Post-Training Dynamics" /><category term="Classic LLM Interview Questions" /><summary type="html"><![CDATA[During the post-training phase of Large Language Models (LLMs), a highly intriguing phenomenon often occurs: when transitioning from Supervised Fine-Tuning (SFT) to Reinforcement Learning (RL) (such as RLHF, RLAIF, or GRPO), the model’s out-of-distribution (OOD) performance on test datasets initially declines before recovering and eventually outperforming the SFT baseline.]]></summary></entry><entry><title type="html">Deep Dive into the ‘Repeater/Repetition Problem’ in Large Language Models</title><link href="https://1571859588.github.io/posts/2026/05/llm-interview-repeater-en/" rel="alternate" type="text/html" title="Deep Dive into the ‘Repeater/Repetition Problem’ in Large Language Models" /><published>2026-05-24T00:00:00+00:00</published><updated>2026-05-24T00:00:00+00:00</updated><id>https://1571859588.github.io/posts/2026/05/llm-interview-repeater-en</id><content type="html" xml:base="https://1571859588.github.io/posts/2026/05/llm-interview-repeater-en/"><![CDATA[<p>The following figure illustrates the repetition problem in LLMs:</p>
+
+<p><img src="/images/blogs/2026-05-24-llm-interview-repeater-en/repetition%20phenomenon.png" alt="Examples of Repetition Curse: (a) Token Repetition Scenario, (b) Paragraph Repetition Scenario" /></p>
+
+<h2 id="1-what-is-the-repeaterrepetition-problem">1. What is the “Repeater/Repetition” Problem?</h2>
+
+<p>In Natural Language Generation (NLG) tasks, models may sometimes fall into an infinite loop, repeatedly generating the same sentence, phrase, or paragraph.</p>
+
+<p>For example:</p>
+
+<blockquote>
+  <p>“Today’s weather is good, let’s go to the park. go to the park. go to the park. …”</p>
+</blockquote>
+
+<p>This self-reinforcing loop prevents the model from terminating the generation process, severely degrading the user experience. It is a classic symptom of text degeneration.</p>
+
+<h2 id="2-why-do-llms-become-repeaters">2. Why Do LLMs Become “Repeaters”?</h2>
+
+<p>To address this question, we must analyze it from the perspective of both the underlying model architecture and the decoding mechanism.</p>
+
+<h3 id="21-autoregressive-nature-and-self-reinforcing-loops">2.1 Autoregressive Nature and Self-Reinforcing Loops</h3>
+
+<p>Large Language Models (LLMs) typically adopt a decoder-only architecture, meaning that each generated token is conditioned on the probability distribution of all previously generated tokens:
+\(P(x_t \mid x_{&lt;t})\)
+Due to the nature of the self-attention mechanism, a newly generated token will establish a strong correlation with historically repeated tokens. This significantly amplifies the attention weights of identical words, forming a positive feedback loop. Ultimately, the probability space becomes severely compressed, forcing the model to predict the same tokens repeatedly.</p>
+
+<h3 id="22-the-limitation-of-decoding-strategies">2.2 The Limitation of Decoding Strategies</h3>
+
+<ul>
+  <li>
+    <p><strong>Greedy Search</strong>: Greedy search always selects the token with the highest probability at each step. While this method is deterministic, it is highly prone to getting trapped in local optima. Once the context enters a repetitive grammatical structure, the model is bound to follow this deterministic path, repeating the same text indefinitely.</p>
+
+    <blockquote>
+      <p>As pointed out in a recent paper, greedy decoding lacks the ability to escape from repetitive loops. Due to the self-reinforcing effect, the probability of repetition increases monotonically with the number of past repetitions, eventually stabilizing near a certain upper bound and causing the model to repeat endlessly.</p>
+    </blockquote>
+  </li>
+  <li>
+    <p><strong>Suboptimal Sampling Parameters (e.g., Low Temperature or Top-p)</strong>: If the temperature is set too low, the logits distribution becomes overly sharp, allowing high-probability tokens to monopolize the generation space, reducing randomness and easily causing the model to degrade into a repetitive state similar to greedy search.</p>
+  </li>
+</ul>
+
+<h3 id="23-the-bias-of-pre-training--fine-tuning-datasets">2.3 The Bias of Pre-training &amp; Fine-tuning datasets</h3>
+
+<p>The training corpora for LLMs originate from vast amounts of web data. This raw data is often filled with repetitive content, such as:</p>
+
+<ul>
+  <li>Website templates, page headers/footers, and copyright disclaimers;</li>
+  <li>Spam ads, automated emails, and machine-generated repetitive code blocks;</li>
+  <li>Error logs captured by web crawlers.</li>
+</ul>
+
+<p>If a model overfits these repetitive patterns during pre-training or Supervised Fine-Tuning (SFT), it will easily trigger this “repetitive behavior” when encountering similar contexts during inference.</p>
+
+<h3 id="24-context-degradation--attention-sinks">2.4 Context Degradation &amp; Attention Sinks</h3>
+
+<p>When the length of the generated text approaches or exceeds the context window of the model, or when the model lacks sufficient long-context instruction tuning, the self-attention mechanism may experience the “attention sink” effect on early tokens or lose the ability to track long-range dependencies. Consequently, the model enters a “distracted” state where it struggles to generate logical, novel content, resorting instead to copying familiar, local, and “safe” sequences to continue generation.</p>
+
+<h3 id="25-prolonged-sft-training">2.5 Prolonged SFT Training</h3>
+
+<p>A paper by ByteDance points out that prolonged SFT training leads to rapid overfitting. This not only triggers the repetition problem but also severely degrades prompt-following capability and generation diversity.</p>
+
+<h2 id="3-how-to-deal-with-it-on-the-inference-side">3. How to Deal with It on the Inference-Side?</h2>
+
+<h3 id="31-repetition-penalty">3.1 Repetition Penalty</h3>
+
+<p>The underlying principle is to penalize the logits of tokens that have already been generated before calculating the Softmax probability distribution.</p>
+
+<p>For each token $i$ in the vocabulary, if it has already appeared in the generated text sequence $g$, its logit is adjusted as follows:
+\(\text{logits}_i = \begin{cases} 
+\text{logits}_i / \theta &amp; \text{if } \text{logits}_i &gt; 0 \\
+\text{logits}_i \times \theta &amp; \text{if } \text{logits}_i \le 0 
+\end{cases}\)
+where $\theta \ge 1.0$ is the penalty factor, which is commonly set between $1.05$ and $1.2$.</p>
+
+<ul>
+  <li>When $\theta = 1.0$, there is no penalty.</li>
+  <li>When $\theta &gt; 1.0$, the logits of previously generated tokens are scaled down proportionally. This significantly decreases their probability after Softmax, encouraging the model to select alternative, ungenerated tokens.</li>
+</ul>
+
+<h3 id="32-presence-penalty--frequency-penalty">3.2 Presence Penalty &amp; Frequency Penalty</h3>
+
+<p>These two penalties, popularized by OpenAI, offer more fine-grained control over repetitive behavior by applying a linear subtraction to the logits:
+\(\text{logits}'_i = \text{logits}_i - (c_i \times \mu_{\text{freq}} + \text{sgn}(c_i) \times \mu_{\text{pres}})\)
+where:</p>
+
+<ul>
+  <li>$c_i$ is the cumulative occurrence count of token $i$ in the generated text.</li>
+  <li>$\text{sgn}(c_i)$ is the sign function (which equals $1$ if $c_i &gt; 0$, and $0$ otherwise).</li>
+  <li>$\mu_{\text{freq}}$ is the <strong>Frequency Penalty</strong>. As a token’s frequency increases, the penalty grows linearly, making it suitable for preventing the repetitive stacking of high-frequency words.</li>
+  <li>$\mu_{\text{pres}}$ is the <strong>Presence Penalty</strong>. As long as a token has appeared at least once, it receives a one-time fixed penalty, which is effective for guiding the model to introduce new topics and generate diverse vocabulary.</li>
+</ul>
+
+<h3 id="33-no-repeat-n-gram">3.3 No-Repeat N-Gram</h3>
+
+<p>This hard constraint is commonly applied in Beam Search or standard text generation.</p>
+
+<ul>
+  <li><strong>Mechanism</strong>: At each decoding step, the model maintains a registry of all generated N-Grams. If selecting a candidate token $w$ forms an N-Gram that has already appeared in the history, the logit of $w$ is forcibly set to $-\infty$ (reducing its probability to zero).</li>
+  <li><strong>Pros and Cons</strong>: Setting <code class="language-plaintext highlighter-rouge">no_repeat_ngram_size = 3</code> completely prevents consecutive repetitions of three or more tokens, which is highly effective for machine translation and summarization tasks. However, for technical writing or programming tasks that require repeating specific terminology or code structures, this rigid constraint can severely damage the quality of the generated text.</li>
+</ul>
+
+<h3 id="34-contrastive-search">3.4 Contrastive Search</h3>
+
+<p>Contrastive Search is an advanced decoding method proposed in recent years.</p>
+
+<p>At each generation step, it balances the model’s output probability against a <strong>degeneration penalty</strong>, which is measured by the maximum cosine similarity (representing the anisotropy penalty) between the candidate token’s hidden state and those of the previously generated context:
+\(x_t = \arg\max_{u \in V^{(k)}} \left\{ (1 - \alpha) \cdot P(u \mid x_{&lt;t}) - \alpha \cdot \max_{j} \text{Sim}(h_u, h_{x_j}) \right\}\)
+where $h_u$ is the representation vector (hidden state) of candidate token $u$, $h_{x_j}$ represents the hidden states of past tokens, and $\alpha$ is a hyperparameter that controls the tradeoff between generation probability and repetition rejection. This ensures that the generated token is both highly probable and maintains a healthy degree of semantic separation from the preceding context.</p>
+
+<h3 id="35-other-inference-adjustments">3.5 Other Inference Adjustments</h3>
+
+<ol>
+  <li><strong>Adjust Temperature</strong>: Slightly increase the Temperature parameter to enhance randomness and generation diversity;</li>
+  <li><strong>Sampling Methods</strong>: Employ Top-$k$ or Top-$p$ sampling strategies instead of greedy search to break deterministic loops;</li>
+  <li><strong>Beam Search with Constraints</strong>: Use Beam Search with early stopping thresholds, which is a generalized approach shown to be effective across various types of repetitive generation.</li>
+</ol>
+
+<h2 id="4-how-to-eradicate-repetition-on-the-training-side">4. How to Eradicate Repetition on the Training-Side?</h2>
+
+<p>While tweaking parameters on the inference side is quick and simple, it is merely a temporary patch rather than a fundamental cure. To address the root cause, training-side interventions are essential. The most effective methods include:</p>
+
+<ol>
+  <li>
+    <p><strong>Extremely Rigorous Data Deduplication</strong>:
+During the pre-training stage, we can leverage algorithms like <strong>MinHash + LSH</strong> and <strong>Suffix Arrays</strong> to de-duplicate trillion-token corpora, removing boilerplate web templates, automated spam, and machine-generated repetitive structures.</p>
+  </li>
+  <li>
+    <p><strong>High-Quality SFT Dataset Cleaning</strong>:
+During the Supervised Fine-Tuning (SFT) phase, we must eliminate samples with monotonous formats or high frequencies of repetitive phrasing in multi-turn dialogues. Rewriting these samples—either through manual curation or using advanced LLMs (e.g., GPT-4)—ensures that the fine-tuning corpus remains diverse and concise.</p>
+  </li>
+  <li><strong>Best Practices in SFT Training</strong>:
+    <ul>
+      <li><strong>Moderate Learning Rate</strong>: Avoid setting the learning rate too high during SFT;</li>
+      <li><strong>Strict Epoch/Step Control</strong>: Closely monitor and limit the number of SFT training epochs;</li>
+      <li><strong>Early Stopping</strong>: Implement early stopping as soon as early signs of overfitting (e.g., repeating behaviors) emerge.</li>
+    </ul>
+  </li>
+  <li><strong>Alignment via RLHF/DPO</strong>:
+    <ul>
+      <li><strong>RLHF (Reinforcement Learning from Human Feedback)</strong>: Assign low rewards to responses containing repetitive loops, training the Reward Model to learn a negative preference against repetition;</li>
+      <li><strong>DPO (Direct Preference Optimization)</strong>: Construct preference triples in the format of <code class="language-plaintext highlighter-rouge">(prompt, chosen_response, rejected_response)</code>, placing repetitive texts in the <code class="language-plaintext highlighter-rouge">rejected_response</code> and clean, diverse texts in the <code class="language-plaintext highlighter-rouge">chosen_response</code>. This directly penalizes the attention paths associated with repetitive generation during parameter updates.</li>
+    </ul>
+
+    <blockquote>
+      <p>For example, ByteDance’s <strong>SEAWEED</strong> model effectively addresses this problem by combining SFT with preference alignment (RLHF/DPO).</p>
+    </blockquote>
+  </li>
+</ol>
+
+<h2 id="5-interview-response-cheat-sheet">5. Interview Response Cheat Sheet</h2>
+
+<p>If an interviewer asks: <em>“How would you diagnose and solve the ‘repeater/repetition’ problem in Large Language Models?”</em></p>
+
+<p>Here is a highly structured, professional answer outline to impress them:</p>
+
+<ol>
+  <li><strong>Acknowledge and Categorize</strong>: 
+Define it as a classic NLG (Natural Language Generation) degradation phenomenon. Clarify that it stems from two main fronts: <em>decoding-side constraints</em> (local traps) and <em>model-side fitting bias</em> (overfitting repetitive data distributions).</li>
+  <li><strong>Explain the Root Causes</strong>:
+    <ul>
+      <li><strong>Autoregressive Nature &amp; Attention Amplification</strong>: decoder-only models generate tokens sequentially. Once a repetitive sequence begins, the Self-Attention mechanism amplifies the weights of these repeated tokens, creating a positive feedback loop that heavily compresses the probability space.</li>
+      <li><strong>Decoding Strategy Limitations</strong>: Deterministic decoding methods like Greedy Search lack the ability to escape repetitive patterns. Similarly, extremely low temperature settings or narrow Top-$p$ bounds stifle generation diversity.</li>
+      <li><strong>Data and Overfitting Bias</strong>: Trillion-token pre-training or fine-tuning datasets are often contaminated with boilerplate web headers, automated crawler logs, and templated code. Prolonged SFT training causes the model to overfit these patterns, triggering repetitive behaviors.</li>
+    </ul>
+  </li>
+  <li><strong>Propose Inference-Side Fixes (Fast Mitigation)</strong>:
+    <ul>
+      <li>Introduce <strong>Repetition Penalty</strong> (multiplicative logit division) and <strong>Frequency/Presence Penalties</strong> (additive linear logit subtraction) to lower the probability of previously generated words.</li>
+      <li>Implement <strong>No-Repeat N-Gram</strong> as a hard physical constraint to completely block phrase repetitions.</li>
+      <li>Mention <strong>Contrastive Search</strong> as an advanced semantic search method that incorporates anisotropy penalties to keep the generated text semantically distinct from the historical context.</li>
+    </ul>
+  </li>
+  <li><strong>Propose Training-Side Cures (Fundamental Resolution)</strong>:
+    <ul>
+      <li><strong>Upstream</strong>: Implement rigorous pre-training data deduplication using MinHash + LSH and Suffix Arrays.</li>
+      <li><strong>Midstream</strong>: Clean SFT dialogue datasets, reducing learning rates, and executing early stopping as soon as repetition signs appear.</li>
+      <li><strong>Downstream</strong>: Apply alignment algorithms (RLHF or DPO) using preference triples where repetitive sequences are explicitly put in the <code class="language-plaintext highlighter-rouge">rejected</code> set to suppress these attention pathways.</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="references">References</h2>
+
+<ol>
+  <li><strong>Learning to Break the Loop: Analyzing and Mitigating Repetitions for Neural Text Generation</strong> (Guan et al., NeurIPS 2022) — <em>Utilized Markov models to explain the self-reinforcement effect and proposed pseudo-repetition penalization (DITTO) to solve the repetition loop.</em></li>
+  <li><strong>A Theoretical Analysis of the Repetition Problem in Text Generation</strong> (Fu et al., AAAI 2021) — <em>Formally simplified the text generation process into a first-order Markov chain, identifying the “high inflow” phenomenon as a major cause of repetition.</em></li>
+  <li><strong>Seaweed-7B: A Cost-Effective Mid-Sized Video Generation Foundation Model</strong> (ByteDance, 2024) — <em>Discussed SFT post-training challenges (including aesthetic tuning overfitting) and utilized a dual-stage post-training pipeline (SFT + RLHF/DPO) to balance structure, consistency, and generation quality.</em></li>
+  <li><strong>A Contrastive Framework for Neural Text Generation</strong> (Su et al., 2022) — <em>Introduced Contrastive Search and analyzed the degradation/repetition of greedy decoding.</em></li>
+  <li><strong>The Curious Case of Neural Text Degeneration</strong> (Holtzman et al., 2019) — <em>The foundational paper analyzing text degeneration and introducing Nucleus (Top-p) Sampling.</em></li>
+</ol>]]></content><author><name>Yuntao Nie</name><email>cuaklenck@gmail.com</email></author><category term="LLM Interview" /><category term="LLM Common Interview Questions" /><category term="Repeater/Repetition Problem" /><category term="Why Models become a Repeater when training by SFT" /><summary type="html"><![CDATA[The following figure illustrates the repetition problem in LLMs:]]></summary></entry><entry><title type="html">The most effective way to learn HDL</title><link href="https://1571859588.github.io/posts/2026/04/blog-post-1/" rel="alternate" type="text/html" title="The most effective way to learn HDL" /><published>2026-04-06T00:00:00+00:00</published><updated>2026-04-06T00:00:00+00:00</updated><id>https://1571859588.github.io/posts/2026/04/blog-post-1</id><content type="html" xml:base="https://1571859588.github.io/posts/2026/04/blog-post-1/"><![CDATA[<p>An exceptionally effective way to master Hardware Description Languages (HDLs) is through interactive, hands-on practice. You can solve practical design challenges on <a href="https://hdlbits.01xz.net/">HDLBits</a> leveraging AI assistance.</p>
+
+<p><img src="/images/blogs/blog1/HDLbits.png" alt="HDLBits Learning Environment" /></p>
+
+<p>This active learning methodology is far more engaging and effective than passive reading.</p>
+
+<ul>
+  <li><a href="https://hdlbits.01xz.net/">HDLBits Platform</a></li>
+</ul>]]></content><author><name>Yuntao Nie</name><email>cuaklenck@gmail.com</email></author><category term="EDA Tutorial" /><category term="HDL Tutorial" /><category term="Verilog" /><summary type="html"><![CDATA[An exceptionally effective way to master Hardware Description Languages (HDLs) is through interactive, hands-on practice. You can solve practical design challenges on HDLBits leveraging AI assistance.]]></summary></entry></feed>
