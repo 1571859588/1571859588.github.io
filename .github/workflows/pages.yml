@@ -21,11 +21,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Ruby & install gems
+      - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2'
-          bundler-cache: false
+
+      - name: Install gems
+        run: bundle install
 
       - name: Sync notes-src → _notes
         run: ruby _scripts/sync-notes.rb
