@@ -88,16 +88,6 @@ toc: false
   </aside>
 </div>
 
-<!-- Search index data (loaded by notes-search.js) -->
-<script>
-var NOTES_INDEX = [
-{% for note in site.notes %}
-  {t:{{ note.title | jsonify }}, s:{{ note.series_title | default: note.series | jsonify }}, u:{{ note.url | relative_url | jsonify }}}{% unless forloop.last %},{% endunless %}
-{% endfor %}
-];
-</script>
-<script src="{{ '/assets/js/notes-search.js' | relative_url }}"></script>
-
 <script>
 (function() {
   var links = document.querySelectorAll('.notes-hub-index-link');
