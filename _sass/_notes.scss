@@ -364,15 +364,7 @@
       border-radius: 8px;
     }
 
-    /* Reset ALL Rouge syntax colors — uniform text like Typora */
-    .highlight [class] {
-      color: #d4d4d4 !important;
-      background: transparent !important;
-      font-weight: inherit !important;
-      font-style: inherit !important;
-    }
-
-    /* Kill any background on Rouge table/td/pre/code wrappers */
+    /* Rouge table/td/pre — clean, no backgrounds */
     .highlight table,
     .highlight td,
     .highlight pre {
@@ -382,6 +374,70 @@
       padding: 0 !important;
     }
   }
+
+  /* ── Syntax colors: VS Code Dark+ inspired ── */
+  .highlight .c   { color: #6a9955; font-style: italic; } /* Comment */
+  .highlight .cm  { color: #6a9955; font-style: italic; }
+  .highlight .cp  { color: #6a9955; font-style: italic; }
+  .highlight .c1  { color: #6a9955; font-style: italic; }
+  .highlight .cs  { color: #6a9955; font-style: italic; }
+  .highlight .k   { color: #569cd6; } /* Keyword */
+  .highlight .kd  { color: #569cd6; }
+  .highlight .kn  { color: #569cd6; }
+  .highlight .kp  { color: #569cd6; }
+  .highlight .kr  { color: #569cd6; }
+  .highlight .kt  { color: #569cd6; }
+  .highlight .kc  { color: #569cd6; }
+  .highlight .nf  { color: #dcdcaa; } /* Function */
+  .highlight .nc  { color: #4ec9b0; } /* Class */
+  .highlight .nd  { color: #569cd6; } /* Decorator */
+  .highlight .s   { color: #ce9178; } /* String */
+  .highlight .s1  { color: #ce9178; }
+  .highlight .s2  { color: #ce9178; }
+  .highlight .sb  { color: #ce9178; }
+  .highlight .sc  { color: #ce9178; }
+  .highlight .sd  { color: #ce9178; }
+  .highlight .sh  { color: #ce9178; }
+  .highlight .si  { color: #ce9178; }
+  .highlight .sx  { color: #ce9178; }
+  .highlight .sr  { color: #ce9178; }
+  .highlight .ss  { color: #ce9178; }
+  .highlight .se  { color: #ce9178; }
+  .highlight .m   { color: #b5cea8; } /* Number */
+  .highlight .mf  { color: #b5cea8; }
+  .highlight .mh  { color: #b5cea8; }
+  .highlight .mi  { color: #b5cea8; }
+  .highlight .mo  { color: #b5cea8; }
+  .highlight .il  { color: #b5cea8; }
+  .highlight .o   { color: #d4d4d4; } /* Operator */
+  .highlight .ow  { color: #569cd6; }
+  .highlight .p   { color: #d4d4d4; } /* Punctuation */
+  .highlight .n   { color: #d4d4d4; } /* Name */
+  .highlight .na  { color: #9cdcfe; } /* Attribute */
+  .highlight .nb  { color: #569cd6; } /* Builtin */
+  .highlight .bp  { color: #569cd6; }
+  .highlight .no  { color: #4ec9b0; } /* Constant */
+  .highlight .ni  { color: #4ec9b0; }
+  .highlight .ne  { color: #f44747; } /* Exception */
+  .highlight .nv  { color: #9cdcfe; } /* Variable */
+  .highlight .vc  { color: #9cdcfe; }
+  .highlight .vg  { color: #9cdcfe; }
+  .highlight .vi  { color: #9cdcfe; }
+  .highlight .nt  { color: #569cd6; } /* Tag */
+  .highlight .nl  { color: #d4d4d4; } /* Label */
+  .highlight .nn  { color: #d4d4d4; } /* Namespace */
+  .highlight .nx  { color: #d4d4d4; } /* Other */
+  .highlight .w   { color: #d4d4d4; }
+  .highlight .err { color: #f44747; }
+  .highlight .g   { color: #d4d4d4; }
+  .highlight .gd  { color: #f44747; background: rgba(244,71,71,0.1) !important; }
+  .highlight .gi  { color: #6a9955; background: rgba(106,153,85,0.1) !important; }
+  .highlight .gh  { color: #569cd6; }
+  .highlight .gu  { color: #4ec9b0; }
+  .highlight .gr  { color: #f44747; }
+  .highlight .gt  { color: #f44747; }
+  .highlight .ge  { font-style: italic; }
+  .highlight .gs  { font-weight: 600; }
 
   /* Plain pre (non-highlighted code) */
   pre {

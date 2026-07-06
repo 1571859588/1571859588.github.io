@@ -148,39 +148,13 @@ layout: default
     </div>
   </article>
 
-  <!-- Right Sidebar: Table of Contents (ScrollSpy) -->
+  <!-- Right Sidebar: Table of Contents (built by JS from DOM) -->
   <aside class="notes-toc" id="notes-toc">
     <div class="notes-toc-inner">
       <h4 class="notes-toc-title">目录</h4>
       <nav class="notes-toc-nav">
         <ul class="notes-toc-list" id="notes-toc-list">
-          {% comment %}Parse rendered content for headings{% endcomment %}
-          {% assign fragments = content | split: '<h' %}
-          {% for frag in fragments %}
-            {% assign level_char = frag | slice: 0 %}
-            {% assign level_num = level_char | plus: 0 %}
-            {% if level_num >= 2 and level_num <= 4 %}
-              {% assign after_digit = frag | slice: 1 %}
-              {% if after_digit == ' ' or after_digit == '>' %}
-                {% assign id_parts = frag | split: 'id="' %}
-                {% assign id_rest = id_parts[1] %}
-                {% if id_rest %}
-                  {% assign id = id_rest | split: '"' | first %}
-                {% endif %}
-                {% assign title_parts = frag | split: '>' %}
-                {% assign title_rest = title_parts[1] %}
-                {% if title_rest %}
-                  {% assign title = title_rest | split: '</h' | first %}
-                  {% assign title = title | replace: '<code>', '' | replace: '</code>', '' | strip_html %}
-                {% endif %}
-                {% if id and title %}
-                <li class="notes-toc-item toc-level-{{ level_num }}">
-                  <a href="#{{ id }}" class="notes-toc-link" data-toc-target="{{ id }}">{{ title }}</a>
-                </li>
-                {% endif %}
-              {% endif %}
-            {% endif %}
-          {% endfor %}
+          <!-- Populated by notes-toc.js -->
         </ul>
       </nav>
     </div>
