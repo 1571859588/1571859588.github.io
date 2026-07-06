@@ -38,7 +38,7 @@ var NOTES_INDEX = [
 {% endif %}
 
 {% if page.series %}
-<script src="{{ base_path }}/assets/js/notes-sidebar-search.js"></script>
+<script src="{{ base_path }}/assets/js/notes-sidebar-search.js?v={{ site.time | date: '%s' }}"></script>
 {% endif %}
 
 {% include analytics.html %}
