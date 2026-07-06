@@ -123,6 +123,31 @@
   flex: 1;
 }
 
+/* Section grouping (subdirectory nesting) */
+.notes-section-group {
+  margin-top: 0.3em;
+}
+
+.notes-section-label {
+  display: block;
+  font-size: 0.72em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #94a3b8;
+  padding: 0.6em 0.75em 0.3em;
+}
+
+.notes-section-list {
+  list-style: none;
+  margin: 0;
+  padding: 0 !important;
+}
+
+.notes-section-list .notes-chapter-link {
+  padding-left: 1.5em;
+}
+
 .notes-sidebar-footer {
   margin-top: 1.2em;
   padding-top: 0.8em;
