@@ -15,12 +15,15 @@ layout: default
       {% assign current_series_id = page.series %}
       {% assign current_series_title = page.series_title | default: current_series_id %}
 
-      <!-- In-series search (outside scroll container so dropdown isnt clipped) -->
+      <!-- In-series search -->
       <div class="notes-sidebar-search" id="notes-sidebar-search">
-        <input type="text" class="notes-sidebar-search-input" id="notes-sidebar-search-input"
+        <input type="text" class="notes-sidebar-search-input" id="ns-si"
                placeholder="搜索本专题…" autocomplete="off">
-        <div class="notes-sidebar-search-results" id="notes-sidebar-search-results" style="display:none"></div>
+        <div class="notes-sidebar-search-results" id="ns-sr" style="display:none"></div>
       </div>
+      <script>
+        document.getElementById('ns-si').placeholder='JS OK '+(new Date).getSeconds();
+      </script>
 
     <div class="notes-sidebar-inner">
       <div class="notes-series-header">
