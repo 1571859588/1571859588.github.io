@@ -47,6 +47,8 @@ var SERIES_INDEX = [
 ];
 </script>
 <script src="{{ base_path }}/assets/js/notes-sidebar-search.js"></script>
+{% else %}
+<script>var SERIES_INDEX=[];</script>
 {% endif %}
 
 {% include analytics.html %}
