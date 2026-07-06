@@ -170,8 +170,8 @@ layout: default
                 {% assign title_parts = frag | split: '>' %}
                 {% assign title_rest = title_parts[1] %}
                 {% if title_rest %}
-                  {% assign title = title_rest | split: '</h' | first | strip_html %}
-                  {% assign title = title | replace: '``', '' %}
+                  {% assign title = title_rest | split: '</h' | first %}
+                  {% assign title = title | replace: '<code>', '' | replace: '</code>', '' | strip_html %}
                 {% endif %}
                 {% if id and title %}
                 <li class="notes-toc-item toc-level-{{ level_num }}">
