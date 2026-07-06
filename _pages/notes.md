@@ -88,69 +88,49 @@ toc: false
   </aside>
 </div>
 
-<!-- Search index (embedded JSON) -->
-<script id="notes-search-data" type="application/json">
-[
+<!-- Search index — stored in <textarea> to safely contain any characters -->
+<textarea id="notes-search-data" style="display:none">[
 {% for note in site.notes %}
-  {
-    "title": {{ note.title | jsonify }},
-    "series": {{ note.series_title | default: note.series | jsonify }},
-    "url": {{ note.url | relative_url | jsonify }},
-    "snippet": {{ note.content | strip_html | strip_newlines | replace: '"', '\"' | truncate: 600 | jsonify }}
-  }{% unless forloop.last %},{% endunless %}
+  {"t":{{ note.title | jsonify }},"s":{{ note.series_title | default: note.series | jsonify }},"u":{{ note.url | relative_url | jsonify }}}{% unless forloop.last %},{% endunless %}
 {% endfor %}
-]
-</script>
+]</textarea>
 
 <script>
 (function() {
   var input  = document.getElementById('notes-search-input');
   var resultsBox = document.getElementById('notes-search-results');
-  var grid   = document.getElementById('notes-series-grid');
   var dataEl = document.getElementById('notes-search-data');
   if (!input || !resultsBox || !dataEl) return;
 
-  var notes = JSON.parse(dataEl.textContent);
+  // Parse from <textarea> — safe for any characters including </script>
+  var notes;
+  try { notes = JSON.parse(dataEl.value); } catch(e) { return; }
 
   function search(query) {
-    var q = query.toLowerCase().trim();
+    var q = query.toLowerCase().trim().replace(/[.*+?^${}()|[\]\\]/g, '');
     if (q.length < 1) { resultsBox.style.display = 'none'; return; }
 
     var hits = [];
     notes.forEach(function(n) {
       var score = 0;
-      var context = '';
-
       // Title match (high weight)
-      if (n.title.toLowerCase().indexOf(q) !== -1) { score += 100; context = n.title; }
+      if (n.t.toLowerCase().indexOf(q) !== -1) score += 100;
       // Series match
-      if (n.series.toLowerCase().indexOf(q) !== -1) { score += 80; context = n.series; }
-      // Content match (lower weight)
-      var ci = n.snippet.toLowerCase().indexOf(q);
-      if (ci !== -1) {
-        score += 40;
-        var start = Math.max(0, ci - 30);
-        var end   = Math.min(n.snippet.length, ci + q.length + 60);
-        context = (start > 0 ? '…' : '') + n.snippet.substring(start, end) + (end < n.snippet.length ? '…' : '');
-      }
-
-      if (score > 0) {
-        hits.push({ note: n, score: score, context: context });
-      }
+      if (n.s.toLowerCase().indexOf(q) !== -1) score += 80;
+      if (score > 0) hits.push({ note: n, score: score });
     });
 
     hits.sort(function(a, b) { return b.score - a.score; });
-    hits = hits.slice(0, 15);
+    hits = hits.slice(0, 20);
 
     if (hits.length === 0) {
       resultsBox.innerHTML = '<div class="notes-search-empty">无匹配结果</div>';
     } else {
       var html = '';
       hits.forEach(function(h) {
-        html += '<a href="' + h.note.url + '" class="notes-search-hit">' +
-                '<span class="notes-search-hit-title">' + escapeHtml(h.note.title) + '</span>' +
-                '<span class="notes-search-hit-series">' + escapeHtml(h.note.series) + '</span>' +
-                '<span class="notes-search-hit-context">' + escapeHtml(h.context) + '</span>' +
+        html += '<a href="' + encodeURI(h.note.u) + '" class="notes-search-hit">' +
+                '<span class="notes-search-hit-title">' + esc(h.note.t) + '</span>' +
+                '<span class="notes-search-hit-series">' + esc(h.note.s) + '</span>' +
                 '</a>';
       });
       resultsBox.innerHTML = html;
@@ -158,19 +138,17 @@ toc: false
     resultsBox.style.display = 'block';
   }
 
-  function escapeHtml(s) {
-    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  function esc(s) {
+    var d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
   }
 
   input.addEventListener('input', function() { search(this.value); });
   input.addEventListener('focus', function() { if (this.value.trim()) search(this.value); });
-
-  // Hide results on outside click
   document.addEventListener('click', function(e) {
     if (!e.target.closest('#notes-search')) resultsBox.style.display = 'none';
   });
-
-  // Keyboard navigation
   input.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') { resultsBox.style.display = 'none'; this.blur(); }
   });
