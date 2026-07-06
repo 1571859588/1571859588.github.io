@@ -23,6 +23,15 @@
       var score = 0;
       if (n.t.toLowerCase().indexOf(q) !== -1) score += 100;
       if (n.s.toLowerCase().indexOf(q) !== -1) score += 80;
+      if (n.c) {
+        var ci = n.c.toLowerCase().indexOf(q);
+        if (ci !== -1) {
+          score += 50;
+          n._ctx = n.c.substring(Math.max(0, ci - 40), ci + q.length + 60);
+          if (ci > 40) n._ctx = '…' + n._ctx;
+          if (ci + q.length + 60 < n.c.length) n._ctx += '…';
+        }
+      }
       if (score > 0) hits.push({ n: n, score: score });
     }
 
@@ -35,9 +44,11 @@
       var html = '';
       for (var j = 0; j < hits.length; j++) {
         var h = hits[j];
+        var ctx = h.n._ctx ? '<span class="notes-search-hit-context">' + esc(h.n._ctx) + '</span>' : '';
         html += '<a href="' + h.n.u + '" class="notes-search-hit">' +
                 '<span class="notes-search-hit-title">' + esc(h.n.t) + '</span>' +
                 '<span class="notes-search-hit-series">' + esc(h.n.s) + '</span>' +
+                ctx +
                 '</a>';
       }
       resultsBox.innerHTML = html;
