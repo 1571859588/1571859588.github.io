@@ -12,19 +12,19 @@ layout: default
 
   <!-- Left Sidebar: Series Chapter Navigation -->
   <aside class="notes-sidebar" id="notes-sidebar">
-    <div class="notes-sidebar-inner">
       {% assign current_series_id = page.series %}
       {% assign current_series_title = page.series_title | default: current_series_id %}
 
-      <div class="notes-series-header">
-        <h3 class="notes-series-title">{{ current_series_title }}</h3>
-      </div>
-
-      <!-- In-series search -->
+      <!-- In-series search (outside scroll container so dropdown isnt clipped) -->
       <div class="notes-sidebar-search" id="notes-sidebar-search">
         <input type="text" class="notes-sidebar-search-input" id="notes-sidebar-search-input"
                placeholder="搜索本专题…" autocomplete="off">
         <div class="notes-sidebar-search-results" id="notes-sidebar-search-results" style="display:none"></div>
+      </div>
+
+    <div class="notes-sidebar-inner">
+      <div class="notes-series-header">
+        <h3 class="notes-series-title">{{ current_series_title }}</h3>
       </div>
 
       <nav class="notes-chapter-nav">
