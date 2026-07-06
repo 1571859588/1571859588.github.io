@@ -45,6 +45,18 @@ module NotesSync
       end
     end
 
+    # Helper: sort a list by order (numbered first) then ctime
+    sorter = ->(list) {
+      list.sort_by! { |h|
+        ord = extract_order(h[:name])
+        [ord ? 0 : 1, ord || 0, File.ctime(h[:path])]
+      }
+    }
+
+    sorter.call(md_files)
+    sorter.call(subdirs)
+
+    # ── Files FIRST, then subdirectories ──
     md_files.each do |f|
       base = f[:name].sub(/\.md$/, '')
       entries << {
@@ -79,7 +91,6 @@ module NotesSync
       entries.concat(sub)
     end
 
-    entries.sort_by! { |e| e[:order] ? [0, e[:order], e[:ctime]] : [1, 0, e[:ctime]] }
     entries
   end
 
@@ -101,6 +112,24 @@ module NotesSync
       notes = entries.reject { |e| e[:is_section] }
       next if notes.empty?
 
+      # Compute section-local ordering:
+      #   section_counts[section_path] = current number within that section
+      section_counts = {}
+      notes.each do |entry|
+        sec = entry[:section_path] || ""
+        section_counts[sec] ||= 0
+        section_counts[sec] += 1
+      end
+
+      notes.each_with_index do |entry, idx|
+        sec = entry[:section_path] || ""
+        section_counts[sec] ||= 0
+        section_local = section_counts[sec]  # Use pre-computed value
+        # Actually we need running counter, not total
+      end
+
+      # Recompute with running counters
+      running = Hash.new(0)
       notes.each_with_index do |entry, idx|
         safe = slugify(entry[:title])
         safe = "note" if safe.empty?
@@ -111,7 +140,8 @@ module NotesSync
           counter += 1
         end
 
-        section = entry[:section_path] || ""
+        sec = entry[:section_path] || ""
+        running[sec] += 1
 
         File.open(out, 'w', encoding: 'UTF-8') do |f|
           f.puts "---"
@@ -120,7 +150,8 @@ module NotesSync
           f.puts "series: #{slugify(series_title)}"
           f.puts "series_title: \"#{series_title.gsub('"', '\"')}\""
           f.puts "series_order: #{idx + 1}"
-          f.puts "section: \"#{section.gsub('"', '\"')}\""
+          f.puts "section_order: #{running[sec]}"
+          f.puts "section: \"#{sec.gsub('"', '\"')}\""
           f.puts "---"
           f.puts
           f.write File.read(entry[:source_path], encoding: 'UTF-8')
