@@ -130,4 +130,60 @@
 
   window.addEventListener('scroll', highlightToc, { passive: true });
   highlightToc();
+
+  // ── 6. Search term highlight (from ?q= param) ──
+  function highlightSearchTerm() {
+    var q = new URLSearchParams(location.search).get('q');
+    if (!q || q.length < 2) return;
+    var body = document.querySelector('.notes-body');
+    if (!body) return;
+
+    // Wait for MathJax / dynamic content to settle
+    setTimeout(function() {
+      var walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT, null, false);
+      var textNodes = [];
+      while (walker.nextNode()) {
+        var p = walker.currentNode.parentNode;
+        if (p.tagName === 'SCRIPT' || p.tagName === 'STYLE' || p.tagName === 'MARK' ||
+            p.closest('pre') || p.closest('code') || p.closest('.notes-search-hit') ||
+            p.closest('.notes-sidebar-search-hit')) continue;
+        textNodes.push(walker.currentNode);
+      }
+
+      var re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+      var firstMark = null;
+
+      textNodes.forEach(function(node) {
+        var text = node.textContent;
+        re.lastIndex = 0;
+        if (!re.test(text)) return;
+        re.lastIndex = 0;
+
+        var frag = document.createDocumentFragment();
+        var lastIdx = 0, match;
+        while ((match = re.exec(text)) !== null) {
+          if (match.index > lastIdx) {
+            frag.appendChild(document.createTextNode(text.substring(lastIdx, match.index)));
+          }
+          var mark = document.createElement('mark');
+          mark.className = 'notes-search-mark';
+          mark.textContent = match[0];
+          frag.appendChild(mark);
+          if (!firstMark) firstMark = mark;
+          lastIdx = re.lastIndex;
+          if (match[0].length === 0) re.lastIndex++; // avoid infinite loop on zero-length match
+        }
+        if (lastIdx < text.length) {
+          frag.appendChild(document.createTextNode(text.substring(lastIdx)));
+        }
+        node.parentNode.replaceChild(frag, node);
+      });
+
+      if (firstMark) {
+        firstMark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 500); // Delay for MathJax rendering
+  }
+
+  highlightSearchTerm();
 })();
