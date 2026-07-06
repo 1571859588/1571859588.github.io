@@ -5,16 +5,26 @@
 /* ── Layout Container ── */
 .notes-layout {
   display: flex;
-  max-width: 100%;
-  margin: 0;
-  padding: 0;
+  max-width: 100% !important;
+  width: 100%;
+  margin: 0 !important;
+  padding: 0 !important;
   min-height: 100vh;
+
+  /* Override .page width constraint (the single layout wrapper) */
+  .page__inner-wrap &,
+  .page & {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
 }
 
 /* ── Left Sidebar: Chapter Navigation ── */
 .notes-sidebar {
-  width: 230px;
-  min-width: 230px;
+  width: 250px;
+  min-width: 250px;
   height: calc(100vh - 60px);
   position: sticky;
   top: 60px;
@@ -259,6 +269,14 @@
   font-size: 0.85em;
   color: #94a3b8;
   margin-bottom: 1.5em;
+}
+
+/* ── Full-width override for notes pages ── */
+#main.notes-layout {
+  max-width: none !important;
+  width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 /* ── Notes Body ── */
@@ -533,8 +551,8 @@
 
 /* ── Right TOC ── */
 .notes-toc {
-  width: 190px;
-  min-width: 190px;
+  width: 210px;
+  min-width: 210px;
   height: calc(100vh - 60px);
   position: sticky;
   top: 60px;
