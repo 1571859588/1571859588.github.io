@@ -81,7 +81,6 @@ var SERIES_INDEX = [
       for (var j = 0; j < Math.min(hits.length, 15); j++) {
         var x = hits[j];
         var ctx = x._ctx ? '<span class="notes-sidebar-search-hit-ctx">' + esc(x._ctx) + '</span>' : '';
-        console.log('Sidebar result link: ' + x.u + '#q=' + encodeURIComponent(q));
         h += '<a href="' + x.u + '#q=' + encodeURIComponent(q) + '" class="notes-sidebar-search-hit">' +
              '<span class="notes-sidebar-search-hit-title">' + hl(x.t, q) + '</span>' + ctx + '</a>';
       }
