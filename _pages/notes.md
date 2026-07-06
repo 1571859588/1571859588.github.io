@@ -88,77 +88,15 @@ toc: false
   </aside>
 </div>
 
+<!-- Search index data (loaded by notes-search.js) -->
 <script>
-console.log('Notes search: init');
-(function() {
-  // Inline search index — no JSON.parse, no <textarea>, just JS objects
-  var notes = [
-  {% for note in site.notes %}
-    {t:{{ note.title | jsonify }}, s:{{ note.series_title | default: note.series | jsonify }}, u:{{ note.url | relative_url | jsonify }}}{% unless forloop.last %},{% endunless %}
-  {% endfor %}
-  ];
-
-  console.log('Notes search: indexed ' + notes.length + ' notes');
-
-  var input  = document.getElementById('notes-search-input');
-  var resultsBox = document.getElementById('notes-search-results');
-  if (!input || !resultsBox) { console.log('Notes search: missing elements'); return; }
-
-  function search(query) {
-    var q = query.toLowerCase().trim();
-    if (q.length < 1) { resultsBox.style.display = 'none'; resultsBox.innerHTML = ''; return; }
-
-    var hits = [];
-    for (var i = 0; i < notes.length; i++) {
-      var n = notes[i];
-      var score = 0;
-      if (n.t.toLowerCase().indexOf(q) !== -1) score += 100;
-      if (n.s.toLowerCase().indexOf(q) !== -1) score += 80;
-      if (score > 0) hits.push({ note: n, score: score });
-    }
-
-    hits.sort(function(a, b) { return b.score - a.score; });
-    hits = hits.slice(0, 20);
-
-    console.log('Notes search: "' + q + '" → ' + hits.length + ' hits');
-
-    if (hits.length === 0) {
-      resultsBox.innerHTML = '<div class="notes-search-empty">无匹配结果</div>';
-    } else {
-      var html = '';
-      for (var j = 0; j < hits.length; j++) {
-        var h = hits[j];
-        html += '<a href="' + h.note.u + '" class="notes-search-hit">' +
-                '<span class="notes-search-hit-title">' + esc(h.note.t) + '</span>' +
-                '<span class="notes-search-hit-series">' + esc(h.note.s) + '</span>' +
-                '</a>';
-      }
-      resultsBox.innerHTML = html;
-    }
-    resultsBox.style.display = 'block';
-  }
-
-  function esc(s) {
-    var d = document.createElement('div');
-    d.textContent = s;
-    return d.innerHTML;
-  }
-
-  // Real-time search on input
-  input.addEventListener('input', function() { search(this.value); });
-
-  // Enter key triggers search
-  input.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') { e.preventDefault(); search(this.value); }
-    if (e.key === 'Escape') { resultsBox.style.display = 'none'; resultsBox.innerHTML = ''; this.blur(); }
-  });
-
-  // Click outside closes results
-  document.addEventListener('click', function(e) {
-    if (!e.target.closest('#notes-search')) { resultsBox.style.display = 'none'; resultsBox.innerHTML = ''; }
-  });
-})();
+var NOTES_INDEX = [
+{% for note in site.notes %}
+  {t:{{ note.title | jsonify }}, s:{{ note.series_title | default: note.series | jsonify }}, u:{{ note.url | relative_url | jsonify }}}{% unless forloop.last %},{% endunless %}
+{% endfor %}
+];
 </script>
+<script src="{{ '/assets/js/notes-search.js' | relative_url }}"></script>
 
 <script>
 (function() {
