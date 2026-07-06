@@ -81,7 +81,7 @@ var SERIES_INDEX = [
       for (var j = 0; j < Math.min(hits.length, 15); j++) {
         var x = hits[j];
         var ctx = x._ctx ? '<span class="notes-sidebar-search-hit-ctx">' + esc(x._ctx) + '</span>' : '';
-        h += '<a href="' + x.u + '" class="notes-sidebar-search-hit" data-q="' + esc(q) + '">' +
+        h += '<a href="' + x.u + '#q=' + encodeURIComponent(q) + '" class="notes-sidebar-search-hit">' +
              '<span class="notes-sidebar-search-hit-title">' + hl(x.t, q) + '</span>' + ctx + '</a>';
       }
       box.innerHTML = h;
@@ -89,7 +89,6 @@ var SERIES_INDEX = [
     box.style.display = 'block';
   });
   inp.addEventListener('keydown', function(e) { if (e.key === 'Escape') { box.style.display = 'none'; box.innerHTML = ''; this.blur(); } });
-  box.addEventListener('click', function(e) { var a = e.target.closest('.notes-sidebar-search-hit'); if (a && a.dataset.q) sessionStorage.setItem('notes-search-q', a.dataset.q); });
   document.addEventListener('click', function(e) { if (!e.target.closest('#notes-sidebar-search')) { box.style.display = 'none'; box.innerHTML = ''; } });
 })();
 </script>

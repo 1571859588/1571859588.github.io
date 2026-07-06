@@ -131,59 +131,47 @@
   window.addEventListener('scroll', highlightToc, { passive: true });
   highlightToc();
 
-  // ── 6. Search term highlight (from sessionStorage) ──
+  // ── 6. Search term highlight (from URL hash #q=...) ──
   function highlightSearchTerm() {
-    var q = sessionStorage.getItem('notes-search-q');
+    var hash = location.hash;
+    if (hash.indexOf('#q=') !== 0) return;
+    var q = decodeURIComponent(hash.slice(3));
     if (!q || q.length < 2) return;
-    sessionStorage.removeItem('notes-search-q'); // Clear after use
+
     var body = document.querySelector('.notes-body');
     if (!body) return;
 
-    // Wait for MathJax / dynamic content to settle
     setTimeout(function() {
-      var walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT, null, false);
+      var walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT);
       var textNodes = [];
       while (walker.nextNode()) {
         var p = walker.currentNode.parentNode;
-        if (p.tagName === 'SCRIPT' || p.tagName === 'STYLE' || p.tagName === 'MARK' ||
-            p.closest('pre') || p.closest('code') || p.closest('.notes-search-hit') ||
-            p.closest('.notes-sidebar-search-hit')) continue;
+        if (p.closest('script,style,pre,mark,.notes-search-hit,.notes-sidebar-search-hit')) continue;
         textNodes.push(walker.currentNode);
       }
 
-      var re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
-      var firstMark = null;
-
+      var ql = q.toLowerCase(), firstMark = null;
       textNodes.forEach(function(node) {
-        var text = node.textContent;
-        re.lastIndex = 0;
-        if (!re.test(text)) return;
-        re.lastIndex = 0;
+        var text = node.textContent, idx = text.toLowerCase().indexOf(ql);
+        if (idx === -1) return;
 
-        var frag = document.createDocumentFragment();
-        var lastIdx = 0, match;
-        while ((match = re.exec(text)) !== null) {
-          if (match.index > lastIdx) {
-            frag.appendChild(document.createTextNode(text.substring(lastIdx, match.index)));
-          }
+        var frag = document.createDocumentFragment(), lastIdx = 0;
+        while (idx !== -1) {
+          if (idx > lastIdx) frag.appendChild(document.createTextNode(text.slice(lastIdx, idx)));
           var mark = document.createElement('mark');
           mark.className = 'notes-search-mark';
-          mark.textContent = match[0];
+          mark.textContent = text.slice(idx, idx + q.length);
           frag.appendChild(mark);
           if (!firstMark) firstMark = mark;
-          lastIdx = re.lastIndex;
-          if (match[0].length === 0) re.lastIndex++; // avoid infinite loop on zero-length match
+          lastIdx = idx + q.length;
+          idx = text.toLowerCase().indexOf(ql, lastIdx);
         }
-        if (lastIdx < text.length) {
-          frag.appendChild(document.createTextNode(text.substring(lastIdx)));
-        }
+        if (lastIdx < text.length) frag.appendChild(document.createTextNode(text.slice(lastIdx)));
         node.parentNode.replaceChild(frag, node);
       });
 
-      if (firstMark) {
-        firstMark.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-    }, 500); // Delay for MathJax rendering
+      if (firstMark) firstMark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 400);
   }
 
   highlightSearchTerm();

@@ -73,7 +73,7 @@
         var ctxHtml = h.n._ctx
           ? '<span class="notes-search-hit-context">' + highlight(h.n._ctx, qRaw) + '</span>'
           : '';
-        html += '<a href="' + h.n.u + '" class="notes-search-hit" data-q="' + esc(qRaw) + '">' +
+        html += '<a href="' + h.n.u + '#q=' + encodeURIComponent(qRaw) + '" class="notes-search-hit">' +
                 '<span class="notes-search-hit-title">' + highlight(h.n.t, qRaw) + '</span>' +
                 '<span class="notes-search-hit-series">' + highlight(h.n.s, qRaw) + '</span>' +
                 ctxHtml +
@@ -83,14 +83,6 @@
     }
     resultsBox.style.display = 'block';
   }
-
-  // Store search query before navigating (so target page can highlight it)
-  resultsBox.addEventListener('click', function(e) {
-    var link = e.target.closest('.notes-search-hit');
-    if (link && link.dataset.q) {
-      sessionStorage.setItem('notes-search-q', link.dataset.q);
-    }
-  });
 
   input.addEventListener('input', function() { search(this.value); });
   input.addEventListener('keydown', function(e) {
