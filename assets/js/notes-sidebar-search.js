@@ -1,13 +1,28 @@
 /**
- * Sidebar search on individual note pages — searches within current series.
- * Reads window.SERIES_INDEX (defined in _includes/scripts.html).
+ * Sidebar search on individual note pages.
+ * Reads titles/URLs directly from the rendered sidebar DOM.
+ * No embedded data — foolproof, no escaping issues.
  */
 (function() {
-  if (typeof SERIES_INDEX === 'undefined' || !SERIES_INDEX.length) return;
-
   var input = document.getElementById('notes-sidebar-search-input');
   var box   = document.getElementById('notes-sidebar-search-results');
   if (!input || !box) return;
+
+  // DEBUG: prove the script loaded by changing placeholder
+  input.placeholder = '✓ 搜索本专题…';
+
+  // Build index from sidebar DOM links
+  var items = [];
+  var links = document.querySelectorAll('.notes-chapter-link');
+  for (var i = 0; i < links.length; i++) {
+    var titleEl = links[i].querySelector('.notes-chapter-title');
+    if (titleEl) {
+      items.push({
+        t: titleEl.textContent.trim(),
+        u: links[i].getAttribute('href')
+      });
+    }
+  }
 
   function esc(s) {
     var d = document.createElement('div');
@@ -26,14 +41,13 @@
     return out;
   }
 
-  function search(val) {
-    var qr = val.trim(), q = qr.toLowerCase();
-    if (q.length < 1) { box.style.display = 'none'; box.innerHTML = ''; return; }
+  input.addEventListener('input', function() {
+    var qr = this.value.trim();
+    if (qr.length < 1) { box.style.display = 'none'; box.innerHTML = ''; return; }
+    var ql = qr.toLowerCase();
     var hits = [];
-    for (var i = 0; i < SERIES_INDEX.length; i++) {
-      if (SERIES_INDEX[i].t.toLowerCase().indexOf(q) !== -1) {
-        hits.push(SERIES_INDEX[i]);
-      }
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].t.toLowerCase().indexOf(ql) !== -1) hits.push(items[i]);
     }
     if (hits.length === 0) {
       box.innerHTML = '<div class="notes-sidebar-search-empty">无匹配</div>';
@@ -47,15 +61,12 @@
       box.innerHTML = html;
     }
     box.style.display = 'block';
-  }
+  });
 
-  input.addEventListener('input', function() { search(this.value); });
   input.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') { e.preventDefault(); search(this.value); }
     if (e.key === 'Escape') { box.style.display = 'none'; box.innerHTML = ''; this.blur(); }
   });
 
-  // Store query for highlight on target page
   box.addEventListener('click', function(e) {
     var link = e.target.closest('.notes-sidebar-search-hit');
     if (link && link.dataset.q) sessionStorage.setItem('notes-search-q', link.dataset.q);
