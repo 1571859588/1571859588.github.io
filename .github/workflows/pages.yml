@@ -1,9 +1,8 @@
-name: Build and Deploy to GitHub Pages
+name: Deploy Jekyll site to Pages
 
 on:
   push:
-    branches:
-      - master
+    branches: [master]
   workflow_dispatch:
 
 permissions:
@@ -22,19 +21,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Ruby
+      - name: Setup Ruby & install gems
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2'
+          bundler-cache: false
 
       - name: Sync notes-src → _notes
-        run: |
-          echo "=== Running notes sync ==="
-          ruby _scripts/sync-notes.rb
-          echo "=== Generated _notes/ files ==="
-          ls -la _notes/ || echo "(empty or missing)"
+        run: ruby _scripts/sync-notes.rb
 
-      - name: Build Jekyll site
+      - name: Build Jekyll
         run: bundle exec jekyll build
         env:
           JEKYLL_ENV: production
@@ -46,10 +42,10 @@ jobs:
 
   deploy:
     needs: build
-    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
