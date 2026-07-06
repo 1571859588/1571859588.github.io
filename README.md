@@ -29,7 +29,9 @@ bundle exec jekyll serve -l -H localhost
 | `_config.yml` | Site configuration (profile, social links, etc.) |
 | `_data/cv.yml` | Shared CV data (personal info, education, awards) |
 | `_data/cv-tracks.yml` | **Per-track CV data** (interests, projects, internships, skills) |
-| `_data/notes.yml` | **Notes series definitions** (titles, descriptions) |
+| `_data/notes.yml` | ~~Removed~~ — series auto-discovered from `notes-src/` |
+| `_plugins/notes-sync.rb` | **Auto-sync plugin** (scans notes-src/ → generates _notes/) |
+| `notes-src/` | **Source notes directory** (copy local notes here, .gitignore-filtered) |
 | `_data/papers.yml` | Publications list |
 | `_data/navigation.yml` | Header navigation menu |
 | `_includes/cv-content.html` | **Reusable CV render template** (param: `track` + `lang`) |
@@ -241,106 +243,75 @@ In `_data/cv-tracks.yml`, find the track section (e.g., `agent:`) and add under 
 
 ## NOTES System（笔记专栏）
 
-The NOTES system hosts informal, fragmented Chinese-language notes organized into **series** (topic-based collections). Each note page features a 3-column layout: left chapter navigation + main content + right TOC with scroll tracking.
+NOTES hosts informal, fragmented Chinese-language notes organized into **series** (topic-based collections). Each note page features a 3-column layout: left chapter navigation + main content + right TOC with scroll tracking.
 
-### Current Series
+### Workflow: One-Click Sync from Local
 
-| Series ID | Title | Notes Count |
-|-----------|-------|-------------|
-| `llm-interview` | LLM 面试笔记 | 6 |
-| `ai-infra` | AI 基础设施 | 1 |
-| `eda-notes` | EDA 笔记 | 1 |
-| `misc` | 杂项笔记 | 1 |
+Instead of manually creating frontmatter-heavy files, simply **copy your local notes directory** into `notes-src/`. A Jekyll plugin auto-generates everything at build time.
 
-### Page Structure
+```bash
+# 1. Copy your local notes into the repo
+cp -r "D:\面试准备及其笔记\*" notes-src/
 
-```
-/notes/                              → Notes hub（series cards）
-/notes/llm-interview/transformer/    → Individual note page (3-column layout)
+# 2. Build — the plugin auto-syncs notes-src/ → _notes/
+bundle exec jekyll serve
 ```
 
-Each note page has:
-- **Left sidebar** — all chapters in the current series (auto-generated), current page highlighted
-- **Main content** — the note body with LaTeX formulas ($...$) and images (![caption](url))
-- **Right TOC** — auto-generated from headings (h2–h4), with scroll-position tracking
-- **Previous / Next** — auto-generated chapter navigation at the bottom
+### Directory Structure
 
-### How to Add a New Note
+```
+notes-src/                          ← Copy your entire notes directory here
+├── LLM 面试笔记/                   ← Top-level dir = series（专题）
+│   ├── 1. Transformer 架构详解.md  ← N. prefix = order（顺序）
+│   ├── 2. LLaMA 架构与 RoPE.md
+│   ├── 3. Attention 变体与优化.md
+│   ├── 3. Attention 变体与优化.assets/  ← Images for the note
+│   │   └── flash-attention.png
+│   ├── 4. 无编号笔记.md           ← No N. prefix → ordered by file ctime
+│   └── LayerNorm 专题/            ← Subdir = section（章节分组）
+│       ├── 1. LayerNorm 基础.md
+│       └── 2. RMSNorm 详解.md
+├── AI 基础设施/
+│   └── 1. RAG 系统架构.md
+└── 杂项笔记/
+    ├── Git 常用命令.md
+    └── Python 技巧.md
+```
 
-Adding a note requires **only one step**: create a `.md` file in `_notes/`.
+### Naming Rules
 
-#### Example: Adding "Attention 机制详解" to the LLM Interview series
+| Rule | Example | Result |
+|------|---------|--------|
+| `N.` prefix in dir/filename | `3. Layer Normalization.md` | Order = 3, Title = "Layer Normalization" |
+| No `N.` prefix | `RAG 系统架构.md` | Order = file creation time |
+| Numbered items always come first | — | Ordered before unnumbered |
+| Subdirectory = section group | `LayerNorm 专题/` | Sidebar group label: "LayerNorm 专题" |
 
-Create `_notes/llm-interview-attention.md`:
+### Image Handling
+
+Images are stored in an `.assets` directory next to the markdown file:
+
+```
+3. Attention 变体与优化.md
+3. Attention 变体与优化.assets/
+├── flash-attention.png
+└── attention-mask.png
+```
+
+Reference images in the markdown as:
 
 ```markdown
----
-layout: notes
-title: "Attention 机制详解"
-series: llm-interview
-series_order: 3
-date: 2025-06-10
----
-
-## 1. 什么是 Attention
-
-Attention 机制的核心思想是让模型在处理每个 token 时，
-动态地关注输入序列中**最相关的部分**。
-
-![Attention 示意图](/images/blogs/attention-diagram.png)
-
-## 2. Scaled Dot-Product Attention
-
-核心公式：
-
-\[
-\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right) V
-\]
-
-### 2.1 Q、K、V 的含义
-
-- **Q (Query)**：当前 token 想要"查询"什么
-- **K (Key)**：每个 token 提供了什么"索引"
-- **V (Value)**：每个 token 实际包含的"内容"
-
-## 3. 代码实现
-
-```python
-import torch
-
-def scaled_dot_product_attention(Q, K, V):
-    d_k = Q.size(-1)
-    scores = torch.matmul(Q, K.transpose(-2, -1)) / torch.sqrt(d_k)
-    attn_weights = torch.softmax(scores, dim=-1)
-    return torch.matmul(attn_weights, V)
-```
+![Flash Attention](3. Attention 变体与优化.assets/flash-attention.png)
 ```
 
-> That's it! The left sidebar, right TOC, breadcrumb, and prev/next links are all **auto-generated**. The note will automatically appear in the correct position within its series.
+> The `.assets/` directories are tracked by Git; all other file types (`.pdf`, `.py`, `.cpp`, etc.) are gitignored.
 
-### Frontmatter Reference
+### How to Add Notes
 
-| Field | Required | Description |
-|-------|----------|-------------|
-| `layout` | Yes | Always `notes` |
-| `title` | Yes | Note title (shown in sidebar, heading, and browser tab) |
-| `series` | Yes | Series ID matching a key in `_data/notes.yml` |
-| `series_order` | Yes | Integer position within the series (determines sidebar order) |
-| `date` | No | Publication date (shown below title), format: `YYYY-MM-DD` |
-
-### How to Add a New Series
-
-#### Step 1: Define the series in `_data/notes.yml`
-
-```yaml
-  - id: your-series-id
-    title: "你的系列标题"
-    description: "简短的系列描述，显示在 Hub 卡片上"
-```
-
-#### Step 2: Create at least one note with `series: your-series-id`
-
-The series will **automatically appear** on the Notes hub page and in the navigation once it has at least one note.
+1. **On your local machine**: Write notes in `D:\面试准备及其笔记\` using any editor (Typora, VS Code, Obsidian)
+2. **To sync to the website**: Copy the entire directory to `notes-src/`
+3. **Build**: Run `bundle exec jekyll serve` — the plugin auto-generates `_notes/` with proper frontmatter
+4. **Commit & push**: Only `.md` and `.assets/` files are tracked
 
 ### Content Features
 
@@ -348,7 +319,7 @@ The series will **automatically appear** on the Notes hub page and in the naviga
 |---------|--------|-------|
 | LaTeX inline | `$E = mc^2$` | Same as Blog, via MathJax |
 | LaTeX block | `$$...$$` or `\[...\]` | Display math |
-| Images | `![caption](url)` | Standard Markdown, like Typora |
+| Images | `![caption](.assets/img.png)` | Relative path to `.assets/` dir |
 | Code blocks | ```` ``` ```` (triple backtick) | Syntax highlighting via Rouge |
 | Tables | Standard Markdown table | Full support |
 | Blockquotes | `> quote` | Styled with blue left border |
@@ -356,32 +327,43 @@ The series will **automatically appear** on the Notes hub page and in the naviga
 ### How It Works
 
 ```
-_data/notes.yml              _notes/*.md
-┌──────────────────┐         ┌──────────────────────────────┐
-│ series:           │         │ ---                           │
-│   - id: llm-int   │         │ layout: notes                 │
-│     title: "..."  │   +    │ series: llm-interview         │
-│     description   │         │ series_order: 1               │
-│   - id: ai-infra  │         │ title: "Transformer 详解"     │
-│     ...           │         │ ---                           │
-└──────────────────┘         │ Content...                    │
-         │                   └──────────────────────────────┘
-         │         ┌─────────────────┐
-         └─────────┤ _layouts/notes  │
-                   │ (auto-builds    │
-                   │  sidebar, TOC,  │
-                   │  breadcrumb,    │
-                   │  prev/next)     │
-                   └─────────────────┘
+notes-src/                   _plugins/notes-sync.rb         _notes/
+┌──────────────────────┐     ┌─────────────────────┐     ┌──────────────────────┐
+│ LLM 面试笔记/         │     │ Jekyll :after_init  │     │ llm-面试笔记-1.md    │
+│ ├ 1. Transformer.md  │ ──→ │ hook:               │ ──→ │   layout: notes      │
+│ ├ 2. LLaMA.md        │     │  1. Scan notes-src/ │     │   title: Transformer │
+│ └ 3. LayerNorm.md    │     │  2. Extract series, │     │   series: llm-面试.. │
+│ AI 基础设施/          │     │     order, section  │     │   series_order: 1    │
+│ └ RAG.md             │     │  3. Add frontmatter │     └──────────────────────┘
+└──────────────────────┘     │  4. Write _notes/   │              │
+         │                   └─────────────────────┘              ▼
+         │                                                  Jekyll Collection
+         │                                                  (auto-read)
+         ▼
+  .gitignore filters:
+  ✓ .md and .assets/
+  ✗ .pdf, .py, .cpp, ...
 ```
 
-The `notes.html` layout automatically:
-1. Finds all `_notes/` files with the same `series` value
-2. Sorts them by `series_order`
-3. Renders the left sidebar with all chapters
-4. Parses the main content for headings to build the right TOC
-5. Generates prev/next chapter links
-6. Activates scrollspy to highlight the current TOC section
+The `_plugins/notes-sync.rb` plugin:
+1. Runs before Jekyll reads collections (`:after_init` hook)
+2. Scans `notes-src/` recursively
+3. Extracts `series`, `section`, `series_order`, `title` from directory structure
+4. Generates `_notes/` files with proper YAML frontmatter
+5. `_notes/` is **gitignored** — it's auto-generated from `notes-src/`
+
+### Adding More Series
+
+Create a new top-level directory in `notes-src/`:
+
+```
+notes-src/
+└── 你的新专题/          ← New series, auto-discovered
+    ├── 1. 第一章.md
+    └── 2. 第二章.md
+```
+
+No configuration files to edit. The Hub page and sidebar **automatically** pick up new series.
 
 ---
 
