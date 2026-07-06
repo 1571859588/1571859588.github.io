@@ -39,53 +39,14 @@ var NOTES_INDEX = [
 
 {% if page.series %}
 <script>
-(function() {
-  var inp = document.getElementById('notes-sidebar-search-input');
-  var box = document.getElementById('notes-sidebar-search-results');
-  if (!inp || !box) return;
-  inp.placeholder = inp.placeholder + ' [' + document.querySelectorAll('.notes-chapter-link').length + ']';
-
-  var items = [];
-  var links = document.querySelectorAll('.notes-chapter-link');
-  for (var i = 0; i < links.length; i++) {
-    var t = links[i].querySelector('.notes-chapter-title');
-    if (t) items.push({ t: t.textContent.trim(), u: links[i].getAttribute('href') });
-  }
-
-  function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
-  function hl(t, q) {
-    var o = '', L = 0, lo = t.toLowerCase(), ql = q.toLowerCase(), i;
-    while ((i = lo.indexOf(ql, L)) !== -1) {
-      o += esc(t.substring(L, i)) + '<mark class="notes-search-highlight">' + esc(t.substring(i, i + q.length)) + '</mark>';
-      L = i + q.length;
-    }
-    return o + esc(t.substring(L));
-  }
-
-  inp.addEventListener('input', function() {
-    var q = this.value.trim();
-    if (!q) { box.style.display = 'none'; box.innerHTML = ''; return; }
-    var ql = q.toLowerCase(), hits = [];
-    for (var i = 0; i < items.length; i++) {
-      if (items[i].t.toLowerCase().indexOf(ql) !== -1) hits.push(items[i]);
-    }
-    if (!hits.length) {
-      box.innerHTML = '<div class="notes-sidebar-search-empty">无匹配</div>';
-    } else {
-      var h = '';
-      for (var j = 0; j < Math.min(hits.length, 15); j++) {
-        h += '<a href="' + hits[j].u + '" class="notes-sidebar-search-hit" data-q="' + esc(q) + '">' +
-             '<span class="notes-sidebar-search-hit-title">' + hl(hits[j].t, q) + '</span></a>';
-      }
-      box.innerHTML = h;
-    }
-    box.style.display = 'block';
-  });
-  inp.addEventListener('keydown', function(e) { if (e.key === 'Escape') { box.style.display = 'none'; box.innerHTML = ''; this.blur(); } });
-  box.addEventListener('click', function(e) { var a = e.target.closest('.notes-sidebar-search-hit'); if (a && a.dataset.q) sessionStorage.setItem('notes-search-q', a.dataset.q); });
-  document.addEventListener('click', function(e) { if (!e.target.closest('#notes-sidebar-search')) { box.style.display = 'none'; box.innerHTML = ''; } });
-})();
+var SERIES_INDEX = [
+{% assign sn_notes = site.notes | where: "series", page.series | sort: "series_order" %}
+{% for sn in sn_notes %}
+  {t:{{ sn.title | jsonify }}, u:{{ sn.url | relative_url | jsonify }}}{% unless forloop.last %},{% endunless %}
+{% endfor %}
+];
 </script>
+<script src="{{ base_path }}/assets/js/notes-sidebar-search.js"></script>
 {% endif %}
 
 {% include analytics.html %}
