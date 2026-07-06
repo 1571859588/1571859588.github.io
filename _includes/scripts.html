@@ -38,26 +38,27 @@ var NOTES_INDEX = [
 {% endif %}
 
 <script>
-var SIDEBAR_NOTES = [
-{% assign sn_notes = site.notes | where: "series", page.series | sort: "series_order" %}
-{% for sn in sn_notes %}
-  {t:{{ sn.title | jsonify }}, u:{{ sn.url | relative_url | jsonify }}}{% unless forloop.last %},{% endunless %}
-{% endfor %}
-];
 (function() {
-  var inp = document.getElementById('notes-sidebar-search-input');
-  var box = document.getElementById('notes-sidebar-search-results');
+  var inp = document.getElementById('ns-si');
+  var box = document.getElementById('ns-sr');
   if (!inp || !box) return;
-  inp.style.border = '2px solid #22c55e';
-  if (!SIDEBAR_NOTES.length) { inp.placeholder = '本专题无笔记'; return; }
-  inp.placeholder = SIDEBAR_NOTES.length + ' 篇可搜';
+  inp.value = ''; inp.placeholder = '输入搜索…'; inp.style.border = '2px solid #3b82f6';
+
+  /* Build index from sidebar links that ARE rendered at this point */
+  var items = [];
+  var links = document.querySelectorAll('.notes-chapter-link');
+  for (var i = 0; i < links.length; i++) {
+    var t = links[i].querySelector('.notes-chapter-title');
+    if (t) items.push({ t: t.textContent.trim(), u: links[i].getAttribute('href') });
+  }
+  inp.placeholder = items.length + ' 篇, 输入搜索…';
 
   function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
   function hl(t, q) {
-    var o = '', L = 0, lo = t.toLowerCase(), ql = q.toLowerCase(), i;
-    while ((i = lo.indexOf(ql, L)) !== -1) {
-      o += esc(t.substring(L, i)) + '<mark class="notes-search-highlight">' + esc(t.substring(i, i + q.length)) + '</mark>';
-      L = i + q.length;
+    var o = '', L = 0, lo = t.toLowerCase(), ql = q.toLowerCase(), idx;
+    while ((idx = lo.indexOf(ql, L)) !== -1) {
+      o += esc(t.substring(L, idx)) + '<mark class="notes-search-highlight">' + esc(t.substring(idx, idx + q.length)) + '</mark>';
+      L = idx + q.length;
     }
     return o + esc(t.substring(L));
   }
@@ -66,8 +67,8 @@ var SIDEBAR_NOTES = [
     var q = this.value.trim();
     if (!q) { box.style.display = 'none'; box.innerHTML = ''; return; }
     var ql = q.toLowerCase(), hits = [];
-    for (var i = 0; i < SIDEBAR_NOTES.length; i++) {
-      if (SIDEBAR_NOTES[i].t.toLowerCase().indexOf(ql) !== -1) hits.push(SIDEBAR_NOTES[i]);
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].t.toLowerCase().indexOf(ql) !== -1) hits.push(items[i]);
     }
     if (!hits.length) {
       box.innerHTML = '<div class="notes-sidebar-search-empty">无匹配</div>';
