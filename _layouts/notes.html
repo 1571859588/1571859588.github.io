@@ -175,18 +175,22 @@ layout: default
 <script src="{{ base_path }}/assets/js/notes-toc.js"></script>
 
 {% comment %}Series-specific search index for sidebar{% endcomment %}
-<script>
-var SERIES_INDEX = [
+<textarea id="series-index-data" style="display:none">[
 {% for sn in series_notes %}
   {% assign raw = sn.content | strip_html | strip_newlines | truncate: 2000 %}
-  {t:{{ sn.title | jsonify }}, u:{{ sn.url | relative_url | jsonify }}, c:{{ raw | jsonify }}}{% unless forloop.last %},{% endunless %}
+  {"t":{{ sn.title | jsonify }},"u":{{ sn.url | relative_url | jsonify }},"c":{{ raw | jsonify }}}{% unless forloop.last %},{% endunless %}
 {% endfor %}
-];
+]</textarea>
 </script>
 
 <script>
 (function() {
-  if (typeof SERIES_INDEX === 'undefined' || SERIES_INDEX.length === 0) return;
+  var dataEl = document.getElementById('series-index-data');
+  if (!dataEl) return;
+  var SERIES_INDEX;
+  try { SERIES_INDEX = JSON.parse(dataEl.value); } catch(e) { return; }
+  if (!SERIES_INDEX || SERIES_INDEX.length === 0) return;
+
   var input  = document.getElementById('notes-sidebar-search-input');
   var box    = document.getElementById('notes-sidebar-search-results');
   if (!input || !box) return;
