@@ -29,52 +29,95 @@ layout: default
       <nav class="notes-chapter-nav">
         {% assign series_notes = site.notes | where: "series", current_series_id | sort: "series_order" %}
 
-        {% comment %}Group notes by section{% endcomment %}
+        {% comment %}Group notes by hierarchical section — supports nesting via section path (e.g. "CUDA编程/总纲"){% endcomment %}
         {% assign current_section = "" %}
+        {% assign current_depth = 0 %}
         {% assign section_open = false %}
 
         <ul class="notes-chapter-list">
         {% for note in series_notes %}
           {% assign note_section = note.section | default: "" %}
-
-          {% comment %}Close previous section if section changes{% endcomment %}
-          {% if note_section != current_section %}
-            {% if section_open %}
-              </ul></li>
-              {% assign section_open = false %}
-            {% endif %}
-            {% assign current_section = note_section %}
-          {% endif %}
-
-          {% comment %}If note has a section, group it{% endcomment %}
+          {% assign note_depth = 0 %}
           {% if note_section != "" %}
-            {% unless section_open %}
-              <li class="notes-section-group">
-                <button class="notes-section-toggle" aria-expanded="true">
-                  <span class="notes-section-arrow">▾</span>
-                  <span class="notes-section-label">{{ note_section | split: "/" | last }}</span>
-                </button>
-                <ul class="notes-section-list">
-              {% assign section_open = true %}
-            {% endunless %}
-            <li class="notes-chapter-item {% if note.url == page.url %}active{% endif %}">
-              <a href="{{ note.url | relative_url }}" class="notes-chapter-link">
-                <span class="notes-chapter-num">{{ note.section_order | default: note.series_order }}</span>
-                <span class="notes-chapter-title">{{ note.title }}</span>
-              </a>
-            </li>
-          {% else %}
-            <li class="notes-chapter-item {% if note.url == page.url %}active{% endif %}">
-              <a href="{{ note.url | relative_url }}" class="notes-chapter-link">
-                <span class="notes-chapter-num">{{ note.series_order }}</span>
-                <span class="notes-chapter-title">{{ note.title }}</span>
-              </a>
-            </li>
+            {% assign note_parts = note_section | split: "/" %}
+            {% assign note_depth = note_parts | size %}
           {% endif %}
+
+          {% comment %}Section changed — close old groups, open new ones{% endcomment %}
+          {% if note_section != current_section %}
+            {% comment %}Determine relationship: deeper, shallower, or different branch{% endcomment %}
+            {% assign close_count = current_depth %}
+            {% assign open_start = 1 %}
+
+            {% if current_section == "" %}
+              {% comment %}Entering first section — nothing to close{% endcomment %}
+              {% assign close_count = 0 %}
+            {% elsif note_section == "" %}
+              {% comment %}Leaving section entirely — close all, open none{% endcomment %}
+            {% else %}
+              {% comment %}Check if old is prefix of new (going deeper){% endcomment %}
+              {% assign old_prefix = current_section | append: "/" %}
+              {% assign new_split = note_section | split: old_prefix | first %}
+              {% if new_split == "" %}
+                {% comment %}old is prefix: e.g. "CUDA编程" → "CUDA编程/总纲" — keep parent, open child{% endcomment %}
+                {% assign close_count = 0 %}
+                {% assign open_start = current_depth | plus: 1 %}
+              {% else %}
+                {% comment %}Check if new is prefix of old (going shallower){% endcomment %}
+                {% assign new_prefix = note_section | append: "/" %}
+                {% assign old_split = current_section | split: new_prefix | first %}
+                {% if old_split == "" %}
+                  {% comment %}new is prefix: e.g. "CUDA编程/总纲" → "CUDA编程" — close child only{% endcomment %}
+                  {% assign close_count = current_depth | minus: note_depth %}
+                  {% assign open_start = 0 %}
+                {% endif %}
+                {% comment %}Else: different branch — close all, open all (defaults){% endcomment %}
+              {% endif %}
+            {% endif %}
+
+            {% comment %}Close levels{% endcomment %}
+            {% if section_open and close_count > 0 %}
+              {% for i in (1..close_count) %}
+                </ul></li>
+              {% endfor %}
+            {% endif %}
+
+            {% comment %}Open new levels{% endcomment %}
+            {% if note_section != "" and open_start > 0 %}
+              {% assign new_parts = note_section | split: "/" %}
+              {% assign part_idx = 0 %}
+              {% for part in new_parts %}
+                {% assign part_idx = part_idx | plus: 1 %}
+                {% if part_idx >= open_start %}
+                  <li class="notes-section-group notes-section-depth-{{ part_idx }}">
+                    <button class="notes-section-toggle" aria-expanded="true">
+                      <span class="notes-section-arrow">▾</span>
+                      <span class="notes-section-label">{{ part }}</span>
+                    </button>
+                    <ul class="notes-section-list">
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+
+            {% assign section_open = note_section != "" %}
+            {% assign current_section = note_section %}
+            {% assign current_depth = note_depth %}
+          {% endif %}
+
+          {% comment %}Render note link (same for all notes) {% endcomment %}
+          <li class="notes-chapter-item {% if note.url == page.url %}active{% endif %}">
+            <a href="{{ note.url | relative_url }}" class="notes-chapter-link">
+              <span class="notes-chapter-num">{{ note.section_order | default: note.series_order }}</span>
+              <span class="notes-chapter-title">{{ note.title }}</span>
+            </a>
+          </li>
         {% endfor %}
 
+        {% comment %}Close any remaining open section groups{% endcomment %}
         {% if section_open %}
-          </ul></li>
+          {% for i in (1..current_depth) %}
+            </ul></li>
+          {% endfor %}
         {% endif %}
         </ul>
       </nav>

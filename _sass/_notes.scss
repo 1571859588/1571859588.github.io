@@ -259,6 +259,44 @@
   padding-left: 1.5em;
 }
 
+/* ── Nested section depth indentation ── */
+.notes-section-depth-2 > .notes-section-toggle {
+  padding-left: 1.2em;
+}
+
+.notes-section-depth-2 .notes-section-list .notes-chapter-link {
+  padding-left: 2.2em;
+}
+
+.notes-section-depth-3 > .notes-section-toggle {
+  padding-left: 1.9em;
+}
+
+.notes-section-depth-3 .notes-section-list .notes-chapter-link {
+  padding-left: 2.9em;
+}
+
+.notes-section-depth-4 > .notes-section-toggle {
+  padding-left: 2.6em;
+}
+
+.notes-section-depth-4 .notes-section-list .notes-chapter-link {
+  padding-left: 3.6em;
+}
+
+/* Nest section labels: reduce font size and use normal case for deeper levels */
+.notes-section-depth-2 .notes-section-label {
+  font-size: 0.69em;
+  letter-spacing: 0.4px;
+}
+
+.notes-section-depth-3 .notes-section-label {
+  font-size: 0.67em;
+  text-transform: none;
+  letter-spacing: 0.2px;
+  font-weight: 600;
+}
+
 .notes-sidebar-footer {
   margin-top: 1.2em;
   padding-top: 0.8em;

@@ -152,6 +152,11 @@ module NotesSync
           f.puts "series_order: #{idx + 1}"
           f.puts "section_order: #{running[sec]}"
           f.puts "section: \"#{sec.gsub('"', '\"')}\""
+          f.puts "section_parts:"
+          sec.split('/').each do |part|
+            next if part.empty?
+            f.puts "  - \"#{part.gsub('"', '\"')}\""
+          end
           f.puts "---"
           f.puts
           f.write File.read(entry[:source_path], encoding: 'UTF-8')
