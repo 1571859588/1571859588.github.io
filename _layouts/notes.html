@@ -45,7 +45,7 @@ layout: default
 
           {% comment %}Section changed — close old groups, open new ones{% endcomment %}
           {% if note_section != current_section %}
-            {% comment %}Determine relationship: deeper, shallower, or different branch{% endcomment %}
+            {% comment %}Determine relationship: deeper, shallower, or shared-prefix branch{% endcomment %}
             {% assign close_count = current_depth %}
             {% assign open_start = 1 %}
 
@@ -70,8 +70,30 @@ layout: default
                   {% comment %}new is prefix: e.g. "CUDA编程/总纲" → "CUDA编程" — close child only{% endcomment %}
                   {% assign close_count = current_depth | minus: note_depth %}
                   {% assign open_start = 0 %}
+                {% else %}
+                  {% comment %}Different branch — compute shared prefix to avoid duplicate parent headers{% endcomment %}
+                  {% assign common = 0 %}
+                  {% assign old_parts = current_section | split: "/" %}
+                  {% assign new_parts = note_section | split: "/" %}
+                  {% if old_parts[0] == new_parts[0] %}
+                    {% assign common = 1 %}
+                    {% if old_parts[1] == new_parts[1] %}
+                      {% assign common = 2 %}
+                      {% if old_parts[2] == new_parts[2] %}
+                        {% assign common = 3 %}
+                        {% if old_parts[3] == new_parts[3] %}
+                          {% assign common = 4 %}
+                        {% endif %}
+                      {% endif %}
+                    {% endif %}
+                  {% endif %}
+                  {% assign close_count = current_depth | minus: common %}
+                  {% if common == 0 %}
+                    {% assign open_start = 1 %}
+                  {% else %}
+                    {% assign open_start = common | plus: 1 %}
+                  {% endif %}
                 {% endif %}
-                {% comment %}Else: different branch — close all, open all (defaults){% endcomment %}
               {% endif %}
             {% endif %}
 
