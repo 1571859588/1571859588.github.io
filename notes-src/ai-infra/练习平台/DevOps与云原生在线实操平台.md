@@ -3,7 +3,7 @@
 > 更新时间：2026-06-30
 > 状态：工具收集笔记
 > 用途：Linux / Docker / Kubernetes / 运维技能在线实操平台，配合 AI-Infra 阶段一/二/四
-> 关联：本目录 `阶段一_Linux网络与Shell脚本.md`、`阶段二_Docker与Nvidia-Docker2.md`、`阶段四_Kubernetes与AI集群.md`
+> 关联：本目录 `1. Linux网络与Shell脚本.md`、`2. Docker与Nvidia-Docker2.md`、`4. Kubernetes与AI集群.md`
 
 ---
 
@@ -261,9 +261,9 @@ docker swarm init  # 初始化 Swarm 集群
 
 ## 十、相关链接
 
-- 本目录 `阶段一_Linux网络与Shell脚本.md`
-- 本目录 `阶段二_Docker与Nvidia-Docker2.md`
-- 本目录 `阶段四_Kubernetes与AI集群.md`
+- 本目录 `1. Linux网络与Shell脚本.md`
+- 本目录 `2. Docker与Nvidia-Docker2.md`
+- 本目录 `4. Kubernetes与AI集群.md`
 - 本目录 `在线GPU练习平台汇总.md`
 - 本目录 `算法刷题在线练习平台.md`
 - 本目录 `AI竞赛与数据科学练习平台.md`

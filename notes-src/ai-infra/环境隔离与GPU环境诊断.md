@@ -3,8 +3,8 @@
 > 来源：AI Infra 前置基础 → 第 8 章 环境隔离与 GPU 软件栈
 > 笔记类型：学习笔记
 > 目标：从零开始，用完整示例讲清楚"venv/conda/容器各管什么、GPU 软件栈分几层、环境出问题按什么顺序查"
-> 更新时间：2026-07-02
-> 关联：本目录 `阶段二_Docker与Nvidia-Docker2.md`、`阶段三_GPU_CUDA与cuDNN软件栈.md`
+> 更新时间：2026-07-06（补充 uv 管理工具与 venv/conda/Docker 的对比）
+> 关联：本目录 `2. Docker与Nvidia-Docker2.md`、`3. GPU-CUDA与cuDNN软件栈.md`
 
 ---
 
@@ -38,6 +38,7 @@
 | 工具 | 隔离范围 | 不隔离什么 | 适合场景 | 不适合场景 |
 |------|---------|-----------|---------|-----------|
 | **venv** | Python 解释器 + pip 包 | 原生库、系统工具链、CUDA | 纯 Python 项目、依赖简单 | 需要 CUDA、cuDNN 等原生库 |
+| **uv** | Python 包 + Python 版本管理（可装指定版本 Python），速度极快 | 原生库、系统工具链、CUDA | 纯 Python 项目、追求速度和锁文件复现 | 需要原生库（同 venv） |
 | **conda** | Python + pip 包 + 一部分原生库（如 numpy 的 MKL 版） | 系统级驱动、内核 | 科学计算、复杂二进制依赖 | 需要隔离 CUDA Toolkit 版本 |
 | **Docker/容器** | 整个用户态：文件系统、库、工具链、进程 | 内核、驱动、硬件 | 部署、CI、跨机器复现 | 单机开发小改小闹 |
 
@@ -140,23 +141,107 @@ docker run --rm -it \
 
 **版本要钉死**：`nvidia/cuda:12.4.1-runtime-ubuntu22.04`（具体到补丁号）比 `nvidia/cuda:latest` 安全得多。`latest` 会漂移，今天能跑明天可能就崩。
 
-### 2.5 选型决策树
+### 2.5 uv 完整示例（现代替代 venv+pip）
+
+uv 是用 Rust 写的 Python 包管理器（2024 年 Astral 公司出品），**一个工具替代了 pip + venv + pip-tools + pyenv**，速度快 10~100 倍。隔离范围和 venv 一样（只管 Python 包），但体验好得多。
+
+```bash
+# ========== 安装 uv ==========
+curl -LsSf https://astral.sh/uv/install.sh | sh
+# 装完后 uv 命令就在 PATH 里了（重启终端或 source ~/.bashrc）
+
+# ========== 方式 A：项目管理模式（推荐，类似 cargo/npm） ==========
+cd ~/projects/my_model
+uv init                     # 生成 pyproject.toml + .python-version + README
+#   pyproject.toml  ← 项目配置 + 依赖声明（替代 requirements.txt）
+#   .python-version ← 指定 Python 版本（如 3.12）
+
+uv add torch==2.3.0 transformers numpy
+#   自动：创建 .venv → 装 Python（如果没有）→ 装包 → 写入 pyproject.toml → 生成 uv.lock
+#   uv.lock 是跨平台锁文件，记录所有依赖的精确版本和 hash
+
+uv add --dev pytest ruff    # 装开发依赖（只在开发时装，不进生产）
+
+uv run python train.py      # ★自动管理环境并运行（不用手动 activate！）
+#   uv run 会：检查 .venv → 缺什么装什么 → 用 .venv 的 python 跑你的脚本
+#   这是最省心的用法，不需要 source activate
+
+uv sync                     # 根据 pyproject.toml + uv.lock 同步环境
+#   别人 clone 你的项目后，一条 uv sync 就能装好所有依赖
+
+uv lock --upgrade           # 更新锁文件（检查有没有新版本可升级）
+
+uv remove transformers      # 卸载并从 pyproject.toml 移除
+
+# ========== 方式 B：兼容 pip 模式（渐进迁移） ==========
+uv venv .venv               # 创建虚拟环境（替代 python -m venv）
+source .venv/bin/activate
+uv pip install -r requirements.txt   # 和 pip 用法一样，但快得多
+uv pip install torch transformers
+uv pip freeze > requirements.txt
+#   如果不想改现有项目结构，uv 可以当"更快的 pip"用
+
+# ========== uv 的独有能力 ==========
+# 1. 管理 Python 版本（替代 pyenv）
+uv python install 3.11 3.12 3.13    # 装多个 Python 版本
+uv python list                       # 看有哪些版本可用
+uv python pin 3.12                   # 给当前项目固定 Python 版本
+#   venv 做不到这点——venv 只能软链系统已有的 Python，uv 能自己装
+
+# 2. 跨平台锁文件（uv.lock）
+#   requirements.txt 只记包名版本，uv.lock 记录：精确版本 + hash + 依赖关系 + 平台信息
+#   在 Linux 生成 uv.lock，到 macOS 上 uv sync 也能正确装（会装对应平台的 wheel）
+#   比 pip-compile 的 requirements.lock 更强
+
+# 3. 单文件脚本依赖（PEP 723，见 linux/Linux开发基本功_新人入门版.md 2.4 节）
+#   脚本第一行声明依赖，uv run 自动建临时环境：
+#   # /// script
+#   # dependencies = ["requests", "rich"]
+#   # ///
+#   import requests, rich
+#   uv run script.py    # 自动装 requests+rich 到临时环境并运行
+
+# 4. uv run 不需要 activate
+#   传统流程：source .venv/bin/activate → python xxx.py → deactivate
+#   uv 流程：uv run xxx.py（省去 activate/deactivate，环境自动管理）
+```
+
+**uv vs venv+pip 的核心区别**：
+
+| 维度 | venv + pip | uv |
+|------|-----------|-----|
+| 速度 | 慢（串行下载+解析） | 快 10~100 倍（Rust + 并行 + 全局缓存） |
+| Python 版本管理 | 不支持（只能用系统的） | 支持（uv python install） |
+| 锁文件 | 需要 pip-tools 额外生成 | 内置 uv.lock（跨平台） |
+| 依赖声明 | requirements.txt（手动维护） | pyproject.toml（uv add 自动维护） |
+| 运行方式 | activate 后 python xxx.py | uv run xxx.py（不用 activate） |
+| 全局缓存 | 无（每个 venv 各装一份） | 有（全局缓存，多项目共享） |
+| 隔离范围 | Python 包 | Python 包（和 venv 一样） |
+
+**实际场景**：新项目直接用 uv（uv init → uv add → uv run），比 venv+pip 快太多且锁文件完善；老项目可以用 uv pip 兼容模式渐进迁移。
+
+**uv 管不了什么**（和 venv 一样的局限）：原生库（CUDA、cuDNN、MKL）、系统工具链、GPU 驱动。需要这些还是得上 conda 或 Docker。
+
+### 2.6 选型决策树
 
 ```
 你的项目需要隔离什么？
 │
 ├─ 只需要 Python 包版本隔离
-│  └─ → venv（最轻，系统已装）
+│  ├─ 新项目 / 追求速度和锁文件 → uv（推荐，比 venv+pip 快 10~100 倍）
+│  └─ 不想装新工具 / 极简需求   → venv（系统自带）
 │
 ├─ 需要 Python + 一部分原生库（MKL、特定 numpy）
-│  └─ → conda（比 venv 多管原生库）
+│  └─ → conda（比 venv/uv 多管原生库）
 │
 ├─ 需要隔离 CUDA Toolkit 版本（一个机器跑多个 CUDA 版本）
-│  └─ → Docker（venv/conda 都管不了 CUDA Toolkit）
+│  └─ → Docker（venv/uv/conda 都管不了 CUDA Toolkit）
 │
 └─ 需要跨机器完整复现（CI/部署/交付给客户）
    └─ → Docker（连 OS、库、工具链一起打包）
 ```
+
+> **uv vs venv 一句话**：隔离范围一样（都只管 Python 包），但 uv 速度快、自带锁文件、能管 Python 版本、不用 activate（uv run 直接跑）。新项目首选 uv，uv 管不了的（原生库/CUDA）才上 conda 或 Docker。
 
 ---
 
@@ -409,7 +494,11 @@ docker run --gpus all -it my-pytorch-image
 
 **问：venv、conda、Docker 在 AI 开发里分别解决什么问题？**
 
-答：它们是**三个递进的隔离层次**，不是互斥的。venv 只隔离 Python 包，适合纯 Python 项目；conda 多隔离一部分原生库（如 MKL 加速的 numpy），适合科学计算；Docker 隔离整个用户态，连 CUDA Toolkit、系统库都打包进去，适合跨机器复现和部署。一个项目可能同时用 venv 管 Python 包 + Docker 打包整体环境，互不冲突。
+答：它们是**三个递进的隔离层次**，不是互斥的。venv（以及现代替代品 uv）只隔离 Python 包，适合纯 Python 项目；conda 多隔离一部分原生库（如 MKL 加速的 numpy），适合科学计算；Docker 隔离整个用户态，连 CUDA Toolkit、系统库都打包进去，适合跨机器复现和部署。一个项目可能同时用 uv 管 Python 包 + Docker 打包整体环境，互不冲突。
+
+**问：uv 和 venv+pip 有什么区别？该用哪个？**
+
+答：隔离范围一样（都只管 Python 包，不管原生库和 CUDA），但 uv 有几个优势：① 速度快 10~100 倍（Rust 写的，并行下载+全局缓存）；② 能管理 Python 版本（uv python install，venv 做不到）；③ 内置跨平台锁文件 uv.lock（venv 需要 pip-tools 额外生成）；④ uv run 不用 activate 就能跑（自动管理环境）。新项目首选 uv，uv 管不了的（原生库/CUDA Toolkit）才上 conda 或 Docker。老项目可以用 uv pip 兼容模式渐进迁移，命令和 pip 一样但快得多。
 
 **问：nvidia-smi 显示的 CUDA 版本和 nvcc 显示的为什么不一样？**
 
@@ -436,7 +525,10 @@ docker run --gpus all -it my-pytorch-image
    `--gpus all` 是把 GPU 设备透传给容器（容器进程能看到 GPU）；`CUDA_VISIBLE_DEVICES` 是 CUDA runtime 层的过滤（进程能看到但不用某些卡）。容器内 `CUDA_VISIBLE_DEVICES=1` 表示"只用 1 号卡"，前提是 `--gpus` 已经把卡透传进来了。
 
 5. **为什么 `environment.yml` / `requirements.txt` 不是完整环境描述？**
-   它们只记录 Python 包，不含操作系统、驱动版本、内核版本、硬件架构（x86 vs ARM）、编译器版本。所以"在我这能跑在你那不能跑"很常见。真正的完整复现要 Docker 镜像（连 OS 和库一起打包），但即便如此也复现不了驱动和硬件——那部分要靠文档记录。
+   它们只记录 Python 包，不含操作系统、驱动版本、内核版本、硬件架构（x86 vs ARM）、编译器版本。所以"在我这能跑在你那不能跑"很常见。真正的完整复现要 Docker 镜像（连 OS 和库一起打包），但即便如此也复现不了驱动和硬件——那部分要靠文档记录。uv.lock 比 requirements.txt 强（含 hash 和平台信息），但同样不含 OS/驱动，所以 uv.lock 也不能替代 Docker 做完整复现。
+
+6. **uv 的全局缓存是怎么回事？多项目共享会不会冲突？**
+   uv 把下载的 wheel 缓存在 `~/.cache/uv` 里，多个项目的 .venv 通过硬链接（hardlink）引用缓存，不重复占磁盘。不会冲突——每个 .venv 是独立的目录，只是底层文件指向同一份缓存。卸载某个包只是断开硬链接，不影响其他项目。这也是 uv 比 pip 快的原因之一（pip 每个 venv 各装一份，重复下载+占空间）。
 
 ---
 
@@ -448,13 +540,14 @@ docker run --gpus all -it my-pytorch-image
 - **"容器里 nvidia-smi 能用但 torch 看不到 GPU"** → 容器启动没加 `--gpus all`
 - **"venv 里 pip install 装到全局了"** → 没激活 venv，或用了 `pip` 而不是 `python -m pip`
 - **"跨机器复现失败"** → requirements.yml 救不了，换 Docker 镜像，并文档记录驱动版本和硬件
+- **"uv 和 venv 怎么选"** → 新项目用 uv（快+锁文件+管 Python 版本），老项目 uv pip 兼容迁移，原生库/CUDA 还是 conda/Docker
 
 ---
 
 ## 九、关联笔记
 
-- 本目录 `阶段二_Docker与Nvidia-Docker2.md`（Docker 命令、Dockerfile、nvidia-docker2 安装）
-- 本目录 `阶段三_GPU_CUDA与cuDNN软件栈.md`（驱动/CUDA/cuDNN 安装步骤、版本兼容表、AWQ 量化）
+- 本目录 `2. Docker与Nvidia-Docker2.md`（Docker 命令、Dockerfile、nvidia-docker2 安装）
+- 本目录 `3. GPU-CUDA与cuDNN软件栈.md`（驱动/CUDA/cuDNN 安装步骤、版本兼容表、AWQ 量化）
 - `python/` 目录（venv/conda 实操）
 - `linux/Linux开发基本功_新人入门版.md`（环境变量、`LD_LIBRARY_PATH`、`which`、`ldd`）
 - `技术工具学习索引.md`
