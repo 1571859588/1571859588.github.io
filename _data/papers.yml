@@ -11,6 +11,26 @@
 # - doi: DOI link (optional)
 
 papers:
+  - id: "multi-granularity-rag-iccad-2026"
+    authors:
+      - "Yuheng Huang"
+      - "Yuhan Qin"
+      - "Yuan Pu"
+      - "Zhaotan Lin"
+      - "<u>Yuntao Nie</u>"
+      - "Zhuolun He"
+      - "Jianwang Zhai"
+      - "Kang Zhao"
+      - "Bei Yu"
+    title: "A Multi-Granularity Retrieval Augmented Generation Framework for EDA Tasks Leveraging Knowledge Graph"
+    venue: "IEEE/ACM International Conference on Computer-Aided Design (ICCAD), San Jose, Nov. 08–12, 2026"
+    date: "2026-11-08"
+    contribution: ""
+    pdf_url: ""
+    slides_url: ""
+    github_url: ""
+    doi: ""
+
   - id: "maeda-2026"
     authors:
       - "Zhenghao Chen"
