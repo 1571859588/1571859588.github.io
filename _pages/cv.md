@@ -7,67 +7,49 @@ author_profile: true
 
 <div class="cv-hub">
   <p class="cv-hub-intro">
-    Select a CV track tailored to the direction you're interested in.
-    Each track highlights relevant research interests, projects, and skills.
+    CVs are organized into two tracks: a <strong>research-oriented CV</strong> (for graduate / PhD applications)
+    and a <strong>job-seeking CV</strong> (for industry applications). Each track highlights relevant
+    research interests, projects, internships, and skills.
   </p>
 
-  <div class="cv-track-cards">
-  {% for t in site.data.cv-tracks.tracks %}
-    {% assign track_key = t[0] %}
-    {% assign track_info = t[1] %}
-    <div class="cv-track-card">
-      <h3 class="cv-track-card-title">{{ track_info.name.en }}</h3>
-      <p class="cv-track-card-desc">{{ track_info.description.en }}</p>
-      <div class="cv-track-card-links">
-        <a href="/cv-{{ track_key }}/" class="btn btn--primary btn--small">English CV</a>
-        <a href="/cv-{{ track_key }}-zh/" class="btn btn--info btn--small">中文简历</a>
+  <section class="cv-hub-region">
+    <h2 class="cv-hub-region-title">Research CV</h2>
+    <p class="cv-hub-region-desc">Academic-oriented layout — publications and research interests lead.</p>
+    <div class="cv-track-cards">
+    {% for t in site.data.cv-tracks.tracks %}
+      {% assign track_key = t[0] %}
+      {% assign track_info = t[1] %}
+      <div class="cv-track-card">
+        <h3 class="cv-track-card-title">{{ track_info.name.en }}</h3>
+        <p class="cv-track-card-desc">{{ track_info.description.en }}</p>
+        <div class="cv-track-card-links">
+          <a href="/cv-{{ track_key }}/" class="btn btn--primary btn--small">English CV</a>
+          <a href="/cv-{{ track_key }}-zh/" class="btn btn--info btn--small">中文简历</a>
+        </div>
       </div>
+    {% endfor %}
     </div>
-  {% endfor %}
-  </div>
-</div>
+  </section>
 
-<style>
-.cv-hub-intro {
-  font-size: 1.1em;
-  color: #555;
-  margin-bottom: 2em;
-  text-align: center;
-}
-.cv-track-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5em;
-  margin-bottom: 2em;
-}
-.cv-track-card {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 1.5em;
-  transition: box-shadow 0.2s, transform 0.2s;
-}
-.cv-track-card:hover {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  transform: translateY(-2px);
-}
-.cv-track-card-title {
-  font-size: 1.3em;
-  margin: 0 0 0.5em 0;
-  color: #2e8b9e;
-}
-.cv-track-card-desc {
-  font-size: 0.95em;
-  color: #666;
-  margin-bottom: 1.2em;
-  line-height: 1.5;
-}
-.cv-track-card-links {
-  display: flex;
-  gap: 0.75em;
-  flex-wrap: wrap;
-}
-.btn--small {
-  padding: 0.35em 1em;
-  font-size: 0.85em;
-}
-</style>
+  <section class="cv-hub-region">
+    <h2 class="cv-hub-region-title">Job-Seeking CV</h2>
+    <p class="cv-hub-region-desc">Employment-oriented layout — internships, projects, and quantified outcomes lead; publications demoted.</p>
+    <div class="cv-track-cards">
+    {% for t in site.data.cv-tracks.tracks %}
+      {% assign track_key = t[0] %}
+      {% assign track_info = t[1] %}
+      <div class="cv-track-card cv-track-card--job">
+        <h3 class="cv-track-card-title">{{ track_info.name.en }}</h3>
+        <p class="cv-track-card-desc">{{ track_info.description.en }}</p>
+        {% if track_info.job_objective.en %}
+        <p class="cv-track-card-obj"><strong>Objective:</strong> {{ track_info.job_objective.en }}</p>
+        {% endif %}
+        <div class="cv-track-card-links">
+          <a href="/cv-job-{{ track_key }}/" class="btn btn--primary btn--small">English CV</a>
+          <a href="/cv-job-{{ track_key }}-zh/" class="btn btn--info btn--small">中文简历</a>
+        </div>
+      </div>
+    {% endfor %}
+    </div>
+  </section>
+</div>

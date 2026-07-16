@@ -20,6 +20,9 @@ tracks:
     description:
       en: "Focus on multi-agent systems, tool-use agents, and LLM-based autonomous workflows."
       zh: "聚焦多智能体系统、工具使用智能体以及基于大语言模型的自主工作流。"
+    job_objective:
+      en: "AI Agent R&D Engineer"
+      zh: "AI Agent 研发工程师"
     research_interests:
       en:
         - "Multi-Agent Systems"
@@ -111,6 +114,9 @@ tracks:
     description:
       en: "Focus on building scalable AI systems, RAG pipelines, model serving, and distributed training infrastructure."
       zh: "聚焦构建可扩展的AI系统、RAG流水线、模型服务与分布式训练基础设施。"
+    job_objective:
+      en: "AI Infrastructure / RAG Engineer"
+      zh: "AI Infra / RAG 工程师"
     research_interests:
       en:
         - "Retrieval-Augmented Generation (RAG)"
@@ -224,6 +230,9 @@ tracks:
     description:
       en: "Focus on applying Large Language Models and AI techniques to Electronic Design Automation challenges."
       zh: "聚焦将大语言模型与AI技术应用于电子设计自动化领域。"
+    job_objective:
+      en: "AI4EDA Engineer"
+      zh: "AI4EDA 工程师"
     research_interests:
       en:
         - "Large Language Models for EDA"

@@ -58,29 +58,50 @@ awards:
   - title:
       en: "First Award Scholarship"
       zh: "一等奖学金"
+    level:
+      en: "First-class"
+      zh: "校级一等奖"
     year: "2021, 2023"
   - title:
       en: "Third Award Scholarship"
       zh: "三等奖学金"
+    level:
+      en: "Third-class"
+      zh: "校级三等奖"
     year: "2022, 2024"
   - title:
       en: "China University Computer Competition - Network Challenge Finals Third Prize"
       zh: "中国大学生计算机大赛-网络技术挑战赛全国三等奖"
+    level:
+      en: "National Third Prize"
+      zh: "全国三等奖"
     year: "2023"
   - title:
       en: "APMCM Third Prize"
       zh: "APMCM三等奖"
+    level:
+      en: "Third Prize"
+      zh: "三等奖"
     year: "2023"
   - title:
       en: "RoboMaster College League Competition 3V3 Third Prize"
       zh: "RoboMaster高校联盟赛3V3对抗赛三等奖"
+    level:
+      en: "Third Prize"
+      zh: "三等奖"
     year: "2024"
   - title:
       en: "Bronze Award of National College Students Algorithm Design and Programming Challenge"
       zh: "全国大学生算法设计与编程挑战赛铜奖"
+    level:
+      en: "Bronze"
+      zh: "铜奖"
     year: ""
   - title:
       en: "National Undergraduate Mathematical Modeling Competition Provincial First Prize"
       zh: "全国大学生数学建模竞赛省一等奖"
+    level:
+      en: "Provincial First Prize"
+      zh: "省一等奖"
     year: "2023"
 

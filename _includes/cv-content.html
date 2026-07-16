@@ -3,11 +3,19 @@
   Parameters:
     - include.track : track key (e.g., "agent", "infra", "eda")
     - include.lang  : language code ("en" or "zh")
+    - include.mode  : "research" (default) | "job"
   Shared data from _data/cv.yml; track-specific data from _data/cv-tracks.yml.
+
+  NOTE on layout modes:
+    - research mode = the {% else %} branch below. It must stay byte-identical to
+      the original PhD-application-oriented layout. Only edit it for genuine fixes.
+    - job mode = the {% if mode == 'job' %} branch. Employment-oriented order with
+      demoted academic weight. Pure layout/visual changes — never alters wording.
 {% endcomment %}
 
 {% assign track = site.data.cv-tracks.tracks[include.track] %}
 {% assign lang = include.lang %}
+{% assign mode = include.mode | default: "research" %}
 
 {% if lang == "zh" %}
   {% assign name_label = "个人简历" %}
@@ -23,6 +31,12 @@
   {% assign sec_skills = "技能" %}
   {% assign label_supervisor = "导师" %}
   {% assign pdf_filename_prefix = "聂云滔_简历" %}
+  {% assign label_objective = "求职意向" %}
+  {% assign label_awards_scholarship = "学业奖学金" %}
+  {% assign label_awards_competition = "学科竞赛" %}
+  {% assign label_pubs_conf = "会议论文" %}
+  {% assign label_pubs_preprint = "预印本" %}
+  {% assign label_research_version = "科研版" %}
 {% else %}
   {% assign name_label = "Curriculum Vitae" %}
   {% assign other_lang = "zh" %}
@@ -37,9 +51,28 @@
   {% assign sec_skills = "Skills" %}
   {% assign label_supervisor = "Supervisor" %}
   {% assign pdf_filename_prefix = "Yuntao_Nie_CV" %}
+  {% assign label_objective = "Objective" %}
+  {% assign label_awards_scholarship = "Scholarships" %}
+  {% assign label_awards_competition = "Competitions" %}
+  {% assign label_pubs_conf = "Conference Papers" %}
+  {% assign label_pubs_preprint = "Preprints" %}
+  {% assign label_research_version = "Research version" %}
 {% endif %}
 
-{% assign pdf_filename = pdf_filename_prefix | append: "_" | append: track.name.en | replace: " ", "_" %}
+{% comment %} Mode-aware filename suffix and track URL prefix. {% endcomment %}
+{% if mode == "job" %}
+  {% if lang == "zh" %}
+    {% assign mode_suffix = "_就业" %}
+  {% else %}
+    {% assign mode_suffix = "_Job" %}
+  {% endif %}
+  {% assign track_url_prefix = "cv-job-" %}
+{% else %}
+  {% assign mode_suffix = "" %}
+  {% assign track_url_prefix = "cv-" %}
+{% endif %}
+
+{% assign pdf_filename = pdf_filename_prefix | append: "_" | append: track.name.en | replace: " ", "_" | append: mode_suffix %}
 
 <!-- Track Selector Bar -->
 <div class="cv-track-selector">
@@ -47,15 +80,19 @@
     {% for t in site.data.cv-tracks.tracks %}
       {% assign track_key = t[0] %}
       {% assign track_info = t[1] %}
-      <a href="/cv-{{ track_key }}{% if lang == 'zh' %}-zh{% endif %}/"
+      <a href="/{{ track_url_prefix }}{{ track_key }}{% if lang == 'zh' %}-zh{% endif %}/"
          class="cv-track-tab{% if track_key == include.track %} active{% endif %}">
         {{ track_info.name[lang] }}
       </a>
     {% endfor %}
   </div>
   <div class="cv-track-lang">
-    <a href="/cv-{{ include.track }}{% if other_lang == 'en' %}/{% else %}-zh/{% endif %}"
+    <a href="/{{ track_url_prefix }}{{ include.track }}{% if other_lang == 'en' %}/{% else %}-zh/{% endif %}"
        class="btn btn--info btn--small">{{ other_lang_label }}</a>
+    {% if mode == "job" %}
+    <a href="/cv-{{ include.track }}{% if other_lang == 'en' %}/{% else %}-zh/{% endif %}"
+       class="btn btn--small">{{ label_research_version }}</a>
+    {% endif %}
   </div>
 </div>
 
@@ -64,7 +101,190 @@
   <button onclick="downloadCV('{{ pdf_filename }}')" class="btn btn--primary"><i class="fa fa-download"></i> {{ btn_download }}</button>
 </div>
 
-<div class="cv-content" id="cv-content">
+<div class="cv-content" id="cv-content" data-mode="{{ mode }}">
+
+{% comment %}
+  ============================================================================
+  SECTION BODY — branched by mode.
+  The {% else %} branch (research) is the original layout, kept verbatim.
+  The job branch reorders/demotes academic weight for employment use.
+  ============================================================================
+{% endcomment %}
+{% if mode == "job" %}
+
+<!-- ============== JOB MODE: employment-oriented order ============== -->
+
+<!-- Header -->
+<div class="cv-header cv-header--job">
+  {% if site.data.cv.personal.photo %}
+  <div class="cv-photo">
+    <img src="{{ site.data.cv.personal.photo }}" alt="{{ site.data.cv.personal.name[lang] }}">
+  </div>
+  {% endif %}
+  <div class="cv-header-info">
+    {% if lang == "zh" %}
+    <h2 class="cv-name">{{ site.data.cv.personal.name.zh }} ({{ site.data.cv.personal.name.en }})</h2>
+    {% else %}
+    <h2 class="cv-name">{{ site.data.cv.personal.name.en }}</h2>
+    {% endif %}
+    <div class="cv-contact cv-contact--job">
+      <span>{{ site.data.cv.personal.email }}</span>
+      <span class="cv-contact-sep">|</span>
+      <span><a href="{{ site.data.cv.personal.website }}">{{ site.data.cv.personal.website }}</a></span>
+      <span class="cv-contact-sep">|</span>
+      <span><a href="https://github.com/{{ site.data.cv.personal.github }}">{{ site.data.cv.personal.github }}</a></span>
+      <span class="cv-contact-sep">|</span>
+      <span>{{ site.data.cv.personal.location[lang] }}</span>
+    </div>
+    {% if track.job_objective[lang] %}
+    <div class="cv-objective">
+      <span class="cv-objective-label">{{ label_objective }}：</span>{{ track.job_objective[lang] }}
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Education -->
+<h2 class="cv-section-title">{{ sec_education }}</h2>
+{% for edu in site.data.cv.education %}
+<div class="cv-entry">
+  <div class="cv-entry-header">
+    <strong>{{ edu.institution[lang] }}</strong>
+    <span class="cv-date">{{ edu.date[lang] }}</span>
+  </div>
+  <div class="cv-entry-content">
+    <strong>{{ edu.degree[lang] }}</strong>{% if edu.supervisor %} <span class="cv-supervisor--muted">| {{ label_supervisor }}: <a href="{{ edu.supervisor_url }}">{{ edu.supervisor[lang] }}</a></span>{% endif %}
+  </div>
+</div>
+{% endfor %}
+
+<!-- Research Interests (weakened, after education) -->
+{% if track.research_interests[lang] %}
+<h2 class="cv-section-title cv-section-title--minor">{{ sec_interest }}</h2>
+<ul class="cv-list cv-list--inline">
+{% for interest in track.research_interests[lang] %}
+  <li>{{ interest }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+
+<!-- Internships (before projects — enterprise recruiters prioritize) -->
+{% if track.internships %}
+<h2 class="cv-section-title">{{ sec_internships }}</h2>
+{% for intern in track.internships %}
+<div class="cv-entry">
+  <div class="cv-entry-header">
+    <strong>{{ intern.company[lang] }}</strong>, {{ intern.location[lang] }} · <em>{{ intern.position[lang] }}</em>
+    <span class="cv-date">{{ intern.date[lang] }}</span>
+  </div>
+  <div class="cv-entry-content">
+    {% if intern.description[lang] %}<div class="cv-positioning">{{ intern.description[lang] }}</div>{% endif %}
+    {% if intern.responsibilities[lang] %}
+    <ul class="cv-highlights">
+      {% for resp in intern.responsibilities[lang] %}
+      <li>{{ resp }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+</div>
+{% endfor %}
+{% endif %}
+
+<!-- Projects (newest first) -->
+{% if track.projects %}
+{% assign job_projects = track.projects | reverse %}
+<h2 class="cv-section-title">{{ sec_projects }}</h2>
+{% for project in job_projects %}
+<div class="cv-entry">
+  <div class="cv-entry-header">
+    <strong>{{ project.name[lang] }}</strong> · <em>{{ project.role[lang] }}</em>
+    <span class="cv-date">{{ project.date[lang] }}</span>
+  </div>
+  <div class="cv-entry-content">
+    <div class="cv-positioning">{{ project.description[lang] }}</div>
+    {% if project.highlights[lang] %}
+    <ul class="cv-highlights">
+      {% for highlight in project.highlights[lang] %}
+      <li>{{ highlight }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+</div>
+{% endfor %}
+{% endif %}
+
+<!-- Honors & Awards (two groups: scholarships | competitions) -->
+<h2 class="cv-section-title">{{ sec_awards }}</h2>
+<div class="cv-awards-group">
+  <div class="cv-award-group-title">{{ label_awards_scholarship }}</div>
+  {% for award in site.data.cv.awards %}
+    {% if award.title.zh contains "奖学金" or award.title.en contains "Scholarship" %}
+  <div class="cv-award-row">
+    <span class="cv-award-title">{{ award.title[lang] }}</span>
+    <span class="cv-award-level">{% if award.level[lang] %}{{ award.level[lang] }}{% endif %}</span>
+    <span class="cv-award-year">{{ award.year }}</span>
+  </div>
+    {% endif %}
+  {% endfor %}
+</div>
+<div class="cv-awards-group">
+  <div class="cv-award-group-title">{{ label_awards_competition }}</div>
+  {% for award in site.data.cv.awards %}
+    {% unless award.title.zh contains "奖学金" or award.title.en contains "Scholarship" %}
+  <div class="cv-award-row">
+    <span class="cv-award-title">{{ award.title[lang] }}</span>
+    <span class="cv-award-level">{% if award.level[lang] %}{{ award.level[lang] }}{% endif %}</span>
+    <span class="cv-award-year">{{ award.year }}</span>
+  </div>
+    {% endunless %}
+  {% endfor %}
+</div>
+
+<!-- Skills (compact, 3 categories) -->
+{% if track.skills %}
+<h2 class="cv-section-title">{{ sec_skills }}</h2>
+<div class="cv-skills-compact">
+{% for skill in track.skills %}
+  <div class="cv-skill-row"><strong>{{ skill.category[lang] }}：</strong>{{ skill.items }}</div>
+{% endfor %}
+</div>
+{% endif %}
+
+<!-- Publications (tail, compressed, grouped) -->
+<h2 class="cv-section-title">{{ sec_publications }}</h2>
+{% assign sorted_papers = site.data.papers.papers | sort: "date" | reverse %}
+<div class="cv-pub-group">
+  <div class="cv-award-group-title">{{ label_pubs_conf }}</div>
+  {% for paper in sorted_papers %}
+    {% unless paper.venue contains "arXiv" %}
+  <div class="cv-entry cv-pub-compact">
+    <div class="cv-pub-line1">
+      <em>{{ paper.title }}</em>{% if paper.venue_short[lang] %} | {{ paper.venue_short[lang] }}{% endif %}{% if paper.date %} | {{ paper.date | date: "%Y" }}{% endif %}
+    </div>
+    <div class="cv-pub-line2">{{ paper.authors | join: ", " | replace: "<u>", "<strong>" | replace: "</u>", "</strong>" }}</div>
+  </div>
+    {% endunless %}
+  {% endfor %}
+</div>
+<div class="cv-pub-group">
+  <div class="cv-award-group-title">{{ label_pubs_preprint }}</div>
+  {% for paper in sorted_papers %}
+    {% if paper.venue contains "arXiv" %}
+  <div class="cv-entry cv-pub-compact">
+    <div class="cv-pub-line1">
+      <em>{{ paper.title }}</em>{% if paper.venue_short[lang] %} | {{ paper.venue_short[lang] }}{% endif %}{% if paper.date %} | {{ paper.date | date: "%Y" }}{% endif %}
+    </div>
+    <div class="cv-pub-line2">{{ paper.authors | join: ", " | replace: "<u>", "<strong>" | replace: "</u>", "</strong>" }}</div>
+  </div>
+    {% endif %}
+  {% endfor %}
+</div>
+
+{% else %}
+
+<!-- ============== RESEARCH MODE: original layout, kept verbatim ============== -->
 
 <!-- Header -->
 <div class="cv-header">
@@ -196,6 +416,9 @@
 {% endfor %}
 </ul>
 {% endif %}
+
+{% endif %}
+{%- comment -%} end section body branch {%- endcomment -%}
 
 </div>
 

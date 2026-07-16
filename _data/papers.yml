@@ -24,6 +24,9 @@ papers:
       - "Bei Yu"
     title: "A Multi-Granularity Retrieval Augmented Generation Framework for EDA Tasks Leveraging Knowledge Graph"
     venue: "IEEE/ACM International Conference on Computer-Aided Design (ICCAD), San Jose, Nov. 08–12, 2026"
+    venue_short:
+      en: "ICCAD 2026"
+      zh: "ICCAD 2026"
     date: "2026-11-08"
     contribution: ""
     pdf_url: ""
@@ -46,6 +49,9 @@ papers:
       - "Kang Zhao"
     title: "MAEDA: An LLM-Powered Multi-Agent Evaluation Framework for EDA Tool Documentation QA"
     venue: "IEEE/ACM Proceedings Design, Automation and Test in Europe (DATE)"
+    venue_short:
+      en: "DATE 2026"
+      zh: "DATE 2026"
     date: "2026-01-01"
     contribution: |
       - Draw the figures in the paper
@@ -66,6 +72,9 @@ papers:
       - "Jiahui Pan"
     title: "SAM-DRA-UNet: An Enhanced U-Net Framework Integrating Knowledge Distillation and Transfer Learning for Brain Tumor Segmentation"
     venue: "International Conference on Intelligent Computing (ICIC)"
+    venue_short:
+      en: "ICIC 2025"
+      zh: "ICIC 2025"
     date: "2025-01-01"
     contribution: |
       - Propose the integration of knowledge distillation and transfer learning into U-Net combined with SAM for brain tumor segmentation
@@ -84,6 +93,9 @@ papers:
       - "<u>Yuntao Nie</u>"
     title: "BERT-Enhanced Retrieval Tool for Homework Plagiarism Detection System"
     venue: "arXiv preprint arXiv:2404.01582"
+    venue_short:
+      en: "arXiv 2024"
+      zh: "arXiv 2024"
     date: "2024-04-01"
     contribution: |
       - Proposed the GPT-3.5 based data augmentation methodology to construct a diverse dataset covering multiple plagiarism styles (e.g., imitation, shuffle)

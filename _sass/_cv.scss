@@ -305,7 +305,7 @@
   font-size: 1.3em;
   font-weight: 600;
   margin: 0 0 0.5em 0;
-  color: $primary-color;
+  color: $info-color;
 }
 
 .cv-track-card-desc {
@@ -324,6 +324,225 @@
 .btn--small {
   padding: 0.35em 1em;
   font-size: 0.85em;
+}
+
+/* ==========================================================================
+   CV Hub Page — Two-region layout (Research CV + Job CV)
+   ========================================================================== */
+
+.cv-hub-region {
+  margin-bottom: 2.5em;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.cv-hub-region-title {
+  font-size: 1.5em;
+  font-weight: 700;
+  color: $text-color;
+  margin: 0 0 0.4em 0;
+  padding-bottom: 0.25em;
+  border-bottom: 2px solid $info-color;
+}
+
+.cv-hub-region-desc {
+  font-size: 0.9em;
+  color: $gray;
+  margin: 0 0 1em 0;
+}
+
+.cv-track-card--job {
+  border-left: 4px solid $info-color;
+}
+
+.cv-track-card-obj {
+  font-size: 0.85em;
+  color: $text-color;
+  margin: 0 0 1em 0;
+  line-height: 1.4;
+
+  strong {
+    color: $info-color;
+  }
+}
+
+/* ==========================================================================
+   Job-mode CV (data-mode="job") — employment-oriented visual weight
+   Screen rules only; print rules live in assets/js/cv-pdf.js.
+   TODO(v1): opt-in markdownify on highlight bullets to bold quantified
+   metrics (e.g. **90%+**) and deployment keywords. Defer until data edits
+   are acceptable.
+   ========================================================================== */
+
+.cv-content[data-mode="job"] {
+  .cv-header--job {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.4em;
+    padding-bottom: 0.6em;
+
+    .cv-photo {
+      display: none; // employment CV: text-first, no photo
+    }
+
+    .cv-name {
+      text-align: left;
+      font-size: 1.8em;
+    }
+  }
+
+  .cv-contact--job {
+    justify-content: flex-start;
+    margin-bottom: 0.3em;
+    gap: 0.4em 0.6em;
+
+    .cv-contact-sep {
+      color: $light-gray;
+    }
+  }
+
+  .cv-objective {
+    font-size: 0.95em;
+    color: $text-color;
+    margin-top: 0.1em;
+  }
+
+  .cv-objective-label {
+    font-weight: 700;
+    color: $info-color;
+  }
+
+  .cv-supervisor--muted {
+    font-size: 0.85em;
+    color: $light-gray;
+
+    a {
+      color: $light-gray;
+    }
+  }
+
+  // Weakened research-interests block (after education in job mode)
+  .cv-section-title--minor {
+    font-size: 1.1em;
+    color: $gray;
+    border-bottom: 1px solid $border-color;
+  }
+
+  .cv-list--inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3em 1em;
+    padding-left: 0;
+    list-style: none;
+
+    li {
+      margin-bottom: 0;
+    }
+  }
+
+  // One-line positioning sentence under each project/internship header
+  .cv-positioning {
+    margin-bottom: 0.2em;
+    color: $text-color;
+  }
+
+  // Awards — two grouped tables, each row: title | level | year
+  .cv-awards-group {
+    margin-bottom: 0.6em;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .cv-award-group-title {
+    font-weight: 600;
+    color: $gray;
+    font-size: 0.9em;
+    margin-bottom: 0.25em;
+  }
+
+  .cv-award-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.75em;
+    padding: 0.15em 0;
+    border-bottom: 1px dotted $border-color;
+    font-size: 0.92em;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  .cv-award-title {
+    flex: 1 1 auto;
+  }
+
+  .cv-award-level {
+    flex: 0 0 auto;
+    font-weight: 700;
+    color: $info-color;
+    text-align: center;
+    min-width: 8em;
+  }
+
+  .cv-award-year {
+    flex: 0 0 auto;
+    color: $gray;
+    text-align: right;
+    white-space: nowrap;
+    min-width: 5em;
+  }
+
+  // Skills — compact horizontal rows
+  .cv-skills-compact {
+    .cv-skill-row {
+      margin-bottom: 0.2em;
+      line-height: 1.5;
+      font-size: 0.92em;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  // Publications — tail, compressed
+  .cv-pub-group {
+    margin-bottom: 0.6em;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .cv-pub-compact {
+    margin-bottom: 0.35em;
+    padding-bottom: 0.2em;
+  }
+
+  .cv-pub-line1 {
+    font-size: 0.92em;
+    line-height: 1.4;
+
+    em {
+      color: $text-color;
+    }
+  }
+
+  .cv-pub-line2 {
+    font-size: 0.85em;
+    color: $gray;
+    line-height: 1.35;
+
+    strong {
+      color: $info-color;
+    }
+  }
 }
 
 /* Print Styles for PDF Generation — Compact Single-Page Layout */

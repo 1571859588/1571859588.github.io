@@ -1,33 +1,34 @@
 /**
  * CV Single-Page Vector PDF Download
  *
- * Injects @media print CSS with LARGER, readable fonts.
- * Bigger fonts → text fills more width per line → dates align close to content.
- * Carefully tuned vertical spacing to fit all content on exactly one A4 page.
+ * Injects @media print CSS. Two modes:
+ *   - research (default): the original PhD-application single-page layout.
+ *   - job: employment-oriented — denser type, demoted academic weight,
+ *     grouped awards, compressed trailing publications, muted supervisor.
+ *
+ * Mode is read from <div id="cv-content" data-mode="...">. The downloadCV
+ * signature is unchanged; job pages pass a mode-suffixed filename.
  */
 
 function downloadCV(filename) {
   var cvEl = document.getElementById('cv-content');
   if (!cvEl) { alert('CV content not found'); return; }
 
+  var mode = (cvEl.getAttribute('data-mode') || 'research').toLowerCase();
+
   // Remove old injected style if any
   var old = document.getElementById('cv-print-override');
   if (old) old.parentNode.removeChild(old);
 
-  var printCSS = [
+  // ── Shared base rules (both modes) ──
+  var base = [
     '@media print {',
-
-    // ── Page: standard CV margins ──
     '  @page { size: A4; margin: 10mm 16mm; }',
-
-    // ── Hide everything except CV ──
     '  body > *:not(#main) { display: none !important; }',
     '  .masthead, .page__footer, .greedy-nav, nav,',
     '  .sidebar, .author__avatar, .author__content,',
     '  .author__urls-wrapper, #sidebar, .page__title,',
     '  .page__hero, .breadcrumbs, .cv-actions, .cv-track-selector { display: none !important; }',
-
-    // ── Full width layout ──
     '  body {',
     '    margin: 0 !important; padding: 0 !important;',
     '    background: #fff !important;',
@@ -36,8 +37,13 @@ function downloadCV(filename) {
     '  }',
     '  #main { max-width: 100% !important; margin: 0 !important; padding: 0 !important; float: none !important; width: 100% !important; }',
     '  .archive, .page, .page__inner-wrap, .wrapper { max-width: 100% !important; margin: 0 !important; padding: 0 !important; width: 100% !important; float: none !important; }',
+    '  a[href^="http"]:after { content: none !important; }',
+    '  .cv-section-title { page-break-after: avoid !important; }',
+    '  .cv-entry { page-break-inside: avoid !important; }'
+  ];
 
-    // ── CV content: readable font sizes ──
+  // ── Research-mode rules (original, larger readable fonts) ──
+  var researchSpecific = [
     '  #cv-content {',
     '    font-family: "Segoe UI", "Noto Sans SC", "Microsoft YaHei", "PingFang SC", Arial, sans-serif !important;',
     '    font-size: 10px !important;',
@@ -45,8 +51,6 @@ function downloadCV(filename) {
     '    color: #222 !important;',
     '    max-width: 100% !important;',
     '  }',
-
-    // ── Header ──
     '  .cv-header {',
     '    display: flex !important; align-items: flex-start !important; gap: 10px !important;',
     '    margin-bottom: 4px !important; padding-bottom: 4px !important;',
@@ -71,16 +75,11 @@ function downloadCV(filename) {
     '  }',
     '  .cv-contact span { display: inline-flex !important; align-items: center !important; gap: 3px !important; }',
     '  .cv-contact a { color: #2a7a92 !important; text-decoration: none !important; }',
-
-    // ── Section titles: clear but compact ──
     '  h2.cv-section-title, .cv-section-title {',
     '    font-size: 12px !important; font-weight: 700 !important; color: #1a1a1a !important;',
     '    margin: 5px 0 2px 0 !important; padding-bottom: 1px !important;',
     '    border-bottom: 1.5px solid #2e8b9e !important;',
-    '    page-break-after: avoid !important;',
     '  }',
-
-    // ── Entry blocks ──
     '  .cv-entry { margin-bottom: 3px !important; padding-bottom: 0 !important; }',
     '  .cv-entry:last-child { margin-bottom: 0 !important; }',
     '  .cv-entry-header {',
@@ -94,34 +93,95 @@ function downloadCV(filename) {
     '    font-size: 9.5px !important; line-height: 1.32 !important; color: #333 !important;',
     '  }',
     '  .cv-entry-content a { color: #2a7a92 !important; text-decoration: none !important; }',
-
-    // ── Lists ──
     '  ul.cv-list { margin: 0 !important; padding-left: 14px !important; }',
     '  ul.cv-list li { margin-bottom: 0.5px !important; line-height: 1.3 !important; font-size: 9.5px !important; }',
     '  ul.cv-highlights { margin: 1px 0 0 0 !important; padding-left: 14px !important; }',
     '  ul.cv-highlights li { margin-bottom: 0.5px !important; line-height: 1.3 !important; font-size: 9px !important; }',
-
-    // ── Publications ──
     '  .cv-publication { margin-bottom: 2px !important; }',
     '  .cv-publication .cv-entry-content { font-size: 9px !important; line-height: 1.28 !important; }',
-
-    // ── Contribution ──
     '  .cv-contribution {',
     '    margin-top: 1px !important; padding: 2px 5px !important; font-size: 8.5px !important;',
     '    background: #f5f5f5 !important; border-left: 2px solid #2e8b9e !important;',
     '  }',
     '  .cv-contribution ul { margin: 1px 0 0 !important; padding-left: 14px !important; }',
-    '  .cv-contribution li { margin-bottom: 0.5px !important; font-size: 8.5px !important; }',
+    '  .cv-contribution li { margin-bottom: 0.5px !important; font-size: 8.5px !important; }'
+  ];
 
-    // ── Links ──
-    '  a[href^="http"]:after { content: none !important; }',
+  // ── Job-mode rules (employment-oriented, denser, single A4) ──
+  var jobSpecific = [
+    '  #cv-content {',
+    '    font-family: "Segoe UI", "Noto Sans SC", "Microsoft YaHei", "PingFang SC", Arial, sans-serif !important;',
+    '    font-size: 8.5px !important;',
+    '    line-height: 1.25 !important;',
+    '    color: #222 !important;',
+    '    max-width: 100% !important;',
+    '  }',
+    '  .cv-header--job {',
+    '    display: block !important; margin-bottom: 4px !important; padding-bottom: 4px !important;',
+    '    border-bottom: 2px solid #2e8b9e !important;',
+    '  }',
+    '  .cv-header--job .cv-photo { display: none !important; }',
+    '  .cv-name {',
+    '    font-size: 16px !important; font-weight: 700 !important; text-align: left !important;',
+    '    margin: 0 0 2px 0 !important; padding: 0 !important; color: #111 !important; border-bottom: none !important;',
+    '  }',
+    '  .cv-contact--job {',
+    '    display: flex !important; flex-wrap: wrap !important; justify-content: flex-start !important;',
+    '    gap: 0 6px !important; font-size: 8px !important; color: #555 !important; margin-bottom: 2px !important;',
+    '  }',
+    '  .cv-contact--job a { color: #2a7a92 !important; text-decoration: none !important; }',
+    '  .cv-contact-sep { color: #bbb !important; }',
+    '  .cv-objective { font-size: 8.5px !important; color: #333 !important; margin-top: 1px !important; }',
+    '  .cv-objective-label { color: #2a7a92 !important; font-weight: 700 !important; }',
+    '  h2.cv-section-title, .cv-section-title {',
+    '    font-size: 10.5px !important; font-weight: 700 !important; color: #1a1a1a !important;',
+    '    margin: 4px 0 2px 0 !important; padding-bottom: 1px !important;',
+    '    border-bottom: 1.5px solid #2e8b9e !important;',
+    '  }',
+    '  .cv-section-title--minor {',
+    '    font-size: 9px !important; color: #777 !important; border-bottom: 1px solid #ddd !important;',
+    '  }',
+    '  .cv-list--inline { display: flex !important; flex-wrap: wrap !important; gap: 0 8px !important; padding-left: 0 !important; }',
+    '  .cv-list--inline li { font-size: 8px !important; color: #555 !important; }',
+    '  .cv-entry { margin-bottom: 2px !important; padding-bottom: 0 !important; }',
+    '  .cv-entry:last-child { margin-bottom: 0 !important; }',
+    '  .cv-entry-header {',
+    '    display: flex !important; justify-content: space-between !important;',
+    '    align-items: baseline !important; gap: 6px !important; margin-bottom: 0 !important;',
+    '  }',
+    '  .cv-entry-header strong { font-size: 8.5px !important; font-weight: 600 !important; color: #111 !important; }',
+    '  .cv-date { font-size: 7.5px !important; color: #555 !important; white-space: nowrap !important; }',
+    '  .cv-entry-content { font-size: 8px !important; line-height: 1.28 !important; color: #333 !important; }',
+    '  .cv-entry-content a { color: #2a7a92 !important; text-decoration: none !important; }',
+    '  .cv-positioning { font-size: 8px !important; color: #444 !important; margin-bottom: 1px !important; }',
+    '  .cv-supervisor--muted, .cv-supervisor--muted a { font-size: 7.5px !important; color: #999 !important; }',
+    '  ul.cv-highlights { margin: 1px 0 0 0 !important; padding-left: 12px !important; }',
+    '  ul.cv-highlights li { margin-bottom: 0.5px !important; line-height: 1.25 !important; font-size: 7.8px !important; }',
+    '  .cv-awards-group { margin-bottom: 3px !important; }',
+    '  .cv-award-group-title { font-size: 7.5px !important; color: #777 !important; font-weight: 600 !important; margin-bottom: 1px !important; }',
+    '  .cv-award-row {',
+    '    display: flex !important; justify-content: space-between !important; align-items: baseline !important;',
+    '    gap: 6px !important; padding: 0.5px 0 !important; border-bottom: 1px dotted #e0e0e0 !important; font-size: 7.8px !important;',
+    '  }',
+    '  .cv-award-row:last-child { border-bottom: none !important; }',
+    '  .cv-award-title { flex: 1 1 auto !important; color: #333 !important; }',
+    '  .cv-award-level { flex: 0 0 auto !important; min-width: 7em !important; text-align: center !important; font-weight: 700 !important; color: #2a7a92 !important; }',
+    '  .cv-award-year { flex: 0 0 auto !important; min-width: 4em !important; text-align: right !important; color: #777 !important; }',
+    '  .cv-skills-compact .cv-skill-row { font-size: 7.8px !important; line-height: 1.3 !important; margin-bottom: 0.5px !important; }',
+    '  .cv-pub-group { margin-bottom: 3px !important; }',
+    '  .cv-pub-compact { margin-bottom: 1.5px !important; padding-bottom: 0.5px !important; }',
+    '  .cv-pub-line1 { font-size: 7.8px !important; line-height: 1.3 !important; }',
+    '  .cv-pub-line1 em { color: #222 !important; font-style: italic !important; }',
+    '  .cv-pub-line2 { font-size: 7px !important; color: #777 !important; line-height: 1.25 !important; }',
+    '  .cv-pub-line2 strong { color: #2a7a92 !important; }'
+  ];
 
-    // ── Page breaks ──
-    '  .cv-section-title { page-break-after: avoid !important; }',
-    '  .cv-entry { page-break-inside: avoid !important; }',
-
-    '}'
-  ].join('\n');
+  var printCSS;
+  if (mode === 'job') {
+    printCSS = base.concat(jobSpecific, ['}']).join('\n');
+  } else {
+    printCSS = base.concat(researchSpecific, ['}']).join('\n');
+  }
 
   // Inject the print CSS
   var styleEl = document.createElement('style');
