@@ -3,14 +3,19 @@
   Parameters:
     - include.track : track key (e.g., "agent", "infra", "eda")
     - include.lang  : language code ("en" or "zh")
-    - include.mode  : "research" (default) | "job"
+    - include.mode  : "research" (default) or "job"
   Shared data from _data/cv.yml; track-specific data from _data/cv-tracks.yml.
 
-  NOTE on layout modes:
-    - research mode = the {% else %} branch below. It must stay byte-identical to
-      the original PhD-application-oriented layout. Only edit it for genuine fixes.
-    - job mode = the {% if mode == 'job' %} branch. Employment-oriented order with
-      demoted academic weight. Pure layout/visual changes — never alters wording.
+  Layout modes:
+    - research mode = the original PhD-application-oriented layout. Kept
+      verbatim in the else-branch of the section body below; only edit it
+      for genuine fixes.
+    - job mode = the employment-oriented layout in the if-branch. Reorders
+      and demotes academic weight. Pure layout/visual changes, never alters
+      wording.
+  NOTE: do not write literal Liquid tag tokens (if/else/endif/etc.) inside
+  this comment block — Liquid scans comment bodies for tag delimiters and
+  will treat unbalanced tags as a syntax error.
 {% endcomment %}
 
 {% assign track = site.data.cv-tracks.tracks[include.track] %}
@@ -105,9 +110,10 @@
 
 {% comment %}
   ============================================================================
-  SECTION BODY — branched by mode.
-  The {% else %} branch (research) is the original layout, kept verbatim.
+  SECTION BODY - branched by mode.
+  The else-branch (research) is the original layout, kept verbatim.
   The job branch reorders/demotes academic weight for employment use.
+  (No literal Liquid tag tokens inside this comment block.)
   ============================================================================
 {% endcomment %}
 {% if mode == "job" %}
