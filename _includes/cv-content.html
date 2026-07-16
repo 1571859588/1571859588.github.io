@@ -120,33 +120,35 @@
 
 <!-- ============== JOB MODE: employment-oriented order ============== -->
 
-<!-- Header -->
+<!-- Header — photo floats right inside header-info (reliable in print vs absolute) -->
 <div class="cv-header cv-header--job">
-  {% if site.data.cv.personal.photo %}
-  <div class="cv-photo">
-    <img src="{{ site.data.cv.personal.photo }}" alt="{{ site.data.cv.personal.name[lang] }}">
-  </div>
-  {% endif %}
   <div class="cv-header-info">
-    {% if lang == "zh" %}
-    <h2 class="cv-name">{{ site.data.cv.personal.name.zh }} ({{ site.data.cv.personal.name.en }})</h2>
-    {% else %}
-    <h2 class="cv-name">{{ site.data.cv.personal.name.en }}</h2>
-    {% endif %}
-    <div class="cv-contact cv-contact--job">
-      <span>{{ site.data.cv.personal.email }}</span>
-      <span class="cv-contact-sep">|</span>
-      <span><a href="{{ site.data.cv.personal.website }}">{{ site.data.cv.personal.website }}</a></span>
-      <span class="cv-contact-sep">|</span>
-      <span><a href="https://github.com/{{ site.data.cv.personal.github }}">{{ site.data.cv.personal.github }}</a></span>
-      <span class="cv-contact-sep">|</span>
-      <span>{{ site.data.cv.personal.location[lang] }}</span>
-    </div>
-    {% if track.job_objective[lang] %}
-    <div class="cv-objective">
-      <span class="cv-objective-label">{{ label_objective }}：</span>{{ track.job_objective[lang] }}
+    {% if site.data.cv.personal.photo %}
+    <div class="cv-photo cv-photo--job">
+      <img src="{{ site.data.cv.personal.photo }}" alt="{{ site.data.cv.personal.name[lang] }}">
     </div>
     {% endif %}
+    <div class="cv-header-text">
+      {% if lang == "zh" %}
+      <h2 class="cv-name">{{ site.data.cv.personal.name.zh }} ({{ site.data.cv.personal.name.en }})</h2>
+      {% else %}
+      <h2 class="cv-name">{{ site.data.cv.personal.name.en }}</h2>
+      {% endif %}
+      <div class="cv-contact cv-contact--job">
+        <span>{{ site.data.cv.personal.email }}</span>
+        <span class="cv-contact-sep">|</span>
+        <span><a href="{{ site.data.cv.personal.website }}">{{ site.data.cv.personal.website }}</a></span>
+        <span class="cv-contact-sep">|</span>
+        <span><a href="https://github.com/{{ site.data.cv.personal.github }}">{{ site.data.cv.personal.github }}</a></span>
+        <span class="cv-contact-sep">|</span>
+        <span>{{ site.data.cv.personal.location[lang] }}</span>
+      </div>
+      {% if track.job_objective[lang] %}
+      <div class="cv-objective">
+        <span class="cv-objective-label">{{ label_objective }}：</span>{{ track.job_objective[lang] }}
+      </div>
+      {% endif %}
+    </div>
   </div>
 </div>
 

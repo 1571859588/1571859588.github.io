@@ -377,43 +377,43 @@
    ========================================================================== */
 
 .cv-content[data-mode="job"] {
-  // ── Header: photo top-right, name + contact + objective all centered ──
+  // ── Header: photo floats right, text centered ──
   .cv-header--job {
-    position: relative;            // anchor for absolute-positioned photo
-    display: flex;
-    flex-direction: column;
-    align-items: center;           // centre name / contact / objective
-    gap: 0.3em;
     padding-bottom: 0.8em;
     border-bottom: 2px solid $primary-color;
+    margin-bottom: 0.3em;
 
-    .cv-photo {
-      display: block;              // show the photo (hidden by research-mode base)
-      position: absolute;
-      top: 0;
-      right: 0;
-
-      img {
-        width: 80px;
-        height: 105px;
-        object-fit: cover;
-        border: 1px solid $border-color;
-      }
+    .cv-header-info {
+      overflow: hidden;        // clearfix for the float
     }
+  }
 
-    .cv-name {
-      text-align: center;
-      font-size: 1.9em;
-      margin-bottom: 0;
-      padding: 0 90px 0 0;        // leave room for the 80 px photo on the right
+  .cv-photo--job {
+    float: right;
+    margin-left: 1em;
+
+    img {
+      width: 80px;
+      height: 105px;
+      object-fit: cover;
+      border: 1px solid $border-color;
     }
+  }
+
+  .cv-header-text {
+    overflow: hidden;           // respects the float
+  }
+
+  .cv-name {
+    text-align: center;
+    font-size: 1.9em;
+    margin-bottom: 0.15em;
   }
 
   .cv-contact--job {
     justify-content: center;
     margin-bottom: 0.25em;
     gap: 0.3em 0.6em;
-    padding: 0 90px 0 0;          // match the name's right-padding
 
     .cv-contact-sep {
       color: $light-gray;
@@ -426,7 +426,6 @@
     font-size: 0.95em;
     color: $text-color;
     margin-top: 0;
-    padding: 0 90px 0 0;          // match the name's right-padding
   }
 
   .cv-objective-label {
