@@ -399,13 +399,13 @@
   }
 
   .cv-name {
-    text-align: left;
+    text-align: center;
     font-size: 1.9em;
     margin-bottom: 0.3em;
   }
 
   .cv-contact--job {
-    justify-content: flex-start;
+    justify-content: center;
     margin-bottom: 0.3em;
     gap: 0.3em 0.6em;
 
@@ -416,6 +416,7 @@
   }
 
   .cv-objective {
+    text-align: center;
     font-size: 0.95em;
     color: $text-color;
     margin-top: 0;
