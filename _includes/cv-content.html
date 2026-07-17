@@ -120,48 +120,43 @@
 
 <!-- ============== JOB MODE: employment-oriented order ============== -->
 
-<!-- Header — photo floats right inside header-info (reliable in print vs absolute) -->
+<!-- Header — photo left (like research CV), text right with objective line -->
 <div class="cv-header cv-header--job">
+  {% if site.data.cv.personal.photo %}
+  <div class="cv-photo cv-photo--job">
+    <img src="{{ site.data.cv.personal.photo }}" alt="{{ site.data.cv.personal.name[lang] }}">
+  </div>
+  {% endif %}
   <div class="cv-header-info">
-    {% if site.data.cv.personal.photo %}
-    <div class="cv-photo cv-photo--job">
-      <img src="{{ site.data.cv.personal.photo }}" alt="{{ site.data.cv.personal.name[lang] }}">
+    {% if lang == "zh" %}
+    <h2 class="cv-name">{{ site.data.cv.personal.name.zh }} ({{ site.data.cv.personal.name.en }})</h2>
+    {% else %}
+    <h2 class="cv-name">{{ site.data.cv.personal.name.en }}</h2>
+    {% endif %}
+    <div class="cv-contact cv-contact--job">
+      <span>{{ site.data.cv.personal.email }}</span>
+      <span class="cv-contact-sep">|</span>
+      <span><a href="{{ site.data.cv.personal.website }}">{{ site.data.cv.personal.website }}</a></span>
+      <span class="cv-contact-sep">|</span>
+      <span><a href="https://github.com/{{ site.data.cv.personal.github }}">{{ site.data.cv.personal.github }}</a></span>
+      <span class="cv-contact-sep">|</span>
+      <span>{{ site.data.cv.personal.location[lang] }}</span>
+    </div>
+    {% if track.job_objective[lang] %}
+    <div class="cv-objective">
+      <span class="cv-objective-label">{{ label_objective }}：</span>{{ track.job_objective[lang] }}
     </div>
     {% endif %}
-    <div class="cv-header-text">
-      {% if lang == "zh" %}
-      <h2 class="cv-name">{{ site.data.cv.personal.name.zh }} ({{ site.data.cv.personal.name.en }})</h2>
-      {% else %}
-      <h2 class="cv-name">{{ site.data.cv.personal.name.en }}</h2>
-      {% endif %}
-      <div class="cv-contact cv-contact--job">
-        <span>{{ site.data.cv.personal.email }}</span>
-        <span class="cv-contact-sep">|</span>
-        <span><a href="{{ site.data.cv.personal.website }}">{{ site.data.cv.personal.website }}</a></span>
-        <span class="cv-contact-sep">|</span>
-        <span><a href="https://github.com/{{ site.data.cv.personal.github }}">{{ site.data.cv.personal.github }}</a></span>
-        <span class="cv-contact-sep">|</span>
-        <span>{{ site.data.cv.personal.location[lang] }}</span>
-      </div>
-      {% if track.job_objective[lang] %}
-      <div class="cv-objective">
-        <span class="cv-objective-label">{{ label_objective }}：</span>{{ track.job_objective[lang] }}
-      </div>
-      {% endif %}
-    </div>
   </div>
 </div>
 
-<!-- Education -->
+<!-- Education — single-line: institution · degree, date right -->
 <h2 class="cv-section-title">{{ sec_education }}</h2>
 {% for edu in site.data.cv.education %}
 <div class="cv-entry">
   <div class="cv-entry-header">
-    <strong>{{ edu.institution[lang] }}</strong>
+    <strong>{{ edu.institution[lang] }} · {{ edu.degree[lang] }}</strong>
     <span class="cv-date">{{ edu.date[lang] }}</span>
-  </div>
-  <div class="cv-entry-content">
-    <strong>{{ edu.degree[lang] }}</strong>{% if edu.supervisor %} <span class="cv-supervisor--muted">| {{ label_supervisor }}: <a href="{{ edu.supervisor_url }}">{{ edu.supervisor[lang] }}</a></span>{% endif %}
   </div>
 </div>
 {% endfor %}

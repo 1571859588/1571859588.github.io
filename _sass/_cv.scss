@@ -377,45 +377,36 @@
    ========================================================================== */
 
 .cv-content[data-mode="job"] {
-  // ── Header: photo right, aligns top=name-top, bottom=objective-bottom ──
+  // ── Header: photo left (like research CV), text right ──
   .cv-header--job {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5em;
     padding-bottom: 0.8em;
     border-bottom: 2px solid $primary-color;
     margin-bottom: 0.3em;
-
-    .cv-header-info {
-      display: flex;
-      flex-direction: row;
-      align-items: flex-start;    // top edge of photo = top edge of name
-      gap: 1em;
-    }
-  }
-
-  .cv-header-text {
-    flex: 1 1 auto;
-    min-width: 0;
   }
 
   .cv-photo--job {
-    flex: 0 0 auto;
+    flex-shrink: 0;
 
     img {
-      height: 4.2em;               // matches name (1.9em) + contact (~1em) + objective (~1em) + gaps
-      width: auto;
+      width: 100px;
+      height: 125px;
       object-fit: cover;
       border: 1px solid $border-color;
     }
   }
 
   .cv-name {
-    text-align: center;
+    text-align: left;
     font-size: 1.9em;
-    margin-bottom: 0.15em;
+    margin-bottom: 0.3em;
   }
 
   .cv-contact--job {
-    justify-content: center;
-    margin-bottom: 0.25em;
+    justify-content: flex-start;
+    margin-bottom: 0.3em;
     gap: 0.3em 0.6em;
 
     .cv-contact-sep {
@@ -425,7 +416,6 @@
   }
 
   .cv-objective {
-    text-align: center;
     font-size: 0.95em;
     color: $text-color;
     margin-top: 0;
