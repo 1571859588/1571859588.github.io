@@ -122,27 +122,35 @@ tracks:
           en: China
           zh: 中国
         position:
-          en: Research Intern (AI Infrastructure)
-          zh: 研究实习生（AI基础设施方向）
+          en: AI Infrastructure Intern
+          zh: AI基础设施实习生
         date:
           en: Oct. 2024 - Present
           zh: 2024.10 - 至今
         description:
-          en: Built production-grade RAG infrastructure and high-throughput document processing pipelines for EDA domain, deployed at Empyrean Technology
-          zh: 为EDA领域构建生产级RAG基础设施与高吞吐文档处理流水线，已在华大九天落地部署
+          en: Built and optimized a production LLM inference serving system (RAG pipeline) serving 5 EDA tools, deployed at Empyrean Technology; 8xA100 40G cluster
+          zh: 构建并优化面向EDA领域的生产级LLM推理服务系统（RAG流水线），服务5款EDA工具，已在华大九天落地部署；8xA100 40G集群
         responsibilities:
           en:
             - >-
-              Architected and containerized a full-stack RAG inference system (FAISS+BM25 hybrid retrieval → LLM re-rank → Qwen1.5-14B generation), serving 10K+ documents across 5 EDA tools; deployed
-              with Docker (Streamlit + MySQL + retrieval engine) at Empyrean Technology
-            - Designed multi-channel retrieval with deduplication and metadata filtering; improved Top-5 recall from 60% to 90%+ through fine-tuned re-ranker scoring
-            - Built automated evaluation framework covering retrieval recall, re-ranker accuracy, and end-to-end QA metrics with regression testing and auto-generated reports
-            - Developed high-throughput PDF parsing pipeline with multi-tool orchestration (MinerU + pdf2kg + OpenCV), configurable Flask orchestration, and auto-verification loop
+              Architected a full-stack LLM inference pipeline (FAISS+BM25 hybrid retrieval -> LLM re-rank -> Qwen1.5-14B generation), containerized with Docker (Streamlit + MySQL + retrieval backend)
+              and deployed at Empyrean Technology, serving 10K+ documents
+            - Designed multi-channel retrieval with deduplication + metadata filtering; fine-tuned Re-ranker for domain-specific scoring, boosting Top-5 recall from 60% to 90%+
+            - Built automated evaluation framework with regression testing covering retrieval recall, re-ranker accuracy, and end-to-end QA metrics; auto-generated performance reports
+            - >-
+              Profiling and optimizing inference pipeline latency: end-to-end request tracing (retrieval -> re-rank -> LLM generate), identifying bottlenecks with Python cProfile and nvidia-smi GPU
+              utilization monitoring
+            - Benchmarking FAISS vector search throughput under concurrent load; analyzing HNSW/IVF index tradeoffs for 10K+ document corpus
+            - >-
+              Developed high-throughput data processing infrastructure (PDF parsing pipeline) with multi-tool orchestration (MinerU + pdf2kg + OpenCV), Flask-based configurable workflow, and Docker
+              deployment
           zh:
-            - 架构并容器化全栈RAG推理系统（FAISS+BM25混合检索 → LLM精排 → Qwen1.5-14B生成），服务10K+文档与5款EDA工具；通过Docker容器化（Streamlit + MySQL + 检索引擎）在华大九天完成生产部署
-            - 设计多路召回 + 去重 + 元数据过滤的混合检索策略，微调Reranker精排模型，Top-5召回率从60%提升至90%以上
-            - 搭建覆盖检索召回率、重排准确率、端到端QA指标的自动化评测框架，支持回归测试与报告自动生成
-            - 开发高吞吐PDF解析流水线，集成MinerU + pdf2kg + OpenCV多工具协同、Flask可配置编排与自动验证修复闭环
+            - 架构全栈LLM推理管线（FAISS+BM25混合检索 -> LLM精排 -> Qwen1.5-14B生成），Docker容器化（Streamlit + MySQL + 检索引擎），在华大九天完成生产部署，服务10K+文档
+            - 设计多路召回+去重+元数据过滤的混合检索策略，微调Reranker精排模型，Top-5召回率从60%提升至90%+
+            - 搭建自动化评测框架覆盖检索召回率、重排准确率、端到端QA指标，支持回归测试与性能报告自动生成
+            - 对推理管线进行全链路延迟剖析（检索->精排->LLM生成），通过cProfile与nvidia-smi GPU利用率监控定位性能瓶颈
+            - 对FAISS向量检索引擎进行并发吞吐压测，分析HNSW/IVF索引在10K+文档规模下的延迟-召回权衡
+            - 开发高吞吐数据处理基础设施（PDF解析流水线），集成MinerU + pdf2kg + OpenCV多工具协同，Flask可配置编排，Docker部署
     projects:
       - name:
           en: LLM Inference Benchmarking & vLLM Source Analysis
